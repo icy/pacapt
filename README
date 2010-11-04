@@ -1,0 +1,13 @@
+A pacman-liked script for Debian users
+
+Query
+
+  pacman -Q    -> dpkg --get-selections | grep install
+  pacman -Qi   -> dpkg-query -s <foobar>
+  pacman -Ql   -> dpkg-query -L <foobar>
+
+Synchronize
+
+  pacman -Ss   -> apt-cache search <foobar>
+  pacman -Sy   -> apt-get update
+  pacman -Su   -> apt-get upgrade
