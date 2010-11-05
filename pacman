@@ -59,9 +59,9 @@ _exec() {
   eval "$* $_VERBOSE $_FORCE"
 }
 
-while getopts "QShfvluyisqwc" opt; do
+while getopts "RQShfvluyisqwc" opt; do
   case "$opt" in
-    Q|S)
+    Q|S|R)
       if [ "$_POPT" != "" -a "$_POPT" != "$opt" ]; then
         _error "Only one operation may be used at a time"
         exit 1
