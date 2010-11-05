@@ -25,6 +25,7 @@ Syntax
 Operators
 
   Query
+    -Ql             list all installed packages
     -Ql <package>   list package's files
     -Qi <package>   print package status
 
@@ -45,10 +46,10 @@ EOF
 
 _exec() {
   _error "Going to execute: $* $_VERBOSE $_FORCE"
-  exec $* $_VERBOSE $_FORCE
+  $* $_VERBOSE $_FORCE
 }
 
-while getopts "QShfvlisq" opt; do
+while getopts "QShfvluisq" opt; do
   case "$opt" in
     Q|S)
       if [ "$_POPT" != "" -a "$_POPT" != "$opt" ]; then
@@ -76,7 +77,8 @@ case "$_POPT$_SOPT" in
   "Qi") _exec "dpkg-query -s $_PKG" ;;
   "Ql") _exec "dpkg-query -l $_PKG" ;;
   "Su") _exec "apt-get upgrade" ;;
-  "Sv") _exec "apt-get" ;;
+  "Sy") _exec "apt-get update" ;;
+  "Q")  _exec "dpkg --get-selections | grep install" ;;
   "S" )
     if [ -z "$_PKG" ]; then
       _error "You must specify a package"
