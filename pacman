@@ -77,7 +77,7 @@ fi
 
 case "$_POPT$_SOPT" in
   "Qi") _exec "dpkg-query -s $_PKG" ;;
-  "Ql") _exec "dpkg-query -l $_PKG" ;;
+  "Ql") _exec "dpkg-query -L $_PKG" ;;
   "Q")  _exec "dpkg --get-selections | grep install" ;;
   "Su") _exec "apt-get upgrade" ;;
   "Sy") _exec "apt-get update" ;;
