@@ -46,7 +46,7 @@ EOF
 
 _exec() {
   _error "Going to execute: $* $_VERBOSE $_FORCE"
-  $* $_VERBOSE $_FORCE
+  eval "$* $_VERBOSE $_FORCE"
 }
 
 while getopts "QShfvluisq" opt; do
