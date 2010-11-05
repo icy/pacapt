@@ -7,6 +7,7 @@
 
 _POPT=""
 _SOPT=""
+_TOPT=""
 _PKG=""
 _VERBOSE=""
 _FORCE=""
@@ -17,7 +18,8 @@ _error() {
 
 _help() {
   cat <<\EOF
-Pacman-liked program for Debian users.
+A pacman-liked package manager for Debian users, or
+a pacman-liked wrapper for apt-get, dpkg and dpkg-query.
 
 Syntax
   $0 <operator> <option> <packages>
@@ -35,9 +37,16 @@ Operators
     -Sy             update package database
     -Ss <package>   search for packages
 
+  Remove
+  Clean up
+    -R <package>    remove some packages
+    -Sc             delete old downloaded packages
+    -Scc            delete all downloaded packages
+
 Options
   -f                force yes
   -v                be verbose
+  -w                download package only
 
 This program is written by Anh K. Huynh. You can find the original source
 and other information at project's home
@@ -50,7 +59,7 @@ _exec() {
   eval "$* $_VERBOSE $_FORCE"
 }
 
-while getopts "QShfvluyisq" opt; do
+while getopts "QShfvluyisqwc" opt; do
   case "$opt" in
     Q|S)
       if [ "$_POPT" != "" -a "$_POPT" != "$opt" ]; then
@@ -60,10 +69,19 @@ while getopts "QShfvluyisq" opt; do
       _POPT="$opt"
       ;;
     s|u|l|i|q|y)
-              _SOPT="$opt" ;;
-    f)        _FORCE="-f --force-yes" ;;
-    v)        _VERBOSE="-v" ;;
-    h)        _help; exit 0 ;;
+        _SOPT="$opt"
+      ;;
+    c)
+      if [ "${_SOPT:0:1}" = "c" ]; then
+        _SOPT="cc"
+      else
+        _SOPT="$opt"
+      fi
+      ;;
+    w) _TOPT="-d" ;;
+    f) _FORCE="-f --force-yes" ;;
+    v) _VERBOSE="-v" ;;
+    h) _help; exit 0 ;;
   esac
 done
 shift $((OPTIND - 1))
@@ -79,15 +97,19 @@ case "$_POPT$_SOPT" in
   "Qi") _exec "dpkg-query -s $_PKG" ;;
   "Ql") _exec "dpkg-query -L $_PKG" ;;
   "Q")  _exec "dpkg --get-selections | grep install" ;;
+  "Rs") _exec "apt-get autoremove $_PKG" ;;
+  "R")  _exec "apt-get remove $_PKG" ;;
   "Su") _exec "apt-get upgrade" ;;
   "Sy") _exec "apt-get update" ;;
   "Ss") _exec "apt-cache search $_PKG" ;;
+  "Sc") _exec "apt-get autoclean" ;;
+  "Scc") _exec "apt-get clean" ;;
   "S" )
     if [ -z "$_PKG" ]; then
       _error "You must specify a package"
       exit 1
     else
-      _exec "apt-get install $_PKG"
+      _exec "apt-get install $_TOPT $_PKG"
     fi
   ;;
 esac

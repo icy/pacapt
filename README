@@ -2,10 +2,10 @@ A pacman-liked package manager for Debian users, or
 a pacman-liked wrapper for apt-get, dpkg and dpkg-query.
 
 Syntax
-  $0 -h                               # print help message
-  $0 <operator> <option> <packages>   # query/install package
+  $0 <operator> <option> <packages>
 
 Operators
+
   Query
     -Q              list all installed packages
     -Ql <package>   list package's files
@@ -17,8 +17,17 @@ Operators
     -Sy             update package database
     -Ss <package>   search for packages
 
+  Remove
+  Clean up
+    -R <package>    remove some packages
+    -Sc             delete old downloaded packages
+    -Scc            delete all downloaded packages
+
 Options
   -f                force yes
   -v                be verbose
+  -w                download package only
 
-Pacman's document: https://wiki.archlinux.org/index.php/Pacman
+This program is written by Anh K. Huynh. You can find the original source
+and other information at project's home
+                http://github.com/icy/pacapt/.
