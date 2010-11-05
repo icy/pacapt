@@ -1,18 +1,20 @@
 A pacman-liked script for Debian users
 
 Syntax
-  $0 <operator> <option> <packages>
+  $0 -h                               # print help message
+  $0 <operator> <option> <packages>   # query/install package
 
 Operators
-
   Query
+    -Q              list all installed packages
     -Ql <package>   list package's files
     -Qi <package>   print package status
 
   Synchronize
-    -S <package>    install packages
+    -S <package>    install package(s)
     -Su             upgrade the system
     -Sy             update package database
+    -Ss <package>   search for packages
 
 Options
   -f                force yes

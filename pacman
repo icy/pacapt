@@ -30,9 +30,10 @@ Operators
     -Qi <package>   print package status
 
   Synchronize
-    -S <package>    install packages
+    -S <package>    install package(s)
     -Su             upgrade the system
     -Sy             update package database
+    -Ss <package>   search for packages
 
 Options
   -f                force yes
@@ -76,9 +77,10 @@ fi
 case "$_POPT$_SOPT" in
   "Qi") _exec "dpkg-query -s $_PKG" ;;
   "Ql") _exec "dpkg-query -l $_PKG" ;;
+  "Q")  _exec "dpkg --get-selections | grep install" ;;
   "Su") _exec "apt-get upgrade" ;;
   "Sy") _exec "apt-get update" ;;
-  "Q")  _exec "dpkg --get-selections | grep install" ;;
+  "Ss") _exec "apt-cache search $_PKG" ;;
   "S" )
     if [ -z "$_PKG" ]; then
       _error "You must specify a package"
