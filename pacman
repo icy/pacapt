@@ -25,7 +25,7 @@ Syntax
 Operators
 
   Query
-    -Ql             list all installed packages
+    -Q              list all installed packages
     -Ql <package>   list package's files
     -Qi <package>   print package status
 
