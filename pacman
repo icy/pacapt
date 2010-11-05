@@ -50,7 +50,7 @@ _exec() {
   eval "$* $_VERBOSE $_FORCE"
 }
 
-while getopts "QShfvluisq" opt; do
+while getopts "QShfvluyisq" opt; do
   case "$opt" in
     Q|S)
       if [ "$_POPT" != "" -a "$_POPT" != "$opt" ]; then
@@ -59,7 +59,8 @@ while getopts "QShfvluisq" opt; do
       fi
       _POPT="$opt"
       ;;
-    l|i|q|y)  _SOPT="$opt" ;;
+    s|u|l|i|q|y)
+              _SOPT="$opt" ;;
     f)        _FORCE="-f --force-yes" ;;
     v)        _VERBOSE="-v" ;;
     h)        _help; exit 0 ;;
