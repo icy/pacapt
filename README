@@ -1,4 +1,5 @@
-A pacman-liked script for Debian users
+A pacman-liked package manager for Debian users, or
+a pacman-liked wrapper for apt-get, dpkg and dpkg-query.
 
 Syntax
   $0 -h                               # print help message
