@@ -1,13 +1,21 @@
 A pacman-liked script for Debian users
 
-Query
+Syntax
+  $0 <operator> <option> <packages>
 
-  pacman -Q    -> dpkg --get-selections | grep install
-  pacman -Qi   -> dpkg-query -s <foobar>
-  pacman -Ql   -> dpkg-query -L <foobar>
+Operators
 
-Synchronize
+  Query
+    -Ql <package>   list package's files
+    -Qi <package>   print package status
 
-  pacman -Ss   -> apt-cache search <foobar>
-  pacman -Sy   -> apt-get update
-  pacman -Su   -> apt-get upgrade
+  Synchronize
+    -S <package>    install packages
+    -Su             upgrade the system
+    -Sy             update package database
+
+Options
+  -f                force yes
+  -v                be verbose
+
+Pacman's document: https://wiki.archlinux.org/index.php/Pacman
