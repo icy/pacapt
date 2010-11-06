@@ -99,8 +99,8 @@ case "$_POPT$_SOPT" in
   "Q")  _exec "dpkg --get-selections | grep install" ;;
   "Rs") _exec "apt-get autoremove $_PKG" ;;
   "R")  _exec "apt-get remove $_PKG" ;;
-  "Su") _exec "apt-get upgrade" ;;
-  "Sy") _exec "apt-get update" ;;
+  "Su") _VERBOSE="" _exec "apt-get upgrade" ;;
+  "Sy") _VERBOSE="" _exec "apt-get update" ;;
   "Ss") _exec "apt-cache search $_PKG" ;;
   "Sc") _exec "apt-get autoclean" ;;
   "Scc") _exec "apt-get clean" ;;
