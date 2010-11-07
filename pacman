@@ -5,12 +5,12 @@
 # License: Public domain
 # Source : http://github.com/icy/pacapt/
 
-_POPT=""
-_SOPT=""
-_TOPT=""
-_PKG=""
-_VERBOSE=""
-_FORCE=""
+_POPT=""    # primary   operation
+_SOPT=""    # secondary operation
+_TOPT=""    # options for operations
+_PKG=""     # packages and extra parameters for apt-get
+_VERBOSE="" # verbose mode
+_FORCE=""   # force yes
 
 _error() {
   echo >&2 ":: $*"
@@ -22,9 +22,9 @@ A pacman-liked package manager for Debian users, or
 a pacman-liked wrapper for apt-get, dpkg and dpkg-query.
 
 Syntax
-  $0 <operator> <option> <packages>
+  $0 <operation> <option> <packages>
 
-Operators
+Operations
 
   Query
     -Q              list all installed packages
@@ -44,9 +44,9 @@ Operators
     -Scc            delete all downloaded packages
 
 Options
-  -f                force yes
-  -v                be verbose
-  -w                download package only
+    -f              force yes
+    -v              be verbose
+    -w              download packages but donot install them
 
 This program is written by Anh K. Huynh. You can find the original source
 and other information at project's home
