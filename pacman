@@ -36,6 +36,7 @@ Operations
     -Su             upgrade the system
     -Sy             update package database
     -Ss <package>   search for packages
+    -Sy <package>   update package database, then install <package>
 
   Remove
   Clean up
@@ -100,7 +101,9 @@ case "$_POPT$_SOPT" in
   "Rs") _exec "apt-get autoremove $_PKG" ;;
   "R")  _exec "apt-get remove $_PKG" ;;
   "Su") _VERBOSE="" _exec "apt-get upgrade" ;;
-  "Sy") _VERBOSE="" _exec "apt-get update" ;;
+  "Sy") _VERBOSE="" _exec "apt-get update" ;
+        [ ! -z "$_PKG" ] \
+          && _VERBOSE="" _exec "apt-get install $_TOPT $_PKG" ;;
   "Ss") _exec "apt-cache search $_PKG" ;;
   "Sc") _exec "apt-get autoclean" ;;
   "Scc") _exec "apt-get clean" ;;

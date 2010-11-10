@@ -16,6 +16,7 @@ Operations
     -Su             upgrade the system
     -Sy             update package database
     -Ss <package>   search for packages
+    -Sy <package>   update package database, then install <package>
 
   Remove
   Clean up
