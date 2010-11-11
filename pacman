@@ -69,8 +69,22 @@ while getopts "RQShfvluyisqwc" opt; do
       fi
       _POPT="$opt"
       ;;
-    s|u|l|i|q|y)
+    s|l|i|q)
         _SOPT="$opt"
+      ;;
+    u)
+      if [ "${_SOPT:0:1}" = "y" ]; then
+        _SOPT="uy"
+      else
+        _SOPT="u"
+      fi
+      ;;
+    y)
+      if [ "${_SOPT:0:1}" = "u" ]; then
+        _SOPT="uy"
+      else
+        _SOPT="y"
+      fi
       ;;
     c)
       if [ "${_SOPT:0:1}" = "c" ]; then
@@ -95,24 +109,25 @@ if [ -z "$_POPT" ]; then
 fi
 
 case "$_POPT$_SOPT" in
-  "Qi") _exec "dpkg-query -s $_PKG" ;;
-  "Ql") _exec "dpkg-query -L $_PKG" ;;
-  "Q")  _exec "dpkg --get-selections | grep install" ;;
-  "Rs") _exec "apt-get autoremove $_PKG" ;;
-  "R")  _exec "apt-get remove $_PKG" ;;
-  "Su") _VERBOSE="" _exec "apt-get upgrade" ;;
-  "Sy") _VERBOSE="" _exec "apt-get update" ;
-        [ ! -z "$_PKG" ] \
-          && _VERBOSE="" _exec "apt-get install $_TOPT $_PKG" ;;
-  "Ss") _exec "apt-cache search $_PKG" ;;
-  "Sc") _exec "apt-get autoclean" ;;
+   "Qi") _exec "dpkg-query -s $_PKG" ;;
+   "Ql") _exec "dpkg-query -L $_PKG" ;;
+    "Q") _exec "dpkg --get-selections | grep install" ;;
+   "Rs") _exec "apt-get autoremove $_PKG" ;;
+    "R") _exec "apt-get remove $_PKG" ;;
+  "Suy") _VERBOSE="" _exec "apt-get update" ;
+         _VERBOSE="" _exec "apt-get upgrade" ;;
+   "Su") _VERBOSE="" _exec "apt-get upgrade" ;;
+   "Sy") _VERBOSE="" _exec "apt-get update" ;
+         [ ! -z "$_PKG" ] \
+           && _VERBOSE="" _exec "apt-get install $_TOPT $_PKG" ;;
+   "Ss") _exec "apt-cache search $_PKG" ;;
+   "Sc") _exec "apt-get autoclean" ;;
   "Scc") _exec "apt-get clean" ;;
-  "S" )
-    if [ -z "$_PKG" ]; then
-      _error "You must specify a package"
-      exit 1
-    else
-      _exec "apt-get install $_TOPT $_PKG"
-    fi
-  ;;
+    "S") if [ -z "$_PKG" ]; then
+           _error "You must specify a package"
+           exit 1
+         else
+           _exec "apt-get install $_TOPT $_PKG"
+         fi
+         ;;
 esac
