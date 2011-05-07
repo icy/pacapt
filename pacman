@@ -87,7 +87,9 @@ while getopts "RQShfvluyisqwc" opt; do
       fi
       ;;
     c)
-      if [ "${_SOPT:0:1}" = "c" ]; then
+      if [ "${_SOPT:0:2}" = "cc" ]; then
+        _SOPT="ccc"
+      elif [ "${_SOPT:0:1}" = "c" ]; then
         _SOPT="cc"
       else
         _SOPT="$opt"
@@ -123,6 +125,7 @@ case "$_POPT$_SOPT" in
    "Ss") _exec "apt-cache search $_PKG" ;;
    "Sc") _exec "apt-get autoclean" ;;
   "Scc") _exec "apt-get clean" ;;
+ "Sccc") _exec "rm -fv /var/cache/apt/*.bin /var/cache/apt/archives/*.* /var/lib/apt/lists/*.*; apt-get autoclean" ;;
     "S") if [ -z "$_PKG" ]; then
            _error "You must specify a package"
            exit 1
