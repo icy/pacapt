@@ -22,7 +22,7 @@ A pacman-liked package manager for Debian users, or
 a pacman-liked wrapper for apt-get, dpkg and dpkg-query.
 
 Syntax
-  $0 <operation> <option> <packages>
+  $0 <operation> <option(s)> <packages>
 
 Operations
 
@@ -38,19 +38,27 @@ Operations
     -Ss <package>   search for packages
     -Sy <package>   update package database, then install <package>
 
-  Remove
-  Clean up
+  Remove / Clean up
     -R <package>    remove some packages
     -Sc             delete old downloaded packages
     -Scc            delete all downloaded packages
+    -Sccc           clean apt-get's variant files. See more details at
+                      http://dragula.org/blogs/646
 
 Options
     -f              force yes
     -v              be verbose
     -w              download packages but donot install them
 
-This program is written by Anh K. Huynh. You can find the original source
-and other information at project's home
+Notes
+
+  To install a package from backports repository, you can try
+      pacman -S foobar -t lenny-backports
+
+  Similiarily, any further option isn't recognized by getopts (1) can be
+  passed to Debian's tool.
+
+This program is written by Anh K. Huynh. The source can be fount at
                 http://github.com/icy/pacapt/.
 EOF
 }
