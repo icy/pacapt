@@ -24,7 +24,6 @@ Operations
     -Scc            delete all downloaded packages
     -Sccc           clean apt-get's variant files. See more details at
                       http://dragula.org/blogs/646
-
 Options
     -f              force yes
     -v              be verbose
@@ -38,5 +37,5 @@ Notes
   Similiarily, any further option isn't recognized by getopts (1) can be
   passed to Debian's tool.
 
-This program is written by Anh K. Huynh. The source can be fount at
+This program is written by Anh K. Huynh. The source can be found at
                 http://github.com/icy/pacapt/.
