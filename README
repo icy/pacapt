@@ -5,9 +5,9 @@ need a common way to manipulate packages. Not all options of the native
 package manager are ported; the tool only provides very basic interface to
 search, install, remove packages and/or update the system.
 
-Arch's pacman is chosen, as pacman has quite smart when it devices all
+Arch's pacman is chosen, as pacman is quite smart when it devides all
 packages-related operations into three major groups: Synchronize, Query
-and Removing/Clean up. It has a clean man page, and it is the only tool
+and Remove/Clean up. It has a clean man page, and it is the only tool
 needed to manipulate official packages on system. (Debian, for example,
 requires you to use apt-get, dpkg and/or aptitude.)
 
