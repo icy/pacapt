@@ -110,7 +110,7 @@ case "$_OSTYPE" in
     /usr/bin/pacman $*
     exit $?
     ;;
-  "YUM")
+  "YUM"|"DPKG")
     ;;
   *)
     _error "System unsupported. Exit (1)."
