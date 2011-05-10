@@ -39,7 +39,7 @@ Operations
     -Sc             delete old downloaded packages
     -Scc            delete all downloaded packages
     -Sccc           clean variant files.
-                    (debian) See more details at http://dragula.org/blogs/646
+                    (debian) See details at http://dragula.org/blogs/646
 Options
     -f              force yes
     -v              be verbose
@@ -50,12 +50,12 @@ Notes
   To install a package from backports repository on Debian system:
       pacman -S foobar -t lenny-backports
 
-  Similiarily, any further option isn't recognized by getopts (1) can be
-  passed to system tool.
+  Similiarily, any further option which isn't recognized by getopts (1)
+  can be passed to system tool.
 
   When being executed on Arch-liked system, the tool simplify invokes
   the system tool '/usr/bin/pacman'. So you would never install this tool
-  as '/usr/bin/pacman', otherwise you may break the your system!
+  as '/usr/bin/pacman', otherwise you may break your system!
 
 This program is written by Anh K. Huynh. The source can be found at
                 http://github.com/icy/pacapt/.
