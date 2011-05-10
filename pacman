@@ -120,7 +120,7 @@ fi
 case "$_POPT$_SOPT" in
    "Qi") _exec "dpkg-query -s $_PKG" ;;
    "Ql") _exec "dpkg-query -L $_PKG" ;;
-    "Q") _exec "dpkg -l | grep ^ii" ;;
+    "Q") _exec "dpkg -l | grep -E ^[hi]i" ;;
    "Rs") _exec "apt-get autoremove $_PKG" ;;
     "R") _exec "apt-get remove $_PKG" ;;
   "Suy") _VERBOSE="" _exec "apt-get update" ;
