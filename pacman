@@ -22,15 +22,15 @@ _help() {
 An Arch's pacman-liked package manager for all Linux distributions.
 
 Instead of remembering various options/tools on different OSs, the tool
-provide common way to manipulate packages. Not all options of the native
+provides common way to manipulate packages. Not all options of the native
 package manager are ported; the tool only provides very basic interface to
 search, install, remove packages and/or update the system.
 
-Arch's pacman is chosen, as pacman has a quite smart when it devices all
-packages-related operatios into three major groups: Synchronize, Query
+Arch's pacman is chosen, as pacman has quite smart when it devices all
+packages-related operations into three major groups: Synchronize, Query
 and Removing/Clean up. It has a clean man page, and it is the only tool
-needed to manipulate official packages. (Debian, for example, requires
-you to use apt-get, dpkg and/or aptitude.)
+needed to manipulate official packages on system. (Debian, for example,
+requires you to use apt-get, dpkg and/or aptitude.)
 
 The tool supports the following types of package manager:
 
