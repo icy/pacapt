@@ -11,6 +11,7 @@ _TOPT=""    # options for operations
 _PKG=""     # packages and extra parameters for apt-get
 _VERBOSE="" # verbose mode
 _FORCE=""   # force yes
+_OSTYPE=""  # type of package manager (Arch pacman, Debian apt, ...)
 
 _error() {
   echo >&2 ":: $*"
@@ -62,11 +63,42 @@ This program is written by Anh K. Huynh. The source can be found at
 EOF
 }
 
-_exec() {
+_exec_dpkg() {
+  [ "$_OSTYPE" = "DPKG" ] || return 0
   _error "Going to execute: $* $_VERBOSE $_FORCE"
   eval "$* $_VERBOSE $_FORCE"
 }
 
+_exec_yum() {
+  [ "$_OSTYPE" = "RPM" ] || return 0
+  _error "Going to execute: $* $_VERBOSE $_FORCE"
+  eval "$* $_VERBOSE $_FORCE"
+}
+
+# Detect package type from /etc/issue
+_OSTYPE_detect() {
+  grep -qi "Arch Linux"       /etc/issue && _OSTYPE="PACMAN"
+  grep -qi "Debian GNU/Linux" /etc/issue && _OSTYPE="DPKG"
+  grep -qi "CentOS"           /etc/issue && _OSTYPE="YUM"
+}
+
+# Detect type of package manager. If the system is Arch type,
+# pass all arguments to /usr/bin/pacman and return.
+_OSTYPE_detect
+case "$_OSTYPE" in
+  "PACMAN")
+    /usr/bin/pacman $*
+    exit $?
+    ;;
+  "DPKG")
+    ;;
+  *)
+    _error ":: System unsupported. Exit (1)."
+    exit 1
+    ;;
+esac
+
+# Get options from command lines. FIXME: Support long options
 while getopts "RQShfvluyisqwc" opt; do
   case "$opt" in
     Q|S|R)
@@ -108,36 +140,63 @@ while getopts "RQShfvluyisqwc" opt; do
     h) _help; exit 0 ;;
   esac
 done
-shift $((OPTIND - 1))
 
+# Remained options/packages/queries
+shift $((OPTIND - 1))
 _PKG="$*"
 
+# Return if no option was specified
 if [ -z "$_POPT" ]; then
   _error "No operation specified (use -h for help)"
   exit 1
 fi
 
+# Invoke the native package manager
 case "$_POPT$_SOPT" in
-   "Qi") _exec "dpkg-query -s $_PKG" ;;
-   "Ql") _exec "dpkg-query -L $_PKG" ;;
-    "Q") _exec "dpkg -l | grep -E ^[hi]i" ;;
-   "Rs") _exec "apt-get autoremove $_PKG" ;;
-    "R") _exec "apt-get remove $_PKG" ;;
-  "Suy") _VERBOSE="" _exec "apt-get update" ;
-         _VERBOSE="" _exec "apt-get upgrade" ;;
-   "Su") _VERBOSE="" _exec "apt-get upgrade" ;;
-   "Sy") _VERBOSE="" _exec "apt-get update" ;
-         [ ! -z "$_PKG" ] \
-           && _VERBOSE="" _exec "apt-get install $_TOPT $_PKG" ;;
-   "Ss") _exec "apt-cache search $_PKG" ;;
-   "Sc") _exec "apt-get autoclean" ;;
-  "Scc") _exec "apt-get clean" ;;
- "Sccc") _exec "rm -fv /var/cache/apt/*.bin /var/cache/apt/archives/*.* /var/lib/apt/lists/*.*; apt-get autoclean" ;;
-    "S") if [ -z "$_PKG" ]; then
-           _error "You must specify a package"
-           exit 1
-         else
-           _exec "apt-get install $_TOPT $_PKG"
-         fi
-         ;;
+   "Qi")
+        _exec_dpkg "dpkg-query -s $_PKG"
+      ;;
+   "Ql")
+        _exec_dpkg "dpkg-query -L $_PKG"
+      ;;
+    "Q")
+        _exec_dpkg "dpkg -l $_PKG | grep -E ^[hi]i"
+      ;;
+   "Rs")
+        _exec_dpkg "apt-get autoremove $_PKG"
+      ;;
+    "R")
+        _exec_dpkg "apt-get remove $_PKG"
+      ;;
+  "Suy")
+        _VERBOSE="" _exec_dpkg "apt-get update"
+        _VERBOSE="" _exec_dpkg "apt-get upgrade"
+      ;;
+   "Su")
+        _VERBOSE="" _exec_dpkg "apt-get upgrade"
+      ;;
+   "Sy")
+        _VERBOSE="" _exec_dpkg "apt-get update"
+        [ ! -z "$_PKG" ] && _VERBOSE="" _exec_dpkg "apt-get install $_TOPT $_PKG"
+      ;;
+   "Ss")
+        _exec_dpkg "apt-cache search $_PKG"
+      ;;
+   "Sc")
+        _exec_dpkg "apt-get autoclean"
+      ;;
+  "Scc")
+        _exec_dpkg "apt-get clean"
+      ;;
+ "Sccc")
+        _exec_dpkg "rm -fv /var/cache/apt/*.bin /var/cache/apt/archives/*.* /var/lib/apt/lists/*.*; apt-get autoclean"
+      ;;
+    "S")
+        if [ -z "$_PKG" ]; then
+          _error "You must specify a package"
+          exit 1
+        else
+          _exec_dpkg "apt-get install $_TOPT $_PKG"
+        fi
+      ;;
 esac
