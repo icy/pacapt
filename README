@@ -1,41 +1,12 @@
-A pacman-liked package manager for Debian users, or
-a pacman-liked wrapper for apt-get, dpkg and dpkg-query.
+usage:  pacman <operation> [...]
+operations:
+    pacman {-h --help}
+    pacman {-V --version}
+    pacman {-D --database} <options> <package(s)>
+    pacman {-Q --query}    [options] [package(s)]
+    pacman {-R --remove}   [options] <package(s)>
+    pacman {-S --sync}     [options] [package(s)]
+    pacman {-T --deptest}  [options] [package(s)]
+    pacman {-U --upgrade}  [options] <file(s)>
 
-Syntax
-  $0 <operation> <option(s)> <packages>
-
-Operations
-
-  Query
-    -Q              list all installed packages
-    -Ql <package>   list package's files
-    -Qi <package>   print package status
-
-  Synchronize
-    -S <package>    install package(s)
-    -Su             upgrade the system
-    -Sy             update package database
-    -Ss <package>   search for packages
-    -Sy <package>   update package database, then install <package>
-
-  Remove / Clean up
-    -R <package>    remove some packages
-    -Sc             delete old downloaded packages
-    -Scc            delete all downloaded packages
-    -Sccc           clean apt-get's variant files. See more details at
-                      http://dragula.org/blogs/646
-Options
-    -f              force yes
-    -v              be verbose
-    -w              download packages but donot install them
-
-Notes
-
-  To install a package from backports repository, you can try
-      pacman -S foobar -t lenny-backports
-
-  Similiarily, any further option isn't recognized by getopts (1) can be
-  passed to Debian's tool.
-
-This program is written by Anh K. Huynh. The source can be found at
-                http://github.com/icy/pacapt/.
+use 'pacman {-h --help}' with an operation for available options

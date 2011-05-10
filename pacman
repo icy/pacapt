@@ -19,8 +19,23 @@ _error() {
 
 _help() {
   cat <<\EOF
-A pacman-liked package manager for Debian users, or
-a pacman-liked wrapper for apt-get, dpkg and dpkg-query.
+An Arch's pacman-liked package manager for all Linux distributions.
+Instead of remembering various options/tools on different OSs, the tool
+provide common way to manipulate packages. Not all options of the native
+package manager are ported; the tool only provides very basic interface to
+search, install, remove packages and/or update the system.
+
+Arch's pacman is chosen, as pacman has a quite smart when it devices all
+packages-related operatios into three major groups: Synchronize, Query
+and Removing/Clean up. It has a clean man page, and it is the only tool
+needed to manipulate official packages. (Debian, for example, requires
+you to use apt-get, dpkg and/or aptitude.)
+
+The tool supports the following types of package manager:
+
+  pacman        by Arch Linux, ArchBang
+  dpkg/apt-get  by Debian, Ubuntu
+  yum/rpm       by Redhat, CentOS, Fedora Core
 
 Syntax
   $0 <operation> <option(s)> <packages>
@@ -52,11 +67,15 @@ Options
 
 Notes
 
-  To install a package from backports repository, you can try
+  To install a package from backports repository on Debian system:
       pacman -S foobar -t lenny-backports
 
   Similiarily, any further option isn't recognized by getopts (1) can be
-  passed to Debian's tool.
+  passed to system tool.
+
+  When being executed on Arch-liked system, the tool simplify invokes
+  the system tool '/usr/bin/pacman'. So you would never install this tool
+  as '/usr/bin/pacman', otherwise you may break the your system!
 
 This program is written by Anh K. Huynh. The source can be found at
                 http://github.com/icy/pacapt/.
@@ -70,7 +89,7 @@ _exec_dpkg() {
 }
 
 _exec_yum() {
-  [ "$_OSTYPE" = "RPM" ] || return 0
+  [ "$_OSTYPE" = "YUM" ] || return 0
   _error "Going to execute: $* $_VERBOSE $_FORCE"
   eval "$* $_VERBOSE $_FORCE"
 }
@@ -90,10 +109,10 @@ case "$_OSTYPE" in
     /usr/bin/pacman $*
     exit $?
     ;;
-  "DPKG")
+  "YUM")
     ;;
   *)
-    _error ":: System unsupported. Exit (1)."
+    _error "System unsupported. Exit (1)."
     exit 1
     ;;
 esac
@@ -134,8 +153,26 @@ while getopts "RQShfvluyisqwc" opt; do
         _SOPT="$opt"
       fi
       ;;
-    w) _TOPT="-d" ;;
-    f) _FORCE="-f --force-yes" ;;
+    w)
+        case "$_OSTYPE" in
+          "DPKG") _TOPT="-d" ;;
+          "YUM")
+              _TOPT="--downloadonly"
+              rpm -aq |grep -q downloadonly
+              if [ $? -ge 1 ]; then
+                _error "Warning: The option '-w' requires you to install the package 'yum-downloadonly'"
+                _error "Warning: Please try 'yum install -y yum-downloadonly' or '$0 -S yum-downloadnly' first."
+              fi
+            ;;
+        esac
+      ;;
+    f)
+        case "$_OSTYPE" in
+          "DPKG") _FORCE="-f --force-yes" ;;
+          "YUM")  _FORCE="-y" ;;
+          *)      _FORCE="-y" ;;
+        esac
+      ;;
     v) _VERBOSE="-v" ;;
     h) _help; exit 0 ;;
   esac
@@ -155,41 +192,56 @@ fi
 case "$_POPT$_SOPT" in
    "Qi")
         _exec_dpkg "dpkg-query -s $_PKG"
+        _exec_yum  "yum info $_PKG"
       ;;
    "Ql")
         _exec_dpkg "dpkg-query -L $_PKG"
+        _exec_yum  "rpm -ql $_PKG"
       ;;
     "Q")
         _exec_dpkg "dpkg -l $_PKG | grep -E ^[hi]i"
+        _exec_yum  "yum list installed $_PKG"
       ;;
    "Rs")
         _exec_dpkg "apt-get autoremove $_PKG"
+        _exec_yum  "yum erase $_PKG"
       ;;
     "R")
         _exec_dpkg "apt-get remove $_PKG"
+        _exec_yum  "yum erase $_PKG"
       ;;
   "Suy")
         _VERBOSE="" _exec_dpkg "apt-get update"
         _VERBOSE="" _exec_dpkg "apt-get upgrade"
+        _exec_yum "yum update $_PKG"
       ;;
    "Su")
         _VERBOSE="" _exec_dpkg "apt-get upgrade"
+        _exec_yum "yum upgrade $_PKG"
       ;;
    "Sy")
         _VERBOSE="" _exec_dpkg "apt-get update"
         [ ! -z "$_PKG" ] && _VERBOSE="" _exec_dpkg "apt-get install $_TOPT $_PKG"
+        # FIXME: What is the alternative of $_OPT in Yum?
+        # FIXME: makecache is quite slow (at the first run)
+        _exec_yum "yum makecache"
+        [ ! -z "$_PKG" ] && _exec_yum "yum install $_TOPT $_PKG"
       ;;
    "Ss")
         _exec_dpkg "apt-cache search $_PKG"
+        _exec_ym   "yum search $_PKG"
       ;;
    "Sc")
         _exec_dpkg "apt-get autoclean"
+        _exec_yum  "yum clean expire-cache"
       ;;
   "Scc")
         _exec_dpkg "apt-get clean"
+        _exec_yum  "yum clean packages"
       ;;
  "Sccc")
         _exec_dpkg "rm -fv /var/cache/apt/*.bin /var/cache/apt/archives/*.* /var/lib/apt/lists/*.*; apt-get autoclean"
+        _exec_yum  "yum clean all"
       ;;
     "S")
         if [ -z "$_PKG" ]; then
@@ -197,6 +249,7 @@ case "$_POPT$_SOPT" in
           exit 1
         else
           _exec_dpkg "apt-get install $_TOPT $_PKG"
+          _exec_yum  "yum install $_TOPT $_PKG"
         fi
       ;;
 esac
