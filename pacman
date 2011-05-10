@@ -39,16 +39,19 @@ The tool supports the following types of package manager:
   yum/rpm       by Redhat, CentOS, Fedora Core
 
 Syntax
+
   $0 <operation> <option(s)> <packages>
 
 Operations
 
   Query
+
     -Q              list all installed packages
     -Ql <package>   list package's files
     -Qi <package>   print package status
 
   Synchronize
+
     -S <package>    install package(s)
     -Su             upgrade the system
     -Sy             update package database
@@ -56,12 +59,14 @@ Operations
     -Sy <package>   update package database, then install <package>
 
   Remove / Clean up
+
     -R <package>    remove some packages
     -Sc             delete old downloaded packages
     -Scc            delete all downloaded packages
     -Sccc           clean variant files.
                     (debian) See details at http://dragula.org/blogs/646
 Options
+
     -f              force yes
     -v              be verbose
     -w              download packages but donot install them
@@ -69,7 +74,7 @@ Options
 Notes
 
   To install a package from backports repository on Debian system:
-      pacman -S foobar -t lenny-backports
+              pacman -S foobar -t lenny-backports
 
   Similiarily, any further option which isn't recognized by getopts (1)
   can be passed to system tool.
@@ -159,7 +164,7 @@ while getopts "RQShfvluyisqwc" opt; do
           "DPKG") _TOPT="-d" ;;
           "YUM")
               _TOPT="--downloadonly"
-              rpm -aq |grep -q downloadonly
+              rpm -aq | grep -q downloadonly
               if [ $? -ge 1 ]; then
                 _error "Warning: The option '-w' requires you to install the package 'yum-downloadonly'"
                 _error "Warning: Please try 'yum install -y yum-downloadonly' or '$0 -S yum-downloadnly' first."
