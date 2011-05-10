@@ -1,12 +1,61 @@
-usage:  pacman <operation> [...]
-operations:
-    pacman {-h --help}
-    pacman {-V --version}
-    pacman {-D --database} <options> <package(s)>
-    pacman {-Q --query}    [options] [package(s)]
-    pacman {-R --remove}   [options] <package(s)>
-    pacman {-S --sync}     [options] [package(s)]
-    pacman {-T --deptest}  [options] [package(s)]
-    pacman {-U --upgrade}  [options] <file(s)>
+k(ssh) centos64 /root/pacman -h\An Arch's pacman-liked package manager for all Linux distributions.
+Instead of remembering various options/tools on different OSs, the tool
+provide common way to manipulate packages. Not all options of the native
+package manager are ported; the tool only provides very basic interface to
+search, install, remove packages and/or update the system.
 
-use 'pacman {-h --help}' with an operation for available options
+Arch's pacman is chosen, as pacman has a quite smart when it devices all
+packages-related operatios into three major groups: Synchronize, Query
+and Removing/Clean up. It has a clean man page, and it is the only tool
+needed to manipulate official packages. (Debian, for example, requires
+you to use apt-get, dpkg and/or aptitude.)
+
+The tool supports the following types of package manager:
+
+  pacman        by Arch Linux, ArchBang
+  dpkg/apt-get  by Debian, Ubuntu
+  yum/rpm       by Redhat, CentOS, Fedora Core
+
+Syntax
+  $0 <operation> <option(s)> <packages>
+
+Operations
+
+  Query
+    -Q              list all installed packages
+    -Ql <package>   list package's files
+    -Qi <package>   print package status
+
+  Synchronize
+    -S <package>    install package(s)
+    -Su             upgrade the system
+    -Sy             update package database
+    -Ss <package>   search for packages
+    -Sy <package>   update package database, then install <package>
+
+  Remove / Clean up
+    -R <package>    remove some packages
+    -Sc             delete old downloaded packages
+    -Scc            delete all downloaded packages
+    -Sccc           clean apt-get's variant files. See more details at
+                      http://dragula.org/blogs/646
+Options
+    -f              force yes
+    -v              be verbose
+    -w              download packages but donot install them
+
+Notes
+
+  To install a package from backports repository on Debian system:
+      pacman -S foobar -t lenny-backports
+
+  Similiarily, any further option isn't recognized by getopts (1) can be
+  passed to system tool.
+
+  When being executed on Arch-liked system, the tool simplify invokes
+  the system tool '/usr/bin/pacman'. So you would never install this tool
+  as '/usr/bin/pacman', otherwise you may break the your system!
+
+This program is written by Anh K. Huynh. The source can be found at
+                http://github.com/icy/pacapt/.
+k(logged out) centos64 /root/pacman -h\
