@@ -21,8 +21,8 @@ _help() {
   cat <<\EOF
 An Arch's pacman-liked package manager for all Linux distributions.
 
-Instead of remembering various options/tools on different OSs, the tool
-provides common way to manipulate packages. Not all options of the native
+Instead of remembering various options/tools on different OSs, you only
+need a common way to manipulate packages. Not all options of the native
 package manager are ported; the tool only provides very basic interface to
 search, install, remove packages and/or update the system.
 
