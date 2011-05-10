@@ -1,4 +1,4 @@
-k(ssh) centos64 /root/pacman -h\An Arch's pacman-liked package manager for all Linux distributions.
+An Arch's pacman-liked package manager for all Linux distributions.
 Instead of remembering various options/tools on different OSs, the tool
 provide common way to manipulate packages. Not all options of the native
 package manager are ported; the tool only provides very basic interface to
@@ -58,4 +58,3 @@ Notes
 
 This program is written by Anh K. Huynh. The source can be found at
                 http://github.com/icy/pacapt/.
-k(logged out) centos64 /root/pacman -h\
