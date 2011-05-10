@@ -11,6 +11,7 @@ _TOPT=""    # options for operations
 _PKG=""     # packages and extra parameters for apt-get
 _VERBOSE="" # verbose mode
 _FORCE=""   # force yes
+_OSTYPE=""  # type of package manager (Arch pacman, Debian apt, ...)
 
 _error() {
   echo >&2 ":: $*"
@@ -18,8 +19,24 @@ _error() {
 
 _help() {
   cat <<\EOF
-A pacman-liked package manager for Debian users, or
-a pacman-liked wrapper for apt-get, dpkg and dpkg-query.
+An Arch's pacman-liked package manager for all Linux distributions.
+
+Instead of remembering various options/tools on different OSs, the tool
+provides common way to manipulate packages. Not all options of the native
+package manager are ported; the tool only provides very basic interface to
+search, install, remove packages and/or update the system.
+
+Arch's pacman is chosen, as pacman has quite smart when it devices all
+packages-related operations into three major groups: Synchronize, Query
+and Removing/Clean up. It has a clean man page, and it is the only tool
+needed to manipulate official packages on system. (Debian, for example,
+requires you to use apt-get, dpkg and/or aptitude.)
+
+The tool supports the following types of package manager:
+
+  pacman        by Arch Linux, ArchBang
+  dpkg/apt-get  by Debian, Ubuntu
+  yum/rpm       by Redhat, CentOS, Fedora Core
 
 Syntax
   $0 <operation> <option(s)> <packages>
@@ -42,8 +59,8 @@ Operations
     -R <package>    remove some packages
     -Sc             delete old downloaded packages
     -Scc            delete all downloaded packages
-    -Sccc           clean apt-get's variant files. See more details at
-                      http://dragula.org/blogs/646
+    -Sccc           clean variant files.
+                    (debian) See more details at http://dragula.org/blogs/646
 Options
     -f              force yes
     -v              be verbose
@@ -51,22 +68,57 @@ Options
 
 Notes
 
-  To install a package from backports repository, you can try
+  To install a package from backports repository on Debian system:
       pacman -S foobar -t lenny-backports
 
   Similiarily, any further option isn't recognized by getopts (1) can be
-  passed to Debian's tool.
+  passed to system tool.
+
+  When being executed on Arch-liked system, the tool simplify invokes
+  the system tool '/usr/bin/pacman'. So you would never install this tool
+  as '/usr/bin/pacman', otherwise you may break the your system!
 
 This program is written by Anh K. Huynh. The source can be found at
                 http://github.com/icy/pacapt/.
 EOF
 }
 
-_exec() {
+_exec_dpkg() {
+  [ "$_OSTYPE" = "DPKG" ] || return 0
   _error "Going to execute: $* $_VERBOSE $_FORCE"
   eval "$* $_VERBOSE $_FORCE"
 }
 
+_exec_yum() {
+  [ "$_OSTYPE" = "YUM" ] || return 0
+  _error "Going to execute: $* $_VERBOSE $_FORCE"
+  eval "$* $_VERBOSE $_FORCE"
+}
+
+# Detect package type from /etc/issue
+_OSTYPE_detect() {
+  grep -qi "Arch Linux"       /etc/issue && _OSTYPE="PACMAN"
+  grep -qi "Debian GNU/Linux" /etc/issue && _OSTYPE="DPKG"
+  grep -qi "CentOS"           /etc/issue && _OSTYPE="YUM"
+}
+
+# Detect type of package manager. If the system is Arch type,
+# pass all arguments to /usr/bin/pacman and return.
+_OSTYPE_detect
+case "$_OSTYPE" in
+  "PACMAN")
+    /usr/bin/pacman $*
+    exit $?
+    ;;
+  "YUM")
+    ;;
+  *)
+    _error "System unsupported. Exit (1)."
+    exit 1
+    ;;
+esac
+
+# Get options from command lines. FIXME: Support long options
 while getopts "RQShfvluyisqwc" opt; do
   case "$opt" in
     Q|S|R)
@@ -102,42 +154,103 @@ while getopts "RQShfvluyisqwc" opt; do
         _SOPT="$opt"
       fi
       ;;
-    w) _TOPT="-d" ;;
-    f) _FORCE="-f --force-yes" ;;
+    w)
+        case "$_OSTYPE" in
+          "DPKG") _TOPT="-d" ;;
+          "YUM")
+              _TOPT="--downloadonly"
+              rpm -aq |grep -q downloadonly
+              if [ $? -ge 1 ]; then
+                _error "Warning: The option '-w' requires you to install the package 'yum-downloadonly'"
+                _error "Warning: Please try 'yum install -y yum-downloadonly' or '$0 -S yum-downloadnly' first."
+              fi
+            ;;
+        esac
+      ;;
+    f)
+        case "$_OSTYPE" in
+          "DPKG") _FORCE="-f --force-yes" ;;
+          "YUM")  _FORCE="-y" ;;
+          *)      _FORCE="-y" ;;
+        esac
+      ;;
     v) _VERBOSE="-v" ;;
     h) _help; exit 0 ;;
   esac
 done
-shift $((OPTIND - 1))
 
+# Remained options/packages/queries
+shift $((OPTIND - 1))
 _PKG="$*"
 
+# Return if no option was specified
 if [ -z "$_POPT" ]; then
   _error "No operation specified (use -h for help)"
   exit 1
 fi
 
+# Invoke the native package manager
 case "$_POPT$_SOPT" in
-   "Qi") _exec "dpkg-query -s $_PKG" ;;
-   "Ql") _exec "dpkg-query -L $_PKG" ;;
-    "Q") _exec "dpkg -l $_PKG | grep -E ^[hi]i" ;;
-   "Rs") _exec "apt-get autoremove $_PKG" ;;
-    "R") _exec "apt-get remove $_PKG" ;;
-  "Suy") _VERBOSE="" _exec "apt-get update" ;
-         _VERBOSE="" _exec "apt-get upgrade" ;;
-   "Su") _VERBOSE="" _exec "apt-get upgrade" ;;
-   "Sy") _VERBOSE="" _exec "apt-get update" ;
-         [ ! -z "$_PKG" ] \
-           && _VERBOSE="" _exec "apt-get install $_TOPT $_PKG" ;;
-   "Ss") _exec "apt-cache search $_PKG" ;;
-   "Sc") _exec "apt-get autoclean" ;;
-  "Scc") _exec "apt-get clean" ;;
- "Sccc") _exec "rm -fv /var/cache/apt/*.bin /var/cache/apt/archives/*.* /var/lib/apt/lists/*.*; apt-get autoclean" ;;
-    "S") if [ -z "$_PKG" ]; then
-           _error "You must specify a package"
-           exit 1
-         else
-           _exec "apt-get install $_TOPT $_PKG"
-         fi
-         ;;
+   "Qi")
+        _exec_dpkg "dpkg-query -s $_PKG"
+        _exec_yum  "yum info $_PKG"
+      ;;
+   "Ql")
+        _exec_dpkg "dpkg-query -L $_PKG"
+        _exec_yum  "rpm -ql $_PKG"
+      ;;
+    "Q")
+        _exec_dpkg "dpkg -l $_PKG | grep -E ^[hi]i"
+        _exec_yum  "yum list installed $_PKG"
+      ;;
+   "Rs")
+        _exec_dpkg "apt-get autoremove $_PKG"
+        _exec_yum  "yum erase $_PKG"
+      ;;
+    "R")
+        _exec_dpkg "apt-get remove $_PKG"
+        _exec_yum  "yum erase $_PKG"
+      ;;
+  "Suy")
+        _VERBOSE="" _exec_dpkg "apt-get update"
+        _VERBOSE="" _exec_dpkg "apt-get upgrade"
+        _exec_yum "yum update $_PKG"
+      ;;
+   "Su")
+        _VERBOSE="" _exec_dpkg "apt-get upgrade"
+        _exec_yum "yum upgrade $_PKG"
+      ;;
+   "Sy")
+        _VERBOSE="" _exec_dpkg "apt-get update"
+        [ ! -z "$_PKG" ] && _VERBOSE="" _exec_dpkg "apt-get install $_TOPT $_PKG"
+        # FIXME: What is the alternative of $_OPT in Yum?
+        # FIXME: makecache is quite slow (at the first run)
+        _exec_yum "yum makecache"
+        [ ! -z "$_PKG" ] && _exec_yum "yum install $_TOPT $_PKG"
+      ;;
+   "Ss")
+        _exec_dpkg "apt-cache search $_PKG"
+        _exec_ym   "yum search $_PKG"
+      ;;
+   "Sc")
+        _exec_dpkg "apt-get autoclean"
+        _exec_yum  "yum clean expire-cache"
+      ;;
+  "Scc")
+        _exec_dpkg "apt-get clean"
+        _exec_yum  "yum clean packages"
+      ;;
+ "Sccc")
+        _exec_dpkg "rm -fv /var/cache/apt/*.bin /var/cache/apt/archives/*.* /var/lib/apt/lists/*.*; apt-get autoclean"
+        _exec_yum  "yum clean all"
+      ;;
+    "S")
+        if [ -z "$_PKG" ]; then
+          _error "You must specify a package"
+          exit 1
+        else
+          _exec_dpkg "apt-get install $_TOPT $_PKG"
+          _exec_yum  "yum install $_TOPT $_PKG"
+        fi
+      ;;
 esac
