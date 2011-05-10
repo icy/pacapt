@@ -1,4 +1,5 @@
 An Arch's pacman-liked package manager for all Linux distributions.
+
 Instead of remembering various options/tools on different OSs, the tool
 provide common way to manipulate packages. Not all options of the native
 package manager are ported; the tool only provides very basic interface to
@@ -37,8 +38,8 @@ Operations
     -R <package>    remove some packages
     -Sc             delete old downloaded packages
     -Scc            delete all downloaded packages
-    -Sccc           clean apt-get's variant files. See more details at
-                      http://dragula.org/blogs/646
+    -Sccc           clean variant files.
+                    (debian) See more details at http://dragula.org/blogs/646
 Options
     -f              force yes
     -v              be verbose
