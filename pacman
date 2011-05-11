@@ -237,7 +237,7 @@ case "$_POPT$_SOPT" in
       ;;
    "Ss")
         _exec_dpkg "apt-cache search $_PKG"
-        _exec_ym   "yum search $_PKG"
+        _exec_yum  "yum search $_PKG"
       ;;
    "Sc")
         _exec_dpkg "apt-get autoclean"
