@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Purpose: Simple wrapper to use Debian package manager as pacman
+# Purpose: A wrapper for all Linux package managers
 # Author : Anh K. Huynh
 # License: Public domain
 # Source : http://github.com/icy/pacapt/
@@ -20,6 +20,7 @@ _error() {
 _help() {
   cat <<\EOF
 An Arch's pacman-liked package manager for all Linux distributions.
+Actually this Bash script provides a wrapper for system's package manager.
 
 Instead of remembering various options/tools on different OSs, you only
 need a common way to manipulate packages. Not all options of the native
