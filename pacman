@@ -107,6 +107,12 @@ _OSTYPE_detect() {
   grep -qi "Debian GNU/Linux" /etc/issue && _OSTYPE="DPKG"
   grep -qi "CentOS"           /etc/issue && _OSTYPE="YUM"
   grep -qi "Fedora"           /etc/issue && _OSTYPE="YUM"
+  if [ -z "$_OSTYPE" ]; then
+    _error "Cannot detect OS type from /etc/issue. Running fall back method."
+    [ -x "/usr/bin/apt-get" ] && _OSTYPE="DPKG"
+    [ -x "/usr/bin/pacman" ]  && _OSTYPE="PACMAN"
+    [ -x "/usr/bin/yum" ]     && _OSTYPE="YUM"
+  fi
 }
 
 # Detect type of package manager. If the system is Arch type,
