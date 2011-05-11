@@ -106,6 +106,7 @@ _OSTYPE_detect() {
   grep -qi "Arch Linux"       /etc/issue && _OSTYPE="PACMAN"
   grep -qi "Debian GNU/Linux" /etc/issue && _OSTYPE="DPKG"
   grep -qi "CentOS"           /etc/issue && _OSTYPE="YUM"
+  grep -qi "Fedora"           /etc/issue && _OSTYPE="YUM"
 }
 
 # Detect type of package manager. If the system is Arch type,
