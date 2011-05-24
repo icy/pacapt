@@ -52,7 +52,7 @@ OPERATIONS
     -Su             upgrade the system
     -Sy             update package database
     -Ss <package>   search for packages
-    -Sy             update package database
+    -Suy            update package database, then upgrage the system
 
   Remove / Clean up
 
