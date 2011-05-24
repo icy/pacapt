@@ -1,34 +1,50 @@
-An Arch's pacman-liked package manager for all Linux distributions.
-Actually this Bash script provides a wrapper for system's package manager.
+DESCRIPTION
 
-Instead of remembering various options/tools on different OSs, you only
-need a common way to manipulate packages. Not all options of the native
-package manager are ported; the tool only provides very basic interface to
-search, install, remove packages and/or update the system.
+  An Arch's pacman-liked package manager for all Linux distributions.
+  Actually this Bash script provides a wrapper for system's package manager.
 
-Arch's pacman is chosen, as pacman is quite smart when it devides all
-packages-related operations into three major groups: Synchronize, Query
-and Remove/Clean up. It has a clean man page, and it is the only tool
-needed to manipulate official packages on system. (Debian, for example,
-requires you to use apt-get, dpkg and/or aptitude.)
+  Instead of remembering various options/tools on different OSs, you only
+  need a common way to manipulate packages. Not all options of the native
+  package manager are ported; the tool only provides very basic interface to
+  search, install, remove packages and/or update the system.
 
-The tool supports the following types of package manager:
+  Arch's pacman is chosen, as pacman is quite smart when it devides all
+  packages-related operations into three major groups: Synchronize, Query
+  and Remove/Clean up. It has a clean man page, and it is the only tool
+  needed to manipulate official packages on system. (Debian, for example,
+  requires you to use apt-get, dpkg and/or aptitude.)
 
-  pacman        by Arch Linux, ArchBang
-  dpkg/apt-get  by Debian, Ubuntu
-  yum/rpm       by Redhat, CentOS, Fedora Core
+  The tool supports the following types of package manager:
 
-Syntax
+    pacman        by Arch Linux, ArchBang
+    dpkg/apt-get  by Debian, Ubuntu
+    yum/rpm       by Redhat, CentOS, Fedora Core
 
-  $0 <operation> <option(s)> <packages>
+INSTALL
 
-Operations
+  Download the script 'pacman' and install it into /usr/local/bin.
+  Example:
+    $ wget https://github.com/icy/pacapt/raw/master/pacman -O /usr/local/bin/pacman
+    $ chmod 755 /usr/local/bin/pacman
+
+  This script shouldn't be installed on Arch-liked system.
+
+SYNTAX
+
+  $ pacman <operation> <option(s)> <packages>
+
+OPERATIONS
 
   Query
 
     -Q              list all installed packages
-    -Ql <package>   list package's files
+    -Qc <package>   show package's changelog
     -Qi <package>   print package status
+    -Ql <package>   list package's files
+    -Qm             list installed packages that aren't available
+                      in any installation source
+    -Qo <file>      query package that provides <file>
+    -Qp <file>      query a package file (donot use package database)
 
   Synchronize
 
@@ -36,7 +52,7 @@ Operations
     -Su             upgrade the system
     -Sy             update package database
     -Ss <package>   search for packages
-    -Sy <package>   update package database, then install <package>
+    -Sy             update package database
 
   Remove / Clean up
 
@@ -44,17 +60,18 @@ Operations
     -Sc             delete old downloaded packages
     -Scc            delete all downloaded packages
     -Sccc           clean variant files.
-                    (debian) See details at http://dragula.org/blogs/646
-Options
+                    (debian) See more at http://dragula.org/blogs/646
+
+OPTIONS
 
     -f              force yes
     -v              be verbose
     -w              download packages but donot install them
 
-Notes
+NOTES
 
   To install a package from backports repository on Debian system:
-              pacman -S foobar -t lenny-backports
+              $ pacman -S foobar -t lenny-backports
 
   Similiarily, any further option which isn't recognized by getopts (1)
   can be passed to system tool.
@@ -63,5 +80,12 @@ Notes
   the system tool '/usr/bin/pacman'. So you would never install this tool
   as '/usr/bin/pacman', otherwise you may break your system!
 
-This program is written by Anh K. Huynh. The source can be found at
-                http://github.com/icy/pacapt/.
+THANKS
+
+  Special thanks to
+    Chau An, Nguyen   (tell me about 'Pacman Rosetta')
+    Karol Blazewicz   (comments about '-Sy')
+
+REFERENCES
+
+  1. Pacman Rosetta, https://wiki.archlinux.org/index.php?title=Pacman_Rosetta
