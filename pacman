@@ -89,14 +89,10 @@ This program is written by Anh K. Huynh. The source can be found at
 EOF
 }
 
-_exec_dpkg() {
-  [ "$_OSTYPE" = "DPKG" ] || return 0
-  _error "Going to execute: $* $_VERBOSE $_FORCE"
-  eval "$* $_VERBOSE $_FORCE"
-}
-
-_exec_yum() {
-  [ "$_OSTYPE" = "YUM" ] || return 0
+_exec_() {
+  local _type="$1"
+  shift
+  [ "$_OSTYPE" = "$_type" ] || return 0
   _error "Going to execute: $* $_VERBOSE $_FORCE"
   eval "$* $_VERBOSE $_FORCE"
 }
@@ -132,7 +128,7 @@ case "$_OSTYPE" in
 esac
 
 # Get options from command lines. FIXME: Support long options
-while getopts "RQShfvluyisqwc" opt; do
+while getopts "RQShfvluyispqwco" opt; do
   case "$opt" in
     Q|S|R)
       if [ "$_POPT" != "" -a "$_POPT" != "$opt" ]; then
@@ -141,7 +137,7 @@ while getopts "RQShfvluyisqwc" opt; do
       fi
       _POPT="$opt"
       ;;
-    s|l|i|q)
+    s|l|i|p|q|o)
         _SOPT="$opt"
       ;;
     u)
@@ -205,65 +201,80 @@ fi
 # Invoke the native package manager
 case "$_POPT$_SOPT" in
    "Qi")
-        _exec_dpkg "dpkg-query -s $_PKG"
-        _exec_yum  "yum info $_PKG"
+        _exec_ DPKG "dpkg-query -s $_PKG"
+        _exec_ YUM  "yum info $_PKG"
       ;;
    "Ql")
-        _exec_dpkg "dpkg-query -L $_PKG"
-        _exec_yum  "rpm -ql $_PKG"
+        _exec_ DPKG "dpkg-query -L $_PKG"
+        _exec_ YUM  "rpm -ql $_PKG"
+      ;;
+   "Qo")
+        _exec_ DPKG "dpkg-query -S $_PKG"
+        _exec_ YUM  "rpm -qf $_PKG"
+      ;;
+   "Qp")
+        # NOTE: input ($_PKG) should be a package
+        _exec_ DPKG "dpkg-deb -I $_PKG"
+        _exec_ YUM  "rpm -qp $_PKG"
+      ;;
+   "Qc")
+        _exec_ DPKG "echo 'Error: function not implemented on Debian'"
+        _exec_ YUM  "rpm -q --changelog $_PKG"
+      ;;
+   "Qu")
+        _exec_ DPKG "apt-get upgrade --trivial-only $_PKG"
+        _exec_ YUM  "yum list updates $_PKG"
       ;;
     "Q")
-        _exec_dpkg "dpkg -l $_PKG | grep -E ^[hi]i"
-        _exec_yum  "yum list installed $_PKG"
+        _exec_ DPKG "dpkg -l $_PKG | grep -E ^[hi]i"
+        _exec_ YUM  "yum list installed $_PKG"
       ;;
    "Rs")
-        _exec_dpkg "apt-get autoremove $_PKG"
-        _exec_yum  "yum erase $_PKG"
+        _exec_ DPKG "apt-get autoremove $_PKG"
+        _exec_ YUM  "yum erase $_PKG"
       ;;
     "R")
-        _exec_dpkg "apt-get remove $_PKG"
-        _exec_yum  "yum erase $_PKG"
+        _exec_ DPKG "apt-get remove $_PKG"
+        _exec_ YUM  "yum erase $_PKG"
       ;;
   "Suy")
-        _VERBOSE="" _exec_dpkg "apt-get update"
-        _VERBOSE="" _exec_dpkg "apt-get upgrade"
-        _exec_yum "yum update $_PKG"
+        _VERBOSE="" _exec_ DPKG "apt-get update"
+        _VERBOSE="" _exec_ DPKG "apt-get upgrade"
+        _exec_ YUM "yum update $_PKG"
       ;;
    "Su")
-        _VERBOSE="" _exec_dpkg "apt-get upgrade"
-        _exec_yum "yum upgrade $_PKG"
+        _VERBOSE="" _exec_ DPKG "apt-get upgrade"
+        _exec_ YUM "yum upgrade $_PKG"
       ;;
    "Sy")
-        _VERBOSE="" _exec_dpkg "apt-get update"
-        [ ! -z "$_PKG" ] && _VERBOSE="" _exec_dpkg "apt-get install $_TOPT $_PKG"
-        # FIXME: What is the alternative of $_OPT in Yum?
-        # FIXME: makecache is quite slow (at the first run)
-        _exec_yum "yum makecache"
-        [ ! -z "$_PKG" ] && _exec_yum "yum install $_TOPT $_PKG"
+        _VERBOSE="" _exec_ DPKG "apt-get update"
+        [ ! -z "$_PKG" ] && _VERBOSE="" _exec_ DPKG "apt-get install $_TOPT $_PKG"
+        _exec_ YUM "yum check-update"
+        [ ! -z "$_PKG" ] && _exec_ YUM "yum install $_TOPT $_PKG"
       ;;
    "Ss")
-        _exec_dpkg "apt-cache search $_PKG"
-        _exec_yum  "yum search $_PKG"
+        _exec_ DPKG "apt-cache search $_PKG"
+        _exec_ YUM  "yum search $_PKG"
       ;;
    "Sc")
-        _exec_dpkg "apt-get autoclean"
-        _exec_yum  "yum clean expire-cache"
+        _exec_ DPKG "apt-get autoclean"
+        _exec_ YUM  "yum clean expire-cache"
       ;;
   "Scc")
-        _exec_dpkg "apt-get clean"
-        _exec_yum  "yum clean packages"
+        _exec_ DPKG "apt-get clean"
+        _exec_ YUM  "yum clean packages"
       ;;
  "Sccc")
-        _exec_dpkg "rm -fv /var/cache/apt/*.bin /var/cache/apt/archives/*.* /var/lib/apt/lists/*.*; apt-get autoclean"
-        _exec_yum  "yum clean all"
+        _exec_ DPKG "rm -fv /var/cache/apt/*.bin /var/cache/apt/archives/*.* /var/lib/apt/lists/*.*; apt-get autoclean"
+        _exec_ YUM  "yum clean all"
       ;;
     "S")
         if [ -z "$_PKG" ]; then
           _error "You must specify a package"
           exit 1
         else
-          _exec_dpkg "apt-get install $_TOPT $_PKG"
-          _exec_yum  "yum install $_TOPT $_PKG"
+          _exec_ DPKG "apt-get install $_TOPT $_PKG"
+          _exec_ YUM  "yum install $_TOPT $_PKG"
         fi
       ;;
 esac
