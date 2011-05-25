@@ -21,7 +21,7 @@ _help() {
   cat <<\EOF
 DESCRIPTION
 
-  An Arch's pacman-liked package manager for all Linux distributions.
+  An Arch's pacman-like package manager for all Linux distributions.
   Actually this Bash script provides a wrapper for system's package manager.
 
   Instead of remembering various options/tools on different OSs, you only
@@ -48,7 +48,7 @@ INSTALL
     $ wget https://github.com/icy/pacapt/raw/master/pacman -O /usr/local/bin/pacman
     $ chmod 755 /usr/local/bin/pacman
 
-  This script shouldn't be installed on Arch-liked system.
+  This script shouldn't be installed on Arch-based system.
 
 SYNTAX
 
@@ -97,7 +97,7 @@ NOTES
   Similiarily, any further option which isn't recognized by getopts (1)
   can be passed to system tool.
 
-  When being executed on Arch-liked system, the tool simplify invokes
+  When being executed on Arch-based system, the tool simplify invokes
   the system tool '/usr/bin/pacman'. So you would never install this tool
   as '/usr/bin/pacman', otherwise you may break your system!
 
