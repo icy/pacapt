@@ -128,9 +128,8 @@ _OSTYPE_detect() {
   grep -qi "CentOS"           /etc/issue && _OSTYPE="YUM"
   grep -qi "Fedora"           /etc/issue && _OSTYPE="YUM"
   if [ -z "$_OSTYPE" ]; then
-    _error "Can't detect OS type from /etc/issue. Running fall back method."
+    _error "Can't detect OS type from /etc/issue. Running fallback method."
     [ -x "/usr/bin/apt-get" ] && _OSTYPE="DPKG"
-    [ -x "/usr/bin/pacman" ]  && _OSTYPE="PACMAN"
     [ -x "/usr/bin/yum" ]     && _OSTYPE="YUM"
   fi
 }
