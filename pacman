@@ -125,6 +125,7 @@ _exec_() {
 _OSTYPE_detect() {
   grep -qi "Arch Linux"       /etc/issue && _OSTYPE="PACMAN"
   grep -qi "Debian GNU/Linux" /etc/issue && _OSTYPE="DPKG"
+  grep -qi "Ubuntu"           /etc/issue && _OSTYPE="DPKG"
   grep -qi "CentOS"           /etc/issue && _OSTYPE="YUM"
   grep -qi "Fedora"           /etc/issue && _OSTYPE="YUM"
   if [ -z "$_OSTYPE" ]; then
