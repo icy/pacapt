@@ -125,6 +125,7 @@ _exec_() {
 _OSTYPE_detect() {
   grep -qi "Arch Linux"       /etc/issue && _OSTYPE="PACMAN"
   grep -qi "Debian GNU/Linux" /etc/issue && _OSTYPE="DPKG"
+  grep -qi "Ubuntu"           /etc/issue && _OSTYPE="DPKG"
   grep -qi "CentOS"           /etc/issue && _OSTYPE="YUM"
   grep -qi "Fedora"           /etc/issue && _OSTYPE="YUM"
   if [ -z "$_OSTYPE" ]; then
@@ -263,6 +264,10 @@ case "$_POPT$_SOPT" in
     "R")
         _exec_ DPKG "apt-get remove $_PKG"
         _exec_ YUM  "yum erase $_PKG"
+      ;;
+   "Si")
+        _exec_ DPKG "dpkg-query -s $_PKG"
+        _exec_ YUM  "yum info $_PKG"
       ;;
   "Suy")
         _VERBOSE="" _exec_ DPKG "apt-get upgrade"
