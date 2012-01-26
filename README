@@ -49,9 +49,9 @@ OPERATIONS
   Synchronize
 
     -S <package>    install package(s)
+    -Ss <package>   search for packages
     -Su             upgrade the system
     -Sy             update package database
-    -Ss <package>   search for packages
     -Suy            update package database, then upgrade the system
 
   Remove / Clean up

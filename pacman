@@ -70,9 +70,9 @@ OPERATIONS
   Synchronize
 
     -S <package>    install package(s)
+    -Ss <package>   search for packages
     -Su             upgrade the system
     -Sy             update package database
-    -Ss <package>   search for packages
     -Suy            update package database, then upgrade the system
 
   Remove / Clean up
@@ -216,6 +216,21 @@ done
 shift $((OPTIND - 1))
 _PKG="$*"
 
+# pacman man page (examples) says: "pacman -Syu gpm = Update package list,
+# upgrade all packages, and then install gpm if it wasn't already installed."
+# Instead, just disallow specific packages, as (ex-)yum users likely expect to
+# just update/upgrade one package (and its dependencies) and apt-get and pacman
+# have no way to do this.
+if [ -n "$_PKG" ]; then
+  case "$_POPT$_SOPT" in
+     "Su"|"Sy"|"Suy")
+        _error "The -Sy/u options refresh and/or upgrade all packages"
+        _error "To install packages as well, use separate commands to do so:"
+	_error "$0 -S$_SOPT"
+	_error "$0 -S $_PKG"
+	exit 1
+  esac
+fi
 # Return if no option was specified
 if [ -z "$_POPT" ]; then
   _error "No operation specified (use -h for help)"
@@ -270,17 +285,17 @@ case "$_POPT$_SOPT" in
         _exec_ YUM  "yum info $_PKG"
       ;;
   "Suy")
+        _VERBOSE="" _exec_ DPKG "apt-get update"
         _VERBOSE="" _exec_ DPKG "apt-get upgrade"
-        _VERBOSE="" _exec_ DPKG "apt-get upgrade"
-        _exec_ YUM "yum update $_PKG"
+        _exec_ YUM "yum update"
       ;;
    "Su")
         _VERBOSE="" _exec_ DPKG "apt-get upgrade"
-        _exec_ YUM "yum upgrade $_PKG"
+        _exec_ YUM "yum update"
       ;;
    "Sy")
-        _VERBOSE="" _exec_ DPKG "apt-get update $_PKG"
-        _exec_ YUM "yum check-update $_PKG"
+        _VERBOSE="" _exec_ DPKG "apt-get update"
+        _exec_ YUM "yum check-update"
       ;;
    "Ss")
         _exec_ DPKG "apt-cache search $_PKG"
