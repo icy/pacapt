@@ -145,7 +145,7 @@ case "$_OSTYPE" in
   "YUM"|"DPKG")
     ;;
   *)
-    _error "System unsupported. Exit (1)."
+    _error "No supported package manager (yum, apt, pacman) installed on system"
     exit 1
     ;;
 esac
