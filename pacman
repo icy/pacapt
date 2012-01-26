@@ -26,20 +26,20 @@ DESCRIPTION
 
   Instead of remembering various options/tools on different OSs, you only
   need a common way to manipulate packages. Not all options of the native
-  package manager are ported; the tool only provides very basic interface to
-  search, install, remove packages and/or update the system.
+  package manager are ported; the tool only provides a very basic interface
+  to search, install, remove packages, and/or update the system.
 
-  Arch's pacman is chosen, as pacman is quite smart when it devides all
+  Arch's pacman is chosen, as pacman is quite smart when it divides all
   packages-related operations into three major groups: Synchronize, Query
   and Remove/Clean up. It has a clean man page, and it is the only tool
   needed to manipulate official packages on system. (Debian, for example,
-  requires you to use apt-get, dpkg and/or aptitude.)
+  requires you to use apt-get, dpkg, and/or aptitude.)
 
   The tool supports the following types of package manager:
 
     pacman        by Arch Linux, ArchBang
     dpkg/apt-get  by Debian, Ubuntu
-    yum/rpm       by Redhat, CentOS, Fedora Core
+    yum/rpm       by Redhat, CentOS, Fedora
 
 INSTALL
 
@@ -48,7 +48,7 @@ INSTALL
     $ wget https://github.com/icy/pacapt/raw/master/pacman -O /usr/local/bin/pacman
     $ chmod 755 /usr/local/bin/pacman
 
-  This script shouldn't be installed on Arch-based system.
+  This script shouldn't be installed on an Arch-based system.
 
 SYNTAX
 
@@ -70,10 +70,10 @@ OPERATIONS
   Synchronize
 
     -S <package>    install package(s)
+    -Ss <package>   search for packages
     -Su             upgrade the system
     -Sy             update package database
-    -Ss <package>   search for packages
-    -Suy            update package database, then upgrage the system
+    -Suy            update package database, then upgrade the system
 
   Remove / Clean up
 
@@ -94,18 +94,18 @@ NOTES
   To install a package from backports repository on Debian system:
               $ pacman -S foobar -t lenny-backports
 
-  Similiarily, any further option which isn't recognized by getopts (1)
+  Similarly, any further option which isn't recognized by getopts (1)
   can be passed to system tool.
 
-  When being executed on Arch-based system, the tool simplify invokes
+  When being executed on Arch-based system, the tool simply invokes
   the system tool '/usr/bin/pacman'. So you would never install this tool
   as '/usr/bin/pacman', otherwise you may break your system!
 
 THANKS
 
   Special thanks to
-    Chau An, Nguyen   (tell me about 'Pacman Rosetta')
-    Karol Blazewicz   (comments about '-Sy')
+    Chau An, Nguyen   (told me about 'Pacman Rosetta')
+    Karol Blazewicz   (for comments about '-Sy')
 
 REFERENCES
 
@@ -140,13 +140,12 @@ _OSTYPE_detect() {
 _OSTYPE_detect
 case "$_OSTYPE" in
   "PACMAN")
-    /usr/bin/pacman $*
-    exit $?
+    exec /usr/bin/pacman "$@"
     ;;
   "YUM"|"DPKG")
     ;;
   *)
-    _error "System unsupported. Exit (1)."
+    _error "No supported package manager (yum, apt, pacman) installed on system"
     exit 1
     ;;
 esac
@@ -192,10 +191,11 @@ while getopts "URQShfvlumyispqwco" opt; do
           "DPKG") _TOPT="-d" ;;
           "YUM")
               _TOPT="--downloadonly"
-              rpm -aq | grep -q downloadonly
-              if [ $? -ge 1 ]; then
-                _error "Warning: The option '-w' requires you to install the package 'yum-downloadonly'"
-                _error "Warning: Please try 'yum install -y yum-downloadonly' or '$0 -S yum-downloadnly' first."
+              if ! rpm -q yum-downloadonly > /dev/null; then
+                _error "The '-w' option requires the package 'yum-downloadonly'"
+                _error "Install this with 'yum install -y yum-downloadonly' or"
+		_error "$0 -S -f yum-downloadonly"
+		exit 1
               fi
             ;;
         esac
@@ -216,6 +216,21 @@ done
 shift $((OPTIND - 1))
 _PKG="$*"
 
+# pacman man page (examples) says: "pacman -Syu gpm = Update package list,
+# upgrade all packages, and then install gpm if it wasn't already installed."
+# Instead, just disallow specific packages, as (ex-)yum users likely expect to
+# just update/upgrade one package (and its dependencies) and apt-get and pacman
+# have no way to do this.
+if [ -n "$_PKG" ]; then
+  case "$_POPT$_SOPT" in
+     "Su"|"Sy"|"Suy")
+        _error "The -Sy/u options refresh and/or upgrade all packages"
+        _error "To install packages as well, use separate commands to do so:"
+	_error "$0 -S$_SOPT"
+	_error "$0 -S $_PKG"
+	exit 1
+  esac
+fi
 # Return if no option was specified
 if [ -z "$_POPT" ]; then
   _error "No operation specified (use -h for help)"
@@ -270,17 +285,17 @@ case "$_POPT$_SOPT" in
         _exec_ YUM  "yum info $_PKG"
       ;;
   "Suy")
+        _VERBOSE="" _exec_ DPKG "apt-get update"
         _VERBOSE="" _exec_ DPKG "apt-get upgrade"
-        _VERBOSE="" _exec_ DPKG "apt-get upgrade"
-        _exec_ YUM "yum update $_PKG"
+        _exec_ YUM "yum update"
       ;;
    "Su")
         _VERBOSE="" _exec_ DPKG "apt-get upgrade"
-        _exec_ YUM "yum upgrade $_PKG"
+        _exec_ YUM "yum update"
       ;;
    "Sy")
-        _VERBOSE="" _exec_ DPKG "apt-get update $_PKG"
-        _exec_ YUM "yum check-update $_PKG"
+        _VERBOSE="" _exec_ DPKG "apt-get update"
+        _exec_ YUM "yum check-update"
       ;;
    "Ss")
         _exec_ DPKG "apt-cache search $_PKG"
