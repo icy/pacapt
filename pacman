@@ -264,6 +264,10 @@ case "$_POPT$_SOPT" in
         _exec_ DPKG "apt-get remove $_PKG"
         _exec_ YUM  "yum erase $_PKG"
       ;;
+   "Si")
+        _exec_ DPKG "dpkg-query -s $_PKG"
+        _exec_ YUM  "yum info $_PKG"
+      ;;
   "Suy")
         _VERBOSE="" _exec_ DPKG "apt-get upgrade"
         _VERBOSE="" _exec_ DPKG "apt-get upgrade"
