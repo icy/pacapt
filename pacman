@@ -191,10 +191,11 @@ while getopts "URQShfvlumyispqwco" opt; do
           "DPKG") _TOPT="-d" ;;
           "YUM")
               _TOPT="--downloadonly"
-              rpm -aq | grep -q downloadonly
-              if [ $? -ge 1 ]; then
-                _error "Warning: The option '-w' requires you to install the package 'yum-downloadonly'"
-                _error "Warning: Please try 'yum install -y yum-downloadonly' or '$0 -S yum-downloadonly' first."
+              if ! rpm -q yum-downloadonly > /dev/null; then
+                _error "The '-w' option requires the package 'yum-downloadonly'"
+                _error "Install this with 'yum install -y yum-downloadonly' or"
+		_error "$0 -S -f yum-downloadonly"
+		exit 1
               fi
             ;;
         esac
