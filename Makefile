@@ -30,5 +30,5 @@ $(BINDIR)/pacman: pacman
 clean:
 	@if git clean -nX | grep -q .; then \
 		git clean -nX; echo -n "Remove these files? [y/N] "; read ANS; \
-		case "$$ANS" in [yY]*) git clean -fX ;; esac ; \
+		case "$$ANS" in [yY]*) git clean -fX ;; *) exit 1;; esac ; \
 	fi
