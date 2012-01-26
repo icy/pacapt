@@ -5,20 +5,20 @@ DESCRIPTION
 
   Instead of remembering various options/tools on different OSs, you only
   need a common way to manipulate packages. Not all options of the native
-  package manager are ported; the tool only provides very basic interface to
-  search, install, remove packages and/or update the system.
+  package manager are ported; the tool only provides a very basic interface
+  to search, install, remove packages, and/or update the system.
 
-  Arch's pacman is chosen, as pacman is quite smart when it devides all
+  Arch's pacman is chosen, as pacman is quite smart when it divides all
   packages-related operations into three major groups: Synchronize, Query
   and Remove/Clean up. It has a clean man page, and it is the only tool
   needed to manipulate official packages on system. (Debian, for example,
-  requires you to use apt-get, dpkg and/or aptitude.)
+  requires you to use apt-get, dpkg, and/or aptitude.)
 
   The tool supports the following types of package manager:
 
     pacman        by Arch Linux, ArchBang
     dpkg/apt-get  by Debian, Ubuntu
-    yum/rpm       by Redhat, CentOS, Fedora Core
+    yum/rpm       by Redhat, CentOS, Fedora
 
 INSTALL
 
@@ -27,7 +27,7 @@ INSTALL
     $ wget https://github.com/icy/pacapt/raw/master/pacman -O /usr/local/bin/pacman
     $ chmod 755 /usr/local/bin/pacman
 
-  This script shouldn't be installed on Arch-based system.
+  This script shouldn't be installed on an Arch-based system.
 
 SYNTAX
 
@@ -52,7 +52,7 @@ OPERATIONS
     -Su             upgrade the system
     -Sy             update package database
     -Ss <package>   search for packages
-    -Suy            update package database, then upgrage the system
+    -Suy            update package database, then upgrade the system
 
   Remove / Clean up
 
@@ -73,18 +73,18 @@ NOTES
   To install a package from backports repository on Debian system:
               $ pacman -S foobar -t lenny-backports
 
-  Similiarily, any further option which isn't recognized by getopts (1)
+  Similarly, any further option which isn't recognized by getopts (1)
   can be passed to system tool.
 
-  When being executed on Arch-based system, the tool simplify invokes
+  When being executed on Arch-based system, the tool simply invokes
   the system tool '/usr/bin/pacman'. So you would never install this tool
   as '/usr/bin/pacman', otherwise you may break your system!
 
 THANKS
 
   Special thanks to
-    Chau An, Nguyen   (tell me about 'Pacman Rosetta')
-    Karol Blazewicz   (comments about '-Sy')
+    Chau An, Nguyen   (told me about 'Pacman Rosetta')
+    Karol Blazewicz   (for comments about '-Sy')
 
 REFERENCES
 
