@@ -1,3 +1,5 @@
+# Do not set this to /usr/bin as it might overwrite real Arch pacman executable
+# (or cause install target to fail if it were to overwrite pacman)
 BINDIR=/usr/local/bin
 
 default:
@@ -19,7 +21,11 @@ README: Makefile pacman
 install: $(BINDIR)/pacman
 
 $(BINDIR)/pacman: pacman
-	install $(<) $(@)
+	@if [ -e $(@) ] && ! file $(@) | grep -q 'shell script'; then \
+		echo "will not overwrite non-script $(@)" >&2; exit 1; \
+	else \
+		install $(<) $(@); \
+	fi
 
 clean:
 	@if git clean -nX | grep -q .; then \
