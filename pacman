@@ -140,8 +140,7 @@ _OSTYPE_detect() {
 _OSTYPE_detect
 case "$_OSTYPE" in
   "PACMAN")
-    /usr/bin/pacman $*
-    exit $?
+    exec /usr/bin/pacman "$@"
     ;;
   "YUM"|"DPKG")
     ;;
