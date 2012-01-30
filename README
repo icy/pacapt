@@ -1,6 +1,10 @@
+NAME
+
+  pacapt - An Arch's pacman-like package manager for some Linux distributions.
+
 DESCRIPTION
 
-  An Arch's pacman-like package manager for all Linux distributions.
+  An Arch's pacman-like package manager for some Linux distributions.
   Actually this Bash script provides a wrapper for system's package manager.
 
   Instead of remembering various options/tools on different OSs, you only
@@ -83,8 +87,13 @@ NOTES
 THANKS
 
   Special thanks to
-    Chau An, Nguyen   (told me about 'Pacman Rosetta')
+
+    Chau An, Nguyen   (told me about 'Pacman Rosetta' [1])
     Karol Blazewicz   (for comments about '-Sy')
+    James Pearson     (for userful comments and patches.
+                       See also http://github.com/xiongchiamiov/pacapt)
+    Alexander Dupuy   (for userful comments and patches.
+                       See also https://github.com/dupuy/pacapt)
 
 REFERENCES
 

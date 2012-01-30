@@ -2,8 +2,16 @@
 
 # Purpose: A wrapper for all Linux package managers
 # Author : Anh K. Huynh
-# License: Public domain
+# License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
+
+# Copyright (C) 2010 - 2012 Anh K. Huynh
+#
+# Usage of the works is permitted provided that this instrument is
+# retained with the works, so that any entity that uses the works is
+# notified of this instrument.
+#
+# DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
 _POPT=""    # primary   operation
 _SOPT=""    # secondary operation
@@ -19,9 +27,13 @@ _error() {
 
 _help() {
   cat <<\EOF
+NAME
+
+  pacapt - An Arch's pacman-like package manager for some Linux distributions.
+
 DESCRIPTION
 
-  An Arch's pacman-like package manager for all Linux distributions.
+  An Arch's pacman-like package manager for some Linux distributions.
   Actually this Bash script provides a wrapper for system's package manager.
 
   Instead of remembering various options/tools on different OSs, you only
@@ -104,8 +116,13 @@ NOTES
 THANKS
 
   Special thanks to
-    Chau An, Nguyen   (told me about 'Pacman Rosetta')
+
+    Chau An, Nguyen   (told me about 'Pacman Rosetta' [1])
     Karol Blazewicz   (for comments about '-Sy')
+    James Pearson     (for userful comments and patches.
+                       See also http://github.com/xiongchiamiov/pacapt)
+    Alexander Dupuy   (for userful comments and patches.
+                       See also https://github.com/dupuy/pacapt)
 
 REFERENCES
 
@@ -194,8 +211,8 @@ while getopts "URQShfvlumyispqwco" opt; do
               if ! rpm -q yum-downloadonly > /dev/null; then
                 _error "The '-w' option requires the package 'yum-downloadonly'"
                 _error "Install this with 'yum install -y yum-downloadonly' or"
-		_error "$0 -S -f yum-downloadonly"
-		exit 1
+                _error "$0 -S -f yum-downloadonly"
+                exit 1
               fi
             ;;
         esac
@@ -226,11 +243,12 @@ if [ -n "$_PKG" ]; then
      "Su"|"Sy"|"Suy")
         _error "The -Sy/u options refresh and/or upgrade all packages"
         _error "To install packages as well, use separate commands to do so:"
-	_error "$0 -S$_SOPT"
-	_error "$0 -S $_PKG"
-	exit 1
+        _error "$0 -S$_SOPT"
+        _error "$0 -S $_PKG"
+        exit 1
   esac
 fi
+
 # Return if no option was specified
 if [ -z "$_POPT" ]; then
   _error "No operation specified (use -h for help)"
