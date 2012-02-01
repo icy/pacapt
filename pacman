@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Purpose: A wrapper for all Linux package managers
+# Purpose: A wrapper for all Unix package managers
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
@@ -29,12 +29,12 @@ _help() {
   cat <<\EOF
 NAME
 
-  pacapt - An Arch's pacman-like package manager for some Linux distributions.
+  pacapt - An Arch's pacman-like package manager for some Unices.
 
 DESCRIPTION
 
-  An Arch's pacman-like package manager for some Linux distributions.
-  Actually this Bash script provides a wrapper for system's package manager.
+  An Arch's pacman-like package manager for some Unices.  Actually this Bash
+  script provides a wrapper for system's package manager.
 
   Instead of remembering various options/tools on different OSs, you only
   need a common way to manipulate packages. Not all options of the native
@@ -51,6 +51,7 @@ DESCRIPTION
 
     pacman        by Arch Linux, ArchBang
     dpkg/apt-get  by Debian, Ubuntu
+    homebrew      by Mac OS X
     yum/rpm       by Redhat, CentOS, Fedora
 
 INSTALL
@@ -140,15 +141,16 @@ _exec_() {
 
 # Detect package type from /etc/issue
 _OSTYPE_detect() {
-  grep -qi "Arch Linux"       /etc/issue && _OSTYPE="PACMAN"
-  grep -qi "Debian GNU/Linux" /etc/issue && _OSTYPE="DPKG"
-  grep -qi "Ubuntu"           /etc/issue && _OSTYPE="DPKG"
-  grep -qi "CentOS"           /etc/issue && _OSTYPE="YUM"
-  grep -qi "Fedora"           /etc/issue && _OSTYPE="YUM"
+  grep -qis "Arch Linux"       /etc/issue && _OSTYPE="PACMAN"
+  grep -qis "Debian GNU/Linux" /etc/issue && _OSTYPE="DPKG"
+  grep -qis "Ubuntu"           /etc/issue && _OSTYPE="DPKG"
+  grep -qis "CentOS"           /etc/issue && _OSTYPE="YUM"
+  grep -qis "Fedora"           /etc/issue && _OSTYPE="YUM"
   if [ -z "$_OSTYPE" ]; then
     _error "Can't detect OS type from /etc/issue. Running fallback method."
-    [ -x "/usr/bin/apt-get" ] && _OSTYPE="DPKG"
-    [ -x "/usr/bin/yum" ]     && _OSTYPE="YUM"
+    [ -x "/usr/bin/apt-get" ]    && _OSTYPE="DPKG"
+    [ -x "/usr/bin/yum" ]        && _OSTYPE="YUM"
+    [ -x "/usr/local/bin/brew" ] && _OSTYPE="HOMEBREW"
   fi
 }
 
@@ -159,7 +161,7 @@ case "$_OSTYPE" in
   "PACMAN")
     exec /usr/bin/pacman "$@"
     ;;
-  "YUM"|"DPKG")
+  "YUM"|"DPKG"|"HOMEBREW")
     ;;
   *)
     _error "No supported package manager (yum, apt, pacman) installed on system"
@@ -258,90 +260,111 @@ fi
 # Invoke the native package manager
 case "$_POPT$_SOPT" in
    "Qi")
-        _exec_ DPKG "dpkg-query -s $_PKG"
-        _exec_ YUM  "yum info $_PKG"
+        _exec_ DPKG     "dpkg-query -s $_PKG"
+        _exec_ HOMEBREW "brew info $_PKG"
+        _exec_ YUM      "yum info $_PKG"
       ;;
    "Ql")
-        _exec_ DPKG "dpkg-query -L $_PKG"
-        _exec_ YUM  "rpm -ql $_PKG"
+        _exec_ DPKG     "dpkg-query -L $_PKG"
+        _exec_ HOMEBREW "brew list $_PKG"
+        _exec_ YUM      "rpm -ql $_PKG"
       ;;
    "Qo")
-        _exec_ DPKG "dpkg-query -S $_PKG"
-        _exec_ YUM  "rpm -qf $_PKG"
+        _exec_ DPKG     "dpkg-query -S $_PKG"
+        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
+        _exec_ YUM      "rpm -qf $_PKG"
       ;;
    "Qp")
         # NOTE: input ($_PKG) should be a package
-        _exec_ DPKG "dpkg-deb -I $_PKG"
-        _exec_ YUM  "rpm -qp $_PKG"
+        _exec_ DPKG     "dpkg-deb -I $_PKG"
+        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
+        _exec_ YUM      "rpm -qp $_PKG"
       ;;
    "Qc")
-        _exec_ DPKG "echo 'Error: function not implemented on Debian system'"
-        _exec_ YUM  "rpm -q --changelog $_PKG"
+        _exec_ DPKG     "echo 'Error: function not implemented on Debian system'"
+        _exec_ HOMEBREW "brew log $_PKG"
+        _exec_ YUM      "rpm -q --changelog $_PKG"
       ;;
    "Qu")
-        _exec_ DPKG "apt-get upgrade --trivial-only $_PKG"
-        _exec_ YUM  "yum list updates $_PKG"
+        _exec_ DPKG     "apt-get upgrade --trivial-only $_PKG"
+        _exec_ HOMEBREW "brew outdated | grep $_PKG"
+        _exec_ YUM      "yum list updates $_PKG"
       ;;
    "Qm")
-        _exec_ DPKG "echo 'Error: function not implemented on Debian system'"
-        _exec_ YUM  "yum list extras $_PKG"
+        _exec_ DPKG     "echo 'Error: function not implemented on Debian system'"
+        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
+        _exec_ YUM      "yum list extras $_PKG"
       ;;
     "Q")
-        _exec_ DPKG "dpkg -l $_PKG | grep -E ^[hi]i"
-        _exec_ YUM  "yum list installed $_PKG"
+        _exec_ DPKG     "dpkg -l $_PKG | grep -E ^[hi]i"
+        _exec_ HOMEBREW "brew list | grep $_PKG"
+        _exec_ YUM      "yum list installed $_PKG"
       ;;
    "Rs")
-        _exec_ DPKG "apt-get autoremove $_PKG"
-        _exec_ YUM  "yum erase $_PKG"
+        _exec_ DPKG     "apt-get autoremove $_PKG"
+        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
+        _exec_ YUM      "yum erase $_PKG"
       ;;
     "R")
-        _exec_ DPKG "apt-get remove $_PKG"
-        _exec_ YUM  "yum erase $_PKG"
+        _exec_ DPKG     "apt-get remove $_PKG"
+        _exec_ HOMEBREW "brew remove $_PKG"
+        _exec_ YUM      "yum erase $_PKG"
       ;;
    "Si")
-        _exec_ DPKG "dpkg-query -s $_PKG"
-        _exec_ YUM  "yum info $_PKG"
+        _exec_ DPKG     "dpkg-query -s $_PKG"
+        _exec_ HOMEBREW "brew info $_PKG"
+        _exec_ YUM      "yum info $_PKG"
       ;;
   "Suy")
         _VERBOSE="" _exec_ DPKG "apt-get update"
         _VERBOSE="" _exec_ DPKG "apt-get upgrade"
+        _exec_ HOMEBREW "brew update"
+        _exec_ HOMEBREW "brew upgrade"
         _exec_ YUM "yum update"
       ;;
    "Su")
         _VERBOSE="" _exec_ DPKG "apt-get upgrade"
+        _exec_ HOMEBREW "brew upgrade"
         _exec_ YUM "yum update"
       ;;
    "Sy")
         _VERBOSE="" _exec_ DPKG "apt-get update"
+        _exec_ HOMEBREW "brew update"
         _exec_ YUM "yum check-update"
       ;;
    "Ss")
-        _exec_ DPKG "apt-cache search $_PKG"
-        _exec_ YUM  "yum search $_PKG"
+        _exec_ DPKG     "apt-cache search $_PKG"
+        _exec_ HOMEBREW "brew search $_PKG"
+        _exec_ YUM      "yum search $_PKG"
       ;;
    "Sc")
-        _exec_ DPKG "apt-get clean"
-        _exec_ YUM  "yum clean expire-cache"
+        _exec_ DPKG     "apt-get clean"
+        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
+        _exec_ YUM      "yum clean expire-cache"
       ;;
   "Scc")
-        _exec_ DPKG "apt-get autoclean"
-        _exec_ YUM  "yum clean packages"
+        _exec_ DPKG     "apt-get autoclean"
+        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
+        _exec_ YUM      "yum clean packages"
       ;;
  "Sccc")
-        _exec_ DPKG "rm -fv /var/cache/apt/*.bin /var/cache/apt/archives/*.* /var/lib/apt/lists/*.*; apt-get autoclean"
-        _exec_ YUM  "yum clean all"
+        _exec_ DPKG     "rm -fv /var/cache/apt/*.bin /var/cache/apt/archives/*.* /var/lib/apt/lists/*.*; apt-get autoclean"
+        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
+        _exec_ YUM      "yum clean all"
       ;;
     "S")
         if [ -z "$_PKG" ]; then
           _error "You must specify a package"
           exit 1
         else
-          _exec_ DPKG "apt-get install $_TOPT $_PKG"
-          _exec_ YUM  "yum install $_TOPT $_PKG"
+          _exec_ DPKG     "apt-get install $_TOPT $_PKG"
+          _exec_ HOMEBREW "brew install $_TOPT $_PKG"
+          _exec_ YUM      "yum install $_TOPT $_PKG"
         fi
       ;;
   "U")
-        _exec_ DPKG "echo 'Error: function not implemented on Debian system'"
-        _exec_ YUM  "yum localinstall"
+        _exec_ DPKG     "echo 'Error: function not implemented on Debian system'"
+        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
+        _exec_ YUM      "yum localinstall"
       ;;
 esac
