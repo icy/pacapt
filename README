@@ -4,8 +4,8 @@ NAME
 
 DESCRIPTION
 
-  An Arch's pacman-like package manager for some Linux distributions.
-  Actually this Bash script provides a wrapper for system's package manager.
+  An Arch's pacman-like package manager for some Unices.  Actually this Bash
+  script provides a wrapper for system's package manager.
 
   Instead of remembering various options/tools on different OSs, you only
   need a common way to manipulate packages. Not all options of the native
@@ -22,6 +22,7 @@ DESCRIPTION
 
     pacman        by Arch Linux, ArchBang
     dpkg/apt-get  by Debian, Ubuntu
+    homebrew      by Mac OS X
     yum/rpm       by Redhat, CentOS, Fedora
 
 INSTALL
