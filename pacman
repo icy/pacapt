@@ -140,11 +140,11 @@ _exec_() {
 
 # Detect package type from /etc/issue
 _OSTYPE_detect() {
-  grep -qi "Arch Linux"       /etc/issue && _OSTYPE="PACMAN"
-  grep -qi "Debian GNU/Linux" /etc/issue && _OSTYPE="DPKG"
-  grep -qi "Ubuntu"           /etc/issue && _OSTYPE="DPKG"
-  grep -qi "CentOS"           /etc/issue && _OSTYPE="YUM"
-  grep -qi "Fedora"           /etc/issue && _OSTYPE="YUM"
+  grep -qis "Arch Linux"       /etc/issue && _OSTYPE="PACMAN"
+  grep -qis "Debian GNU/Linux" /etc/issue && _OSTYPE="DPKG"
+  grep -qis "Ubuntu"           /etc/issue && _OSTYPE="DPKG"
+  grep -qis "CentOS"           /etc/issue && _OSTYPE="YUM"
+  grep -qis "Fedora"           /etc/issue && _OSTYPE="YUM"
   if [ -z "$_OSTYPE" ]; then
     _error "Can't detect OS type from /etc/issue. Running fallback method."
     [ -x "/usr/bin/apt-get" ] && _OSTYPE="DPKG"
