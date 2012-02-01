@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Purpose: A wrapper for all Linux package managers
+# Purpose: A wrapper for all Unix package managers
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
@@ -29,12 +29,12 @@ _help() {
   cat <<\EOF
 NAME
 
-  pacapt - An Arch's pacman-like package manager for some Linux distributions.
+  pacapt - An Arch's pacman-like package manager for some Unices.
 
 DESCRIPTION
 
-  An Arch's pacman-like package manager for some Linux distributions.
-  Actually this Bash script provides a wrapper for system's package manager.
+  An Arch's pacman-like package manager for some Unices.  Actually this Bash
+  script provides a wrapper for system's package manager.
 
   Instead of remembering various options/tools on different OSs, you only
   need a common way to manipulate packages. Not all options of the native
@@ -51,6 +51,7 @@ DESCRIPTION
 
     pacman        by Arch Linux, ArchBang
     dpkg/apt-get  by Debian, Ubuntu
+    homebrew      by Mac OS X
     yum/rpm       by Redhat, CentOS, Fedora
 
 INSTALL
