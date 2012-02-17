@@ -24,6 +24,7 @@ DESCRIPTION
     dpkg/apt-get  by Debian, Ubuntu
     homebrew      by Mac OS X
     yum/rpm       by Redhat, CentOS, Fedora
+    portage       by Gentoo GNU/Linux
 
 INSTALL
 
@@ -61,7 +62,7 @@ OPERATIONS
 
   Remove / Clean up
 
-    -R <package>    remove some packages
+    -R <packages>   remove some packages
     -Sc             delete old downloaded packages
     -Scc            delete all downloaded packages
     -Sccc           clean variant files.
@@ -84,6 +85,11 @@ NOTES
   When being executed on Arch-based system, the tool simply invokes
   the system tool '/usr/bin/pacman'. So you would never install this tool
   as '/usr/bin/pacman', otherwise you may break your system!
+
+LICENSE
+
+  The tool is license under the terms of the license described in the
+  COPYING file.
 
 THANKS
 
