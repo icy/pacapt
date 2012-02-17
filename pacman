@@ -61,6 +61,9 @@ INSTALL
     $ wget https://github.com/icy/pacapt/raw/master/pacman -O /usr/local/bin/pacman
     $ chmod 755 /usr/local/bin/pacman
 
+  If you're running Gentoo, you need to install 'eix' first:
+    # emerge eix
+
   This script shouldn't be installed on an Arch-based system.
 
 SYNTAX
@@ -90,7 +93,7 @@ OPERATIONS
 
   Remove / Clean up
 
-    -R <package>    remove some packages
+    -R <packages>   remove some packages
     -Sc             delete old downloaded packages
     -Scc            delete all downloaded packages
     -Sccc           clean variant files.
@@ -131,45 +134,75 @@ REFERENCES
 EOF
 }
 
+###
+### Helpers
+###
+
 _exec_() {
   local _type="$1"
   shift
   [ "$_OSTYPE" = "$_type" ] || return 0
   _error "Going to execute: $* $_VERBOSE $_FORCE"
-  eval "$* $_VERBOSE $_FORCE"
+#  eval "$* $_VERBOSE $_FORCE"
+  # DEBUG
+  echo "$* $_VERBOSE $_FORCE"
 }
 
+
 # Detect package type from /etc/issue
+_found_arch() {
+  local _arch_str="$1"
+  return $(grep -qis "$_arch_str" /etc/issue)
+}
+
+# Detect package type
 _OSTYPE_detect() {
-  grep -qis "Arch Linux"       /etc/issue && _OSTYPE="PACMAN"
-  grep -qis "Debian GNU/Linux" /etc/issue && _OSTYPE="DPKG"
-  grep -qis "Ubuntu"           /etc/issue && _OSTYPE="DPKG"
-  grep -qis "CentOS"           /etc/issue && _OSTYPE="YUM"
-  grep -qis "Fedora"           /etc/issue && _OSTYPE="YUM"
+  _found_arch "Arch Linux"       && _OSTYPE="PACMAN"
+  _found_arch "Debian GNU/Linux" && _OSTYPE="DPKG"
+  _found_arch "Ubuntu"           && _OSTYPE="DPKG"
+  _found_arch "CentOS"           && _OSTYPE="YUM"
+  _found_arch "Fedora"           && _OSTYPE="YUM"
+
   if [ -z "$_OSTYPE" ]; then
     _error "Can't detect OS type from /etc/issue. Running fallback method."
     [ -x "/usr/bin/apt-get" ]    && _OSTYPE="DPKG"
     [ -x "/usr/bin/yum" ]        && _OSTYPE="YUM"
     [ -x "/usr/local/bin/brew" ] && _OSTYPE="HOMEBREW"
+    [ -x "/usr/bin/emerge" ]     && _OSTYPE="PORTAGE"
   fi
 }
+
+###
+### Main
+###
 
 # Detect type of package manager. If the system is Arch type,
 # pass all arguments to /usr/bin/pacman and return.
 _OSTYPE_detect
+
+## DEBUG
+echo "OS Type: $_OSTYPE\n"
+
 case "$_OSTYPE" in
   "PACMAN")
     exec /usr/bin/pacman "$@"
     ;;
-  "YUM"|"DPKG"|"HOMEBREW")
+  "YUM"|"DPKG"|"HOMEBREW"|"PORTAGE")
     ;;
   *)
-    _error "No supported package manager (yum, apt, pacman) installed on system"
+    _error "No supported package manager (yum, apt, pacman, portage) installed on system"
     exit 1
     ;;
 esac
 
+#
 # Get options from command lines. FIXME: Support long options
+#
+
+# By default, with Gentoo, 'force' is always 'yes', so we change it to
+# 'no'
+[ "$_OSTYPE" = "PORTAGE" ] && _FORCE="-a"
+
 while getopts "URQShfvlumyispqwco" opt; do
   case "$opt" in
     Q|S|R|U)
@@ -217,13 +250,15 @@ while getopts "URQShfvlumyispqwco" opt; do
                 exit 1
               fi
             ;;
+          "PORTAGE") _TOPT="--fetchonly" ;;
         esac
       ;;
     f)
         case "$_OSTYPE" in
-          "DPKG") _FORCE="-f --force-yes" ;;
-          "YUM")  _FORCE="-y" ;;
-          *)      _FORCE="-y" ;;
+          "DPKG")     _FORCE="-f --force-yes" ;;
+          "YUM")      _FORCE="-y" ;;
+          "PORTAGE")  _FORCE="" ;;
+          *)          _FORCE="-y" ;;
         esac
       ;;
     v) _VERBOSE="-v" ;;
@@ -250,6 +285,13 @@ if [ -n "$_PKG" ]; then
         exit 1
   esac
 fi
+
+echo "Primary options: $_POPT"
+echo "Secondary options: $_SOPT"
+echo "Options for operations: $_TOPT"
+echo "Extra params: $_PKG"
+echo "Verbose: $_VERBOSE"
+echo "Force: $_FORCE"
 
 # Return if no option was specified
 if [ -z "$_POPT" ]; then
