@@ -1,0 +1,30 @@
+#!/bin/sh
+
+./pacman -Q
+echo ======
+./pacman -Qc package
+echo ======
+./pacman -Qi package
+echo ======
+./pacman -Qm
+echo ======
+./pacman -Qo file
+echo ======
+./pacman -Qp file
+echo ======
+./pacman -S package
+echo ======
+./pacman -Ss package
+echo ======
+./pacman -Su
+echo ======
+./pacman -Sy
+echo ======
+./pacman -Suy
+echo ======
+./pacman -R package
+echo ======
+./pacman -Sc
+echo ======
+./pacman -Scc
+echo ======

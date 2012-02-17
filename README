@@ -33,9 +33,6 @@ INSTALL
     $ wget https://github.com/icy/pacapt/raw/master/pacman -O /usr/local/bin/pacman
     $ chmod 755 /usr/local/bin/pacman
 
-  If you're running Gentoo, you need to install 'eix' first:
-    # emerge eix
-
   This script shouldn't be installed on an Arch-based system.
 
 SYNTAX
