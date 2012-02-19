@@ -328,8 +328,9 @@ case "$_POPT$_SOPT" in
           "
       ;;
    "Qo")
+        _os_is HOMEBREW && _error "Function not implemented in homebrew"
+
         _exec_ DPKG     "dpkg-query -S $_PKG"
-        _exec_ HOMEBREW _error "function not implemented in homebrew"
         _exec_ YUM      "rpm -qf $_PKG"
         _FORCE="" _exec_ PORTAGE "
             if [ -x /usr/bin/equery ]; then
@@ -346,7 +347,7 @@ case "$_POPT$_SOPT" in
         _exec_ YUM      "rpm -qp $_PKG"
       ;;
    "Qc")
-        _os_is DPKG     "echo 'Error: function not implemented in Debian system'"
+        _os_is DPKG     && _error "Function not implemented in Debian system'"
         _exec_ HOMEBREW "brew log $_PKG"
         _exec_ YUM      "rpm -q --changelog $_PKG"
         _FORCE="" \
