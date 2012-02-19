@@ -343,14 +343,14 @@ case "$_POPT$_SOPT" in
           "
       ;;
    "Qp")
-        _os_is HOMEBREW && _error "Function not implemented in homebrew'"
-        _os_is PORTAGE  && _error "Function not supported as Gentoo has no definition of 'package file'."
+        _os_is HOMEBREW && _error "Function not implemented in homebrew"
+        _os_is PORTAGE  && _error "Function not supported as Gentoo has no definition of 'package file"
 
         _exec_ DPKG     "dpkg-deb -I $_PKG"
         _exec_ YUM      "rpm -qp $_PKG"
       ;;
    "Qc")
-        _os_is DPKG     && _error "Function not implemented in Debian system'"
+        _os_is DPKG     && _error "Function not implemented in Debian system"
 
         _exec_ HOMEBREW "brew log $_PKG"
         _exec_ YUM      "rpm -q --changelog $_PKG"
@@ -478,7 +478,7 @@ case "$_POPT$_SOPT" in
           "
       ;;
  "Sccc")
-        _os_is HOMEBREW && _error "Function not implemented in homebrew'"
+        _os_is HOMEBREW && _error "Function not implemented in homebrew"
 
         _exec_ DPKG "rm -fv /var/cache/apt/*.bin
                             /var/cache/apt/archives/*.*
@@ -500,9 +500,9 @@ case "$_POPT$_SOPT" in
         fi
       ;;
   "U")
-        _os_is DPKG     && _error "Function not implemented in Debian system'"
-        _os_is HOMEBREW && _error "Function not implemented in homebrew'"
-        _os_is PORTAGE  && _error "You need to implement a local overlay and do the installation as usual.'"
+        _os_is DPKG     && _error "Function not implemented in Debian system"
+        _os_is HOMEBREW && _error "Function not implemented in homebrew"
+        _os_is PORTAGE  && _error "You need to implement a local overlay and do the installation as usual."
 
         _exec_ YUM      "yum localinstall"
       ;;
