@@ -135,36 +135,33 @@ EOF
 ### Helpers
 ###
 
-_exists() {
-  [ -f "$1" ]
+_os_is() {
+  [ "$_OSTYPE" = "$*" ]
 }
 
 _exec_() {
   local _type="$1"
   shift
-  [ "$_OSTYPE" = "$_type" ] || return 0
-  _error "Going to execute: $* $_VERBOSE $_FORCE"
+  _os_is $_type || return 0
+  [ -z "$_VERBOSE" ] || _error "Going to execute: $* $_VERBOSE $_FORCE"
   eval "$* $_VERBOSE $_FORCE"
-  # # DEBUG
-  # echo ""
-  # echo "== $* $_VERBOSE $_FORCE =="
-  # echo ""
 }
 
 
 # Detect package type from /etc/issue
 _found_arch() {
-  local _arch_str="$1"
-  return $(grep -qis "$_arch_str" /etc/issue)
+  local _ostype="$1"
+  shift
+  grep -qis "$*" /etc/issue && _OSTYPE="$_ostype"
 }
 
 # Detect package type
 _OSTYPE_detect() {
-  _found_arch "Arch Linux"       && _OSTYPE="PACMAN"
-  _found_arch "Debian GNU/Linux" && _OSTYPE="DPKG"
-  _found_arch "Ubuntu"           && _OSTYPE="DPKG"
-  _found_arch "CentOS"           && _OSTYPE="YUM"
-  _found_arch "Fedora"           && _OSTYPE="YUM"
+  _found_arch PACMAN "Arch Linux"
+  _found_arch DPKG   "Debian GNU/Linux"
+  _found_arch DPKG   "Ubuntu"
+  _found_arch YUM    "CentOS"
+  _found_arch YUM    "Fedora"
 
   if [ -z "$_OSTYPE" ]; then
     _error "Can't detect OS type from /etc/issue. Running fallback method."
@@ -182,9 +179,6 @@ _OSTYPE_detect() {
 # Detect type of package manager. If the system is Arch type,
 # pass all arguments to /usr/bin/pacman and return.
 _OSTYPE_detect
-
-## DEBUG
-echo "OS Type: $_OSTYPE"
 
 case "$_OSTYPE" in
   "PACMAN")
@@ -317,36 +311,42 @@ case "$_POPT$_SOPT" in
         _exec_ DPKG     "dpkg-query -s $_PKG"
         _exec_ HOMEBREW "brew info $_PKG"
         _exec_ YUM      "yum info $_PKG"
-        _FORCE="" \
-            && _exec_ PORTAGE  "emerge --info $_PKG"
+        _FORCE="" _exec_ PORTAGE  "emerge --info $_PKG"
       ;;
    "Ql")
         _exec_ DPKG     "dpkg-query -L $_PKG"
         _exec_ HOMEBREW "brew list $_PKG"
         _exec_ YUM      "rpm -ql $_PKG"
-        _FORCE="" \
-            && (_exists "/usr/bin/qlist" && _exec_ PORTAGE "qlist $_PKG") \
-            || (_exists "/usr/bin/equery" && _exec_ PORTAGE "equery files $_PKG") \
-            || (_error "You need to install portage-utils or gentoolkit in order to perform this operation.")
+        _FORCE="" _exec_ PORTAGE "
+            if [ -x /usr/bin/qlist ]; then
+              qlist $_PKG
+            elif [ -x /usr/bin/equery ]; then
+              equery files $_PKG
+            else
+              _error 'You need to install portage-utils or gentoolkit to perform this operation.'
+            fi
+          "
       ;;
    "Qo")
         _exec_ DPKG     "dpkg-query -S $_PKG"
-        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
+        _exec_ HOMEBREW _error "function not implemented in homebrew"
         _exec_ YUM      "rpm -qf $_PKG"
-        _FORCE="" \
-            && _exists "/usr/bin/equery" && _exec_ PORTAGE "equery belongs $_PKG" \
-                                         || _error "You need to install gentoolkit in order to perform this operation"
+        _FORCE="" _exec_ PORTAGE "
+            if [ -x /usr/bin/equery ]; then
+              equery belongs $_PKG
+            else
+              _error 'You need to install gentoolkit to perform this operation'
+            fi
+          "
       ;;
    "Qp")
-        # NOTE: input ($_PKG) should be a package
+        _os_is HOMEBREW && _error "Function not implemented in homebrew'"
+        _os_is PORTAGE  && _error "Function not supported as Gentoo has no definition of 'package file'."
         _exec_ DPKG     "dpkg-deb -I $_PKG"
-        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
         _exec_ YUM      "rpm -qp $_PKG"
-        [ $_OSTYPE = "PORTAGE" ] && \
-            _error "Gentoo has no definition of 'package file', thus this feature is not supported."
       ;;
    "Qc")
-        _exec_ DPKG     "echo 'Error: function not implemented in Debian system'"
+        _os_is DPKG     "echo 'Error: function not implemented in Debian system'"
         _exec_ HOMEBREW "brew log $_PKG"
         _exec_ YUM      "rpm -q --changelog $_PKG"
         _FORCE="" \
@@ -356,29 +356,35 @@ case "$_POPT$_SOPT" in
         _exec_ DPKG     "apt-get upgrade --trivial-only $_PKG"
         _exec_ HOMEBREW "brew outdated | grep $_PKG"
         _exec_ YUM      "yum list updates $_PKG"
-        _exec_ PORTAGE "emerge -uvN $_PKG" # not exactly
+        _exec_ PORTAGE  "emerge -uvN $_PKG" # FIXME: not exactly
       ;;
    "Qm")
-        _exec_ DPKG     "echo 'Error: function not implemented in Debian system'"
-        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
+        _os_is DPKG     && _error "Function not implemented in Debian system"
+        _os_is HOMEBREW && _error "Function not implemented in homebrew"
+        _os_is PORTAGE  && _error "Function not supported in Gentoo"
+
         _exec_ YUM      "yum list extras $_PKG"
-        [ $_OSTYPE = "PORTAGE" ] && \
-            _error "Not supported in Gentoo"
       ;;
     "Q")
         _exec_ DPKG     "dpkg -l $_PKG | grep -E ^[hi]i"
         _exec_ HOMEBREW "brew list | grep $_PKG"
         _exec_ YUM      "yum list installed $_PKG"
 
-        # There are actually many ways to do this in Gentoo
-        _FORCE="" \
-            && (_exists "/usr/bin/eix" && _exec_ PORTAGE "eix -I $_PKG") \
-            || (_exists "/usr/bin/equery" && _exec_ PORTAGE "equery list '*' $_PKG") \
-            || _exec_ PORTAGE "ls -d /var/db/pkg/*/*"
+        # FIXME: There are actually many ways to do this in Gentoo
+        _FORCE="" && _exec_ PORTAGE "
+            if [ -x /usr/bin/eix ]; then
+              eix -I $_PKG
+            elif [ -x /usr/bin/equery ]; then
+              equery list '*' $_PKG
+            else
+              ls -d /var/db/pkg/*/*
+            fi
+          "
       ;;
    "Rs")
+        _os_is HOMEBREW && _error "Function not implemented in homebrew"
+
         _exec_ DPKG     "apt-get autoremove $_PKG"
-        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
         _exec_ YUM      "yum erase $_PKG"
         _exec_ PORTAGE  "emerge --depclean world $_PKG"
       ;;
@@ -396,15 +402,19 @@ case "$_POPT$_SOPT" in
             && _exec_ PORTAGE  "emerge --info $_PKG"
       ;;
   "Suy")
-        _VERBOSE="" _exec_ DPKG "apt-get update"
-        _VERBOSE="" _exec_ DPKG "apt-get upgrade"
-        _exec_ HOMEBREW "brew update"
-        _exec_ HOMEBREW "brew upgrade"
+        _VERBOSE="" _exec_ DPKG "apt-get update; apt-get upgrade"
+        _exec_ HOMEBREW "brew update; brew upgrade"
         _exec_ YUM "yum update"
-        [ "$_OSTYPE" = "PORTAGE" ] \
-            && (_exists "/usr/bin/layman" \
-                    && _exec_ PORTAGE "layman --sync-all && emerge --sync && emerge -auND world $_PKG" \
-                    || _exec_ PORTAGE "emerge --sync && emerge -uND world $_PKG" )
+        _exec_ PORTAGE "
+            if [ -x /usr/bin/layman ]; then
+              layman --sync-all \
+                && emerge --sync \
+                && emerge -auND world $_PKG
+            else
+              emerge --sync \
+                && emerge -uND world $_PKG
+            fi
+          "
       ;;
    "Su")
         _VERBOSE="" _exec_ DPKG "apt-get upgrade"
@@ -416,41 +426,60 @@ case "$_POPT$_SOPT" in
         _VERBOSE="" _exec_ DPKG "apt-get update"
         _exec_ HOMEBREW         "brew update"
         _exec_ YUM              "yum check-update"
-        [ "$_OSTYPE" = "PORTAGE" ] \
-            && _FORCE="" \
-            && (_exists "/usr/bin/layman" \
-                   && _exec_ PORTAGE "layman --sync-all && emerge --sync" \
-                   || _exec_ PORTAGE "emerge --sync" )
+        _FORCE="" _exec_ PORTAGE "
+            if [ -x /usr/bin/layman ]; then
+              layman --sync-all && emerge --sync
+            else
+              emerge --sync
+            fi
+          "
       ;;
    "Ss")
         _exec_ DPKG     "apt-cache search $_PKG"
         _exec_ HOMEBREW "brew search $_PKG"
         _exec_ YUM      "yum search $_PKG"
-        _FORCE="" \
-            && (_exists "/usr/bin/eix" && _exec_ PORTAGE "eix $_PKG" \
-                                       || _exec_ PORTAGE "emerge --search $_PKG") \
+        _FORCE="" _exec_ PORTAGE "
+            if [ -x /usr/bin/eix ]; then
+              eix $_PKG
+            else
+              emerge --search $_PKG
+            fi
+          "
       ;;
    "Sc")
+        _os_is HOMEBREW && _error "Function not implemented in homebrew"
+
         _exec_ DPKG     "apt-get clean"
-        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
         _exec_ YUM      "yum clean expire-cache"
-        _FORCE="" \
-            && (_exists "/usr/bin/eclean-dist" && _exec_ PORTAGE "eclean-dist -d -t1m -s50 -f" \
-                                               || _error "You need install gentoolkit to perform this operation.")
+        __FORCE="" _exec_ PORTAGE "
+            if [ -x usr/bin/eclean-dist ]; then
+              eclean-dist -d -t1m -s50 -f
+            else
+              _error 'You need install gentoolkit to perform this operation.'
+            fi
+          "
       ;;
   "Scc")
-        _exec_ DPKG     "apt-get autoclean"
-        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
-        _exec_ YUM      "yum clean packages"
-        _FORCE="" \
-            && (_exists "/usr/bin/eclean" && _exec_ PORTAGE "eclean -i distfiles" \
-                                          || _error "You need install gentoolkit to perform this operation.")
+        _os_is HOMEBREW && _error "Function not implemented in homebrew"
 
+        _exec_ DPKG     "apt-get autoclean"
+        _exec_ YUM      "yum clean packages"
+        _FORCE="" _exec_ PORTAGE "
+            if [ -x /usr/bin/eclean ]; then
+              eclean -i distfiles
+            else
+              _error 'You need install gentoolkit to perform this operation.'
+            fi
+          "
       ;;
  "Sccc")
-        _exec_ DPKG     "rm -fv /var/cache/apt/*.bin /var/cache/apt/archives/*.* /var/lib/apt/lists/*.*; apt-get autoclean"
-        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
-        _exec_ YUM      "yum clean all"
+        _os_is HOMEBREW && _error "Function not implemented in homebrew'"
+
+        _exec_ DPKG "rm -fv /var/cache/apt/*.bin
+                            /var/cache/apt/archives/*.*
+                            /var/lib/apt/lists/*.* ;
+                     apt-get autoclean"
+        _exec_ YUM   "yum clean all"
         _FORCE="" \
             && _exec_ PORTAGE "rm -fv /usr/portage/distfiles/*.*"
       ;;
@@ -466,10 +495,10 @@ case "$_POPT$_SOPT" in
         fi
       ;;
   "U")
-        _exec_ DPKG     "echo 'Error: function not implemented in Debian system'"
-        _exec_ HOMEBREW "echo 'Error: function not implemented in homebrew'"
+        _os_is DPKG     && _error "Function not implemented in Debian system'"
+        _os_is HOMEBREW && _error "unction not implemented in homebrew'"
+        _os_is PORTAGE  && _error "You need to implement a local overlay and do the installation as usual.'"
+
         _exec_ YUM      "yum localinstall"
-        [ $_OSTYPE = "PORTAGE" ] && \
-            _error "You need to implement a local overlay and do the installation as usual."
       ;;
 esac

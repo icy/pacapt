@@ -1,5 +1,17 @@
 #!/bin/sh
 
+cat <<\EOF
+Warning:
+  This script is originally created by CMPITG (See also [1].)
+  icy made changes to ensure that this script only prints this message.
+  Reason: We need a stable way to ensure the script works as designed.
+
+References:
+  [1] https://github.com/icy/pacapt/pull/8
+EOF
+
+exit 0
+
 ./pacman -Q
 echo ======
 ./pacman -Qc package

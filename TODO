@@ -1,3 +1,4 @@
+[x] Add tests
 [x] For Gentoo system:
 
     pacman -Q       => eix -I
