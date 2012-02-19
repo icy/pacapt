@@ -1,6 +1,6 @@
 NAME
 
-  pacapt - An Arch's pacman-like package manager for some Linux distributions.
+  pacapt - An Arch's pacman-like package manager for some Unices.
 
 DESCRIPTION
 
@@ -24,7 +24,6 @@ DESCRIPTION
     dpkg/apt-get  by Debian, Ubuntu
     homebrew      by Mac OS X
     yum/rpm       by Redhat, CentOS, Fedora
-    portage       by Gentoo GNU/Linux
 
 INSTALL
 
@@ -86,21 +85,18 @@ NOTES
   the system tool '/usr/bin/pacman'. So you would never install this tool
   as '/usr/bin/pacman', otherwise you may break your system!
 
-LICENSE
-
-  The tool is license under the terms of the license described in the
-  COPYING file.
-
 THANKS
 
   Special thanks to
 
-    Chau An, Nguyen   (told me about 'Pacman Rosetta' [1])
+    Châu An, Nguyễn   (told me about 'Pacman Rosetta' [1])
     Karol Blazewicz   (for comments about '-Sy')
     James Pearson     (for userful comments and patches.
                        See also http://github.com/xiongchiamiov/pacapt)
     Alexander Dupuy   (for userful comments and patches.
                        See also https://github.com/dupuy/pacapt)
+    Hà Dương, Nguyễn  (for adding Gentoo support.
+                       See also https://github.com/CMPITG/pacapt)
 
 REFERENCES
 

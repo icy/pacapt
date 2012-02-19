@@ -118,12 +118,14 @@ THANKS
 
   Special thanks to
 
-    Chau An, Nguyen   (told me about 'Pacman Rosetta' [1])
+    Châu An, Nguyễn   (told me about 'Pacman Rosetta' [1])
     Karol Blazewicz   (for comments about '-Sy')
     James Pearson     (for userful comments and patches.
                        See also http://github.com/xiongchiamiov/pacapt)
     Alexander Dupuy   (for userful comments and patches.
                        See also https://github.com/dupuy/pacapt)
+    Hà Dương, Nguyễn  (for adding Gentoo support.
+                       See also https://github.com/CMPITG/pacapt)
 
 REFERENCES
 
