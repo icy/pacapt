@@ -24,6 +24,7 @@ DESCRIPTION
     dpkg/apt-get  by Debian, Ubuntu
     homebrew      by Mac OS X
     yum/rpm       by Redhat, CentOS, Fedora
+    portage       by Gentoo
 
 INSTALL
 
