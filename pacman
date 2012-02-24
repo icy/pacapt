@@ -384,7 +384,7 @@ case "$_POPT$_SOPT" in
             elif [ -x /usr/bin/equery ]; then
               equery list '*' $_PKG
             else
-              ls -d /var/db/pkg/*/*
+              LS_COLORS=never ls -1 -d /var/db/pkg/*/*
             fi
           "
       ;;
