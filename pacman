@@ -190,7 +190,8 @@ case "$_OSTYPE" in
   "YUM"|"DPKG"|"HOMEBREW"|"PORTAGE")
     ;;
   *)
-    _error "No supported package manager (yum, apt, pacman, portage) installed on system"
+    _error "No supported package manager installed on system"
+    _error "(supported: apt, homebrew, pacman, portage, yum)"
     exit 1
     ;;
 esac
