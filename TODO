@@ -2,7 +2,7 @@
 [x] For Gentoo system:
 
     pacman -Q       => eix -I
-    pacman -Qc <p>  => emerge -p --changlog <p>
+    pacman -Qc <p>  => emerge -p --changelog <p>
     pacman -Qi <p>  => emerge --info <p>
     pacmon -Ql <p>  => exists("qlist") && qlist <p> || equery files <p>
     pacman -Qm      = orphan packages, not supported
