@@ -53,6 +53,7 @@ DESCRIPTION
     dpkg/apt-get  by Debian, Ubuntu
     homebrew      by Mac OS X
     yum/rpm       by Redhat, CentOS, Fedora
+    portage       by Gentoo
 
 INSTALL
 
@@ -189,7 +190,8 @@ case "$_OSTYPE" in
   "YUM"|"DPKG"|"HOMEBREW"|"PORTAGE")
     ;;
   *)
-    _error "No supported package manager (yum, apt, pacman, portage) installed on system"
+    _error "No supported package manager installed on system"
+    _error "(supported: apt, homebrew, pacman, portage, yum)"
     exit 1
     ;;
 esac
@@ -382,7 +384,7 @@ case "$_POPT$_SOPT" in
             elif [ -x /usr/bin/equery ]; then
               equery list '*' $_PKG
             else
-              ls -d /var/db/pkg/*/*
+              LS_COLORS=never ls -1 -d /var/db/pkg/*/*
             fi
           "
       ;;
@@ -481,8 +483,8 @@ case "$_POPT$_SOPT" in
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
 
         _exec_ DPKG "rm -fv /var/cache/apt/*.bin
-                            /var/cache/apt/archives/*.*
-                            /var/lib/apt/lists/*.* ;
+                     rm -fv /var/cache/apt/archives/*.*
+                     rm -fv /var/lib/apt/lists/*.*
                      apt-get autoclean"
         _exec_ YUM   "yum clean all"
         _FORCE="" \
