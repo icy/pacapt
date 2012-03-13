@@ -500,10 +500,10 @@ case "$_POPT$_SOPT" in
         fi
       ;;
   "U")
-        _os_is DPKG     && _error "Function not implemented in Debian system"
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
         _os_is PORTAGE  && _error "You need to implement a local overlay and do the installation as usual."
 
-        _exec_ YUM      "yum localinstall"
+        _exec_ DPKG     "dpkg -i $_TOPT $_PKG"
+        _exec_ YUM      "yum localinstall $_TOPT $_PKG"
       ;;
 esac
