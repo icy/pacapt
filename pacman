@@ -203,12 +203,12 @@ esac
 
 # By default, with Gentoo, 'force' is always 'yes', so we change it to
 # 'no'
-[ "$_OSTYPE" = "PORTAGE" ] && _FORCE="-a"
+[[ "$_OSTYPE" = "PORTAGE" ]] && _FORCE="-a"
 
 while getopts "URQShfvlumyispqwco" opt; do
   case "$opt" in
     Q|S|R|U)
-      if [ "$_POPT" != "" -a "$_POPT" != "$opt" ]; then
+      if [[ "$_POPT" != "" && "$_POPT" != "$opt" ]]; then
         _error "Only one operation may be used at a time"
         exit 1
       fi
@@ -220,7 +220,7 @@ while getopts "URQShfvlumyispqwco" opt; do
       ;;
 
     u)
-      if [ "${_SOPT:0:1}" = "y" ]; then
+      if [[ "${_SOPT:0:1}" = "y" ]]; then
         _SOPT="uy"
       else
         _SOPT="u"
@@ -228,7 +228,7 @@ while getopts "URQShfvlumyispqwco" opt; do
       ;;
 
     y)
-      if [ "${_SOPT:0:1}" = "u" ]; then
+      if [[ "${_SOPT:0:1}" = "u" ]]; then
         _SOPT="uy"
       else
         _SOPT="y"
@@ -236,9 +236,9 @@ while getopts "URQShfvlumyispqwco" opt; do
       ;;
 
     c)
-      if [ "${_SOPT:0:2}" = "cc" ]; then
+      if [[ "${_SOPT:0:2}" = "cc" ]]; then
         _SOPT="ccc"
-      elif [ "${_SOPT:0:1}" = "c" ]; then
+      elif [[ "${_SOPT:0:1}" = "c" ]]; then
         _SOPT="cc"
       else
         _SOPT="$opt"
@@ -285,7 +285,7 @@ _PKG="$*"
 # Instead, just disallow specific packages, as (ex-)yum users likely expect to
 # just update/upgrade one package (and its dependencies) and apt-get and pacman
 # have no way to do this.
-if [ -n "$_PKG" ]; then
+if [[ -n "$_PKG" ]]; then
   case "$_POPT$_SOPT" in
      "Su"|"Sy"|"Suy")
         _error "The -Sy/u options refresh and/or upgrade all packages"
@@ -305,7 +305,7 @@ fi
 # echo "Force: $_FORCE"
 
 # Return if no option was specified
-if [ -z "$_POPT" ]; then
+if [[ -z "$_POPT" ]]; then
   _error "No operation specified (use -h for help)"
   exit 1
 fi
@@ -316,14 +316,29 @@ case "$_POPT$_SOPT" in
         _exec_ DPKG     "dpkg-query -s $_PKG"
         _exec_ HOMEBREW "brew info $_PKG"
         _exec_ YUM      "yum info $_PKG"
-        _FORCE="" _exec_ PORTAGE  "emerge --info $_PKG"
+        _FORCE="" \
+        _exec_ PORTAGE  "emerge --info $_PKG"
       ;;
    "Ql")
-        _exec_ DPKG     "dpkg-query -L $_PKG"
+        _exec_ DPKG     "
+            if [[ -n \"$_PKG\" ]]; then
+              dpkg-query -L $_PKG
+            else
+              dpkg -l \
+                | grep -E ^[hi]i \
+                | awk '{print \$2}' \
+                | while read _pkg; do
+                    dpkg-query -L \$_pkg \
+                      | while read _line; do
+                          echo \$_pkg \$_line
+                        done
+                  done
+            fi
+          "
         _exec_ HOMEBREW "brew list $_PKG"
         _exec_ YUM      "rpm -ql $_PKG"
         _FORCE="" \
-        _exec_ PORTAGE "
+        _exec_ PORTAGE  "
             if [[ -x /usr/bin/qlist ]]; then
               qlist $_PKG
             elif [[ -x /usr/bin/equery ]]; then
@@ -462,7 +477,7 @@ case "$_POPT$_SOPT" in
         _exec_ YUM      "yum search $_PKG"
         _FORCE="" \
         _exec_ PORTAGE "
-            if [ -x /usr/bin/eix ]; then
+            if [[ -x /usr/bin/eix ]]; then
               eix $_PKG
             else
               emerge --search $_PKG
@@ -509,7 +524,7 @@ case "$_POPT$_SOPT" in
         _exec_ PORTAGE "rm -fv /usr/portage/distfiles/*.*"
       ;;
     "S")
-        if [ -z "$_PKG" ]; then
+        if [[ -z "$_PKG" ]]; then
           _error "You must specify a package"
           exit 1
         else
