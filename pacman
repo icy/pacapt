@@ -139,15 +139,16 @@ EOF
 ###
 
 _os_is() {
-  [ "$_OSTYPE" = "$*" ]
+  [[ "$_OSTYPE" = "$*" ]]
 }
 
 _exec_() {
   local _type="$1"
   shift
-  _os_is $_type || return 0
-  [ -z "$_VERBOSE" ] || _error "Going to execute: $* $_VERBOSE $_FORCE"
-  eval "$* $_VERBOSE $_FORCE"
+  if _os_is $_type; then
+    [[ -z "$_VERBOSE" ]] || _error "Going to execute: $* $_VERBOSE $_FORCE"
+    eval "$* $_VERBOSE $_FORCE"
+  fi
 }
 
 
@@ -166,12 +167,12 @@ _OSTYPE_detect() {
   _found_arch YUM    "CentOS"
   _found_arch YUM    "Fedora"
 
-  if [ -z "$_OSTYPE" ]; then
+  if [[ -z "$_OSTYPE" ]]; then
     _error "Can't detect OS type from /etc/issue. Running fallback method."
-    [ -x "/usr/bin/apt-get" ]    && _OSTYPE="DPKG"
-    [ -x "/usr/bin/yum" ]        && _OSTYPE="YUM"
-    [ -x "/usr/local/bin/brew" ] && _OSTYPE="HOMEBREW"
-    [ -x "/usr/bin/emerge" ]     && _OSTYPE="PORTAGE"
+    [[ -x "/usr/bin/apt-get" ]]    && _OSTYPE="DPKG"
+    [[ -x "/usr/bin/yum" ]]        && _OSTYPE="YUM"
+    [[ -x "/usr/local/bin/brew" ]] && _OSTYPE="HOMEBREW"
+    [[ -x "/usr/bin/emerge" ]]     && _OSTYPE="PORTAGE"
   fi
 }
 
@@ -321,10 +322,11 @@ case "$_POPT$_SOPT" in
         _exec_ DPKG     "dpkg-query -L $_PKG"
         _exec_ HOMEBREW "brew list $_PKG"
         _exec_ YUM      "rpm -ql $_PKG"
-        _FORCE="" _exec_ PORTAGE "
-            if [ -x /usr/bin/qlist ]; then
+        _FORCE="" \
+        _exec_ PORTAGE "
+            if [[ -x /usr/bin/qlist ]]; then
               qlist $_PKG
-            elif [ -x /usr/bin/equery ]; then
+            elif [[ -x /usr/bin/equery ]]; then
               equery files $_PKG
             else
               _error 'You need to install portage-utils or gentoolkit to perform this operation.'
@@ -336,8 +338,9 @@ case "$_POPT$_SOPT" in
 
         _exec_ DPKG     "dpkg-query -S $_PKG"
         _exec_ YUM      "rpm -qf $_PKG"
-        _FORCE="" _exec_ PORTAGE "
-            if [ -x /usr/bin/equery ]; then
+        _FORCE="" \
+        _exec_ PORTAGE "
+            if [[ -x /usr/bin/equery ]]; then
               equery belongs $_PKG
             else
               _error 'You need to install gentoolkit to perform this operation'
@@ -354,9 +357,9 @@ case "$_POPT$_SOPT" in
    "Qq")
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
         _os_is PORTAGE  && _error "Function not supported as Gentoo has no definition of 'package file"
-        _exec_ YUM      && _error "Function not implemented in Yum"
+        _os_is YUM      && _error "Function not implemented in Yum"
 
-        _exec_ DPKG     "dpkg -l $_PKG | grep -E ^[hi]i | awk '{print $2}'"
+        _exec_ DPKG     "dpkg -l | grep -E ^[hi]i | awk '{print \$2}'"
       ;;
    "Qc")
         _os_is DPKG     && _error "Function not implemented in Debian system"
@@ -364,7 +367,7 @@ case "$_POPT$_SOPT" in
         _exec_ HOMEBREW "brew log $_PKG"
         _exec_ YUM      "rpm -q --changelog $_PKG"
         _FORCE="" \
-            && _exec_ PORTAGE "emerge -p --changelog $_PKG"
+        _exec_ PORTAGE "emerge -p --changelog $_PKG"
       ;;
    "Qu")
         _exec_ DPKG     "apt-get upgrade --trivial-only $_PKG"
@@ -385,10 +388,11 @@ case "$_POPT$_SOPT" in
         _exec_ YUM      "yum list installed $_PKG"
 
         # FIXME: There are actually many ways to do this in Gentoo
-        _FORCE="" && _exec_ PORTAGE "
-            if [ -x /usr/bin/eix ]; then
+        _FORCE="" \
+        _exec_ PORTAGE "
+            if [[ -x /usr/bin/eix ]]; then
               eix -I $_PKG
-            elif [ -x /usr/bin/equery ]; then
+            elif [[ -x /usr/bin/equery ]]; then
               equery list '*' $_PKG
             else
               LS_COLORS=never ls -1 -d /var/db/pkg/*/*
@@ -413,14 +417,15 @@ case "$_POPT$_SOPT" in
         _exec_ HOMEBREW "brew info $_PKG"
         _exec_ YUM      "yum info $_PKG"
         _FORCE="" \
-            && _exec_ PORTAGE  "emerge --info $_PKG"
+        _exec_ PORTAGE  "emerge --info $_PKG"
       ;;
   "Suy")
-        _VERBOSE="" _exec_ DPKG "apt-get update; apt-get upgrade"
+        _VERBOSE="" \
+        _exec_ DPKG "apt-get update; apt-get upgrade"
         _exec_ HOMEBREW "brew update; brew upgrade"
         _exec_ YUM "yum update"
         _exec_ PORTAGE "
-            if [ -x /usr/bin/layman ]; then
+            if [[ -x /usr/bin/layman ]]; then
               layman --sync-all \
                 && emerge --sync \
                 && emerge -auND world $_PKG
@@ -431,17 +436,20 @@ case "$_POPT$_SOPT" in
           "
       ;;
    "Su")
-        _VERBOSE="" _exec_ DPKG "apt-get upgrade"
+        _VERBOSE="" \
+        _exec_ DPKG "apt-get upgrade"
         _exec_ HOMEBREW         "brew upgrade"
         _exec_ YUM              "yum update"
         _exec_ PORTAGE          "emerge -uND world $_PKG"
       ;;
    "Sy")
-        _VERBOSE="" _exec_ DPKG "apt-get update"
+        _VERBOSE="" \
+        _exec_ DPKG "apt-get update"
         _exec_ HOMEBREW         "brew update"
         _exec_ YUM              "yum check-update"
-        _FORCE="" _exec_ PORTAGE "
-            if [ -x /usr/bin/layman ]; then
+        _FORCE="" \
+        _exec_ PORTAGE "
+            if [[ -x /usr/bin/layman ]]; then
               layman --sync-all && emerge --sync
             else
               emerge --sync
@@ -452,7 +460,8 @@ case "$_POPT$_SOPT" in
         _exec_ DPKG     "apt-cache search $_PKG"
         _exec_ HOMEBREW "brew search $_PKG"
         _exec_ YUM      "yum search $_PKG"
-        _FORCE="" _exec_ PORTAGE "
+        _FORCE="" \
+        _exec_ PORTAGE "
             if [ -x /usr/bin/eix ]; then
               eix $_PKG
             else
@@ -465,8 +474,9 @@ case "$_POPT$_SOPT" in
 
         _exec_ DPKG     "apt-get clean"
         _exec_ YUM      "yum clean expire-cache"
-        __FORCE="" _exec_ PORTAGE "
-            if [ -x usr/bin/eclean-dist ]; then
+        __FORCE="" \
+        _exec_ PORTAGE "
+            if [[ -x usr/bin/eclean-dist ]]; then
               eclean-dist -d -t1m -s50 -f
             else
               _error 'You need install gentoolkit to perform this operation.'
@@ -478,8 +488,9 @@ case "$_POPT$_SOPT" in
 
         _exec_ DPKG     "apt-get autoclean"
         _exec_ YUM      "yum clean packages"
-        _FORCE="" _exec_ PORTAGE "
-            if [ -x /usr/bin/eclean ]; then
+        _FORCE="" \
+        _exec_ PORTAGE "
+            if [[ -x /usr/bin/eclean ]]; then
               eclean -i distfiles
             else
               _error 'You need install gentoolkit to perform this operation.'
@@ -495,7 +506,7 @@ case "$_POPT$_SOPT" in
                      apt-get autoclean"
         _exec_ YUM   "yum clean all"
         _FORCE="" \
-            && _exec_ PORTAGE "rm -fv /usr/portage/distfiles/*.*"
+        _exec_ PORTAGE "rm -fv /usr/portage/distfiles/*.*"
       ;;
     "S")
         if [ -z "$_PKG" ]; then
@@ -508,7 +519,7 @@ case "$_POPT$_SOPT" in
           _exec_ PORTAGE  "emerge $_TOPT $_PKG"
         fi
       ;;
-  "U")
+    "U")
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
         _os_is PORTAGE  && _error "You need to implement a local overlay and do the installation as usual."
 
