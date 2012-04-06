@@ -351,6 +351,13 @@ case "$_POPT$_SOPT" in
         _exec_ DPKG     "dpkg-deb -I $_PKG"
         _exec_ YUM      "rpm -qp $_PKG"
       ;;
+   "Qq")
+        _os_is HOMEBREW && _error "Function not implemented in homebrew"
+        _os_is PORTAGE  && _error "Function not supported as Gentoo has no definition of 'package file"
+        _exec_ YUM      && _error "Function not implemented in Yum"
+
+        _exec_ DPKG     "dpkg -l $_PKG | grep -E ^[hi]i | awk '{print $2}'"
+      ;;
    "Qc")
         _os_is DPKG     && _error "Function not implemented in Debian system"
 
