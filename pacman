@@ -205,7 +205,7 @@ esac
 # 'no'
 [[ "$_OSTYPE" = "PORTAGE" ]] && _FORCE="-a"
 
-while getopts "URQShfvlumyispqwco" opt; do
+while getopts "URQShfvlumyispqwco" opt 2>/dev/null; do
   case "$opt" in
     Q|S|R|U)
       if [[ "$_POPT" != "" && "$_POPT" != "$opt" ]]; then
@@ -215,8 +215,15 @@ while getopts "URQShfvlumyispqwco" opt; do
       _POPT="$opt"
       ;;
 
-    s|l|i|p|q|o|m)
+    # FIXME: Please check pacman(8) to see if they are really 2nd operation
+    s|l|i|p|o|m)
         _SOPT="$opt"
+      ;;
+
+    # NOTE: -q is an output option, not an operator!
+    # Thanks to James Pearson for his catch :)
+    q)
+        _TOPT="$opt"
       ;;
 
     u)
@@ -246,33 +253,35 @@ while getopts "URQShfvlumyispqwco" opt; do
       ;;
 
     w)
-        case "$_OSTYPE" in
-          "DPKG") _TOPT="-d" ;;
-          "YUM")
-              _TOPT="--downloadonly"
-              if ! rpm -q yum-downloadonly > /dev/null; then
-                _error "The '-w' option requires the package 'yum-downloadonly'"
-                _error "Install this with 'yum install -y yum-downloadonly' or"
-                _error "$0 -S -f yum-downloadonly"
-                exit 1
-              fi
-            ;;
-          "PORTAGE") _TOPT="--fetchonly" ;;
-        esac
+      case "$_OSTYPE" in
+        "DPKG") _TOPT="-d" ;;
+        "YUM")
+            _TOPT="--downloadonly"
+            if ! rpm -q yum-downloadonly > /dev/null; then
+              _error "The '-w' option requires the package 'yum-downloadonly'"
+              _error "Install this with 'yum install -y yum-downloadonly' or"
+              _error "$0 -S -f yum-downloadonly"
+              exit 1
+            fi
+          ;;
+        "PORTAGE") _TOPT="--fetchonly" ;;
+      esac
       ;;
 
     f)
-        case "$_OSTYPE" in
-          "DPKG")     _FORCE="-f --force-yes" ;;
-          "YUM")      _FORCE="-y" ;;
-          "PORTAGE")  _FORCE="" ;;
-          *)          _FORCE="-y" ;;
-        esac
+      case "$_OSTYPE" in
+        "DPKG")     _FORCE="-f --force-yes" ;;
+        "YUM")      _FORCE="-y" ;;
+        "PORTAGE")  _FORCE="" ;;
+        *)          _FORCE="-y" ;;
+      esac
       ;;
 
     v) _VERBOSE="-v" ;;
 
     h) _help; exit 0 ;;
+
+    *) _error "Error: Invalid option"; exit 1 ;;
   esac
 done
 
@@ -312,6 +321,10 @@ fi
 
 # Invoke the native package manager
 case "$_POPT$_SOPT" in
+    ####################################################################
+    #                            QUERYING                              #
+    ####################################################################
+
    "Qi")
         _exec_ DPKG     "dpkg-query -s $_PKG"
         _exec_ HOMEBREW "brew info $_PKG"
@@ -328,10 +341,14 @@ case "$_POPT$_SOPT" in
                 | grep -E ^[hi]i \
                 | awk '{print \$2}' \
                 | while read _pkg; do
-                    dpkg-query -L \$_pkg \
-                      | while read _line; do
-                          echo \$_pkg \$_line
-                        done
+                    if [[ \"$_TOPT\" = 'q' ]]; then
+                      dpkg-query -L \$_pkg
+                    else
+                      dpkg-query -L \$_pkg \
+                        | while read _line; do
+                            echo \$_pkg \$_line
+                          done
+                    fi
                   done
             fi
           "
@@ -354,7 +371,7 @@ case "$_POPT$_SOPT" in
         _exec_ DPKG     "dpkg-query -S $_PKG"
         _exec_ YUM      "rpm -qf $_PKG"
         _FORCE="" \
-        _exec_ PORTAGE "
+        _exec_ PORTAGE  "
             if [[ -x /usr/bin/equery ]]; then
               equery belongs $_PKG
             else
@@ -369,20 +386,13 @@ case "$_POPT$_SOPT" in
         _exec_ DPKG     "dpkg-deb -I $_PKG"
         _exec_ YUM      "rpm -qp $_PKG"
       ;;
-   "Qq")
-        _os_is HOMEBREW && _error "Function not implemented in homebrew"
-        _os_is PORTAGE  && _error "Function not supported as Gentoo has no definition of 'package file"
-        _os_is YUM      && _error "Function not implemented in Yum"
-
-        _exec_ DPKG     "dpkg -l | grep -E ^[hi]i | awk '{print \$2}'"
-      ;;
    "Qc")
         _os_is DPKG     && _error "Function not implemented in Debian system"
 
         _exec_ HOMEBREW "brew log $_PKG"
         _exec_ YUM      "rpm -q --changelog $_PKG"
         _FORCE="" \
-        _exec_ PORTAGE "emerge -p --changelog $_PKG"
+        _exec_ PORTAGE  "emerge -p --changelog $_PKG"
       ;;
    "Qu")
         _exec_ DPKG     "apt-get upgrade --trivial-only $_PKG"
@@ -397,23 +407,41 @@ case "$_POPT$_SOPT" in
 
         _exec_ YUM      "yum list extras $_PKG"
       ;;
-    "Q")
-        _exec_ DPKG     "dpkg -l $_PKG | grep -E ^[hi]i"
-        _exec_ HOMEBREW "brew list | grep $_PKG"
-        _exec_ YUM      "yum list installed $_PKG"
 
-        # FIXME: There are actually many ways to do this in Gentoo
-        _FORCE="" \
-        _exec_ PORTAGE "
-            if [[ -x /usr/bin/eix ]]; then
-              eix -I $_PKG
-            elif [[ -x /usr/bin/equery ]]; then
-              equery list '*' $_PKG
-            else
-              LS_COLORS=never ls -1 -d /var/db/pkg/*/*
-            fi
-          "
+    "Q")
+        if [[ "$_TOPT" = 'q' ]]; then
+          # FIXME: Should we redirect user to a similar operation?
+          _os_is HOMEBREW && _error "Function not implemented in homebrew"
+          _os_is PORTAGE  && _error "Function not supported as Gentoo has no definition of 'package file"
+          _os_is YUM      && _error "Function not implemented in Yum"
+
+          _exec_ DPKG     "dpkg -l | grep -E ^[hi]i | awk '{print \$2}'"
+        elif [[ "$_TOPT" = "" ]]; then
+          _exec_ DPKG     "dpkg -l $_PKG | grep -E ^[hi]i"
+          _exec_ HOMEBREW "brew list | grep $_PKG"
+          _exec_ YUM      "yum list installed $_PKG"
+
+          # FIXME: There are actually many ways to do this in Gentoo
+          _FORCE="" \
+          _exec_ PORTAGE "
+              if [[ -x /usr/bin/eix ]]; then
+                eix -I $_PKG
+              elif [[ -x /usr/bin/equery ]]; then
+                equery list '*' $_PKG
+              else
+                LS_COLORS=never ls -1 -d /var/db/pkg/*/*
+              fi
+            "
+        else
+          _error "Error: Invalid option"
+          exit 1
+        fi
       ;;
+
+    ####################################################################
+    #                            REMOVING                              #
+    ####################################################################
+
    "Rs")
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
 
@@ -427,6 +455,11 @@ case "$_POPT$_SOPT" in
         _exec_ YUM      "yum erase $_PKG"
         _exec_ PORTAGE  "emerge --depclean $_PKG"
       ;;
+
+    ####################################################################
+    #                           SYNCHRONIZING                          #
+    ####################################################################
+
    "Si")
         _exec_ DPKG     "dpkg-query -s $_PKG"
         _exec_ HOMEBREW "brew info $_PKG"
@@ -436,10 +469,10 @@ case "$_POPT$_SOPT" in
       ;;
   "Suy")
         _VERBOSE="" \
-        _exec_ DPKG "apt-get update; apt-get upgrade"
+        _exec_ DPKG     "apt-get update; apt-get upgrade"
         _exec_ HOMEBREW "brew update; brew upgrade"
-        _exec_ YUM "yum update"
-        _exec_ PORTAGE "
+        _exec_ YUM      "yum update"
+        _exec_ PORTAGE  "
             if [[ -x /usr/bin/layman ]]; then
               layman --sync-all \
                 && emerge --sync \
@@ -452,18 +485,18 @@ case "$_POPT$_SOPT" in
       ;;
    "Su")
         _VERBOSE="" \
-        _exec_ DPKG "apt-get upgrade"
-        _exec_ HOMEBREW         "brew upgrade"
-        _exec_ YUM              "yum update"
-        _exec_ PORTAGE          "emerge -uND world $_PKG"
+        _exec_ DPKG     "apt-get upgrade"
+        _exec_ HOMEBREW "brew upgrade"
+        _exec_ YUM      "yum update"
+        _exec_ PORTAGE  "emerge -uND world $_PKG"
       ;;
    "Sy")
         _VERBOSE="" \
-        _exec_ DPKG "apt-get update"
-        _exec_ HOMEBREW         "brew update"
-        _exec_ YUM              "yum check-update"
+        _exec_ DPKG     "apt-get update"
+        _exec_ HOMEBREW "brew update"
+        _exec_ YUM      "yum check-update"
         _FORCE="" \
-        _exec_ PORTAGE "
+        _exec_ PORTAGE  "
             if [[ -x /usr/bin/layman ]]; then
               layman --sync-all && emerge --sync
             else
@@ -476,7 +509,7 @@ case "$_POPT$_SOPT" in
         _exec_ HOMEBREW "brew search $_PKG"
         _exec_ YUM      "yum search $_PKG"
         _FORCE="" \
-        _exec_ PORTAGE "
+        _exec_ PORTAGE  "
             if [[ -x /usr/bin/eix ]]; then
               eix $_PKG
             else
@@ -490,7 +523,7 @@ case "$_POPT$_SOPT" in
         _exec_ DPKG     "apt-get clean"
         _exec_ YUM      "yum clean expire-cache"
         __FORCE="" \
-        _exec_ PORTAGE "
+        _exec_ PORTAGE  "
             if [[ -x usr/bin/eclean-dist ]]; then
               eclean-dist -d -t1m -s50 -f
             else
@@ -504,7 +537,7 @@ case "$_POPT$_SOPT" in
         _exec_ DPKG     "apt-get autoclean"
         _exec_ YUM      "yum clean packages"
         _FORCE="" \
-        _exec_ PORTAGE "
+        _exec_ PORTAGE  "
             if [[ -x /usr/bin/eclean ]]; then
               eclean -i distfiles
             else
@@ -515,30 +548,39 @@ case "$_POPT$_SOPT" in
  "Sccc")
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
 
-        _exec_ DPKG "rm -fv /var/cache/apt/*.bin
-                     rm -fv /var/cache/apt/archives/*.*
-                     rm -fv /var/lib/apt/lists/*.*
-                     apt-get autoclean"
-        _exec_ YUM   "yum clean all"
+        _exec_ DPKG     "rm -fv /var/cache/apt/*.bin
+                          rm -fv /var/cache/apt/archives/*.*
+                          rm -fv /var/lib/apt/lists/*.*
+                          apt-get autoclean"
+        _exec_ YUM      "yum clean all"
         _FORCE="" \
-        _exec_ PORTAGE "rm -fv /usr/portage/distfiles/*.*"
+        _exec_ PORTAGE  "rm -fv /usr/portage/distfiles/*.*"
       ;;
     "S")
-        if [[ -z "$_PKG" ]]; then
-          _error "You must specify a package"
-          exit 1
-        else
-          _exec_ DPKG     "apt-get install $_TOPT $_PKG"
-          _exec_ HOMEBREW "brew install $_TOPT $_PKG"
-          _exec_ YUM      "yum install $_TOPT $_PKG"
-          _exec_ PORTAGE  "emerge $_TOPT $_PKG"
-        fi
+        [[ -z "$_PKG" ]] \
+          && { _error "You must specify a package"; exit 1; }
+
+        _exec_ DPKG     "apt-get install $_TOPT $_PKG"
+        _exec_ HOMEBREW "brew install $_TOPT $_PKG"
+        _exec_ YUM      "yum install $_TOPT $_PKG"
+        _exec_ PORTAGE  "emerge $_TOPT $_PKG"
       ;;
+
+    ####################################################################
+    #                            UPGRADING                             #
+    ####################################################################
+
     "U")
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
         _os_is PORTAGE  && _error "You need to implement a local overlay and do the installation as usual."
 
         _exec_ DPKG     "dpkg -i $_TOPT $_PKG"
         _exec_ YUM      "yum localinstall $_TOPT $_PKG"
+      ;;
+
+    # Default option
+      *)
+        _error "Error: Invalid option"
+        exit 1
       ;;
 esac

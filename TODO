@@ -5,7 +5,7 @@
     pacman -Qc <p>  => emerge -p --changelog <p>
     pacman -Qi <p>  => emerge --info <p>
     pacmon -Ql <p>  => exists("qlist") && qlist <p> || equery files <p>
-    pacman -Qm      = orphan packages, not supported
+    pacman -Qm      => orphan packages, not supported
     pacman -Qo <f>  => equery belongs <f>
     pacman -Qp <f>  => not supported, Gentoo virtually has no definition of "package file"
 
