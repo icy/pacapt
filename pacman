@@ -518,9 +518,8 @@ case "$_POPT$_SOPT" in
           "
       ;;
    "Sc")
-        _os_is HOMEBREW && _error "Function not implemented in homebrew"
-
         _exec_ DPKG     "apt-get clean"
+        _exec_ HOMEBREW "brew cleanup"
         _exec_ YUM      "yum clean expire-cache"
         __FORCE="" \
         _exec_ PORTAGE  "
@@ -532,9 +531,8 @@ case "$_POPT$_SOPT" in
           "
       ;;
   "Scc")
-        _os_is HOMEBREW && _error "Function not implemented in homebrew"
-
         _exec_ DPKG     "apt-get autoclean"
+        _exec_ HOMEBREW "brew cleanup -s"
         _exec_ YUM      "yum clean packages"
         _FORCE="" \
         _exec_ PORTAGE  "
@@ -546,12 +544,11 @@ case "$_POPT$_SOPT" in
           "
       ;;
  "Sccc")
-        _os_is HOMEBREW && _error "Function not implemented in homebrew"
-
         _exec_ DPKG     "rm -fv /var/cache/apt/*.bin
                           rm -fv /var/cache/apt/archives/*.*
                           rm -fv /var/lib/apt/lists/*.*
                           apt-get autoclean"
+        _exec_ HOMEBREW "rm -rf $(brew --cache)"
         _exec_ YUM      "yum clean all"
         _FORCE="" \
         _exec_ PORTAGE  "rm -fv /usr/portage/distfiles/*.*"
