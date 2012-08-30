@@ -59,7 +59,7 @@ INSTALL
 
   Download the script 'pacman' and install it into /usr/local/bin.
   Example:
-    $ wget https://github.com/icy/pacapt/raw/master/pacman -O /usr/local/bin/pacman
+    $ wget --no-check-certificate https://github.com/icy/pacapt/raw/master/pacman -O /usr/local/bin/pacman
     $ chmod 755 /usr/local/bin/pacman
 
   This script shouldn't be installed on an Arch-based system.
