@@ -548,7 +548,7 @@ case "$_POPT$_SOPT" in
                           rm -fv /var/cache/apt/archives/*.*
                           rm -fv /var/lib/apt/lists/*.*
                           apt-get autoclean"
-        _exec_ HOMEBREW "rm -rf $(brew --cache)"
+        _exec_ HOMEBREW 'rm -rf $(brew --cache)'
         _exec_ YUM      "yum clean all"
         _FORCE="" \
         _exec_ PORTAGE  "rm -fv /usr/portage/distfiles/*.*"
