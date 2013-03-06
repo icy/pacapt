@@ -507,7 +507,7 @@ case "$_POPT$_SOPT" in
    "Ss")
         _exec_ DPKG     "apt-cache search $_PKG"
         _exec_ HOMEBREW "brew search $_PKG"
-        _exec_ YUM      "yum search $_PKG"
+        _exec_ YUM      "yum -C search $_PKG"
         _FORCE="" \
         _exec_ PORTAGE  "
             if [[ -x /usr/bin/eix ]]; then
