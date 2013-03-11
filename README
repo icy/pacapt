@@ -28,12 +28,24 @@ DESCRIPTION
 
 INSTALL
 
+  This script shouldn't be installed on an Arch-based system.
+
   Download the script 'pacman' and install it into /usr/local/bin.
-  Example:
-    $ wget --no-check-certificate https://github.com/icy/pacapt/raw/master/pacman -O /usr/local/bin/pacman
+
+    $ wget \
+        -O /usr/local/bin/pacman \
+        https://github.com/icy/pacapt/raw/master/pacman
+
     $ chmod 755 /usr/local/bin/pacman
 
-  This script shouldn't be installed on an Arch-based system.
+  If you have problem with Github's SSL certificate you may try
+
+    $ wget \
+        --no-check-certificate \
+        -O /usr/local/bin/pacman \
+        https://github.com/icy/pacapt/raw/master/pacman
+
+  However this way isn't recommended unless you know what you're doing.
 
 SYNTAX
 
