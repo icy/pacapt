@@ -177,6 +177,7 @@ _OSTYPE_detect() {
   _found_arch DPKG   "Debian GNU/Linux"
   _found_arch DPKG   "Ubuntu"
   _found_arch YUM    "CentOS"
+  _found_arch YUM    "Red Hat"
   _found_arch YUM    "Fedora"
 
   if [[ -z "$_OSTYPE" ]]; then
