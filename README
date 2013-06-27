@@ -25,6 +25,7 @@ DESCRIPTION
     homebrew      by Mac OS X
     yum/rpm       by Redhat, CentOS, Fedora
     portage       by Gentoo
+    zypper        by OpenSUSE
 
 INSTALL
 

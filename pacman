@@ -54,6 +54,7 @@ DESCRIPTION
     homebrew      by Mac OS X
     yum/rpm       by Redhat, CentOS, Fedora
     portage       by Gentoo
+    zypper        by OpenSUSE
 
 INSTALL
 
@@ -179,6 +180,7 @@ _OSTYPE_detect() {
   _found_arch YUM    "CentOS"
   _found_arch YUM    "Red Hat"
   _found_arch YUM    "Fedora"
+  _found_arch ZYPPER "SUSE"
 
   if [[ -z "$_OSTYPE" ]]; then
     _error "Can't detect OS type from /etc/issue. Running fallback method."
@@ -186,6 +188,7 @@ _OSTYPE_detect() {
     [[ -x "/usr/bin/yum" ]]        && _OSTYPE="YUM"
     [[ -x "/usr/local/bin/brew" ]] && _OSTYPE="HOMEBREW"
     [[ -x "/usr/bin/emerge" ]]     && _OSTYPE="PORTAGE"
+    [[ -x "/usr/bin/zypper" ]]     && _OSTYPE="ZYPPER"
   fi
 }
 
@@ -201,7 +204,7 @@ case "$_OSTYPE" in
   "PACMAN")
     exec /usr/bin/pacman "$@"
     ;;
-  "YUM"|"DPKG"|"HOMEBREW"|"PORTAGE")
+  "YUM"|"DPKG"|"HOMEBREW"|"PORTAGE"|"ZYPPER")
     ;;
   *)
     _error "No supported package manager installed on system"
@@ -278,6 +281,7 @@ while getopts "URQShfvlumyispqwco" opt 2>/dev/null; do
             fi
           ;;
         "PORTAGE") _TOPT="--fetchonly" ;;
+        "ZYPPER")  _TOPT="--download-only" ;;
       esac
       ;;
 
@@ -339,6 +343,7 @@ case "$_POPT$_SOPT" in
     ####################################################################
 
    "Qi")
+        _exec_ ZYPPER   "zypper info $_PKG"
         _exec_ DPKG     "dpkg-query -s $_PKG"
         _exec_ HOMEBREW "brew info $_PKG"
         _exec_ YUM      "yum info $_PKG"
@@ -346,6 +351,7 @@ case "$_POPT$_SOPT" in
         _exec_ PORTAGE  "emerge --info $_PKG"
       ;;
    "Ql")
+        _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
         _exec_ DPKG     "
             if [[ -n \"$_PKG\" ]]; then
               dpkg-query -L $_PKG
@@ -379,6 +385,7 @@ case "$_POPT$_SOPT" in
           "
       ;;
    "Qo")
+        _exec_ ZYPPER "echo 'Function is not available'; exit 1"
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
 
         _exec_ DPKG     "dpkg-query -S $_PKG"
@@ -393,6 +400,7 @@ case "$_POPT$_SOPT" in
           "
       ;;
    "Qp")
+        _exec_ ZYPPER "echo 'Function is not available'; exit 1"
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
         _os_is PORTAGE  && _error "Function not supported as Gentoo has no definition of 'package file"
 
@@ -400,6 +408,7 @@ case "$_POPT$_SOPT" in
         _exec_ YUM      "rpm -qp $_PKG"
       ;;
    "Qc")
+        _exec_ ZYPPER "echo 'Function is not available'; exit 1"
         _os_is DPKG     && _error "Function not implemented in Debian system"
 
         _exec_ HOMEBREW "brew log $_PKG"
@@ -408,12 +417,14 @@ case "$_POPT$_SOPT" in
         _exec_ PORTAGE  "emerge -p --changelog $_PKG"
       ;;
    "Qu")
+        _exec_ ZYPPER   "zypper list-updates"
         _exec_ DPKG     "apt-get upgrade --trivial-only $_PKG"
         _exec_ HOMEBREW "brew outdated | grep $_PKG"
         _exec_ YUM      "yum list updates $_PKG"
         _exec_ PORTAGE  "emerge -uvN $_PKG" # FIXME: not exactly
       ;;
    "Qm")
+        _exec_ ZYPPER   "zypper search -si | grep 'System Packages'"
         _os_is DPKG     && _error "Function not implemented in Debian system"
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
         _os_is PORTAGE  && _error "Function not supported in Gentoo"
@@ -422,6 +433,7 @@ case "$_POPT$_SOPT" in
       ;;
 
     "Q")
+        _exec_ ZYPPER   "echoh 'Function is not available'; exit 1"
         if [[ "$_TOPT" = 'q' ]]; then
           # FIXME: Should we redirect user to a similar operation?
           _os_is HOMEBREW && _error "Function not implemented in homebrew"
@@ -456,6 +468,7 @@ case "$_POPT$_SOPT" in
     ####################################################################
 
    "Rs")
+        _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
 
         _exec_ DPKG     "apt-get autoremove $_PKG"
@@ -463,6 +476,7 @@ case "$_POPT$_SOPT" in
         _exec_ PORTAGE  "emerge --depclean world $_PKG"
       ;;
     "R")
+        _exec_ ZYPPER   "zypper remove $_PKG"
         _exec_ DPKG     "apt-get remove $_PKG"
         _exec_ HOMEBREW "brew remove $_PKG"
         _exec_ YUM      "yum erase $_PKG"
@@ -474,6 +488,7 @@ case "$_POPT$_SOPT" in
     ####################################################################
 
    "Si")
+        _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
         _exec_ DPKG     "dpkg-query -s $_PKG"
         _exec_ HOMEBREW "brew info $_PKG"
         _exec_ YUM      "yum info $_PKG"
@@ -481,6 +496,7 @@ case "$_POPT$_SOPT" in
         _exec_ PORTAGE  "emerge --info $_PKG"
       ;;
   "Suy")
+        _exe_ ZYPPER    "zypper dup"
         _VERBOSE="" \
         _exec_ DPKG     "apt-get update; apt-get upgrade"
         _exec_ HOMEBREW "brew update; brew upgrade"
@@ -497,6 +513,7 @@ case "$_POPT$_SOPT" in
           "
       ;;
    "Su")
+        _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
         _VERBOSE="" \
         _exec_ DPKG     "apt-get upgrade"
         _exec_ HOMEBREW "brew upgrade"
@@ -504,6 +521,7 @@ case "$_POPT$_SOPT" in
         _exec_ PORTAGE  "emerge -uND world $_PKG"
       ;;
    "Sy")
+        _exec_ ZYPPER   "zypper update"
         _VERBOSE="" \
         _exec_ DPKG     "apt-get update"
         _exec_ HOMEBREW "brew update"
@@ -518,6 +536,7 @@ case "$_POPT$_SOPT" in
           "
       ;;
    "Ss")
+        _exec_ ZYPPER   "zypper search $_PKG"
         _exec_ DPKG     "apt-cache search $_PKG"
         _exec_ HOMEBREW "brew search $_PKG"
         _exec_ YUM      "yum -C search $_PKG"
@@ -531,6 +550,7 @@ case "$_POPT$_SOPT" in
           "
       ;;
    "Sc")
+        _exec_ ZYPPER   "zypper clean"
         _exec_ DPKG     "apt-get clean"
         _exec_ HOMEBREW "brew cleanup"
         _exec_ YUM      "yum clean expire-cache"
@@ -544,6 +564,7 @@ case "$_POPT$_SOPT" in
           "
       ;;
   "Scc")
+        _exec_ ZYPPER   "zypper clean"
         _exec_ DPKG     "apt-get autoclean"
         _exec_ HOMEBREW "brew cleanup -s"
         _exec_ YUM      "yum clean packages"
@@ -557,6 +578,7 @@ case "$_POPT$_SOPT" in
           "
       ;;
  "Sccc")
+        _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
         _exec_ DPKG     "rm -fv /var/cache/apt/*.bin
                           rm -fv /var/cache/apt/archives/*.*
                           rm -fv /var/lib/apt/lists/*.*
@@ -570,6 +592,7 @@ case "$_POPT$_SOPT" in
         [[ -z "$_PKG" ]] \
           && { _error "You must specify a package"; exit 1; }
 
+        _exec_ ZYPPER   "zypper install $_TOPT $_PKG"
         _exec_ DPKG     "apt-get install $_TOPT $_PKG"
         _exec_ HOMEBREW "brew install $_TOPT $_PKG"
         _exec_ YUM      "yum install $_TOPT $_PKG"
@@ -581,6 +604,7 @@ case "$_POPT$_SOPT" in
     ####################################################################
 
     "U")
+        _exec_ ZYPPER   "zypper install $_PKG"
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
         _os_is PORTAGE  && _error "You need to implement a local overlay and do the installation as usual."
 
