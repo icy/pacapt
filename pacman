@@ -433,7 +433,7 @@ case "$_POPT$_SOPT" in
       ;;
 
     "Q")
-        _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
+        _exec_ ZYPPER   "zypper search -i"
         if [[ "$_TOPT" = 'q' ]]; then
           # FIXME: Should we redirect user to a similar operation?
           _os_is HOMEBREW && _error "Function not implemented in homebrew"
