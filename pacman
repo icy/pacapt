@@ -521,7 +521,7 @@ case "$_POPT$_SOPT" in
         _exec_ PORTAGE  "emerge -uND world $_PKG"
       ;;
    "Sy")
-        _exec_ ZYPPER   "zypper update"
+        _exec_ ZYPPER   "zypper refresh"
         _VERBOSE="" \
         _exec_ DPKG     "apt-get update"
         _exec_ HOMEBREW "brew update"
