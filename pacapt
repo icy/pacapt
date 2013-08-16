@@ -211,7 +211,11 @@ while getopts "URQShfvlumyispqwco" opt 2>/dev/null; do
 
     # FIXME: Please check pacman(8) to see if they are really 2nd operation
     s|l|i|p|o|m)
-        _SOPT="$opt"
+        if [[ "$_SOPT" == '' ]]; then
+          _SOPT="$opt"
+        else
+          _TOPT="$opt"
+        fi
       ;;
 
     # NOTE: -q is an output option, not an operator!
@@ -456,12 +460,26 @@ case "$_POPT$_SOPT" in
     ####################################################################
 
    "Rs")
-        _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
-        _os_is HOMEBREW && _error "Function not implemented in homebrew"
+        if [[ "$_TOPT" = 's' ]]; then
+          _os_is DPKG     && _error "Function not implemented in Debian system"
+          _os_is YUM      && _error "Function not implemented in Yum"
+          _os_is PORTAGE  && _error "Function not supported in Gentoo"
 
-        _exec_ DPKG     "apt-get autoremove $_PKG"
-        _exec_ YUM      "yum erase $_PKG"
-        _exec_ PORTAGE  "emerge --depclean world $_PKG"
+          _exec_ ZYPPER   "zypper remove $_PKG --clean-deps"
+          _exec_ HOMEBREW "
+              brew rm $_PKG
+              brew rm \$(join <(brew leaves) <(brew deps $_PKG))
+            "
+        elif [[ "$_TOPT" = '' ]]; then
+          _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
+          _os_is HOMEBREW && _error "Function not implemented in homebrew"
+
+          _exec_ DPKG     "apt-get autoremove $_PKG"
+          _exec_ YUM      "yum erase $_PKG"
+          _exec_ PORTAGE  "emerge --depclean world $_PKG"
+        else
+          _error "Error: Invalid option"
+        fi
       ;;
     "R")
         _exec_ ZYPPER   "zypper remove $_PKG"
