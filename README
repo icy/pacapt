@@ -29,28 +29,26 @@ DESCRIPTION
 
 INSTALL
 
-  This script shouldn't be installed on an Arch-based system.
-
-  Download the script 'pacman' and install it into /usr/local/bin.
+  Download the script 'pacapt' and install it into /usr/local/bin.
 
     $ wget \
-        -O /usr/local/bin/pacman \
-        https://github.com/icy/pacapt/raw/master/pacman
+        -O /usr/local/bin/pacapt \
+        https://github.com/icy/pacapt/raw/master/pacapt
 
-    $ chmod 755 /usr/local/bin/pacman
+    $ chmod 755 /usr/local/bin/pacapt
 
   If you have problem with Github's SSL certificate you may try
 
     $ wget \
         --no-check-certificate \
-        -O /usr/local/bin/pacman \
-        https://github.com/icy/pacapt/raw/master/pacman
+        -O /usr/local/bin/pacapt \
+        https://github.com/icy/pacapt/raw/master/pacapt
 
   However this way isn't recommended unless you know what you're doing.
 
 SYNTAX
 
-  $ pacman <operation> <option(s)> <packages>
+  $ pacapt <operation> <option(s)> <packages>
 
 OPERATIONS
 
@@ -90,14 +88,13 @@ OPTIONS
 NOTES
 
   To install a package from backports repository on Debian system:
-              $ pacman -S foobar -t lenny-backports
+              $ pacapt -S foobar -t lenny-backports
 
   Similarly, any further option which isn't recognized by getopts (1)
   can be passed to system tool.
 
   When being executed on Arch-based system, the tool simply invokes
-  the system tool '/usr/bin/pacman'. So you would never install this tool
-  as '/usr/bin/pacman', otherwise you may break your system!
+  the system tool '/usr/bin/pacman'.
 
 THANKS
 

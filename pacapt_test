@@ -12,31 +12,31 @@ EOF
 
 exit 0
 
-./pacman -Q
+./pacapt -Q
 echo ======
-./pacman -Qc package
+./pacapt -Qc package
 echo ======
-./pacman -Qi package
+./pacapt -Qi package
 echo ======
-./pacman -Qm
+./pacapt -Qm
 echo ======
-./pacman -Qo file
+./pacapt -Qo file
 echo ======
-./pacman -Qp file
+./pacapt -Qp file
 echo ======
-./pacman -S package
+./pacapt -S package
 echo ======
-./pacman -Ss package
+./pacapt -Ss package
 echo ======
-./pacman -Su
+./pacapt -Su
 echo ======
-./pacman -Sy
+./pacapt -Sy
 echo ======
-./pacman -Suy
+./pacapt -Suy
 echo ======
-./pacman -R package
+./pacapt -R package
 echo ======
-./pacman -Sc
+./pacapt -Sc
 echo ======
-./pacman -Scc
+./pacapt -Scc
 echo ======

@@ -1,27 +1,27 @@
 [x] Add tests
 [x] For Gentoo system:
 
-    pacman -Q       => eix -I
-    pacman -Qc <p>  => emerge -p --changelog <p>
-    pacman -Qi <p>  => emerge --info <p>
-    pacmon -Ql <p>  => exists("qlist") && qlist <p> || equery files <p>
-    pacman -Qm      => orphan packages, not supported
-    pacman -Qo <f>  => equery belongs <f>
-    pacman -Qp <f>  => not supported, Gentoo virtually has no definition of "package file"
+    pacapt -Q       => eix -I
+    pacapt -Qc <p>  => emerge -p --changelog <p>
+    pacapt -Qi <p>  => emerge --info <p>
+    pacapt -Ql <p>  => exists("qlist") && qlist <p> || equery files <p>
+    pacapt -Qm      => orphan packages, not supported
+    pacapt -Qo <f>  => equery belongs <f>
+    pacapt -Qp <f>  => not supported, Gentoo virtually has no definition of "package file"
 
-    pacman -S <p>   => emerge -a <p>
-    pacman -Ss <p>  => eix <p> || emerge --search <p>
-    pacman -Su      => emerge -auND world
-    pacman -Sy      => emerge --sync ; exists("layman") && layman --sync-all
-    pacman -Suy     => emerge --sync ; exists("layman") && layman --sync-all ; emerge -auND world
+    pacapt -S <p>   => emerge -a <p>
+    pacapt -Ss <p>  => eix <p> || emerge --search <p>
+    pacapt -Su      => emerge -auND world
+    pacapt -Sy      => emerge --sync ; exists("layman") && layman --sync-all
+    pacapt -Suy     => emerge --sync ; exists("layman") && layman --sync-all ; emerge -auND world
 
 
-    pacman -R <p>   => emerge --depclean <p>
+    pacapt -R <p>   => emerge --depclean <p>
 
-    pacman -Sc      = clean all distfiles except for installed packages (exact version), those which are less than one month old, bigger than 50MB, or fetch-restricted:
+    pacapt -Sc      = clean all distfiles except for installed packages (exact version), those which are less than one month old, bigger than 50MB, or fetch-restricted:
                     => eclean-dist -d -t1m -s50 -f
 
-    pacman -Scc     => eclean -i distfiles
+    pacapt -Scc     => eclean -i distfiles
 
     -f              => remove "-a"
     -v              => -v
