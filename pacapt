@@ -47,7 +47,7 @@ DESCRIPTION
   needed to manipulate official packages on system. (Debian, for example,
   requires you to use apt-get, dpkg, and/or aptitude.)
 
-  The tool supports the following types of package manager:
+  The tool supports the following package managers:
 
     pacman        by Arch Linux, ArchBang
     dpkg/apt-get  by Debian, Ubuntu
@@ -56,30 +56,9 @@ DESCRIPTION
     portage       by Gentoo
     zypper        by OpenSUSE
 
-INSTALL
-
-  This script shouldn't be installed on an Arch-based system.
-
-  Download the script 'pacman' and install it into /usr/local/bin.
-
-    $ wget \
-        -O /usr/local/bin/pacman \
-        https://github.com/icy/pacapt/raw/master/pacman
-
-    $ chmod 755 /usr/local/bin/pacman
-
-  If you have problem with Github's SSL certificate you may try
-
-    $ wget \
-        --no-check-certificate \
-        -O /usr/local/bin/pacman \
-        https://github.com/icy/pacapt/raw/master/pacman
-
-  However this way isn't recommended unless you know what you're doing.
-
 SYNTAX
 
-  $ pacman <operation> <option(s)> <packages>
+  $ pacapt <operation> <option(s)> <packages>
 
 OPERATIONS
 
@@ -119,14 +98,13 @@ OPTIONS
 NOTES
 
   To install a package from backports repository on Debian system:
-              $ pacman -S foobar -t lenny-backports
+              $ pacapt -S foobar -t lenny-backports
 
   Similarly, any further option which isn't recognized by getopts (1)
   can be passed to system tool.
 
   When being executed on Arch-based system, the tool simply invokes
-  the system tool '/usr/bin/pacman'. So you would never install this tool
-  as '/usr/bin/pacman', otherwise you may break your system!
+  the system tool '/usr/bin/pacman'.
 
 THANKS
 
@@ -386,9 +364,18 @@ case "$_POPT$_SOPT" in
       ;;
    "Qo")
         _exec_ ZYPPER "echo 'Function is not available'; exit 1"
-        _os_is HOMEBREW && _error "Function not implemented in homebrew"
 
         _exec_ DPKG     "dpkg-query -S $_PKG"
+        _exec_ HOMEBREW "
+            for package in /usr/local/Cellar/*; do
+              pkg=\"$_PKG\"
+              files=(\${package}/*/\${pkg/#\/usr\/local\//})
+              if [ -e \${files[\${#files[@]} - 1]} ]; then
+                echo \"\$package\"
+                break
+              fi
+            done
+          "
         _exec_ YUM      "rpm -qf $_PKG"
         _FORCE="" \
         _exec_ PORTAGE  "

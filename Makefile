@@ -1,13 +1,11 @@
-# Do not set this to /usr/bin as it might overwrite real Arch pacman executable
-# (or cause install target to fail if it were to overwrite pacman)
 BINDIR=/usr/local/bin
 
 default:
 	@echo "make README  : build the README file from script's contents"
-	@echo "make install : install pacman script into $(BINDIR)/"
+	@echo "make install : install pacapt script into $(BINDIR)/"
 	@echo "make clean   : remove git-ignored files"
 
-README: Makefile pacman
+README: Makefile pacapt
 	@cat pacman \
 		| awk > $(@) \
 			' \
@@ -18,9 +16,9 @@ README: Makefile pacman
 				} \
 			'
 
-install: $(BINDIR)/pacman
+install: $(BINDIR)/pacapt
 
-$(BINDIR)/pacman: pacman
+$(BINDIR)/pacapt: pacapt
 	@if [ -e $(@) ] && ! file $(@) | grep -q 'shell script'; then \
 		echo "will not overwrite non-script $(@)" >&2; exit 1; \
 	else \
