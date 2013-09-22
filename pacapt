@@ -52,6 +52,7 @@ DESCRIPTION
     pacman        by Arch Linux, ArchBang
     dpkg/apt-get  by Debian, Ubuntu
     homebrew      by Mac OS X
+    macports      by Mac OS X
     yum/rpm       by Redhat, CentOS, Fedora
     portage       by Gentoo
     zypper        by OpenSUSE
@@ -165,6 +166,7 @@ _OSTYPE_detect() {
     [[ -x "/usr/bin/apt-get" ]]    && _OSTYPE="DPKG"
     [[ -x "/usr/bin/yum" ]]        && _OSTYPE="YUM"
     [[ -x "/usr/local/bin/brew" ]] && _OSTYPE="HOMEBREW"
+    [[ -x "/opt/local/bin/port" ]] && _OSTYPE="MACPORTS"
     [[ -x "/usr/bin/emerge" ]]     && _OSTYPE="PORTAGE"
     [[ -x "/usr/bin/zypper" ]]     && _OSTYPE="ZYPPER"
   fi
@@ -182,7 +184,7 @@ case "$_OSTYPE" in
   "PACMAN")
     exec /usr/bin/pacman "$@"
     ;;
-  "YUM"|"DPKG"|"HOMEBREW"|"PORTAGE"|"ZYPPER")
+  "YUM"|"DPKG"|"HOMEBREW"|"MACPORTS"|"PORTAGE"|"ZYPPER")
     ;;
   *)
     _error "No supported package manager installed on system"
@@ -262,6 +264,7 @@ while getopts "URQShfvlumyispqwco" opt 2>/dev/null; do
               exit 1
             fi
           ;;
+        "MACPORTS") _TOPT="fetch" ;;
         "PORTAGE") _TOPT="--fetchonly" ;;
         "ZYPPER")  _TOPT="--download-only" ;;
       esac
@@ -271,6 +274,7 @@ while getopts "URQShfvlumyispqwco" opt 2>/dev/null; do
       case "$_OSTYPE" in
         "DPKG")     _FORCE="-f --force-yes" ;;
         "YUM")      _FORCE="-y" ;;
+        "MACPORTS")  _FORCE="-f" ;;
         "PORTAGE")  _FORCE="" ;;
         *)          _FORCE="-y" ;;
       esac
@@ -328,6 +332,8 @@ case "$_POPT$_SOPT" in
         _exec_ ZYPPER   "zypper info $_PKG"
         _exec_ DPKG     "dpkg-query -s $_PKG"
         _exec_ HOMEBREW "brew info $_PKG"
+        #_exec_ MACPORTS "port info $_PKG"
+        _os_is MACPORTS && _error "Function not implemented in macports"
         _exec_ YUM      "yum info $_PKG"
         _FORCE="" \
         _exec_ PORTAGE  "emerge --info $_PKG"
@@ -354,6 +360,7 @@ case "$_POPT$_SOPT" in
             fi
           "
         _exec_ HOMEBREW "brew list $_PKG"
+        _exec_ MACPORTS "port contents $_PKG"
         _exec_ YUM      "rpm -ql $_PKG"
         _FORCE="" \
         _exec_ PORTAGE  "
@@ -381,6 +388,7 @@ case "$_POPT$_SOPT" in
               fi
             done
           "
+        _exec_ MACPORTS "port provides $_PKG"
         _exec_ YUM      "rpm -qf $_PKG"
         _FORCE="" \
         _exec_ PORTAGE  "
@@ -394,6 +402,7 @@ case "$_POPT$_SOPT" in
    "Qp")
         _exec_ ZYPPER "echo 'Function is not available'; exit 1"
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
+        _os_is MACPORTS && _error "Function not implemented in macports"
         _os_is PORTAGE  && _error "Function not supported as Gentoo has no definition of 'package file"
 
         _exec_ DPKG     "dpkg-deb -I $_PKG"
@@ -404,6 +413,7 @@ case "$_POPT$_SOPT" in
         _os_is DPKG     && _error "Function not implemented in Debian system"
 
         _exec_ HOMEBREW "brew log $_PKG"
+        _exec_ MACPORTS "port log $_PKG"
         _exec_ YUM      "rpm -q --changelog $_PKG"
         _FORCE="" \
         _exec_ PORTAGE  "emerge -p --changelog $_PKG"
@@ -412,6 +422,7 @@ case "$_POPT$_SOPT" in
         _exec_ ZYPPER   "zypper list-updates"
         _exec_ DPKG     "apt-get upgrade --trivial-only $_PKG"
         _exec_ HOMEBREW "brew outdated | grep $_PKG"
+        _exec_ MACPORTS "port outdated $_PKG"
         _exec_ YUM      "yum list updates $_PKG"
         _exec_ PORTAGE  "emerge -uvN $_PKG" # FIXME: not exactly
       ;;
@@ -419,6 +430,7 @@ case "$_POPT$_SOPT" in
         _exec_ ZYPPER   "zypper search -si | grep 'System Packages'"
         _os_is DPKG     && _error "Function not implemented in Debian system"
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
+        _os_is MACPORTS && _error "Function not implemented in macports"
         _os_is PORTAGE  && _error "Function not supported in Gentoo"
 
         _exec_ YUM      "yum list extras $_PKG"
@@ -429,6 +441,7 @@ case "$_POPT$_SOPT" in
         if [[ "$_TOPT" = 'q' ]]; then
           # FIXME: Should we redirect user to a similar operation?
           _os_is HOMEBREW && _error "Function not implemented in homebrew"
+          _os_is MACPORTS && _error "Function not implemented in macports"
           _os_is PORTAGE  && _error "Function not supported as Gentoo has no definition of 'package file"
           _os_is YUM      && _error "Function not implemented in Yum"
 
@@ -436,6 +449,7 @@ case "$_POPT$_SOPT" in
         elif [[ "$_TOPT" = "" ]]; then
           _exec_ DPKG     "dpkg -l $_PKG | grep -E ^[hi]i"
           _exec_ HOMEBREW "brew list | grep $_PKG"
+          _exec_ MACPORTS "port installed $_PKG"
           _exec_ YUM      "yum list installed $_PKG"
 
           # FIXME: There are actually many ways to do this in Gentoo
@@ -470,10 +484,11 @@ case "$_POPT$_SOPT" in
               brew rm $_PKG
               brew rm \$(join <(brew leaves) <(brew deps $_PKG))
             "
+          _os_is MACPORTS && _error "Function not implemented in macports"
         elif [[ "$_TOPT" = '' ]]; then
           _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
           _os_is HOMEBREW && _error "Function not implemented in homebrew"
-
+          _exec_ MACPORTS "port uninstall --follow-dependencies $_PKG"
           _exec_ DPKG     "apt-get autoremove $_PKG"
           _exec_ YUM      "yum erase $_PKG"
           _exec_ PORTAGE  "emerge --depclean world $_PKG"
@@ -485,6 +500,7 @@ case "$_POPT$_SOPT" in
         _exec_ ZYPPER   "zypper remove $_PKG"
         _exec_ DPKG     "apt-get remove $_PKG"
         _exec_ HOMEBREW "brew remove $_PKG"
+        _exec_ MACPORTS "port uninstall $_PKG"
         _exec_ YUM      "yum erase $_PKG"
         _exec_ PORTAGE  "emerge --depclean $_PKG"
       ;;
@@ -497,6 +513,7 @@ case "$_POPT$_SOPT" in
         _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
         _exec_ DPKG     "dpkg-query -s $_PKG"
         _exec_ HOMEBREW "brew info $_PKG"
+        _exec_ MACPORTS "port info $_PKG"
         _exec_ YUM      "yum info $_PKG"
         _FORCE="" \
         _exec_ PORTAGE  "emerge --info $_PKG"
@@ -506,6 +523,7 @@ case "$_POPT$_SOPT" in
         _VERBOSE="" \
         _exec_ DPKG     "apt-get update; apt-get upgrade"
         _exec_ HOMEBREW "brew update; brew upgrade"
+        _exec_ MACPORTS "port selfupdate; port upgrade outdated"
         _exec_ YUM      "yum update"
         _exec_ PORTAGE  "
             if [[ -x /usr/bin/layman ]]; then
@@ -523,6 +541,7 @@ case "$_POPT$_SOPT" in
         _VERBOSE="" \
         _exec_ DPKG     "apt-get upgrade"
         _exec_ HOMEBREW "brew upgrade"
+        _exec_ MACPORTS "port upgrade outdated"
         _exec_ YUM      "yum update"
         _exec_ PORTAGE  "emerge -uND world $_PKG"
       ;;
@@ -531,6 +550,7 @@ case "$_POPT$_SOPT" in
         _VERBOSE="" \
         _exec_ DPKG     "apt-get update"
         _exec_ HOMEBREW "brew update"
+        _exec_ MACPORTS "port selfupdate" # or sync?
         _exec_ YUM      "yum check-update"
         _FORCE="" \
         _exec_ PORTAGE  "
@@ -545,6 +565,7 @@ case "$_POPT$_SOPT" in
         _exec_ ZYPPER   "zypper search $_PKG"
         _exec_ DPKG     "apt-cache search $_PKG"
         _exec_ HOMEBREW "brew search $_PKG"
+        _exec_ MACPORTS "port search $_PKG"
         _exec_ YUM      "yum -C search $_PKG"
         _FORCE="" \
         _exec_ PORTAGE  "
@@ -559,6 +580,7 @@ case "$_POPT$_SOPT" in
         _exec_ ZYPPER   "zypper clean"
         _exec_ DPKG     "apt-get clean"
         _exec_ HOMEBREW "brew cleanup"
+        _exec_ MACPORTS "port clean --all inactive"
         _exec_ YUM      "yum clean expire-cache"
         __FORCE="" \
         _exec_ PORTAGE  "
@@ -573,6 +595,7 @@ case "$_POPT$_SOPT" in
         _exec_ ZYPPER   "zypper clean"
         _exec_ DPKG     "apt-get autoclean"
         _exec_ HOMEBREW "brew cleanup -s"
+        _exec_ MACPORTS "port clean --all installed"
         _exec_ YUM      "yum clean packages"
         _FORCE="" \
         _exec_ PORTAGE  "
@@ -590,6 +613,7 @@ case "$_POPT$_SOPT" in
                           rm -fv /var/lib/apt/lists/*.*
                           apt-get autoclean"
         _exec_ HOMEBREW 'rm -rf $(brew --cache)'
+        _os_is MACPORTS && _error "Function not implemented in macports"
         _exec_ YUM      "yum clean all"
         _FORCE="" \
         _exec_ PORTAGE  "rm -fv /usr/portage/distfiles/*.*"
@@ -601,6 +625,12 @@ case "$_POPT$_SOPT" in
         _exec_ ZYPPER   "zypper install $_TOPT $_PKG"
         _exec_ DPKG     "apt-get install $_TOPT $_PKG"
         _exec_ HOMEBREW "brew install $_TOPT $_PKG"
+        if [[ "$_TOPT" = fetch ]]
+        then
+            _exec_ MACPORTS "port patch $_PKG"
+        else
+            _exec_ MACPORTS "port install $_TOPT $_PKG"
+        fi
         _exec_ YUM      "yum install $_TOPT $_PKG"
         _exec_ PORTAGE  "emerge $_TOPT $_PKG"
       ;;
@@ -612,6 +642,7 @@ case "$_POPT$_SOPT" in
     "U")
         _exec_ ZYPPER   "zypper install $_PKG"
         _os_is HOMEBREW && _error "Function not implemented in homebrew"
+        _os_is MACPORTS && _error "Function not implemented in macports"
         _os_is PORTAGE  && _error "You need to implement a local overlay and do the installation as usual."
 
         _exec_ DPKG     "dpkg -i $_TOPT $_PKG"
