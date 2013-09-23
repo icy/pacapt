@@ -387,7 +387,7 @@ case "$_POPT$_SOPT" in
             cellar=\"$(brew --cellar)\"
             for package in \$cellar/*; do
               files=(\${package}/*/\${pkg/#\$prefix\//})
-              if [ -e \${files[\${#files[@]} - 1]} ]; then
+              if [[ -e \${files[\${#files[@]} - 1]} ]]; then
                 echo \"\${package/#\$cellar\//}\"
                 break
               fi
