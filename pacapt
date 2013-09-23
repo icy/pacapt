@@ -5,7 +5,7 @@
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
 
-# Copyright (C) 2010 - 2012 Anh K. Huynh
+# Copyright (C) 2010 - 2013 Anh K. Huynh
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
@@ -49,11 +49,11 @@ DESCRIPTION
 
   The tool supports the following package managers:
 
-    pacman        by Arch Linux, ArchBang
-    dpkg/apt-get  by Debian, Ubuntu
+    pacman        by Arch Linux, ArchBang, Manjaro, etc.
+    dpkg/apt-get  by Debian, Ubuntu, etc.
     homebrew      by Mac OS X
     macports      by Mac OS X
-    yum/rpm       by Redhat, CentOS, Fedora
+    yum/rpm       by Redhat, CentOS, Fedora, etc.
     portage       by Gentoo
     zypper        by OpenSUSE
 
@@ -163,12 +163,18 @@ _OSTYPE_detect() {
 
   if [[ -z "$_OSTYPE" ]]; then
     _error "Can't detect OS type from /etc/issue. Running fallback method."
-    [[ -x "/usr/bin/apt-get" ]]    && _OSTYPE="DPKG"
-    [[ -x "/usr/bin/yum" ]]        && _OSTYPE="YUM"
-    [[ -x "/usr/local/bin/brew" ]] && _OSTYPE="HOMEBREW"
-    [[ -x "/opt/local/bin/port" ]] && _OSTYPE="MACPORTS"
-    [[ -x "/usr/bin/emerge" ]]     && _OSTYPE="PORTAGE"
-    [[ -x "/usr/bin/zypper" ]]     && _OSTYPE="ZYPPER"
+    [[ -x "/usr/bin/pacman" ]]           && _OSTYPE="PACMAN"
+    [[ -x "/usr/bin/apt-get" ]]          && _OSTYPE="DPKG"
+    [[ -x "/usr/bin/yum" ]]              && _OSTYPE="YUM"
+    [[ -x "/opt/local/bin/port" ]]       && _OSTYPE="MACPORTS"
+    [[ -x "$(brew --prefix)/bin/brew" ]] && _OSTYPE="HOMEBREW"
+    [[ -x "/usr/bin/emerge" ]]           && _OSTYPE="PORTAGE"
+    [[ -x "/usr/bin/zypper" ]]           && _OSTYPE="ZYPPER"
+    if [[ -z "$_OSTYPE" ]]; then
+      _error "No supported package manager installed on system"
+      _error "(supported: apt, homebrew, pacman, portage, yum)"
+      exit 1
+    fi
   fi
 }
 
@@ -176,22 +182,8 @@ _OSTYPE_detect() {
 ### Main
 ###
 
-# Detect type of package manager. If the system is Arch type,
-# pass all arguments to /usr/bin/pacman and return.
+# Detect type of package manager.
 _OSTYPE_detect
-
-case "$_OSTYPE" in
-  "PACMAN")
-    exec /usr/bin/pacman "$@"
-    ;;
-  "YUM"|"DPKG"|"HOMEBREW"|"MACPORTS"|"PORTAGE"|"ZYPPER")
-    ;;
-  *)
-    _error "No supported package manager installed on system"
-    _error "(supported: apt, homebrew, pacman, portage, yum)"
-    exit 1
-    ;;
-esac
 
 #
 # Get options from command lines. FIXME: Support long options
@@ -288,6 +280,12 @@ while getopts "URQShfvlumyispqwco" opt 2>/dev/null; do
   esac
 done
 
+# If the system is Arch-like, pass all of the arguments to /usr/bin/pacman
+# and return.  This is done here to achieve a consistent help menu.
+if [[ "$_OSTYPE" == "PACMAN" ]]; then
+    exec /usr/bin/pacman "$@"
+fi
+
 # Remained options/packages/queries
 shift $((OPTIND - 1))
 _PKG="$*"
@@ -380,10 +378,12 @@ case "$_POPT$_SOPT" in
         _exec_ HOMEBREW "
             cd \"$(dirname -- $(which $_PKG))\"
             pkg=\"\$(pwd -P)/$(basename -- $_PKG)\"
-            for package in /usr/local/Cellar/*; do
-              files=(\${package}/*/\${pkg/#\/usr\/local\//})
-              if [ -e \${files[\${#files[@]} - 1]} ]; then
-                echo \"\${package/#\/usr\/local\/Cellar\//}\"
+            prefix=\"$(brew --prefix)\"
+            cellar=\"$(brew --cellar)\"
+            for package in \$cellar/*; do
+              files=(\${package}/*/\${pkg/#\$prefix\//})
+              if [[ -e \${files[\${#files[@]} - 1]} ]]; then
+                echo \"\${package/#\$cellar\//}\"
                 break
               fi
             done
