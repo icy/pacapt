@@ -170,6 +170,11 @@ _OSTYPE_detect() {
     [[ -x "$(brew --prefix)/bin/brew" ]] && _OSTYPE="HOMEBREW"
     [[ -x "/usr/bin/emerge" ]]           && _OSTYPE="PORTAGE"
     [[ -x "/usr/bin/zypper" ]]           && _OSTYPE="ZYPPER"
+    if [[ -z "$_OSTYPE" ]]; then
+      _error "No supported package manager installed on system"
+      _error "(supported: apt, homebrew, pacman, portage, yum)"
+      exit 1
+    fi
   fi
 }
 
@@ -179,16 +184,6 @@ _OSTYPE_detect() {
 
 # Detect type of package manager.
 _OSTYPE_detect
-
-case "$_OSTYPE" in
-  "PACMAN"|"YUM"|"DPKG"|"HOMEBREW"|"MACPORTS"|"PORTAGE"|"ZYPPER")
-    ;;
-  *)
-    _error "No supported package manager installed on system"
-    _error "(supported: apt, homebrew, pacman, portage, yum)"
-    exit 1
-    ;;
-esac
 
 #
 # Get options from command lines. FIXME: Support long options
