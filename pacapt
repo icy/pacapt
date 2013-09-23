@@ -287,7 +287,7 @@ done
 
 # If the system is Arch-like, pass all of the arguments to /usr/bin/pacman
 # and return.  This is done here to achieve a consistent help menu.
-if [ "$_OSTYPE" = "PACMAN" ]; then
+if [[ "$_OSTYPE" == "PACMAN" ]]; then
     exec /usr/bin/pacman "$@"
 fi
 
