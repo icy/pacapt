@@ -163,13 +163,13 @@ _OSTYPE_detect() {
 
   if [[ -z "$_OSTYPE" ]]; then
     _error "Can't detect OS type from /etc/issue. Running fallback method."
-    [[ -x "/usr/bin/pacman" ]]           && _OSTYPE="PACMAN"
-    [[ -x "/usr/bin/apt-get" ]]          && _OSTYPE="DPKG"
-    [[ -x "/usr/bin/yum" ]]              && _OSTYPE="YUM"
-    [[ -x "/opt/local/bin/port" ]]       && _OSTYPE="MACPORTS"
-    [[ -x "$(brew --prefix)/bin/brew" ]] && _OSTYPE="HOMEBREW"
-    [[ -x "/usr/bin/emerge" ]]           && _OSTYPE="PORTAGE"
-    [[ -x "/usr/bin/zypper" ]]           && _OSTYPE="ZYPPER"
+    which pacman >/dev/null  && _OSTYPE="PACMAN"
+    which apt-get >/dev/null && _OSTYPE="DPKG"
+    which yum >/dev/null     && _OSTYPE="YUM"
+    which port >/dev/null    && _OSTYPE="MACPORTS"
+    which brew >/dev/null    && _OSTYPE="HOMEBREW"
+    which emerge >/dev/null  && _OSTYPE="PORTAGE"
+    which zypper >/dev/null  && _OSTYPE="ZYPPER"
     if [[ -z "$_OSTYPE" ]]; then
       _error "No supported package manager installed on system"
       _error "(supported: apt, homebrew, pacman, portage, yum)"
