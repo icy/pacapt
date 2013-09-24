@@ -162,6 +162,10 @@ _OSTYPE_detect() {
   _found_arch ZYPPER "SUSE"
 
   if [[ -z "$_OSTYPE" ]]; then
+    # See also https://github.com/icy/pacapt/pull/22
+    # Please not that $OSTYPE (which is `linux-gnu` on Linux system)
+    # is not our $_OSTYPE. The choice is not very good because
+    # a typo can just break the logic of the program.
     if [[ "$OSTYPE" != "darwin"* ]]; then
       _error "Can't detect OS type from /etc/issue. Running fallback method."
     fi
