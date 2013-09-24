@@ -162,7 +162,9 @@ _OSTYPE_detect() {
   _found_arch ZYPPER "SUSE"
 
   if [[ -z "$_OSTYPE" ]]; then
-    _error "Can't detect OS type from /etc/issue. Running fallback method."
+    if [[ "$OSTYPE" != "darwin"* ]]; then
+      _error "Can't detect OS type from /etc/issue. Running fallback method."
+    fi
     [[ -x "/usr/bin/pacman" ]]           && _OSTYPE="PACMAN"
     [[ -x "/usr/bin/apt-get" ]]          && _OSTYPE="DPKG"
     [[ -x "/usr/bin/yum" ]]              && _OSTYPE="YUM"
