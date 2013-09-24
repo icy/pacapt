@@ -173,7 +173,7 @@ _OSTYPE_detect() {
     [[ -x "/usr/bin/apt-get" ]]          && _OSTYPE="DPKG"
     [[ -x "/usr/bin/yum" ]]              && _OSTYPE="YUM"
     [[ -x "/opt/local/bin/port" ]]       && _OSTYPE="MACPORTS"
-    [[ -x "$(brew --prefix)/bin/brew" ]] && _OSTYPE="HOMEBREW"
+    command -v brew >/dev/null           && _OSTYPE="HOMEBREW"
     [[ -x "/usr/bin/emerge" ]]           && _OSTYPE="PORTAGE"
     [[ -x "/usr/bin/zypper" ]]           && _OSTYPE="ZYPPER"
     if [[ -z "$_OSTYPE" ]]; then
