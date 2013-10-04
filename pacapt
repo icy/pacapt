@@ -382,10 +382,10 @@ case "$_POPT$_SOPT" in
 
         _exec_ DPKG     "dpkg-query -S $_PKG"
         _exec_ HOMEBREW "
-            cd \"$(dirname -- $(which $_PKG))\"
-            pkg=\"\$(pwd -P)/$(basename -- $_PKG)\"
-            prefix=\"$(brew --prefix)\"
-            cellar=\"$(brew --cellar)\"
+            cd \"\$(dirname -- \$(which $_PKG))\"
+            pkg=\"\$(pwd -P)/\$(basename -- $_PKG)\"
+            prefix=\"\$(brew --prefix)\"
+            cellar=\"\$(brew --cellar)\"
             for package in \$cellar/*; do
               files=(\${package}/*/\${pkg/#\$prefix\//})
               if [[ -e \${files[\${#files[@]} - 1]} ]]; then
