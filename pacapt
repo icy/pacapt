@@ -153,13 +153,13 @@ _found_arch() {
 
 # Detect package type
 _OSTYPE_detect() {
-  _found_arch PACMAN "Arch Linux"
-  _found_arch DPKG   "Debian GNU/Linux"
-  _found_arch DPKG   "Ubuntu"
-  _found_arch YUM    "CentOS"
-  _found_arch YUM    "Red Hat"
-  _found_arch YUM    "Fedora"
-  _found_arch ZYPPER "SUSE"
+  _found_arch PACMAN "Arch Linux" && return
+  _found_arch DPKG   "Debian GNU/Linux" && return
+  _found_arch DPKG   "Ubuntu" && return
+  _found_arch YUM    "CentOS" && return
+  _found_arch YUM    "Red Hat" && return
+  _found_arch YUM    "Fedora" && return
+  _found_arch ZYPPER "SUSE" && return
 
   if [[ -z "$_OSTYPE" ]]; then
     # See also https://github.com/icy/pacapt/pull/22
@@ -169,13 +169,13 @@ _OSTYPE_detect() {
     if [[ "$OSTYPE" != "darwin"* ]]; then
       _error "Can't detect OS type from /etc/issue. Running fallback method."
     fi
-    [[ -x "/usr/bin/pacman" ]]           && _OSTYPE="PACMAN"
-    [[ -x "/usr/bin/apt-get" ]]          && _OSTYPE="DPKG"
-    [[ -x "/usr/bin/yum" ]]              && _OSTYPE="YUM"
-    [[ -x "/opt/local/bin/port" ]]       && _OSTYPE="MACPORTS"
-    command -v brew >/dev/null           && _OSTYPE="HOMEBREW"
-    [[ -x "/usr/bin/emerge" ]]           && _OSTYPE="PORTAGE"
-    [[ -x "/usr/bin/zypper" ]]           && _OSTYPE="ZYPPER"
+    [[ -x "/usr/bin/pacman" ]]           && _OSTYPE="PACMAN" && return
+    [[ -x "/usr/bin/apt-get" ]]          && _OSTYPE="DPKG" && return
+    [[ -x "/usr/bin/yum" ]]              && _OSTYPE="YUM" && return
+    [[ -x "/opt/local/bin/port" ]]       && _OSTYPE="MACPORTS" && return
+    command -v brew >/dev/null           && _OSTYPE="HOMEBREW" && return
+    [[ -x "/usr/bin/emerge" ]]           && _OSTYPE="PORTAGE" && return
+    [[ -x "/usr/bin/zypper" ]]           && _OSTYPE="ZYPPER" && return
     if [[ -z "$_OSTYPE" ]]; then
       _error "No supported package manager installed on system"
       _error "(supported: apt, homebrew, pacman, portage, yum)"
