@@ -191,13 +191,16 @@ _OSTYPE_detect() {
 # Detect type of package manager.
 _OSTYPE_detect
 
+# If the system is Arch-like, pass all of the arguments to /usr/bin/pacman
+# and return.  This is done here to achieve a consistent help menu.
+[[ "$_OSTYPE" == "PACMAN" ]] && exec /usr/bin/pacman "$@"
+
 #
 # Get options from command lines. FIXME: Support long options
 #
 
-# By default, with Gentoo, 'force' is always 'yes', so we change it to
-# 'no'
-[[ "$_OSTYPE" = "PORTAGE" ]] && _FORCE="-a"
+# By default, with Gentoo, 'force' is always 'yes', so we change it to 'no'
+[[ "$_OSTYPE" == "PORTAGE" ]] && _FORCE="-a"
 
 while getopts "URQShfvlumyispqwco" opt 2>/dev/null; do
   case "$opt" in
@@ -285,12 +288,6 @@ while getopts "URQShfvlumyispqwco" opt 2>/dev/null; do
     *) _error "Error: Invalid option"; exit 1 ;;
   esac
 done
-
-# If the system is Arch-like, pass all of the arguments to /usr/bin/pacman
-# and return.  This is done here to achieve a consistent help menu.
-if [[ "$_OSTYPE" == "PACMAN" ]]; then
-    exec /usr/bin/pacman "$@"
-fi
 
 # Remained options/packages/queries
 shift $((OPTIND - 1))
