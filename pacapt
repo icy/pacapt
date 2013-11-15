@@ -514,7 +514,7 @@ case "$_POPT$_SOPT" in
 
    "Si")
         _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
-        _exec_ DPKG     "dpkg-query -s $_PKG"
+        _exec_ DPKG     "apt-cache show $_PKG"
         _exec_ HOMEBREW "brew info $_PKG"
         _exec_ MACPORTS "port info $_PKG"
         _exec_ YUM      "yum info $_PKG"
