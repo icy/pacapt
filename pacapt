@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Purpose: A wrapper for all Unix package managers
 # Author : Anh K. Huynh
@@ -20,6 +20,7 @@ _PKG=""     # packages and extra parameters for apt-get
 _VERBOSE="" # verbose mode
 _FORCE=""   # force yes
 _OSTYPE=""  # type of package manager (Arch pacman, Debian apt, ...)
+_FETCH=""   # fetch in FreeBSD
 
 _error() {
   echo >&2 ":: $*"
@@ -137,9 +138,14 @@ _os_is() {
 _exec_() {
   local _type="$1"
   shift
+  local _command="$*"
+  if test -n "$_FETCH"; then
+    _command=${_command/install/}
+    _command=${_command/  / }
+  fi
   if _os_is $_type; then
-    [[ -z "$_VERBOSE" ]] || _error "Going to execute: $* $_VERBOSE $_FORCE"
-    eval "$* $_VERBOSE $_FORCE"
+    [[ -z "$_VERBOSE" ]] || _error "Going to execute: $_command $_VERBOSE $_FORCE"
+    eval "$_command $_VERBOSE $_FORCE"
   fi
 }
 
@@ -167,7 +173,7 @@ _OSTYPE_detect() {
   # Please not that $OSTYPE (which is `linux-gnu` on Linux system)
   # is not our $_OSTYPE. The choice is not very good because
   # a typo can just break the logic of the program.
-  if [[ "$OSTYPE" != "darwin"* ]]; then
+  if [[ "$OSTYPE" != "darwin"* && ! -x "/usr/sbin/pkg" ]]; then
     _error "Can't detect OS type from /etc/issue. Running fallback method."
   fi
   [[ -x "/usr/bin/pacman" ]]           && _OSTYPE="PACMAN" && return
@@ -177,9 +183,10 @@ _OSTYPE_detect() {
   command -v brew >/dev/null           && _OSTYPE="HOMEBREW" && return
   [[ -x "/usr/bin/emerge" ]]           && _OSTYPE="PORTAGE" && return
   [[ -x "/usr/bin/zypper" ]]           && _OSTYPE="ZYPPER" && return
+  [[ -x "/usr/sbin/pkg" ]]             && _OSTYPE="PKG" && return
   if [[ -z "$_OSTYPE" ]]; then
     _error "No supported package manager installed on system"
-    _error "(supported: apt, homebrew, pacman, portage, yum)"
+    _error "(supported: apt, homebrew, pacman, portage, yum, pkg)"
     exit 1
   fi
 }
@@ -268,6 +275,7 @@ while getopts "URQShfvlumyispqwco" opt 2>/dev/null; do
         "MACPORTS") _TOPT="fetch" ;;
         "PORTAGE") _TOPT="--fetchonly" ;;
         "ZYPPER")  _TOPT="--download-only" ;;
+        "PKG") _TOPT="fetch"; _FETCH=yes ;;
       esac
       ;;
 
@@ -277,11 +285,18 @@ while getopts "URQShfvlumyispqwco" opt 2>/dev/null; do
         "YUM")      _FORCE="-y" ;;
         "MACPORTS")  _FORCE="-f" ;;
         "PORTAGE")  _FORCE="" ;;
-        *)          _FORCE="-y" ;;
+        # It's -f, but it cannot be at end of the command.
+        "PKG")      _error "-f not implemented in FreeBSD" ;;
       esac
       ;;
 
-    v) _VERBOSE="-v" ;;
+    v)
+      case "$_OSTYPE" in
+        # It's -d, but it cannot be at end of the command
+        "PKG") _error "-v not implemented in FreeBSD"; _VERBOSE=" " ;;
+        *)     _VERBOSE="-v" ;;
+      esac
+      ;;
 
     h) _help; exit 0 ;;
 
@@ -338,6 +353,7 @@ case "$_POPT$_SOPT" in
         _exec_ YUM      "yum info $_PKG"
         _FORCE="" \
         _exec_ PORTAGE  "emerge --info $_PKG"
+        _exec_ PKG      "pkg info $_PKG"
       ;;
    "Ql")
         _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
@@ -373,6 +389,7 @@ case "$_POPT$_SOPT" in
               _error 'You need to install portage-utils or gentoolkit to perform this operation.'
             fi
           "
+        _exec_ PKG      "pkg info -l $_PKG"
       ;;
    "Qo")
         _exec_ ZYPPER "echo 'Function is not available'; exit 1"
@@ -401,6 +418,7 @@ case "$_POPT$_SOPT" in
               _error 'You need to install gentoolkit to perform this operation'
             fi
           "
+        _exec_ PKG      "pkg which $_PKG"
       ;;
    "Qp")
         _exec_ ZYPPER "echo 'Function is not available'; exit 1"
@@ -410,6 +428,7 @@ case "$_POPT$_SOPT" in
 
         _exec_ DPKG     "dpkg-deb -I $_PKG"
         _exec_ YUM      "rpm -qp $_PKG"
+        _exec_ PKG      "pkg query -F $_PKG '%n %v'"
       ;;
    "Qc")
         _exec_ ZYPPER "echo 'Function is not available'; exit 1"
@@ -420,6 +439,7 @@ case "$_POPT$_SOPT" in
         _exec_ YUM      "rpm -q --changelog $_PKG"
         _FORCE="" \
         _exec_ PORTAGE  "emerge -p --changelog $_PKG"
+        _os_is PKG      && _error "Function not implemented in FreeBSD system"
       ;;
    "Qu")
         _exec_ ZYPPER   "zypper list-updates"
@@ -428,6 +448,7 @@ case "$_POPT$_SOPT" in
         _exec_ MACPORTS "port outdated $_PKG"
         _exec_ YUM      "yum list updates $_PKG"
         _exec_ PORTAGE  "emerge -uvN $_PKG" # FIXME: not exactly
+        _exec_ PKG      "pkg upgrade -n"
       ;;
    "Qm")
         _exec_ ZYPPER   "zypper search -si | grep 'System Packages'"
@@ -437,6 +458,7 @@ case "$_POPT$_SOPT" in
         _os_is PORTAGE  && _error "Function not supported in Gentoo"
 
         _exec_ YUM      "yum list extras $_PKG"
+        _os_is PKG      && _error "Function not implemented in FreeBSD"
       ;;
 
     "Q")
@@ -449,6 +471,7 @@ case "$_POPT$_SOPT" in
           _os_is YUM      && _error "Function not implemented in Yum"
 
           _exec_ DPKG     "dpkg -l | grep -E ^[hi]i | awk '{print \$2}'"
+          _exec_ PKG      "pkg query %n"
         elif [[ "$_TOPT" = "" ]]; then
           _exec_ DPKG     "dpkg -l $_PKG | grep -E ^[hi]i"
           _exec_ HOMEBREW "brew list | grep $_PKG"
@@ -466,6 +489,7 @@ case "$_POPT$_SOPT" in
                 LS_COLORS=never ls -1 -d /var/db/pkg/*/*
               fi
             "
+          _exec_ PKG      "pkg query '%n %v'"
         else
           _error "Error: Invalid option"
           exit 1
@@ -487,6 +511,7 @@ case "$_POPT$_SOPT" in
               brew rm $_PKG
               brew rm \$(join <(brew leaves) <(brew deps $_PKG))
             "
+          _os_is PKG      && _error "Function not implemented in FreeBSD"
           _os_is MACPORTS && _error "Function not implemented in macports"
         elif [[ "$_TOPT" = '' ]]; then
           _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
@@ -495,6 +520,7 @@ case "$_POPT$_SOPT" in
           _exec_ DPKG     "apt-get autoremove $_PKG"
           _exec_ YUM      "yum erase $_PKG"
           _exec_ PORTAGE  "emerge --depclean world $_PKG"
+          _exec_ PKG      "pkg remove $_PKG; pkg autoremove"
         else
           _error "Error: Invalid option"
         fi
@@ -506,6 +532,7 @@ case "$_POPT$_SOPT" in
         _exec_ MACPORTS "port uninstall $_PKG"
         _exec_ YUM      "yum erase $_PKG"
         _exec_ PORTAGE  "emerge --depclean $_PKG"
+        _exec_ PKG      "pkg remove $_PKG"
       ;;
 
     ####################################################################
@@ -520,6 +547,7 @@ case "$_POPT$_SOPT" in
         _exec_ YUM      "yum info $_PKG"
         _FORCE="" \
         _exec_ PORTAGE  "emerge --info $_PKG"
+        _exec_ PKG      "pkg search -S name -ef $_PKG"
       ;;
   "Suy")
         _exec_ ZYPPER   "zypper dup"
@@ -538,6 +566,7 @@ case "$_POPT$_SOPT" in
                 && emerge -uND world $_PKG
             fi
           "
+        _exec_ PKG      "pkg upgrade"
       ;;
    "Su")
         _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
@@ -547,6 +576,7 @@ case "$_POPT$_SOPT" in
         _exec_ MACPORTS "port upgrade outdated"
         _exec_ YUM      "yum update"
         _exec_ PORTAGE  "emerge -uND world $_PKG"
+        _exec_ PKG      "pkg upgrade -U"
       ;;
    "Sy")
         _exec_ ZYPPER   "zypper refresh"
@@ -563,6 +593,7 @@ case "$_POPT$_SOPT" in
               emerge --sync
             fi
           "
+        _exec_ PKG      "pkg update"
       ;;
    "Ss")
         _exec_ ZYPPER   "zypper search $_PKG"
@@ -578,6 +609,7 @@ case "$_POPT$_SOPT" in
               emerge --search $_PKG
             fi
           "
+        _exec_ PKG      "pkg search $_PKG"
       ;;
    "Sc")
         _exec_ ZYPPER   "zypper clean"
@@ -593,6 +625,7 @@ case "$_POPT$_SOPT" in
               _error 'You need install gentoolkit to perform this operation.'
             fi
           "
+        _exec_ PKG      "pkg clean"
       ;;
   "Scc")
         _exec_ ZYPPER   "zypper clean"
@@ -608,6 +641,7 @@ case "$_POPT$_SOPT" in
               _error 'You need install gentoolkit to perform this operation.'
             fi
           "
+        _exec_ PKG      "pkg clean -a"
       ;;
  "Sccc")
         _exec_ ZYPPER   "echo 'Function is not available'; exit 1"
@@ -620,6 +654,7 @@ case "$_POPT$_SOPT" in
         _exec_ YUM      "yum clean all"
         _FORCE="" \
         _exec_ PORTAGE  "rm -fv /usr/portage/distfiles/*.*"
+        _os_is PKG      && _error "Function not implemented in FreeBSD"
       ;;
     "S")
         [[ -z "$_PKG" ]] \
@@ -636,6 +671,7 @@ case "$_POPT$_SOPT" in
         fi
         _exec_ YUM      "yum install $_TOPT $_PKG"
         _exec_ PORTAGE  "emerge $_TOPT $_PKG"
+        _exec_ PKG      "pkg install $_TOPT $_PKG"
       ;;
 
     ####################################################################
