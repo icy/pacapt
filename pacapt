@@ -57,6 +57,7 @@ DESCRIPTION
     yum/rpm       by Redhat, CentOS, Fedora, etc.
     portage       by Gentoo
     zypper        by OpenSUSE
+    pkg           by FreeBSD
 
 SYNTAX
 
