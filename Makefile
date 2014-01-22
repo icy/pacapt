@@ -6,7 +6,7 @@ default:
 	@echo "make clean   : remove git-ignored files"
 
 README: Makefile pacapt
-	@cat pacman \
+	@cat pacapt \
 		| awk > $(@) \
 			' \
 				BEGIN { EOF = 0 } \
