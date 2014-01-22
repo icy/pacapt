@@ -57,6 +57,27 @@ DESCRIPTION
     portage       by Gentoo
     zypper        by OpenSUSE
 
+INSTALL
+
+  This script shouldn't be installed on an Arch-based system.
+
+  Download the script 'pacapt' and install it into /usr/local/bin.
+
+    $ wget \
+        https://github.com/icy/pacapt/raw/master/pacapt \
+        -O /usr/local/bin/pacapt
+
+    $ chmod 755 /usr/local/bin/pacapt
+
+  If you have problem with Github's SSL certificate you may try
+
+    $ wget \
+        --no-check-certificate \
+        https://github.com/icy/pacapt/raw/master/pacapt \
+        -O /usr/local/bin/pacapt
+
+  However this way isn't recommended unless you know what you're doing.
+
 SYNTAX
 
   $ pacapt <operation> <option(s)> <packages>
