@@ -191,7 +191,12 @@ _OSTYPE_detect() {
   if [[ "$OSTYPE" != "darwin"* ]]; then
     _error "Can't detect OS type from /etc/issue. Running fallback method."
   fi
-  [[ -x "/usr/bin/pacman" ]]           && _OSTYPE="PACMAN" && return
+  if [[ -x "/usr/bin/pacman" ]]; then
+    # This is to prevent a loop when this script is installed on
+    # non-standard system
+    grep -q '$FUNC_NAME' '/usr/bin/pacman' >/dev/null 2>&1
+    [[ $? -ge 1 ]] && _OSTYPE="PACMAN" && return
+  fi
   [[ -x "/usr/bin/apt-get" ]]          && _OSTYPE="DPKG" && return
   [[ -x "/usr/bin/yum" ]]              && _OSTYPE="YUM" && return
   [[ -x "/opt/local/bin/port" ]]       && _OSTYPE="MACPORTS" && return
