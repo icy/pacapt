@@ -194,7 +194,7 @@ _OSTYPE_detect() {
   if [[ -x "/usr/bin/pacman" ]]; then
     # This is to prevent a loop when this script is installed on
     # non-standard system
-    grep -q "$FUNC_NAME" '/usr/bin/pacman' >/dev/null 2>&1
+    grep -q "$FUNCNAME" '/usr/bin/pacman' >/dev/null 2>&1
     [[ $? -ge 1 ]] && _OSTYPE="PACMAN" && return
   fi
   [[ -x "/usr/bin/apt-get" ]]          && _OSTYPE="DPKG" && return
