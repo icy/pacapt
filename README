@@ -65,6 +65,7 @@ OPERATIONS
                       in any installation source
     -Qo <file>      query package that provides <file>
     -Qp <file>      query a package file (don't use package database)
+    -Qs <package>   search for installed package
 
   Synchronize
 
