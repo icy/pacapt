@@ -13,6 +13,8 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+set -u      # exit if there is any unbound variable
+
 _POPT=""    # primary   operation
 _SOPT=""    # secondary operation
 _TOPT=""    # options for operations
