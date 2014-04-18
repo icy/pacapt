@@ -96,6 +96,7 @@ OPERATIONS
                       in any installation source
     -Qo <file>      query package that provides <file>
     -Qp <file>      query a package file (don't use package database)
+    -Qs <package>   search for installed package
 
   Synchronize
 
@@ -465,6 +466,14 @@ case "$_POPT$_SOPT" in
         _os_is PORTAGE  && _error "Function not supported in Gentoo"
 
         _exec_ YUM      "yum list extras $_PKG"
+      ;;
+   "Qs")
+        _exec_ DPKG     "dpkg-query -W '*$_PKG*' | cut -f1"
+        _os_is HOMEBREW && _error "Function not implemented in homebrew"
+        _os_is MACPORTS && _error "Function not implemented in macports"
+        _os_is PORTAGE  && _error "Function not implemented in Gentoo"
+        _os_is YUM      && _error "Function not implemented in Yum"
+        _os_is ZYPPER   && _error "Function not implemented in Zypper"
       ;;
 
     "Q")
