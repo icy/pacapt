@@ -70,7 +70,7 @@ while :; do
       if [[ "$_SOPT" == '' ]]; then
         _SOPT="$_opt"
       else
-        if [[ "${_SOPT:0:1}" = "s" ]]; then
+        if [[ "${_SOPT:0:1}" == "s" ]]; then
           _SOPT="ns"
         else
           _SOPT="n"
@@ -82,7 +82,7 @@ while :; do
       _TOPT="$_opt" ;; # Thanks to James Pearson
 
     u)
-      if [[ "${_SOPT:0:1}" = "y" ]]; then
+      if [[ "${_SOPT:0:1}" == "y" ]]; then
         _SOPT="uy"
       else
         _SOPT="u"
@@ -98,9 +98,9 @@ while :; do
       ;;
 
     c)
-      if [[ "${_SOPT:0:2}" = "cc" ]]; then
+      if [[ "${_SOPT:0:2}" == "cc" ]]; then
         _SOPT="ccc"
-      elif [[ "${_SOPT:0:1}" = "c" ]]; then
+      elif [[ "${_SOPT:0:1}" == "c" ]]; then
         _SOPT="cc"
       else
         _SOPT="$_opt"

@@ -66,7 +66,7 @@ dpkg_Qs() {
 }
 
 dpkg_Rs() {
-  if [[ "$_TOPT" = "" ]]; then
+  if [[ "$_TOPT" == "" ]]; then
     apt-get autoremove "$@"
   else
     _not_implemented
