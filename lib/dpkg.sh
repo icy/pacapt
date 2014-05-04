@@ -73,6 +73,14 @@ dpkg_Rs() {
   fi
 }
 
+dpkg_Rn() {
+  apt-get purge "$@"
+}
+
+dpkg_Rns() {
+  apt-get --purge autoremove "$@"
+}
+
 dpkg_R() {
   apt-get remove "$@"
 }
