@@ -112,7 +112,7 @@ OPERATIONS
     -Sc             delete old downloaded packages
     -Scc            delete all downloaded packages
     -Sccc           clean variant files.
-                    (debian) See more at http://dragula.org/blogs/646
+                    (debian) See more at http://dragula.viettug.org/blogs/646
 
 OPTIONS
 
