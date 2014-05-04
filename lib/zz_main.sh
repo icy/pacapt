@@ -125,7 +125,8 @@ while :; do
       _tranlate_w
     fi
     break
-  elif [[ -z "${_POPT}${_SOPT}${_TOPT}" ]]; then
+  # Don't have anything from the first argument. Something wrong.
+  elif [[ -z "${_POPT}${_SOPT}${_TOPT}${_EOPT}" ]]; then
     break
   fi
 done
