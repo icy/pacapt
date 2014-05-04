@@ -1,0 +1,147 @@
+# Purpose: A wrapper for all Unix package managers
+# Author : Anh K. Huynh
+# License: Fair license (http://www.opensource.org/licenses/fair)
+# Source : http://github.com/icy/pacapt/
+
+# Copyright (C) 2010 - 2014 Anh K. Huynh
+#
+# Usage of the works is permitted provided that this instrument is
+# retained with the works, so that any entity that uses the works is
+# notified of this instrument.
+#
+# DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
+
+set -u
+unset GREP_OPTIONS
+: ${PACAPT_DEBUG=}
+
+_POPT="" # primary operation
+_SOPT="" # secondary operation
+_TOPT="" # options for operations
+_EOPT="" # extra options (directly given to package manager)
+_PACMAN="" # name of the package manager
+
+_PACMAN_detect \
+|| die "'pacapt' doesn't support your package manager."
+
+if [[ -z "$PACAPT_DEBUG" ]]; then
+  [[ "$_PACMAN" != "pacman" ]] \
+  || exec "/usr/bin/pacman" "$@"
+fi
+
+while :; do
+  _args="${1-}"
+
+  [[ "${_args:0:1}" == "-" ]] || break
+
+  case "${_args}" in
+  "--help")
+    _help
+    exit 0
+    ;;
+  "-"|"--")
+    break
+    ;;
+  esac
+
+  i=1
+  while [[ "$i" -lt "${#_args}" ]]; do
+    _opt="${_args:$i:1}"
+    (( i ++ ))
+
+    case "$_opt" in
+    h)
+      _help
+      exit 0
+      ;;
+
+    Q|S|R|U)
+      if [[ -n "$_POPT" && "$_POPT" != "$_opt" ]]; then
+        _error "Only one operation may be used at a time"
+        exit 1
+      fi
+      _POPT="$_opt"
+      ;;
+
+    # FIXME: Please check pacman(8) to see if they are really 2nd operation
+    s|l|i|p|o|m)
+      if [[ "$_SOPT" == '' ]]; then
+        _SOPT="$_opt"
+      else
+        _TOPT="$_opt"
+      fi
+      ;;
+
+    q)
+      _TOPT="$_opt" ;; # Thanks to James Pearson
+
+    u)
+      if [[ "${_SOPT:0:1}" = "y" ]]; then
+        _SOPT="uy"
+      else
+        _SOPT="u"
+      fi
+      ;;
+
+    y)
+      if [[ "${_SOPT:0:1}" == "u" ]]; then
+        _SOPT="uy"
+      else
+        _SOPT="y"
+      fi
+      ;;
+
+    c)
+      if [[ "${_SOPT:0:2}" = "cc" ]]; then
+        _SOPT="ccc"
+      elif [[ "${_SOPT:0:1}" = "c" ]]; then
+        _SOPT="cc"
+      else
+        _SOPT="$_opt"
+      fi
+      ;;
+
+    w)
+      _tranlate_w;;
+
+    v)
+      _EOPT="-v"
+      ;;
+
+    *)
+      _die "pacapt: Unknown option '$_opt'."
+      ;;
+    esac
+  done
+
+  shift
+
+  if [[ -n "$_POPT" && -n "$_SOPT" ]]; then
+    if [[ -z "$_TOPT" && "${1-}" == "-w" ]]; then
+      shift
+      _tranlate_w
+    fi
+    break
+  elif [[ -z "${_POPT}${_SOPT}${_TOPT}" ]]; then
+    break
+  fi
+done
+
+[[ -n "$_POPT" ]] \
+|| _die "pacapt: Please specify a primary operation (Q, S, R, U)."
+
+if [[ -n "$PACAPT_DEBUG" ]]; then
+  _PACMAN="$PACAPT_DEBUG"
+fi
+
+_validate_operation "${_PACMAN}_${_POPT}${_SOPT}" \
+|| {
+  _not_implemented
+  exit 1
+}
+
+if [[ -n "$PACAPT_DEBUG" ]]; then
+  echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT $@'"
+else
+  "${_PACMAN}_${_POPT}${_SOPT}" $_EOPT "$@"
+fi
