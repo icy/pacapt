@@ -66,11 +66,15 @@ while :; do
       ;;
 
     # FIXME: Please check pacman(8) to see if they are really 2nd operation
-    s|l|i|p|o|m)
+    s|l|i|p|o|m|n)
       if [[ "$_SOPT" == '' ]]; then
         _SOPT="$_opt"
       else
-        _TOPT="$_opt"
+        if [[ "${_SOPT:0:1}" = "s" ]]; then
+          _SOPT="ns"
+        else
+          _SOPT="n"
+        fi
       fi
       ;;
 
