@@ -624,7 +624,7 @@ case "$_POPT$_SOPT" in
         _exec_ YUM      "yum clean expire-cache"
         __FORCE="" \
         _exec_ PORTAGE  "
-            if [[ -x usr/bin/eclean-dist ]]; then
+            if [[ -x /usr/bin/eclean-dist ]]; then
               eclean-dist -d -t1m -s50 -f
             else
               _error 'You need install gentoolkit to perform this operation.'
