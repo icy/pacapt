@@ -27,6 +27,8 @@ _PACMAN_detect \
 if [[ -z "$PACAPT_DEBUG" ]]; then
   [[ "$_PACMAN" != "pacman" ]] \
   || exec "/usr/bin/pacman" "$@"
+else
+  _PACMAN="$PACAPT_DEBUG"
 fi
 
 while :; do
@@ -102,7 +104,8 @@ while :; do
       ;;
 
     w)
-      _tranlate_w;;
+      _tranlate_w
+      ;;
 
     v)
       _EOPT="-v"
@@ -130,10 +133,6 @@ done
 [[ -n "$_POPT" ]] \
 || _die "pacapt: Please specify a primary operation (Q, S, R, U)."
 
-if [[ -n "$PACAPT_DEBUG" ]]; then
-  _PACMAN="$PACAPT_DEBUG"
-fi
-
 _validate_operation "${_PACMAN}_${_POPT}${_SOPT}" \
 || {
   _not_implemented
@@ -141,6 +140,7 @@ _validate_operation "${_PACMAN}_${_POPT}${_SOPT}" \
 }
 
 if [[ -n "$PACAPT_DEBUG" ]]; then
+  echo "pacapt: $_PACMAN, p=$_POPT, s=$_SOPT, t=$_TOPT, e=$_EOPT"
   echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT $@'"
 else
   "${_PACMAN}_${_POPT}${_SOPT}" $_EOPT "$@"
