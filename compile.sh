@@ -20,7 +20,7 @@ unset GREP_OPTIONS
 _SUPPORTED_PACMAN="(dpkg|homebew|macports|portage|yum|zypper)"
 
 cat <<EOF
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Purpose: A wrapper for all Unix package managers
 # Author : Anh K. Huynh
