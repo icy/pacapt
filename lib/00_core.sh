@@ -58,6 +58,7 @@ _PACMAN_detect() {
   [[ -x "/opt/local/bin/port" ]] && _PACMAN="macports" && return
   [[ -x "/usr/bin/emerge" ]] && _PACMAN="portage" && return
   [[ -x "/usr/bin/zypper" ]] && _PACMAN="zypper" && return
+  [[ -x "/usr/sbin/pkg" ]] && _PACMAN="pkgng" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
@@ -90,6 +91,10 @@ _tranlate_w() {
 
   "zypper")
     _TOPT="--download-only"
+    ;;
+
+  "pkgng")
+    _TOPT="fetch"
     ;;
 
   *)
