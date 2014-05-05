@@ -32,7 +32,8 @@ DESCRIPTION
 INSTALLATION
 
   1. This script shouldn't be installed on an Arch-based system.
-  2. Compile and install the script
+  2. On FreeBSD, please install `bash` package first
+  3. Compile and install the script
 
         $ git clone https://github.com/icy/pacapt.git
         $ cd pacapt && git checkout ng
