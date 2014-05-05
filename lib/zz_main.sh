@@ -148,6 +148,26 @@ _validate_operation "${_PACMAN}_${_POPT}${_SOPT}" \
   exit 1
 }
 
+# pacman man page (examples) says:
+#   "pacman -Syu gpm = Update package list, upgrade all packages,
+#    and then install gpm if it wasn't already installed."
+#
+# Instead, just disallow specific packages, as (ex-)yum users likely
+# expect to just update/upgrade one package (and its dependencies)
+# and apt-get and pacman have no way to do this.
+#
+if [[ -n "$@" ]]; then
+  case "${_POPT}${_SOPT}" in
+    "Su"|"Sy"|"Suy")
+      echo 1>&2 "WARNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      echo 1>&2 "  The -Sy/u options refresh and/or upgrade all packages."
+      echo 1>&2 "  To install packages as well, use separate commands:"
+      echo 1>&2
+      echo 1>&2 "    $0 -S$_SOPT; $0 -S $@"
+      echo 1>&2 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+  esac
+fi
+
 if [[ -n "$PACAPT_DEBUG" ]]; then
   echo "pacapt: $_PACMAN, p=$_POPT, s=$_SOPT, t=$_TOPT, e=$_EOPT"
   echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT $@'"
