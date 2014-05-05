@@ -48,6 +48,11 @@ OPERATIONS
     -Sccc           clean variant files.
                     (debian) See also http://dragula.viettug.org/blogs/646
 
+  Miscellaneous
+
+    -h or --help    print this help message
+    -P              print supported operations
+
 OPTIONS
 
     -w              download packages but don't install them
@@ -70,7 +75,7 @@ EXAMPLES
 NOTES
 
   When being executed on Arch-based system, the tool simply invokes
-  the system tool '/usr/bin/pacman'.
+  the system package manager (`/usr/bin/pacman`.)
 
   Though you can specify option by its own word, for example,
 
@@ -82,7 +87,7 @@ NOTES
 
 AUTHORS
 
-  The script was writted Anh K. Huynh. Some developers and system admin-
+  The script was written Anh K. Huynh. Some developers and system admin-
   strator have contributed to the script. See THANKS for details.
 EOF
 }
