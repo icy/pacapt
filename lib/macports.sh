@@ -73,6 +73,6 @@ macports_S() {
   if [[ "$_TOPT" == "fetch" ]]; then
     port patch "$@"
   else
-    port install $_TOPT "$@"
+    port install "$@"
   fi
 }
