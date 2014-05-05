@@ -17,7 +17,7 @@ set -u
 set -e
 unset GREP_OPTIONS
 
-_SUPPORTED_PACMAN="(dpkg|homebew|macports|portage|yum|zypper)"
+_SUPPORTED_PACMAN="(pkgng|dpkg|homebew|macports|portage|yum|zypper)"
 
 cat <<EOF
 #!/usr/bin/env bash
