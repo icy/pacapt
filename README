@@ -27,6 +27,7 @@ DESCRIPTION
     yum/rpm       by Redhat, CentOS, Fedora, etc.
     portage       by Gentoo
     zypper        by OpenSUSE
+    pkg           by FreeBSD
 
 INSTALL
 
@@ -48,6 +49,10 @@ INSTALL
         -O /usr/local/bin/pacapt
 
   However this way isn't recommended unless you know what you're doing.
+
+  If you are using FreeBSD, you will also need to install bash package.
+
+    $ pkg install bash
 
 SYNTAX
 
