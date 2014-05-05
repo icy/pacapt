@@ -98,7 +98,7 @@ _tranlate_w() {
     ;;
 
   *)
-    _TOPT="-w"
+    _TOPT=""
     return 1
     ;;
   esac
