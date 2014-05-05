@@ -103,3 +103,15 @@ _tranlate_w() {
     ;;
   esac
 }
+
+_print_supported_operations() {
+  local _pacman="$1"
+  echo -n "pacapt: available operations:"
+  grep -E "^${_pacman}_[^ \t]+\(\)" "$0" \
+  | awk -F '(' '{print $1}' \
+  | sed -e "s/${_pacman}_//g" \
+  | while read O; do
+      echo -n " $O"
+    done
+  echo
+}

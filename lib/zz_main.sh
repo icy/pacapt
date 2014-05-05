@@ -56,6 +56,10 @@ while :; do
       _help
       exit 0
       ;;
+    P)
+      _print_supported_operations $_PACMAN
+      exit 0
+      ;;
 
     Q|S|R|U)
       if [[ -n "$_POPT" && "$_POPT" != "$_opt" ]]; then
