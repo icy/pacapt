@@ -1,9 +1,9 @@
 # Purpose: Macports support
-# Author : Anh K. Huynh
+# Author : 10sr
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
 
-# Copyright (C) 2010 - 2014 Anh K. Huynh
+# Copyright (C) 2010 - 2014 10sr
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
