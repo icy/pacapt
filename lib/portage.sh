@@ -1,9 +1,9 @@
 # Purpose: Gentoo support
-# Author : Anh K. Huynh
+# Author : Hà-Dương Nguyễn
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
 
-# Copyright (C) 2010 - 2014 Anh K. Huynh
+# Copyright (C) 2010 - 2014 Hà-Dương Nguyễn
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
