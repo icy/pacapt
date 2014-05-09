@@ -19,8 +19,8 @@ unset GREP_OPTIONS
 
 _SUPPORTED_PACMAN="(pkgng|dpkg|homebew|macports|portage|yum|zypper)"
 
-_GIT_COMMIT="$(git log --pretty="%H" -1 2>/dev/null)"
-_GIT_COMMIT="${_GIT_COMMIT:-unknown}"
+VERSION="${VERSION:-$(git log --pretty="%H" -1 2>/dev/null)}"
+VERSION="${VERSION:-unknown}"
 
 cat <<EOF
 #!/usr/bin/env bash
@@ -29,7 +29,7 @@ cat <<EOF
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: $_GIT_COMMIT
+# Version: $VERSION
 
 # Copyright (C) 2010 - $(date +%Y) Anh K. Huynh
 #
@@ -61,3 +61,5 @@ for L in ./lib/*.sh; do
   | grep -v '^#' \
   | cat
 done
+
+echo 1>&2 "pacapt version '$VERSION' has been generated"
