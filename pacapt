@@ -1,0 +1,1105 @@
+#!/usr/bin/env bash
+#
+# Purpose: A wrapper for all Unix package managers
+# Author : Anh K. Huynh
+# License: Fair license (http://www.opensource.org/licenses/fair)
+# Source : http://github.com/icy/pacapt/
+# Version: ng-unstable
+
+# Copyright (C) 2010 - 2014 Anh K. Huynh
+#
+# Usage of the works is permitted provided that this instrument is
+# retained with the works, so that any entity that uses the works is
+# notified of this instrument.
+#
+# DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
+#
+
+export PACAPT_VERSION='ng-unstable'
+
+
+_error() {
+  echo >&2 "Error: $@"
+  return 1
+}
+
+_die() {
+  echo >&2 "$@"
+  exit 1
+}
+
+_not_implemented() {
+  echo >&2 "${_PACMAN}: '${_POPT}:${_SOPT}:${_TOPT}' operation is invalid or not implemented."
+}
+
+_issue2pacman() {
+  local _pacman="$1"
+  shift
+  grep -qis "$@" /etc/issue \
+  && _PACMAN="$_pacman"
+}
+
+_PACMAN_detect() {
+  _issue2pacman pacman "Arch Linux" && return
+  _issue2pacman dpkg "Debian GNU/Linux" && return
+  _issue2pacman dpkg "Ubuntu" && return
+  _issue2pacman yum "CentOS" && return
+  _issue2pacman yum "Red Hat" && return
+  _issue2pacman yum "Fedora" && return
+  _issue2pacman zypper "SUSE" && return
+
+  [[ -z "$_PACMAN" ]] || return
+
+  # Prevent a loop when this script is installed on non-standard system
+  if [[ -x "/usr/bin/pacman" ]]; then
+    grep -q "$FUNCNAME" '/usr/bin/pacman' >/dev/null 2>&1
+    [[ $? -ge 1 ]] && _PACMAN="pacman" \
+    && return
+  fi
+
+  [[ -x "/usr/bin/apt-get" ]] && _PACMAN="dpkg" && return
+  [[ -x "/usr/bin/yum" ]] && _PACMAN="yum" && return
+  [[ -x "/opt/local/bin/port" ]] && _PACMAN="macports" && return
+  [[ -x "/usr/bin/emerge" ]] && _PACMAN="portage" && return
+  [[ -x "/usr/bin/zypper" ]] && _PACMAN="zypper" && return
+  [[ -x "/usr/sbin/pkg" ]] && _PACMAN="pkgng" && return
+
+  command -v brew >/dev/null && _PACMAN="homebrew" && return
+
+  return 1
+}
+
+_tranlate_w() {
+  case "$_PACMAN" in
+  "dpkg")
+    _TOPT="-d"
+    ;;
+
+  "yum")
+    _TOPT="--downloadonly"
+    if ! rpm -q 'yum-downloadonly' >/dev/null 2>&1; then
+      _error "'yum-downloadonly' package is required when '-w' is used."
+      exit 1
+    fi
+    ;;
+
+  "macports")
+    _TOPT="fetch"
+    ;;
+
+  "portage")
+    _TOPT="--fetchonly"
+    ;;
+
+  "zypper")
+    _TOPT="--download-only"
+    ;;
+
+  "pkgng")
+    _TOPT="fetch"
+    ;;
+
+  *)
+    _TOPT=""
+    return 1
+    ;;
+  esac
+}
+
+_print_supported_operations() {
+  local _pacman="$1"
+  echo -n "pacapt: available operations:"
+  grep -E "^${_pacman}_[^ \t]+\(\)" "$0" \
+  | awk -F '(' '{print $1}' \
+  | sed -e "s/${_pacman}_//g" \
+  | while read O; do
+      echo -n " $O"
+    done
+  echo
+}
+
+_print_pacapt_version() {
+  cat <<EOF
+pacapt version '${1:-unknown}'
+
+Copyright (C) 2010 - $(date +%Y) Anh K. Huynh
+
+Usage of the works is permitted provided that this
+instrument is retained with the works, so that any
+entity that uses the works is notified of this instrument.
+
+DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
+EOF
+}
+
+
+dpkg_Q() {
+  if [[ "$_TOPT" == "q" ]]; then
+    dpkg -l \
+    | grep -E '^[hi]i' \
+    | awk '{print $2}'
+  elif [[ "$_TOPT" == "" ]]; then
+    dpkg -l "$@" \
+    | grep -E '^[hi]i'
+  else
+    _not_implemented
+  fi
+}
+
+dpkg_Qi() {
+  dpkg-query -s "$@"
+}
+
+dpkg_Ql() {
+  if [[ -n "$@" ]]; then
+    dpkg-query -L "$@"
+    return
+  fi
+
+  dpkg -l \
+  | grep -E '^[hi]i' \
+  | awk '{print $2}' \
+  | while read _pkg; do
+      if [[ "$_TOPT" == "q" ]]; then
+        dpkg-query -L "$_pkg"
+      else
+        dpkg-query -L "$_pkg" \
+        | while read _line; do
+            echo "$_pkg $_line"
+          done
+      fi
+    done
+}
+
+dpkg_Qo() {
+  dpkg-query -S "$@"
+}
+
+dpkg_Qp() {
+  dpkg-deb -I "$@"
+}
+
+dpkg_Qu() {
+  apt-get upgrade --trivial-only "$@"
+}
+
+dpkg_Qs() {
+  dpkg-query -W "*$@*" | cut -f1
+}
+
+dpkg_Rs() {
+  if [[ "$_TOPT" == "" ]]; then
+    apt-get autoremove "$@"
+  else
+    _not_implemented
+  fi
+}
+
+dpkg_Rn() {
+  apt-get purge "$@"
+}
+
+dpkg_Rns() {
+  apt-get --purge autoremove "$@"
+}
+
+dpkg_R() {
+  apt-get remove "$@"
+}
+
+dpkg_Si() {
+  apt-cache show "$@"
+}
+
+dpkg_Suy() {
+  apt-get update \
+  && apt-get upgrade "$@"
+}
+
+dpkg_Su() {
+  apt-get upgrade "$@"
+}
+
+dpkg_Sy() {
+  apt-get update "$@"
+}
+
+dpkg_Ss() {
+  apt-cache search "$@"
+}
+
+dpkg_Sc() {
+  apt-get clean "$@"
+}
+
+dpkg_Scc() {
+  apt-get autoclean "$@"
+}
+
+dpkg_Sccc() {
+  rm -fv /var/cache/apt/*.bin
+  rm -fv /var/cache/apt/archives/*.*
+  rm -fv /var/lib/apt/lists/*.*
+  apt-get autoclean
+}
+
+dpkg_S() {
+  apt-get install $_TOPT "$@"
+}
+
+dpkg_U() {
+  dpkg -i "$@"
+}
+
+
+_help() {
+  cat <<-EOF
+NAME
+  pacapt - An Arch's pacman-like package manager for some Unices.
+  More details can be found at https://github.com/icy/pacapt .
+
+SYNTAX
+
+  $ pacapt <operation(s)> <option(s)> <packages>
+
+OPERATIONS
+
+  Query
+    -Q              list all installed packages
+    -Qc <package>   show package's changelog
+    -Qi <package>   print package status
+    -Ql <package>   list package's files
+    -Qm             list installed packages that aren't available
+                    in any installation source
+    -Qo <file>      query package that provides <file>
+    -Qp <file>      query a package file (don't use package database)
+    -Qs <package>   search for installed package
+
+  Synchronize
+    -S <package>    install package(s)
+    -Ss <package>   search for packages
+    -Su             upgrade the system
+    -Sy             update package database
+    -Suy            update package database, then upgrade the system
+
+  Remove / Clean up
+    -R <packages>   remove some packages
+    -Sc             delete old downloaded packages
+    -Scc            delete all downloaded packages
+    -Sccc           clean variant files.
+                    (debian) See also http://dragula.viettug.org/blogs/646
+
+  Miscellaneous
+
+    -h or --help    print this help message
+    -P              print supported operations
+    -V              print version information
+
+OPTIONS
+
+    -w              download packages but don't install them
+
+EXAMPLES
+
+  1. To install a package from Debian's backports repository
+
+      $ pacapt -S foobar -t lenny-backports
+      $ pacapt -S -- -t lenny-backports foobar
+
+  2. To update package database and then update your system
+
+      $ pacapt -Syu
+
+  3. To download a package without installing it
+
+      $ pacapt -Sw foobar
+
+NOTES
+
+  When being executed on Arch-based system, the tool simply invokes
+  the system package manager (`/usr/bin/pacman`.)
+
+  Though you can specify option by its own word, for example,
+
+      $ pacapt -S -y -u
+
+  it's always the best to combine them
+
+      $ pacapt -Syu
+
+AUTHORS
+
+  The script was written Anh K. Huynh. Some developers and system admin-
+  strator have contributed to the script. See THANKS for details.
+EOF
+}
+
+
+homebrew_Qi() {
+  brew info "$@"
+}
+
+homebrew_Ql() {
+  brew list "$@"
+}
+
+homebrew_Qo() {
+  local pkg prefix cellar
+
+  cd "$(dirname -- $(which "$@"))"
+  pkg="$(pwd -P)/$(basename -- "$@")"
+  prefix="$(brew --prefix)"
+  cellar="$(brew --cellar)"
+
+  for package in $cellar/*; do
+    files=(${package}/*/${pkg/#$prefix\//})
+    if [[ -e "${files[${#files[@]} - 1]}" ]]; then
+      echo "${package/#$cellar\//}"
+      break
+    fi
+  done
+}
+
+homebrew_Qc() {
+  brew log "$@"
+}
+
+homebrew_Qu() {
+  brew outdated | grep "$@"
+}
+
+homebrew_Q() {
+  if [[ "$_TOPT" == "" ]]; then
+    brew list | grep "$@"
+  else
+    _not_implemented
+  fi
+}
+
+homebrew_Rs() {
+  if [[ "$_TOPT" == "s" ]]; then
+    brew rm "$@"
+    brw rm $(join <(brew leaves) <(brew deps "$@"))
+  else
+    _not_implemented
+  fi
+}
+
+homebrew_R() {
+  brew remove "$@"
+}
+
+homebrew_Si() {
+  brew info "$@"
+}
+
+homebrew_Suy() {
+  brew update \
+  && brew upgrade "$@"
+}
+
+homebrew_Su() {
+  bre upgrade "$@"
+}
+
+homebrew_Sy() {
+  brew update "$@"
+}
+
+homebrew_Ss() {
+  brew search "$@"
+}
+
+homebrew_Sc() {
+  brew cleanup "$@"
+}
+
+homebrew_Scc() {
+  bre cleanup -s "$@"
+}
+
+homebrew_Sccc() {
+  rm -rf $(brew --cache)
+}
+
+homebrew_S() {
+  brew install $_TOPT "$@"
+}
+
+
+macports_Ql() {
+  port contents "$@"
+}
+
+macports_Qo() {
+  port provides "$@"
+}
+
+macports_Qc() {
+  port log "$@"
+}
+
+macports_Qu() {
+  port outdated "$@"
+}
+
+macports_Rs() {
+  if [[ "$_TOPT" == "" ]]; then
+    port uninstall --follow-dependencies "$@"
+  else
+    _not_implemented
+  fi
+}
+
+macports_R() {
+  port uninstall "$@"
+}
+
+macports_Si() {
+  port info "$@"
+}
+
+macports_Suy() {
+  port selfupdate \
+  && port upgrade outdated "$@"
+}
+
+macports_Su() {
+  port upgrade outdate "$@"
+}
+
+macports_Sy() {
+  port selfupdate "$@"
+}
+
+macports_Ss() {
+  port search "$@"
+}
+
+macports_Sc() {
+  port clean --all inactive "$@"
+}
+
+macports_Scc() {
+  port clean --all installed "$@"
+}
+
+macports_S() {
+  if [[ "$_TOPT" == "fetch" ]]; then
+    port patch "$@"
+  else
+    port install "$@"
+  fi
+}
+
+
+pkgng_Qi() {
+  pkg info "$@"
+}
+
+pkgng_Ql() {
+  pkg info -l "$@"
+}
+
+pkgng_Qo() {
+  pkg which "$@"
+}
+
+pkgng_Qp() {
+  pkg query -F "$@" '%n %v'
+}
+
+pkgng_Qu() {
+  pkg upgrade -n "$@"
+}
+
+pkgng_Q() {
+  if [[ "$_TOPT" == "q" ]]; then
+    pkg query '%n' "$@"
+  elif [[ "$_TOPT" == "" ]]; then
+    pkg query '%n %v' "$@"
+  else
+    _not_implemented
+  fi
+}
+
+pkgng_Rs() {
+  if [[ "$_TOPT" == "" ]]; then
+    pkg remove "$@"
+    pkg autoremove
+  else
+    _not_implemented
+  fi
+}
+
+pkgng_R() {
+  pkg remove "$@"
+}
+
+pkgng_Si() {
+  pkg search -S name -ef "$@"
+}
+
+pkgng_Suy() {
+  pkg upgrade "$@"
+}
+
+pkgng_Su() {
+  pkg upgrade -U "$@"
+}
+
+pkgng_Sy() {
+  pkg update "$@"
+}
+
+pkgng_Ss() {
+  pkg search "$@"
+}
+
+pkgng_Sc() {
+  pkg clean "$@"
+}
+
+pkgng_Scc() {
+  pkg clean -a "$@"
+}
+
+pkgng_S() {
+  if [[ "$_TOPT" == "fetch" ]]; then
+    pkg fetch "$@"
+  else
+    pkg install "$@"
+  fi
+}
+
+
+portage_Qi() {
+  emerge --info "$@"
+}
+
+portage_Ql() {
+  if [[ -x '/usr/bin/qlist' ]]; then
+    qlist "$@"
+  elif [[ -x '/usr/bin/equery' ]]; then
+    equery files "$@"
+  else
+    _error "'portage-utils' or 'gentoolkit' package is required to perform this opreation."
+  fi
+}
+
+portage_Qo() {
+  if [[ -x '/usr/bin/equery' ]]; then
+    equery belongs "$@"
+  else
+    _error "'gentoolkit' package is required to perform this operation."
+  fi
+}
+
+portage_Qc() {
+  emerge -p --changelog "$@"
+}
+
+portage_Qu() {
+  emerge -uvN "$@"
+}
+
+portage_Q() {
+  if [[ "$_TOPT" == "" ]]; then
+    if [[ -x '/usr/bin/eix' ]]; then
+      eix -I "$@"
+    elif [[ -x '/usr/bin/equery' ]]; then
+      equery list '*' $_PKG
+    else
+      LS_COLORS=never \
+      ls -1 -d /var/db/pkg/*/*
+    fi
+  else
+    _not_implemented
+  fi
+}
+
+portage_Rs() {
+  if [[ "$_TOPT" == "" ]]; then
+    emerge --depclean world "$@"
+  else
+    _not_implemented
+  fi
+}
+
+portage_R() {
+  emerge --depclean "@"
+}
+
+portage_Si() {
+  emerge --info "$@"
+}
+
+portage_Suy() {
+  if [[ -x '/usr/bin/layman' ]]; then
+    layman --sync-all \
+    && emerge --sync \
+    && emerge -auND world "$@"
+  else
+    emerge --sync \
+    && emerge -uND world "$@"
+  fi
+}
+
+portage_Su() {
+  emerge -uND world "$@"
+}
+
+portage_Sy() {
+  if [[ -x "/usr/bin/layman" ]]; then
+    layman --sync-all \
+    && emerge --sync "$@"
+  else
+    emerge --sync "$@"
+  fi
+}
+
+portage_Ss() {
+  if [[ -x "/usr/bin/eix" ]]; then
+    eix "$@"
+  else
+    emerge --search "$@"
+  fi
+}
+
+portage_Sc() {
+  if [[ -x "/usr/bin/eclean-dist" ]]; then
+    eclean-dist -d -t1m -s50 -f "$@"
+  else
+    _error "'gentoolkit' package is required to perform this operation."
+  fi
+}
+
+portage_Scc() {
+  if [[ -x "/usr/bin/eclean" ]]; then
+    eclean -i distfiles "$@"
+  else
+    _error "'gentoolkit' package is required to perform this operation."
+  fi
+}
+
+portage_Sccc() {
+  rm -fv /usr/portage/distfiles/*.*
+}
+
+portage_S() {
+  emerge "$@"
+}
+
+
+yum_Qi() {
+  yum info "$@"
+}
+
+yum_Ql() {
+  rpm -ql "$@"
+}
+
+yum_Qo() {
+  rpm -qf "$@"
+}
+
+yum_Qp() {
+  rpm -qp "$@"
+}
+
+yum_Qc() {
+  rpm -q --changelog "$@"
+}
+
+yum_Qu() {
+  yum list updates "$@"
+}
+
+yum_Qm() {
+  yum list extras "$@"
+}
+
+yum_Rs() {
+  if [[ "$_TOPT" == "" ]]; then
+    yum erase "$@"
+  else
+    _not_implemented
+  fi
+}
+
+yum_R() {
+  yum erase "$@"
+}
+
+yum_Si() {
+  yum info "$@"
+}
+
+yum_Suy() {
+  yum update "$@"
+}
+
+yum_Su() {
+  yum update "$@"
+}
+
+yum_Sy() {
+  yum check-update "$@"
+}
+
+yum_Ss() {
+  yum -C search "$@"
+}
+
+yum_Sc() {
+  yum clean expire-cache "$@"
+}
+
+yum_Scc() {
+  yum clean packages "$@"
+}
+
+yum_Sccc() {
+  yum clean all "$@"
+}
+
+yum_S() {
+  yum install $_TOPT "$@"
+}
+
+yum_U() {
+  yum localinstall "$@"
+}
+
+
+zypper_Qi() {
+  zypper info "$@"
+}
+
+zypper_Qu() {
+  zypper list-updates "$@"
+}
+
+zypper_Qm() {
+  zypper search -si "$@" \
+  | grep 'System Packages'
+}
+
+zypper_Q() {
+  zypper search -i "$@"
+}
+
+zypper_Rs() {
+  if [[ "$_TOPT" == "s" ]]; then
+    zypper remove "$@" --clean-deps
+  else
+    _not_implemented
+  fi
+}
+
+zypper_R() {
+  zypper remove "$@"
+}
+
+zypper_Rs() {
+  if [[ "$_TOPT" == "s" ]]; then
+    zypper remove "$@" --clean-deps
+  else
+    _not_implemented
+  fi
+}
+
+zypper_Suy() {
+  zypper dup "$@"
+}
+
+zypper_Sy() {
+  zypper refresh "$@"
+}
+
+zypper_Ss() {
+  zypper search "$@"
+}
+
+zypper_Sc() {
+  zypper clean "$@"
+}
+
+zypper_Scc() {
+  zypper clean "$@"
+}
+
+zypper_S() {
+  zypper install $_TOPT "$@"
+}
+
+zypper_U() {
+  zypper install "$@"
+}
+_validate_operation() {
+  case "$1" in
+  "dpkg_Q") return 0 ;;
+  "dpkg_Qi") return 0 ;;
+  "dpkg_Ql") return 0 ;;
+  "dpkg_Qo") return 0 ;;
+  "dpkg_Qp") return 0 ;;
+  "dpkg_Qu") return 0 ;;
+  "dpkg_Qs") return 0 ;;
+  "dpkg_Rs") return 0 ;;
+  "dpkg_Rn") return 0 ;;
+  "dpkg_Rns") return 0 ;;
+  "dpkg_R") return 0 ;;
+  "dpkg_Si") return 0 ;;
+  "dpkg_Suy") return 0 ;;
+  "dpkg_Su") return 0 ;;
+  "dpkg_Sy") return 0 ;;
+  "dpkg_Ss") return 0 ;;
+  "dpkg_Sc") return 0 ;;
+  "dpkg_Scc") return 0 ;;
+  "dpkg_Sccc") return 0 ;;
+  "dpkg_S") return 0 ;;
+  "dpkg_U") return 0 ;;
+  "macports_Ql") return 0 ;;
+  "macports_Qo") return 0 ;;
+  "macports_Qc") return 0 ;;
+  "macports_Qu") return 0 ;;
+  "macports_Rs") return 0 ;;
+  "macports_R") return 0 ;;
+  "macports_Si") return 0 ;;
+  "macports_Suy") return 0 ;;
+  "macports_Su") return 0 ;;
+  "macports_Sy") return 0 ;;
+  "macports_Ss") return 0 ;;
+  "macports_Sc") return 0 ;;
+  "macports_Scc") return 0 ;;
+  "macports_S") return 0 ;;
+  "pkgng_Qi") return 0 ;;
+  "pkgng_Ql") return 0 ;;
+  "pkgng_Qo") return 0 ;;
+  "pkgng_Qp") return 0 ;;
+  "pkgng_Qu") return 0 ;;
+  "pkgng_Q") return 0 ;;
+  "pkgng_Rs") return 0 ;;
+  "pkgng_R") return 0 ;;
+  "pkgng_Si") return 0 ;;
+  "pkgng_Suy") return 0 ;;
+  "pkgng_Su") return 0 ;;
+  "pkgng_Sy") return 0 ;;
+  "pkgng_Ss") return 0 ;;
+  "pkgng_Sc") return 0 ;;
+  "pkgng_Scc") return 0 ;;
+  "pkgng_S") return 0 ;;
+  "portage_Qi") return 0 ;;
+  "portage_Ql") return 0 ;;
+  "portage_Qo") return 0 ;;
+  "portage_Qc") return 0 ;;
+  "portage_Qu") return 0 ;;
+  "portage_Q") return 0 ;;
+  "portage_Rs") return 0 ;;
+  "portage_R") return 0 ;;
+  "portage_Si") return 0 ;;
+  "portage_Suy") return 0 ;;
+  "portage_Su") return 0 ;;
+  "portage_Sy") return 0 ;;
+  "portage_Ss") return 0 ;;
+  "portage_Sc") return 0 ;;
+  "portage_Scc") return 0 ;;
+  "portage_Sccc") return 0 ;;
+  "portage_S") return 0 ;;
+  "yum_Qi") return 0 ;;
+  "yum_Ql") return 0 ;;
+  "yum_Qo") return 0 ;;
+  "yum_Qp") return 0 ;;
+  "yum_Qc") return 0 ;;
+  "yum_Qu") return 0 ;;
+  "yum_Qm") return 0 ;;
+  "yum_Rs") return 0 ;;
+  "yum_R") return 0 ;;
+  "yum_Si") return 0 ;;
+  "yum_Suy") return 0 ;;
+  "yum_Su") return 0 ;;
+  "yum_Sy") return 0 ;;
+  "yum_Ss") return 0 ;;
+  "yum_Sc") return 0 ;;
+  "yum_Scc") return 0 ;;
+  "yum_Sccc") return 0 ;;
+  "yum_S") return 0 ;;
+  "yum_U") return 0 ;;
+  "zypper_Qi") return 0 ;;
+  "zypper_Qu") return 0 ;;
+  "zypper_Qm") return 0 ;;
+  "zypper_Q") return 0 ;;
+  "zypper_Rs") return 0 ;;
+  "zypper_R") return 0 ;;
+  "zypper_Rs") return 0 ;;
+  "zypper_Suy") return 0 ;;
+  "zypper_Sy") return 0 ;;
+  "zypper_Ss") return 0 ;;
+  "zypper_Sc") return 0 ;;
+  "zypper_Scc") return 0 ;;
+  "zypper_S") return 0 ;;
+  "zypper_U") return 0 ;;
+  *) return 1 ;;
+  esac
+}
+
+
+set -u
+unset GREP_OPTIONS
+: ${PACAPT_DEBUG=}
+
+_POPT="" # primary operation
+_SOPT="" # secondary operation
+_TOPT="" # options for operations
+_EOPT="" # extra options (directly given to package manager)
+_PACMAN="" # name of the package manager
+
+_PACMAN_detect \
+|| die "'pacapt' doesn't support your package manager."
+
+if [[ -z "$PACAPT_DEBUG" ]]; then
+  [[ "$_PACMAN" != "pacman" ]] \
+  || exec "/usr/bin/pacman" "$@"
+else
+  _PACMAN="$PACAPT_DEBUG"
+fi
+
+while :; do
+  _args="${1-}"
+
+  [[ "${_args:0:1}" == "-" ]] || break
+
+  case "${_args}" in
+  "--help")
+    _help
+    exit 0
+    ;;
+  "-"|"--")
+    break
+    ;;
+  esac
+
+  i=1
+  while [[ "$i" -lt "${#_args}" ]]; do
+    _opt="${_args:$i:1}"
+    (( i ++ ))
+
+    case "$_opt" in
+    h)
+      _help
+      exit 0
+      ;;
+    V)
+      _print_pacapt_version $PACAPT_VERSION;
+      exit 0
+      ;;
+    P)
+      _print_supported_operations $_PACMAN
+      exit 0
+      ;;
+
+    Q|S|R|U)
+      if [[ -n "$_POPT" && "$_POPT" != "$_opt" ]]; then
+        _error "Only one operation may be used at a time"
+        exit 1
+      fi
+      _POPT="$_opt"
+      ;;
+
+    # FIXME: Please check pacman(8) to see if they are really 2nd operation
+    s|l|i|p|o|m|n)
+      if [[ "$_SOPT" == '' ]]; then
+        _SOPT="$_opt"
+      else
+        if [[ "${_SOPT:0:1}" == "s" ]]; then
+          _SOPT="ns"
+        else
+          _SOPT="n"
+        fi
+      fi
+      ;;
+
+    q)
+      _TOPT="$_opt" ;; # Thanks to James Pearson
+
+    u)
+      if [[ "${_SOPT:0:1}" == "y" ]]; then
+        _SOPT="uy"
+      else
+        _SOPT="u"
+      fi
+      ;;
+
+    y)
+      if [[ "${_SOPT:0:1}" == "u" ]]; then
+        _SOPT="uy"
+      else
+        _SOPT="y"
+      fi
+      ;;
+
+    c)
+      if [[ "${_SOPT:0:2}" == "cc" ]]; then
+        _SOPT="ccc"
+      elif [[ "${_SOPT:0:1}" == "c" ]]; then
+        _SOPT="cc"
+      else
+        _SOPT="$_opt"
+      fi
+      ;;
+
+    w)
+      _tranlate_w
+      ;;
+
+    v)
+      _EOPT="-v"
+      ;;
+
+    *)
+      _die "pacapt: Unknown option '$_opt'."
+      ;;
+    esac
+  done
+
+  shift
+
+  if [[ -n "$_POPT" && -n "$_SOPT" ]]; then
+    if [[ -z "$_TOPT" && "${1-}" == "-w" ]]; then
+      shift
+      _tranlate_w
+    fi
+    break
+  # Don't have anything from the first argument. Something wrong.
+  elif [[ -z "${_POPT}${_SOPT}${_TOPT}${_EOPT}" ]]; then
+    break
+  fi
+done
+
+[[ -n "$_POPT" ]] \
+|| _die "pacapt: Please specify a primary operation (Q, S, R, U)."
+
+_validate_operation "${_PACMAN}_${_POPT}${_SOPT}" \
+|| {
+  _not_implemented
+  exit 1
+}
+
+if [[ -n "$@" ]]; then
+  case "${_POPT}${_SOPT}" in
+  "Su"|"Sy"|"Suy")
+    echo 1>&2 "WARNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    echo 1>&2 "  The -Sy/u options refresh and/or upgrade all packages."
+    echo 1>&2 "  To install packages as well, use separate commands:"
+    echo 1>&2
+    echo 1>&2 "    $0 -S$_SOPT; $0 -S $@"
+    echo 1>&2 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+  esac
+fi
+
+if [[ -n "$PACAPT_DEBUG" ]]; then
+  echo "pacapt: $_PACMAN, p=$_POPT, s=$_SOPT, t=$_TOPT, e=$_EOPT"
+  echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT $@'"
+else
+  "${_PACMAN}_${_POPT}${_SOPT}" $_EOPT "$@"
+fi
