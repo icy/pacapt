@@ -6,6 +6,9 @@ Some guidelines
   4. Don't use `master` branch unless you need to fix bugs
   5. Use 'PACAPT_DEBUG=foo' where 'foobar' is a package manager
      (dpkg, pacman, zypper, ...) to print what 'pacapt' will do.
+  6. The 'pacapt' script is generated, and it should be stable.
+     So please do not use 'make pacapt' to update it, and/or
+     modify it manually. For your development, use 'pacat.dev'
 
 Git branches
 
