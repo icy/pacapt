@@ -35,9 +35,8 @@ INSTALLATION
   2. On FreeBSD, please install `bash` package first
   3. Method 1: Use the stable script
 
-        $ wget \
+        $ wget -O /usr/local/bin/pacapt \
             https://github.com/icy/pacapt/raw/ng/pacapt \
-          -O /usr/local/bin/pacapt
         $ chmod 755 /usr/local/bin/pacapt
 
   4. Method 2: Compile and install a development version
