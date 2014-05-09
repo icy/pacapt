@@ -17,7 +17,7 @@ default:
 pacapt.dev: ./lib/*.sh compile.sh
 	@./compile.sh > $(@)
 	@chmod 755 $(@)
-	@echo 1>&2 "The output file is '$(@)', which is expected to be unstable"
+	@echo 1>&2 "The output file is '$(@)' (unstable version)"
 
 install.dev: pacapt.dev
 	@if [ -e $(@) ] && ! file $(@) | grep -q 'shell script'; then \
@@ -32,7 +32,7 @@ install.dev: pacapt.dev
 pacapt: ./lib/*.sh compile.sh
 	@./compile.sh > $(@)
 	@chmod 755 $(@)
-	@echo 1>&2 "The output file is '$(@)', which is expected to be stable"
+	@echo 1>&2 "The output file is '$(@)' (stable version)"
 
 install: $(BINDIR)/pacapt
 
