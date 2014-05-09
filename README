@@ -33,12 +33,20 @@ INSTALLATION
 
   1. This script shouldn't be installed on an Arch-based system.
   2. On FreeBSD, please install `bash` package first
-  3. Compile and install the script
+  3. Method 1: Use the stable script
+
+        $ wget \
+            https://github.com/icy/pacapt/raw/ng/pacapt \
+          -O /usr/local/bin/pacapt
+        $ chmod 755 /usr/local/bin/pacapt
+
+  4. Method 2: Compile and install a development version
 
         $ git clone https://github.com/icy/pacapt.git
-        $ cd pacapt && git checkout ng
-        $ ./compile.sh > pacapt
-        $ install -m755 ./pacapt /usr/local/bin/pacapt
+        $ cd pacapt
+        $ git checkout ng
+        $ ./compile.sh > pacapt.dev
+        $ install -m755 ./pacapt.dev /usr/local/bin/pacapt
 
 USAGE
 
