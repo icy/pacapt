@@ -56,6 +56,10 @@ while :; do
       _help
       exit 0
       ;;
+    V)
+      _print_pacapt_version $PACAPT_VERSION;
+      exit 0
+      ;;
     P)
       _print_supported_operations $_PACMAN
       exit 0

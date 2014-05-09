@@ -52,6 +52,7 @@ OPERATIONS
 
     -h or --help    print this help message
     -P              print supported operations
+    -V              print version information
 
 OPTIONS
 

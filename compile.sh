@@ -39,6 +39,8 @@ cat <<EOF
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
+
+export PACAPT_VERSION='$VERSION'
 EOF
 
 for L in ./lib/*.sh; do
