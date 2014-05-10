@@ -28,10 +28,15 @@ _not_implemented() {
 # Detect package type from /etc/issue
 # FIXME: Using new `issue` file (location)
 _issue2pacman() {
-  local _pacman="$1"
-  shift
+  local _pacman
+
+  _pacman="$1"; shift
+
   grep -qis "$@" /etc/issue \
-  && _PACMAN="$_pacman"
+  && _PACMAN="$_pacman" && return
+
+  grep -qis "$@" /etc/os-release \
+  && _PACMAN="$_pacman" && return
 }
 
 # Detect package type
