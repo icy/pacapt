@@ -19,7 +19,7 @@ NAME
 
 SYNTAX
 
-  $ pacapt <operation(s)> <option(s)> <packages>
+  $ pacapt <option(s)> <operation(s)> <package(s)>
 
 OPERATIONS
 
