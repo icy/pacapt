@@ -51,7 +51,7 @@ for L in ./lib/*.sh; do
     grep -hE "^($_SUPPORTED_PACMAN)_[^ \t]+\(\)" ./lib/*.sh \
     | awk -F '(' '{print $1}' \
     | while read F; do
-        echo "  \"$F\") return 0 ;;"
+        echo "  \"$F\") ;;"
       done
 
     echo "  *) return 1 ;;"
