@@ -218,6 +218,18 @@ _OSTYPE_detect() {
 ###
 
 # Detect type of package manager.
+cat 1>&2 <<-EOF
+WARNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  You are using the 'pacapt' on the old stable branch
+  which is closed on May 4th, 2014.
+
+  Please consider to switch to new script on 'ng' branch
+  which is under an active development. See also
+
+      https://github.com/icy/pacapt/tree/ng
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+EOF
+
 _OSTYPE_detect
 
 # If the system is Arch-like, pass all of the arguments to /usr/bin/pacman
