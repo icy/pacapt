@@ -16,6 +16,7 @@ default:
 
 pacapt.dev: ./lib/*.sh compile.sh
 	@./compile.sh > $(@)
+	@bash -n $(@)
 	@chmod 755 $(@)
 	@echo 1>&2 "The output file is '$(@)' (unstable version)"
 
@@ -31,6 +32,7 @@ install.dev: pacapt.dev
 
 pacapt: ./lib/*.sh compile.sh
 	@./compile.sh > $(@)
+	@bash -n $(@)
 	@chmod 755 $(@)
 	@echo 1>&2 "The output file is '$(@)' (stable version)"
 

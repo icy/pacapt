@@ -45,6 +45,7 @@ INSTALLATION
         $ cd pacapt
         $ git checkout ng
         $ ./compile.sh > pacapt.dev
+        $ bash -n pacapt.dev # check if syntax is good
         $ install -m755 ./pacapt.dev /usr/local/bin/pacapt
 
 USAGE
