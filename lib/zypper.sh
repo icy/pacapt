@@ -25,7 +25,15 @@ zypper_Qm() {
 }
 
 zypper_Q() {
-  zypper search -i "$@"
+  if [[ "$_TOPT" == "q" ]]; then
+    zypper search -i "$@" \
+    | grep ^i \
+    | awk '{print $3}'
+  elif [[ "$_TOPT" == "" ]]; then
+    zypper search -i "$@"
+  else
+    _not_implemented
+  fi
 }
 
 zypper_Rs() {
