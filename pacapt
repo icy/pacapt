@@ -4,7 +4,7 @@
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: ng-unstable
+# Version: 2.0.0-alpha
 
 # Copyright (C) 2010 - 2014 Anh K. Huynh
 #
@@ -15,7 +15,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='ng-unstable'
+export PACAPT_VERSION='2.0.0-alpha'
 
 
 _error() {
@@ -33,10 +33,15 @@ _not_implemented() {
 }
 
 _issue2pacman() {
-  local _pacman="$1"
-  shift
+  local _pacman
+
+  _pacman="$1"; shift
+
   grep -qis "$@" /etc/issue \
-  && _PACMAN="$_pacman"
+  && _PACMAN="$_pacman" && return
+
+  grep -qis "$@" /etc/os-release \
+  && _PACMAN="$_pacman" && return
 }
 
 _PACMAN_detect() {
@@ -691,6 +696,16 @@ portage_S() {
 }
 
 
+yum_Q() {
+  if [[ "$_TOPT" == "q" ]]; then
+    rpm -qa --qf "%{NAME}\n"
+  elif [[ "$_TOPT" == "" ]]; then
+    rpm -qa --qf "%{NAME} %{VERSION}\n"
+  else
+    _not_implemented
+  fi
+}
+
 yum_Qi() {
   yum info "$@"
 }
@@ -838,107 +853,108 @@ zypper_U() {
 }
 _validate_operation() {
   case "$1" in
-  "dpkg_Q") return 0 ;;
-  "dpkg_Qi") return 0 ;;
-  "dpkg_Ql") return 0 ;;
-  "dpkg_Qo") return 0 ;;
-  "dpkg_Qp") return 0 ;;
-  "dpkg_Qu") return 0 ;;
-  "dpkg_Qs") return 0 ;;
-  "dpkg_Rs") return 0 ;;
-  "dpkg_Rn") return 0 ;;
-  "dpkg_Rns") return 0 ;;
-  "dpkg_R") return 0 ;;
-  "dpkg_Si") return 0 ;;
-  "dpkg_Suy") return 0 ;;
-  "dpkg_Su") return 0 ;;
-  "dpkg_Sy") return 0 ;;
-  "dpkg_Ss") return 0 ;;
-  "dpkg_Sc") return 0 ;;
-  "dpkg_Scc") return 0 ;;
-  "dpkg_Sccc") return 0 ;;
-  "dpkg_S") return 0 ;;
-  "dpkg_U") return 0 ;;
-  "macports_Ql") return 0 ;;
-  "macports_Qo") return 0 ;;
-  "macports_Qc") return 0 ;;
-  "macports_Qu") return 0 ;;
-  "macports_Rs") return 0 ;;
-  "macports_R") return 0 ;;
-  "macports_Si") return 0 ;;
-  "macports_Suy") return 0 ;;
-  "macports_Su") return 0 ;;
-  "macports_Sy") return 0 ;;
-  "macports_Ss") return 0 ;;
-  "macports_Sc") return 0 ;;
-  "macports_Scc") return 0 ;;
-  "macports_S") return 0 ;;
-  "pkgng_Qi") return 0 ;;
-  "pkgng_Ql") return 0 ;;
-  "pkgng_Qo") return 0 ;;
-  "pkgng_Qp") return 0 ;;
-  "pkgng_Qu") return 0 ;;
-  "pkgng_Q") return 0 ;;
-  "pkgng_Rs") return 0 ;;
-  "pkgng_R") return 0 ;;
-  "pkgng_Si") return 0 ;;
-  "pkgng_Suy") return 0 ;;
-  "pkgng_Su") return 0 ;;
-  "pkgng_Sy") return 0 ;;
-  "pkgng_Ss") return 0 ;;
-  "pkgng_Sc") return 0 ;;
-  "pkgng_Scc") return 0 ;;
-  "pkgng_S") return 0 ;;
-  "portage_Qi") return 0 ;;
-  "portage_Ql") return 0 ;;
-  "portage_Qo") return 0 ;;
-  "portage_Qc") return 0 ;;
-  "portage_Qu") return 0 ;;
-  "portage_Q") return 0 ;;
-  "portage_Rs") return 0 ;;
-  "portage_R") return 0 ;;
-  "portage_Si") return 0 ;;
-  "portage_Suy") return 0 ;;
-  "portage_Su") return 0 ;;
-  "portage_Sy") return 0 ;;
-  "portage_Ss") return 0 ;;
-  "portage_Sc") return 0 ;;
-  "portage_Scc") return 0 ;;
-  "portage_Sccc") return 0 ;;
-  "portage_S") return 0 ;;
-  "yum_Qi") return 0 ;;
-  "yum_Ql") return 0 ;;
-  "yum_Qo") return 0 ;;
-  "yum_Qp") return 0 ;;
-  "yum_Qc") return 0 ;;
-  "yum_Qu") return 0 ;;
-  "yum_Qm") return 0 ;;
-  "yum_Rs") return 0 ;;
-  "yum_R") return 0 ;;
-  "yum_Si") return 0 ;;
-  "yum_Suy") return 0 ;;
-  "yum_Su") return 0 ;;
-  "yum_Sy") return 0 ;;
-  "yum_Ss") return 0 ;;
-  "yum_Sc") return 0 ;;
-  "yum_Scc") return 0 ;;
-  "yum_Sccc") return 0 ;;
-  "yum_S") return 0 ;;
-  "yum_U") return 0 ;;
-  "zypper_Qi") return 0 ;;
-  "zypper_Qu") return 0 ;;
-  "zypper_Qm") return 0 ;;
-  "zypper_Q") return 0 ;;
-  "zypper_Rs") return 0 ;;
-  "zypper_R") return 0 ;;
-  "zypper_Rs") return 0 ;;
-  "zypper_Suy") return 0 ;;
-  "zypper_Sy") return 0 ;;
-  "zypper_Ss") return 0 ;;
-  "zypper_Sc") return 0 ;;
-  "zypper_Scc") return 0 ;;
-  "zypper_S") return 0 ;;
-  "zypper_U") return 0 ;;
+  "dpkg_Q") ;;
+  "dpkg_Qi") ;;
+  "dpkg_Ql") ;;
+  "dpkg_Qo") ;;
+  "dpkg_Qp") ;;
+  "dpkg_Qu") ;;
+  "dpkg_Qs") ;;
+  "dpkg_Rs") ;;
+  "dpkg_Rn") ;;
+  "dpkg_Rns") ;;
+  "dpkg_R") ;;
+  "dpkg_Si") ;;
+  "dpkg_Suy") ;;
+  "dpkg_Su") ;;
+  "dpkg_Sy") ;;
+  "dpkg_Ss") ;;
+  "dpkg_Sc") ;;
+  "dpkg_Scc") ;;
+  "dpkg_Sccc") ;;
+  "dpkg_S") ;;
+  "dpkg_U") ;;
+  "macports_Ql") ;;
+  "macports_Qo") ;;
+  "macports_Qc") ;;
+  "macports_Qu") ;;
+  "macports_Rs") ;;
+  "macports_R") ;;
+  "macports_Si") ;;
+  "macports_Suy") ;;
+  "macports_Su") ;;
+  "macports_Sy") ;;
+  "macports_Ss") ;;
+  "macports_Sc") ;;
+  "macports_Scc") ;;
+  "macports_S") ;;
+  "pkgng_Qi") ;;
+  "pkgng_Ql") ;;
+  "pkgng_Qo") ;;
+  "pkgng_Qp") ;;
+  "pkgng_Qu") ;;
+  "pkgng_Q") ;;
+  "pkgng_Rs") ;;
+  "pkgng_R") ;;
+  "pkgng_Si") ;;
+  "pkgng_Suy") ;;
+  "pkgng_Su") ;;
+  "pkgng_Sy") ;;
+  "pkgng_Ss") ;;
+  "pkgng_Sc") ;;
+  "pkgng_Scc") ;;
+  "pkgng_S") ;;
+  "portage_Qi") ;;
+  "portage_Ql") ;;
+  "portage_Qo") ;;
+  "portage_Qc") ;;
+  "portage_Qu") ;;
+  "portage_Q") ;;
+  "portage_Rs") ;;
+  "portage_R") ;;
+  "portage_Si") ;;
+  "portage_Suy") ;;
+  "portage_Su") ;;
+  "portage_Sy") ;;
+  "portage_Ss") ;;
+  "portage_Sc") ;;
+  "portage_Scc") ;;
+  "portage_Sccc") ;;
+  "portage_S") ;;
+  "yum_Q") ;;
+  "yum_Qi") ;;
+  "yum_Ql") ;;
+  "yum_Qo") ;;
+  "yum_Qp") ;;
+  "yum_Qc") ;;
+  "yum_Qu") ;;
+  "yum_Qm") ;;
+  "yum_Rs") ;;
+  "yum_R") ;;
+  "yum_Si") ;;
+  "yum_Suy") ;;
+  "yum_Su") ;;
+  "yum_Sy") ;;
+  "yum_Ss") ;;
+  "yum_Sc") ;;
+  "yum_Scc") ;;
+  "yum_Sccc") ;;
+  "yum_S") ;;
+  "yum_U") ;;
+  "zypper_Qi") ;;
+  "zypper_Qu") ;;
+  "zypper_Qm") ;;
+  "zypper_Q") ;;
+  "zypper_Rs") ;;
+  "zypper_R") ;;
+  "zypper_Rs") ;;
+  "zypper_Suy") ;;
+  "zypper_Sy") ;;
+  "zypper_Ss") ;;
+  "zypper_Sc") ;;
+  "zypper_Scc") ;;
+  "zypper_S") ;;
+  "zypper_U") ;;
   *) return 1 ;;
   esac
 }
