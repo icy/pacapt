@@ -36,7 +36,7 @@ INSTALLATION
   3. Method 1: Use the stable script
 
         $ wget -O /usr/local/bin/pacapt \
-            https://github.com/icy/pacapt/raw/ng/pacapt \
+            https://github.com/icy/pacapt/raw/ng/pacapt
         $ chmod 755 /usr/local/bin/pacapt
 
   4. Method 2: Compile and install a development version
