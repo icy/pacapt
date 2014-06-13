@@ -4,7 +4,7 @@
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.0.0-alpha
+# Version: 2.0.0-beta
 
 # Copyright (C) 2010 - 2014 Anh K. Huynh
 #
@@ -15,7 +15,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.0.0-alpha'
+export PACAPT_VERSION='2.0.0-beta'
 
 
 _error() {
@@ -801,7 +801,15 @@ zypper_Qm() {
 }
 
 zypper_Q() {
-  zypper search -i "$@"
+  if [[ "$_TOPT" == "q" ]]; then
+    zypper search -i "$@" \
+    | grep ^i \
+    | awk '{print $3}'
+  elif [[ "$_TOPT" == "" ]]; then
+    zypper search -i "$@"
+  else
+    _not_implemented
+  fi
 }
 
 zypper_Rs() {
