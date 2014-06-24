@@ -47,7 +47,7 @@ portage_Q() {
     if [[ -x '/usr/bin/eix' ]]; then
       eix -I "$@"
     elif [[ -x '/usr/bin/equery' ]]; then
-      equery list '*' $_PKG
+      equery list '*' "$@"
     else
       LS_COLORS=never \
       ls -1 -d /var/db/pkg/*/*
