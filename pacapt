@@ -4,7 +4,7 @@
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.0.0-beta
+# Version: 2.0.0-gamma
 
 # Copyright (C) 2010 - 2014 Anh K. Huynh
 #
@@ -15,7 +15,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.0.0-beta'
+export PACAPT_VERSION='2.0.0-gamma'
 
 
 _error() {
@@ -613,7 +613,7 @@ portage_Q() {
     if [[ -x '/usr/bin/eix' ]]; then
       eix -I "$@"
     elif [[ -x '/usr/bin/equery' ]]; then
-      equery list '*' $_PKG
+      equery list -i "$@"
     else
       LS_COLORS=never \
       ls -1 -d /var/db/pkg/*/*
@@ -984,7 +984,7 @@ _PACMAN_detect \
 if [[ -z "$PACAPT_DEBUG" ]]; then
   [[ "$_PACMAN" != "pacman" ]] \
   || exec "/usr/bin/pacman" "$@"
-else
+elif [[ "$PACAPT_DEBUG" != "auto" ]]; then
   _PACMAN="$PACAPT_DEBUG"
 fi
 
