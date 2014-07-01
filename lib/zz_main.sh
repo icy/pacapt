@@ -27,7 +27,7 @@ _PACMAN_detect \
 if [[ -z "$PACAPT_DEBUG" ]]; then
   [[ "$_PACMAN" != "pacman" ]] \
   || exec "/usr/bin/pacman" "$@"
-else
+elif [[ "$PACAPT_DEBUG" != "auto" ]]; then
   _PACMAN="$PACAPT_DEBUG"
 fi
 
