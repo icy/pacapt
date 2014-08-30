@@ -100,3 +100,11 @@ yum_S() {
 yum_U() {
   yum localinstall "$@"
 }
+
+yum_Sg() {
+  if [[ "$@" != "" ]]; then
+    yum groupinfo "$@"
+  else
+    yum grouplist
+  fi
+}  
