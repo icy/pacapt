@@ -4,7 +4,7 @@
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 192d2cf
+# Version: 2.0.0-delta
 
 # Copyright (C) 2010 - 2014 Anh K. Huynh
 #
@@ -15,7 +15,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='192d2cf'
+export PACAPT_VERSION='2.0.0-delta'
 
 
 _error() {
