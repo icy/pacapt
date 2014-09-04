@@ -44,6 +44,7 @@ _PACMAN_detect() {
   _issue2pacman pacman "Arch Linux" && return
   _issue2pacman dpkg "Debian GNU/Linux" && return
   _issue2pacman dpkg "Ubuntu" && return
+  _issue2pacman cave "Exherbo Linux" && return
   _issue2pacman yum "CentOS" && return
   _issue2pacman yum "Red Hat" && return
   _issue2pacman yum "Fedora" && return
@@ -59,6 +60,7 @@ _PACMAN_detect() {
   fi
 
   [[ -x "/usr/bin/apt-get" ]] && _PACMAN="dpkg" && return
+  [[ -x "/usr/bin/cave" ]] && _PACMAN="cave" && return
   [[ -x "/usr/bin/yum" ]] && _PACMAN="yum" && return
   [[ -x "/opt/local/bin/port" ]] && _PACMAN="macports" && return
   [[ -x "/usr/bin/emerge" ]] && _PACMAN="portage" && return
@@ -76,6 +78,9 @@ _tranlate_w() {
   case "$_PACMAN" in
   "dpkg")
     _TOPT="-d"
+    ;;
+  "cave")
+    _TOPT="-f"
     ;;
 
   "yum")
