@@ -11,12 +11,21 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+# FIXME: This will affect all distributions, because this will be loaded
+# FIXME: globally. We need to provide, for example, (cave_init) method.
+#
 # cave uses asterisks pretty liberally, this is for output parsing correctness
 shopt -u globstar
 
 cave_Q() {
   if [[ "$_TOPT" == "q" ]]; then
-    cave show -f "${@:-world}" | while read cave_line;do echo $cave_line;done | grep -v '^$'
+    # FIXME: Why the `while`? I believe we can skip it, for example:
+    # FIXME:  cave show -f "${@:-world}" | grep -v '^$'
+    cave show -f "${@:-world}" \
+    | while read cave_line; do
+        echo $cave_line
+      done \
+    | grep -v '^$'
   else
     cave show -f "${@:-world}"
   fi
@@ -32,7 +41,12 @@ cave_Ql() {
     return
   fi
 
-  cave show -f "${@:-world}" | while read cave_line;do echo $cave_line;done | grep -v '^$' \ \
+  # FIXME: Remove (while) loop, as in (cave_Q)
+  cave show -f "${@:-world}" \
+  | while read cave_line; do
+      echo $cave_line
+    done \
+  | grep -v '^$' \
   | while read _pkg; do
       if [[ "$_TOPT" == "q" ]]; then
         cave --color no contents "$_pkg"
@@ -52,13 +66,16 @@ cave_Qp() {
 
 cave_Qu() {
   if [[ -z "$@" ]];then
-    cave resolve -c world | grep '^u.*' |
-    while read _pkg;do
-        _pkg=$(echo "$_pkg" | cut -d'u' -f2-)
+    cave resolve -c world \
+    | grep '^u.*' \
+    | while read _pkg; do
+        _pkg="$(echo "$_pkg" | cut -d'u' -f2-)"
         echo $_pkg
     done
   else
-    cave resolve -c world | grep '^u.*' | grep -- "$@"
+    cave resolve -c world \
+    | grep '^u.*' \
+    | grep -- "$@"
   fi
 }
 
