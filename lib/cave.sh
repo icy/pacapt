@@ -3,7 +3,7 @@
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/somasis/pacapt/
 
-# Copyright (C) 2010 - 2014 Somasis
+# Copyright (C) 2014 Somasis
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
