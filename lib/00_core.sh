@@ -130,7 +130,7 @@ _print_pacapt_version() {
   cat <<EOF
 pacapt version '${1:-unknown}'
 
-Copyright (C) 2010 - $(date +%Y) Anh K. Huynh
+Copyright (C) 2010 - $(date +%Y) Anh K. Huynh et al.
 
 Usage of the works is permitted provided that this
 instrument is retained with the works, so that any
