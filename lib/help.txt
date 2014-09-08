@@ -1,18 +1,3 @@
-# Purpose: Provide help message
-# Author : Anh K. Huynh
-# License: Fair license (http://www.opensource.org/licenses/fair)
-# Source : http://github.com/icy/pacapt/
-
-# Copyright (C) 2010 - 2014 Anh K. Huynh
-#
-# Usage of the works is permitted provided that this instrument is
-# retained with the works, so that any entity that uses the works is
-# notified of this instrument.
-#
-# DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
-
-_help() {
-  cat <<-EOF
 NAME
   pacapt - An Arch's pacman-like package manager for some Unices.
   More details can be found at https://github.com/icy/pacapt .
@@ -88,7 +73,13 @@ NOTES
 
 AUTHORS
 
-  The script was written Anh K. Huynh. Some developers and system admin-
-  strator have contributed to the script. See THANKS for details.
-EOF
-}
+  10sr
+  Alexander Dupuy
+  Anh K. Huynh
+  Arcterus
+  Danny George
+  Hà-Dương Nguyễn
+  James Pearson
+  Karol Blazewicz
+  Konrad Borowski
+  Somasis

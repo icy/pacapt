@@ -5,7 +5,7 @@
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
 
-# Copyright (C) 2010 - 2014 Anh K. Huynh
+# Copyright (C) 2010 - 2014 Anh K. Huynh et al.
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
@@ -26,12 +26,22 @@ cat <<EOF
 #!/usr/bin/env bash
 #
 # Purpose: A wrapper for all Unix package managers
-# Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
 # Version: $VERSION
+# Authors: Anh K. Huynh et al.
 
-# Copyright (C) 2010 - $(date +%Y) Anh K. Huynh
+# Copyright (C) 2010 - $(date +%Y) | 10sr
+#                                  | Alexander Dupuy
+#                                  | Anh K. Huynh
+#                                  | Arcterus
+#                                  | Danny George
+#                                  | Hà-Dương Nguyễn
+#                                  | Huy Ngô
+#                                  | James Pearson
+#                                  | Karol Blazewicz
+#                                  | Konrad Borowski
+#                                  | Somasis
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
@@ -42,6 +52,21 @@ cat <<EOF
 
 export PACAPT_VERSION='$VERSION'
 EOF
+
+cat <<'EOS'
+
+_help() {
+  cat <<'EOF'
+EOS
+
+cat ./lib/help.txt
+
+cat <<'EOS'
+EOF
+
+}
+
+EOS
 
 for L in ./lib/*.sh; do
   if [[ "${L##*/}" == "zz_main.sh" ]]; then
