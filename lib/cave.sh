@@ -11,11 +11,10 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
-# FIXME: This will affect all distributions, because this will be loaded
-# FIXME: globally. We need to provide, for example, (cave_init) method.
-#
 # cave uses asterisks pretty liberally, this is for output parsing correctness
-shopt -u globstar
+_cave_init() {
+  shopt -u globstar
+}
 
 cave_Q() {
   if [[ "$_TOPT" == "q" ]]; then

@@ -11,6 +11,10 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+_dpkg_init() {
+  :
+}
+
 dpkg_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     dpkg -l \

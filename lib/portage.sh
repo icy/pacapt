@@ -11,6 +11,10 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+_portage_init() {
+  :
+}
+
 portage_Qi() {
   emerge --info "$@"
 }

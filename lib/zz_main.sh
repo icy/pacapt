@@ -176,5 +176,6 @@ if [[ -n "$PACAPT_DEBUG" ]]; then
   echo "pacapt: $_PACMAN, p=$_POPT, s=$_SOPT, t=$_TOPT, e=$_EOPT"
   echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT $@'"
 else
+  "_${_PACMAN}_init"
   "${_PACMAN}_${_POPT}${_SOPT}" $_EOPT "$@"
 fi

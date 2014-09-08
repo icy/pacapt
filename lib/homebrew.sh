@@ -11,6 +11,10 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+_homebrew_init() {
+  :
+}
+
 homebrew_Qi() {
   brew info "$@"
 }

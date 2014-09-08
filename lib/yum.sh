@@ -11,6 +11,10 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+_yum_init() {
+  :
+}
+
 yum_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     rpm -qa --qf "%{NAME}\n"

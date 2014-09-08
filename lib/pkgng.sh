@@ -16,6 +16,10 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+_pkgng_init() {
+  :
+}
+
 pkgng_Qi() {
   pkg info "$@"
 }

@@ -11,6 +11,10 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+_macports_init() {
+  :
+}
+
 macports_Ql() {
   port contents "$@"
 }

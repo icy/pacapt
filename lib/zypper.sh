@@ -11,6 +11,10 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+_zypper_init() {
+  :
+}
+
 zypper_Qi() {
   zypper info "$@"
 }
