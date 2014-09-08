@@ -69,9 +69,8 @@ cave_Qu() {
     cave resolve -c world \
     | grep '^u.*' \
     | while read _pkg; do
-        _pkg="$(echo "$_pkg" | cut -d'u' -f2-)"
-        echo $_pkg
-    done
+        echo "$_pkg" | cut -d'u' -f2-
+      done
   else
     cave resolve -c world \
     | grep '^u.*' \
