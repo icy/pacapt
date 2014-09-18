@@ -18,12 +18,7 @@ _cave_init() {
 
 cave_Q() {
   if [[ "$_TOPT" == "q" ]]; then
-    # FIXME: Why the `while`? I believe we can skip it, for example:
-    # FIXME:  cave show -f "${@:-world}" | grep -v '^$'
     cave show -f "${@:-world}" \
-    | while read cave_line; do
-        echo $cave_line
-      done \
     | grep -v '^$'
   else
     cave show -f "${@:-world}"
@@ -40,11 +35,7 @@ cave_Ql() {
     return
   fi
 
-  # FIXME: Remove (while) loop, as in (cave_Q)
   cave show -f "${@:-world}" \
-  | while read cave_line; do
-      echo $cave_line
-    done \
   | grep -v '^$' \
   | while read _pkg; do
       if [[ "$_TOPT" == "q" ]]; then
