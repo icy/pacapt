@@ -32,16 +32,16 @@ cat <<EOF
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - $(date +%Y) | 10sr
-#                                  | Alexander Dupuy
-#                                  | Anh K. Huynh
-#                                  | Arcterus
-#                                  | Danny George
-#                                  | Hà-Dương Nguyễn
-#                                  | Huy Ngô
-#                                  | James Pearson
-#                                  | Karol Blazewicz
-#                                  | Konrad Borowski
-#                                  | Somasis
+#                           | Alexander Dupuy
+#                           | Anh K. Huynh
+#                           | Arcterus
+#                           | Danny George
+#                           | Hà-Dương Nguyễn
+#                           | Huy Ngô
+#                           | James Pearson
+#                           | Karol Blazewicz
+#                           | Konrad Borowski
+#                           | Somasis
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
