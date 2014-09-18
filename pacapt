@@ -1,12 +1,22 @@
 #!/usr/bin/env bash
 #
 # Purpose: A wrapper for all Unix package managers
-# Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.0.0-gamma
+# Version: 2.0.0-delta
+# Authors: Anh K. Huynh et al.
 
-# Copyright (C) 2010 - 2014 Anh K. Huynh
+# Copyright (C) 2010 - 2014 | 10sr
+#                           | Alexander Dupuy
+#                           | Anh K. Huynh
+#                           | Arcterus
+#                           | Danny George
+#                           | Hà-Dương Nguyễn
+#                           | Huy Ngô
+#                           | James Pearson
+#                           | Karol Blazewicz
+#                           | Konrad Borowski
+#                           | Somasis
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
@@ -15,7 +25,99 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.0.0-gamma'
+export PACAPT_VERSION='2.0.0-delta'
+
+_help() {
+  cat <<'EOF'
+NAME
+  pacapt - An Arch's pacman-like package manager for some Unices.
+  More details can be found at https://github.com/icy/pacapt .
+
+SYNTAX
+
+  $ pacapt <option(s)> <operation(s)> <package(s)>
+
+OPERATIONS
+
+  Query
+    -Q              list all installed packages
+    -Qc <package>   show package's changelog
+    -Qi <package>   print package status
+    -Ql <package>   list package's files
+    -Qm             list installed packages that aren't available
+                    in any installation source
+    -Qo <file>      query package that provides <file>
+    -Qp <file>      query a package file (don't use package database)
+    -Qs <package>   search for installed package
+
+  Synchronize
+    -S <package>    install package(s)
+    -Ss <package>   search for packages
+    -Su             upgrade the system
+    -Sy             update package database
+    -Suy            update package database, then upgrade the system
+
+  Remove / Clean up
+    -R <packages>   remove some packages
+    -Sc             delete old downloaded packages
+    -Scc            delete all downloaded packages
+    -Sccc           clean variant files.
+                    (debian) See also http://dragula.viettug.org/blogs/646
+
+  Miscellaneous
+
+    -h or --help    print this help message
+    -P              print supported operations
+    -V              print version information
+
+OPTIONS
+
+    -w              download packages but don't install them
+
+EXAMPLES
+
+  1. To install a package from Debian's backports repository
+
+      $ pacapt -S foobar -t lenny-backports
+      $ pacapt -S -- -t lenny-backports foobar
+
+  2. To update package database and then update your system
+
+      $ pacapt -Syu
+
+  3. To download a package without installing it
+
+      $ pacapt -Sw foobar
+
+NOTES
+
+  When being executed on Arch-based system, the tool simply invokes
+  the system package manager (`/usr/bin/pacman`.)
+
+  Though you can specify option by its own word, for example,
+
+      $ pacapt -S -y -u
+
+  it's always the best to combine them
+
+      $ pacapt -Syu
+
+AUTHORS
+
+  10sr
+  Alexander Dupuy
+  Anh K. Huynh
+  Arcterus
+  Danny George
+  Hà-Dương Nguyễn
+  James Pearson
+  Karol Blazewicz
+  Konrad Borowski
+  Somasis
+EOF
+
+}
+
 
 
 _error() {
@@ -48,6 +150,7 @@ _PACMAN_detect() {
   _issue2pacman pacman "Arch Linux" && return
   _issue2pacman dpkg "Debian GNU/Linux" && return
   _issue2pacman dpkg "Ubuntu" && return
+  _issue2pacman cave "Exherbo Linux" && return
   _issue2pacman yum "CentOS" && return
   _issue2pacman yum "Red Hat" && return
   _issue2pacman yum "Fedora" && return
@@ -63,6 +166,7 @@ _PACMAN_detect() {
   fi
 
   [[ -x "/usr/bin/apt-get" ]] && _PACMAN="dpkg" && return
+  [[ -x "/usr/bin/cave" ]] && _PACMAN="cave" && return
   [[ -x "/usr/bin/yum" ]] && _PACMAN="yum" && return
   [[ -x "/opt/local/bin/port" ]] && _PACMAN="macports" && return
   [[ -x "/usr/bin/emerge" ]] && _PACMAN="portage" && return
@@ -78,6 +182,9 @@ _tranlate_w() {
   case "$_PACMAN" in
   "dpkg")
     _TOPT="-d"
+    ;;
+  "cave")
+    _TOPT="-f"
     ;;
 
   "yum")
@@ -127,7 +234,7 @@ _print_pacapt_version() {
   cat <<EOF
 pacapt version '${1:-unknown}'
 
-Copyright (C) 2010 - $(date +%Y) Anh K. Huynh
+Copyright (C) 2010 - $(date +%Y) Anh K. Huynh et al.
 
 Usage of the works is permitted provided that this
 instrument is retained with the works, so that any
@@ -137,6 +244,150 @@ DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 EOF
 }
 
+
+_cave_init() {
+  shopt -u globstar
+}
+
+cave_Q() {
+  if [[ "$_TOPT" == "q" ]]; then
+    cave show -f "${@:-world}" \
+    | grep -v '^$'
+  else
+    cave show -f "${@:-world}"
+  fi
+}
+
+cave_Qi() {
+  cave show "$@"
+}
+
+cave_Ql() {
+  if [[ -n "$@" ]]; then
+    cave contents "$@"
+    return
+  fi
+
+  cave show -f "${@:-world}" \
+  | grep -v '^$' \
+  | while read _pkg; do
+      if [[ "$_TOPT" == "q" ]]; then
+        cave --color no contents "$_pkg"
+      else
+        cave contents "$_pkg"
+      fi
+    done
+}
+
+cave_Qo() {
+  cave owner "$@"
+}
+
+cave_Qp() {
+  _not_implemented
+}
+
+cave_Qu() {
+  if [[ -z "$@" ]];then
+    cave resolve -c world \
+    | grep '^u.*' \
+    | while read _pkg; do
+        echo "$_pkg" | cut -d'u' -f2-
+      done
+  else
+    cave resolve -c world \
+    | grep '^u.*' \
+    | grep -- "$@"
+  fi
+}
+
+cave_Qs() {
+  cave show -f world | grep -- "$@"
+}
+
+cave_Rs() {
+  if [[ "$_TOPT" == "" ]]; then
+    cave uninstall -r "$@" \
+    && echo "Control-C to stop uninstalling..." \
+    && sleep 2s \
+    && cave uninstall -xr "$@"
+  else
+    cave purge "$@" \
+    && echo "Control-C to stop uninstalling (+ dependencies)..." \
+    && sleep 2s \
+    && cave purge -x "$@"
+  fi
+}
+
+cave_Rn() {
+  _not_implemented
+}
+
+cave_Rns() {
+  _not_implemented
+}
+
+cave_R() {
+  cave uninstall "$@" \
+  && echo "Control-C to stop uninstalling..." \
+  && sleep 2s \
+  cave uninstall -x "$@"
+}
+
+cave_Si() {
+  cave show "$@"
+}
+
+cave_Suy() {
+  cave sync && cave resolve -c "${@:-world}" \
+  && echo "Control-C to stop upgrading..." \
+  && sleep 2s \
+  && cave resolve -cx "${@:-world}"
+}
+
+cave_Su() {
+  cave resolve -c "$@" \
+  && echo "Control-C to stop upgrading..." \
+  && sleep 2s \
+  && cave resolve -cx "$@"
+}
+
+cave_Sy() {
+  cave sync "$@"
+}
+
+cave_Ss() {
+  cave search "$@"
+}
+
+cave_Sc() {
+  cave fix-cache "$@"
+}
+
+cave_Scc() {
+  cave fix-cache "$@"
+}
+
+cave_Sccc() {
+  #rm -fv /var/cache/paludis/*
+  _not_implemented
+}
+
+cave_S() {
+  cave resolve $_TOPT "$@" \
+  && echo "Control-C to stop installing..." \
+  && sleep 2s \
+  && cave resolve -x $_TOPT "$@"
+}
+
+cave_U() {
+  _not_implemented
+}
+
+
+_dpkg_init() {
+  :
+}
 
 dpkg_Q() {
   if [[ "$_TOPT" == "q" ]]; then
@@ -257,88 +508,9 @@ dpkg_U() {
 }
 
 
-_help() {
-  cat <<-EOF
-NAME
-  pacapt - An Arch's pacman-like package manager for some Unices.
-  More details can be found at https://github.com/icy/pacapt .
-
-SYNTAX
-
-  $ pacapt <option(s)> <operation(s)> <package(s)>
-
-OPERATIONS
-
-  Query
-    -Q              list all installed packages
-    -Qc <package>   show package's changelog
-    -Qi <package>   print package status
-    -Ql <package>   list package's files
-    -Qm             list installed packages that aren't available
-                    in any installation source
-    -Qo <file>      query package that provides <file>
-    -Qp <file>      query a package file (don't use package database)
-    -Qs <package>   search for installed package
-
-  Synchronize
-    -S <package>    install package(s)
-    -Ss <package>   search for packages
-    -Su             upgrade the system
-    -Sy             update package database
-    -Suy            update package database, then upgrade the system
-
-  Remove / Clean up
-    -R <packages>   remove some packages
-    -Sc             delete old downloaded packages
-    -Scc            delete all downloaded packages
-    -Sccc           clean variant files.
-                    (debian) See also http://dragula.viettug.org/blogs/646
-
-  Miscellaneous
-
-    -h or --help    print this help message
-    -P              print supported operations
-    -V              print version information
-
-OPTIONS
-
-    -w              download packages but don't install them
-
-EXAMPLES
-
-  1. To install a package from Debian's backports repository
-
-      $ pacapt -S foobar -t lenny-backports
-      $ pacapt -S -- -t lenny-backports foobar
-
-  2. To update package database and then update your system
-
-      $ pacapt -Syu
-
-  3. To download a package without installing it
-
-      $ pacapt -Sw foobar
-
-NOTES
-
-  When being executed on Arch-based system, the tool simply invokes
-  the system package manager (`/usr/bin/pacman`.)
-
-  Though you can specify option by its own word, for example,
-
-      $ pacapt -S -y -u
-
-  it's always the best to combine them
-
-      $ pacapt -Syu
-
-AUTHORS
-
-  The script was written Anh K. Huynh. Some developers and system admin-
-  strator have contributed to the script. See THANKS for details.
-EOF
+_homebrew_init() {
+  :
 }
-
 
 homebrew_Qi() {
   brew info "$@"
@@ -432,6 +604,10 @@ homebrew_S() {
 }
 
 
+_macports_init() {
+  :
+}
+
 macports_Ql() {
   port contents "$@"
 }
@@ -497,6 +673,10 @@ macports_S() {
   fi
 }
 
+
+_pkgng_init() {
+  :
+}
 
 pkgng_Qi() {
   pkg info "$@"
@@ -577,6 +757,10 @@ pkgng_S() {
   fi
 }
 
+
+_portage_init() {
+  :
+}
 
 portage_Qi() {
   emerge --info "$@"
@@ -696,6 +880,10 @@ portage_S() {
 }
 
 
+_yum_init() {
+  :
+}
+
 yum_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     rpm -qa --qf "%{NAME}\n"
@@ -787,6 +975,10 @@ yum_U() {
 }
 
 
+_zypper_init() {
+  :
+}
+
 zypper_Qi() {
   zypper info "$@"
 }
@@ -861,6 +1053,27 @@ zypper_U() {
 }
 _validate_operation() {
   case "$1" in
+  "cave_Q") ;;
+  "cave_Qi") ;;
+  "cave_Ql") ;;
+  "cave_Qo") ;;
+  "cave_Qp") ;;
+  "cave_Qu") ;;
+  "cave_Qs") ;;
+  "cave_Rs") ;;
+  "cave_Rn") ;;
+  "cave_Rns") ;;
+  "cave_R") ;;
+  "cave_Si") ;;
+  "cave_Suy") ;;
+  "cave_Su") ;;
+  "cave_Sy") ;;
+  "cave_Ss") ;;
+  "cave_Sc") ;;
+  "cave_Scc") ;;
+  "cave_Sccc") ;;
+  "cave_S") ;;
+  "cave_U") ;;
   "dpkg_Q") ;;
   "dpkg_Qi") ;;
   "dpkg_Ql") ;;
@@ -882,6 +1095,23 @@ _validate_operation() {
   "dpkg_Sccc") ;;
   "dpkg_S") ;;
   "dpkg_U") ;;
+  "homebrew_Qi") ;;
+  "homebrew_Ql") ;;
+  "homebrew_Qo") ;;
+  "homebrew_Qc") ;;
+  "homebrew_Qu") ;;
+  "homebrew_Q") ;;
+  "homebrew_Rs") ;;
+  "homebrew_R") ;;
+  "homebrew_Si") ;;
+  "homebrew_Suy") ;;
+  "homebrew_Su") ;;
+  "homebrew_Sy") ;;
+  "homebrew_Ss") ;;
+  "homebrew_Sc") ;;
+  "homebrew_Scc") ;;
+  "homebrew_Sccc") ;;
+  "homebrew_S") ;;
   "macports_Ql") ;;
   "macports_Qo") ;;
   "macports_Qc") ;;
@@ -1125,5 +1355,6 @@ if [[ -n "$PACAPT_DEBUG" ]]; then
   echo "pacapt: $_PACMAN, p=$_POPT, s=$_SOPT, t=$_TOPT, e=$_EOPT"
   echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT $@'"
 else
+  "_${_PACMAN}_init"
   "${_PACMAN}_${_POPT}${_SOPT}" $_EOPT "$@"
 fi
