@@ -4,7 +4,7 @@
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.0.0-gamma
+# Version: 2.0.0-delta
 
 # Copyright (C) 2010 - 2014 Anh K. Huynh
 #
@@ -15,7 +15,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.0.0-gamma'
+export PACAPT_VERSION='2.0.0-delta'
 
 
 _error() {
@@ -786,6 +786,14 @@ yum_U() {
   yum localinstall "$@"
 }
 
+yum_Sg() {
+  if [[ "$@" != "" ]]; then
+    yum groupinfo "$@"
+  else
+    yum grouplist
+  fi
+}  
+
 
 zypper_Qi() {
   zypper info "$@"
@@ -949,6 +957,7 @@ _validate_operation() {
   "yum_Sccc") ;;
   "yum_S") ;;
   "yum_U") ;;
+  "yum_Sg") ;;
   "zypper_Qi") ;;
   "zypper_Qu") ;;
   "zypper_Qm") ;;
@@ -1031,7 +1040,7 @@ while :; do
       ;;
 
     # FIXME: Please check pacman(8) to see if they are really 2nd operation
-    s|l|i|p|o|m|n)
+    s|l|i|p|o|m|n|g)
       if [[ "$_SOPT" == '' ]]; then
         _SOPT="$_opt"
       else
