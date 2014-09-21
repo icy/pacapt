@@ -22,7 +22,7 @@ _EOPT="" # extra options (directly given to package manager)
 _PACMAN="" # name of the package manager
 
 _PACMAN_detect \
-|| die "'pacapt' doesn't support your package manager."
+|| _die "'pacapt' doesn't support your package manager."
 
 if [[ -z "$PACAPT_DEBUG" ]]; then
   [[ "$_PACMAN" != "pacman" ]] \
