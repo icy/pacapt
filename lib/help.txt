@@ -78,7 +78,9 @@ AUTHORS
   Anh K. Huynh
   Arcterus
   Danny George
+  Darshit Shah
   Hà-Dương Nguyễn
+  Huy Ngô
   James Pearson
   Karol Blazewicz
   Konrad Borowski
