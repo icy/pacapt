@@ -36,6 +36,7 @@ cat <<EOF
 #                           | Anh K. Huynh
 #                           | Arcterus
 #                           | Danny George
+#                           | Darshit Shah
 #                           | Hà-Dương Nguyễn
 #                           | Huy Ngô
 #                           | James Pearson
