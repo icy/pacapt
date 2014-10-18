@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Purpose: A wrapper for all Unix package managers
 # Author : Anh K. Huynh
@@ -17,7 +17,7 @@ set -u
 set -e
 unset GREP_OPTIONS
 
-_SUPPORTED_PACMAN="(pkgng|dpkg|homebrew|macports|portage|yum|zypper|cave)"
+_SUPPORTED_PACMAN="(pkgng|dpkg|homebrew|macports|portage|yum|zypper|cave|pkg_tools)"
 
 VERSION="${VERSION:-$(git log --pretty="%h" -1 2>/dev/null)}"
 VERSION="${VERSION:-unknown}"
