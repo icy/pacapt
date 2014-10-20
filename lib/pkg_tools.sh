@@ -21,12 +21,12 @@ pkg_tools_Qi() {
 }
 
 pkg_tools_Ql() {
-  PKG_PATH=
+  export PKG_PATH=
   pkg_info -L "$@"
 }
 
 pkg_tools_Qo() {
-  PKG_PATH=
+  export PKG_PATH=
   pkg_info -E "$@"
 }
 
@@ -35,18 +35,22 @@ pkg_tools_Qp() {
 }
 
 pkg_tools_Qu() {
-  PKG_PATH=
+  export PKG_PATH=
   pkg_add -nUuI "$@"
 }
 
 pkg_tools_Q() {
-  PKG_PATH=
+  export PKG_PATH=
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
-  if [[ "$_TOPT" == "q" ]]; then
+  if [[ "$_TOPT" == "q" && ! -z "$@" ]]; then
     pkg_info -q | grep "^$@-"
-  elif [[ "$_TOPT" == "" ]]; then
+  elif [[ "$_TOPT" == "q" && -z "$@" ]];then
+    pkg_info -q
+  elif [[ "$_TOPT" == "" && ! -z "$@" ]]; then
     pkg_info | grep "^$@-"
+  elif [[ "$_TOPT" == "" && -z "$@" ]];then
+    pkg_info
   else
     _not_implemented
   fi
