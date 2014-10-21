@@ -16,7 +16,7 @@ _pkg_tools_init() {
 }
 
 pkg_tools_Qi() {
-  PKG_PATH= # disable searching mirrors for packages
+  export PKG_PATH= # disable searching mirrors for packages
   pkg_info "$@"
 }
 
