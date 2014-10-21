@@ -117,8 +117,10 @@ pkg_tools_Sc() {
   # by default no cache directory is used
   if [[ -z "$PKG_CACHE" ]];then
     echo "You have no cache directory set, set \$PKG_CACHE for a cache directory."
+  elif [[ ! -d "$PKG_CACHE" ]];then
+  	  echo "You have a cache directory set, but it does not exist. Create \"$PKG_CACHE\"."
   else
-    cd "$PKG_CACHE"
+    cd "$PKG_CACHE" || exit $?
     if [[ "$_TOPT" != "--noconfirm" ]];then
       # don't blindly delete everything in a directory!
       rm -irf *
@@ -137,3 +139,4 @@ pkg_tools_Scc() {
 pkg_tools_S() {
   pkg_add "$@"
 }
+
