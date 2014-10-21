@@ -16,17 +16,17 @@ _pkg_tools_init() {
 }
 
 pkg_tools_Qi() {
-  PKG_PATH= # disable searching mirrors for packages
+  export PKG_PATH= # disable searching mirrors for packages
   pkg_info "$@"
 }
 
 pkg_tools_Ql() {
-  PKG_PATH=
+  export PKG_PATH=
   pkg_info -L "$@"
 }
 
 pkg_tools_Qo() {
-  PKG_PATH=
+  export PKG_PATH=
   pkg_info -E "$@"
 }
 
@@ -35,18 +35,22 @@ pkg_tools_Qp() {
 }
 
 pkg_tools_Qu() {
-  PKG_PATH=
+  export PKG_PATH=
   pkg_add -nUuI "$@"
 }
 
 pkg_tools_Q() {
-  PKG_PATH=
+  export PKG_PATH=
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
-  if [[ "$_TOPT" == "q" ]]; then
+  if [[ "$_TOPT" == "q" && ! -z "$@" ]]; then
     pkg_info -q | grep "^$@-"
-  elif [[ "$_TOPT" == "" ]]; then
+  elif [[ "$_TOPT" == "q" && -z "$@" ]];then
+    pkg_info -q
+  elif [[ "$_TOPT" == "" && ! -z "$@" ]]; then
     pkg_info | grep "^$@-"
+  elif [[ "$_TOPT" == "" && -z "$@" ]];then
+    pkg_info
   else
     _not_implemented
   fi
@@ -55,6 +59,22 @@ pkg_tools_Q() {
 pkg_tools_Rs() {
   if [[ "$_TOPT" == "" ]]; then
     pkg_delete -D dependencies "$@"
+  else
+    _not_implemented
+  fi
+}
+
+pkg_tools_Rn() {
+  if [[ "$_TOPT" == "" ]];then
+    pkg_delete -c "$@"
+  else
+    _not_implemented
+  fi
+}
+
+pkg_tools_Rns() {
+  if [[ "$_TOPT" == "" ]];then
+    pkg_delete -c "$@"
   else
     _not_implemented
   fi
@@ -86,7 +106,11 @@ pkg_tools_Sy() {
 }
 
 pkg_tools_Ss() {
-  pkg_info -Q "$@"
+  if [[ -z "$@" ]];then
+    _not_implemented
+  else
+    pkg_info -Q "$@"
+  fi
 }
 
 pkg_tools_Sc() {
@@ -96,7 +120,7 @@ pkg_tools_Sc() {
   else
     cd "$PKG_CACHE"
     if [[ "$_TOPT" != "--noconfirm" ]];then
-      # dont't blindly delete everything in a directory!
+      # don't blindly delete everything in a directory!
       rm -irf *
     else
       # unless they really want to...
