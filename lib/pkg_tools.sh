@@ -64,6 +64,22 @@ pkg_tools_Rs() {
   fi
 }
 
+pkg_tools_Rn() {
+  if [[ "$_TOPT" == "" ]];then
+    pkg_delete -c "$@"
+  else
+    _not_implemented
+  fi
+}
+
+pkg_tools_Rns() {
+  if [[ "$_TOPT" == "" ]];then
+    pkg_delete -c "$@"
+  else
+    _not_implemented
+  fi
+}
+
 pkg_tools_R() {
   pkg_delete "$@"
 }
@@ -90,7 +106,11 @@ pkg_tools_Sy() {
 }
 
 pkg_tools_Ss() {
-  pkg_info -Q "$@"
+  if [[ -z "$@" ]];then
+    _not_implemented
+  else
+    pkg_info -Q "$@"
+  fi
 }
 
 pkg_tools_Sc() {
@@ -100,7 +120,7 @@ pkg_tools_Sc() {
   else
     cd "$PKG_CACHE"
     if [[ "$_TOPT" != "--noconfirm" ]];then
-      # dont't blindly delete everything in a directory!
+      # don't blindly delete everything in a directory!
       rm -irf *
     else
       # unless they really want to...
