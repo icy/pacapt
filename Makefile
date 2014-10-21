@@ -21,7 +21,7 @@ pacapt.dev: ./lib/*.sh compile.sh
 	@echo 1>&2 "The output file is '$(@)' (unstable version)"
 
 install.dev: pacapt.dev
-	@if [ -e $(@) ] && ! file $(@) | grep -q 'shell script'; then \
+	@if [ -e $(@) ] && ! file $(@) | grep -q 'script'; then \
 		echo >&2 "Makefile Will not overwrite non-script $(@)"; \
 		exit 1; \
 	else \
@@ -39,7 +39,7 @@ pacapt: ./lib/*.sh compile.sh
 install: $(BINDIR)/pacapt
 
 $(BINDIR)/pacapt: pacapt
-	@if [ -e $(@) ] && ! file $(@) | grep -q 'shell script'; then \
+	@if [ -e $(@) ] && ! file $(@) | grep -q 'script'; then \
 		echo >&2 "Makefile Will not overwrite non-script $(@)"; \
 		exit 1; \
 	else \
