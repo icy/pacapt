@@ -29,6 +29,7 @@ DESCRIPTION
     zypper        by OpenSUSE
     pkgng         by FreeBSD
     cave          by Exherbo Linux
+    pkg_tools     by OpenBSD
 
 INSTALLATION
 
