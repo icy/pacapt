@@ -88,6 +88,10 @@ pkg_tools_Si() {
   pkg_info "$@"
 }
 
+pkg_tools_Sl() {
+  pkg_info -L "$@"
+}
+
 pkg_tools_Suy() {
   # pkg_tools doesn't really have any concept of a database
   # there's actually not really any database to update, so
