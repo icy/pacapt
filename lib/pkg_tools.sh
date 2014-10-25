@@ -36,7 +36,7 @@ pkg_tools_Qp() {
 
 pkg_tools_Qu() {
   export PKG_PATH=
-  pkg_add -nUuI "$@"
+  pkg_add -u "$@"
 }
 
 pkg_tools_Q() {
@@ -88,13 +88,17 @@ pkg_tools_Si() {
   pkg_info "$@"
 }
 
+pkg_tools_Sl() {
+  pkg_info -L "$@"
+}
+
 pkg_tools_Suy() {
   # pkg_tools doesn't really have any concept of a database
   # there's actually not really any database to update, so
   # this function is mostly just for convienience since on arch
   # doing -Su is normally a bad thing to do since it's a partial upgrade
 
-  pkg_add -u "$@"
+  pkg_tools_Su "$@"
 }
 
 pkg_tools_Su() {
@@ -139,4 +143,3 @@ pkg_tools_Scc() {
 pkg_tools_S() {
   pkg_add "$@"
 }
-
