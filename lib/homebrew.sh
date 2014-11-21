@@ -79,7 +79,7 @@ homebrew_Suy() {
 }
 
 homebrew_Su() {
-  bre upgrade "$@"
+  brew upgrade "$@"
 }
 
 homebrew_Sy() {
@@ -95,7 +95,7 @@ homebrew_Sc() {
 }
 
 homebrew_Scc() {
-  bre cleanup -s "$@"
+  brew cleanup -s "$@"
 }
 
 homebrew_Sccc() {
