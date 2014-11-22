@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.0.0-epsilon
+# Version: 2.0.1
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2014 | 10sr
@@ -26,7 +26,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.0.0-epsilon'
+export PACAPT_VERSION='2.0.1'
 
 _help() {
   cat <<'EOF'
@@ -110,7 +110,9 @@ AUTHORS
   Anh K. Huynh
   Arcterus
   Danny George
+  Darshit Shah
   Hà-Dương Nguyễn
+  Huy Ngô
   James Pearson
   Karol Blazewicz
   Konrad Borowski
@@ -577,7 +579,7 @@ homebrew_Suy() {
 }
 
 homebrew_Su() {
-  bre upgrade "$@"
+  brew upgrade "$@"
 }
 
 homebrew_Sy() {
@@ -593,7 +595,7 @@ homebrew_Sc() {
 }
 
 homebrew_Scc() {
-  bre cleanup -s "$@"
+  brew cleanup -s "$@"
 }
 
 homebrew_Sccc() {
