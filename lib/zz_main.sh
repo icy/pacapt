@@ -13,7 +13,7 @@
 
 set -u
 unset GREP_OPTIONS
-: ${PACAPT_DEBUG=}
+: "${PACAPT_DEBUG=}"
 
 _POPT="" # primary operation
 _SOPT="" # secondary operation
