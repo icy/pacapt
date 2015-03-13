@@ -3,13 +3,14 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.0.1
+# Version: 2.0.2
 # Authors: Anh K. Huynh et al.
 
-# Copyright (C) 2010 - 2014 | 10sr
+# Copyright (C) 2010 - 2015 | 10sr
 #                           | Alexander Dupuy
 #                           | Anh K. Huynh
 #                           | Arcterus
+#                           | Cuong Manh Le
 #                           | Danny George
 #                           | Darshit Shah
 #                           | Hà-Dương Nguyễn
@@ -26,7 +27,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.0.1'
+export PACAPT_VERSION='2.0.2'
 
 _help() {
   cat <<'EOF'
@@ -109,6 +110,7 @@ AUTHORS
   Alexander Dupuy
   Anh K. Huynh
   Arcterus
+  Cuong Manh Le
   Danny George
   Darshit Shah
   Hà-Dương Nguyễn
@@ -1203,7 +1205,7 @@ _validate_operation() {
 
 set -u
 unset GREP_OPTIONS
-: ${PACAPT_DEBUG=}
+: "${PACAPT_DEBUG=}"
 
 _POPT="" # primary operation
 _SOPT="" # secondary operation
