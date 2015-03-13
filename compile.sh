@@ -35,6 +35,7 @@ cat <<EOF
 #                           | Alexander Dupuy
 #                           | Anh K. Huynh
 #                           | Arcterus
+#                           | Cuong Manh Le
 #                           | Danny George
 #                           | Darshit Shah
 #                           | Hà-Dương Nguyễn
