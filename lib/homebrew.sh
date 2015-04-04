@@ -48,6 +48,10 @@ homebrew_Qu() {
   brew outdated | grep "$@"
 }
 
+homebrew_Qs() {
+  brew list | grep "$@"
+}
+
 homebrew_Q() {
   if [[ "$_TOPT" == "" ]]; then
     if [[ "$@" == "" ]]; then
