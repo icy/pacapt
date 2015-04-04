@@ -50,7 +50,11 @@ homebrew_Qu() {
 
 homebrew_Q() {
   if [[ "$_TOPT" == "" ]]; then
-    brew list | grep "$@"
+    if [[ "$@" == "" ]]; then
+      brew list
+    else
+      brew list | grep "$@"
+    fi
   else
     _not_implemented
   fi
