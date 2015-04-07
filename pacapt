@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.0.2
+# Version: 2.0.3
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2015 | 10sr
@@ -27,7 +27,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.0.2'
+export PACAPT_VERSION='2.0.3'
 
 _help() {
   cat <<'EOF'
@@ -119,6 +119,7 @@ AUTHORS
   Karol Blazewicz
   Konrad Borowski
   Somasis
+  Vojtech Letal
 EOF
 
 }
@@ -550,9 +551,17 @@ homebrew_Qu() {
   brew outdated | grep "$@"
 }
 
+homebrew_Qs() {
+  brew list | grep "$@"
+}
+
 homebrew_Q() {
   if [[ "$_TOPT" == "" ]]; then
-    brew list | grep "$@"
+    if [[ "$@" == "" ]]; then
+      brew list
+    else
+      brew list | grep "$@"
+    fi
   else
     _not_implemented
   fi
@@ -1105,6 +1114,7 @@ _validate_operation() {
   "homebrew_Qo") ;;
   "homebrew_Qc") ;;
   "homebrew_Qu") ;;
+  "homebrew_Qs") ;;
   "homebrew_Q") ;;
   "homebrew_Rs") ;;
   "homebrew_R") ;;
