@@ -71,6 +71,7 @@ $ install -m755 ./pacapt.dev /usr/local/bin/pacapt
 ````
 
 Please read the sample `Makefile` for some details.
+Some conventions are provided in `CONTRIBUTING.md`.
 
 ## USAGE
 
