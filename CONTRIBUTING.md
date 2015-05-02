@@ -9,9 +9,9 @@
 ## Testing
 
 5. Use `PACAPT_DEBUG=foo` where `foo` is a package manager
-   (`dpkg`, `pacman`, `zypper`, ...) to print what 'pacapt' will do.
+   (`dpkg`, `pacman`, `zypper`, ...) to print what `pacapt` will do.
    Use `PACAPT_DEBUG=auto` for auto-detection.
-6. You can use `docker` for testing, by mouting the `pacapt.dev` script
+6. You can use `docker` for testing, by mounting the `pacapt.dev` script
    to the container. Example
 
 ````
@@ -38,8 +38,8 @@ $ docker run --rm -ti -v $PWD/pacapt.dev:/usr/bin/pacman debian:stable /bin/bash
     The current stable branch.
     All future `v2.x` releases come from this branch.
 
-## Close branches
+## Closed branches
 
 1. `master`:
-    The old stable code of the `pacapt`
+    The old stable code of the `pacapt`.
     This branch is closed on May 4th, 2014.
