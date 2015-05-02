@@ -41,6 +41,7 @@ The tool supports the following package managers:
 ````
 $ wget -O /usr/local/bin/pacapt \
     https://github.com/icy/pacapt/raw/ng/pacapt
+
 $ chmod 755 /usr/local/bin/pacapt
 ````
 
@@ -51,7 +52,7 @@ See `CONTRIBUTING.md` for details.
 
 ## DEVELOPMENT
 
-A development version
+A development script can be compiled from the source code.
 
 ````
 $ git clone https://github.com/icy/pacapt.git
