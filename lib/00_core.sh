@@ -23,6 +23,7 @@ _die() {
 
 _not_implemented() {
   echo >&2 "${_PACMAN}: '${_POPT}:${_SOPT}:${_TOPT}' operation is invalid or not implemented."
+  return 1
 }
 
 # Detect package type from /etc/issue
