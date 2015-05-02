@@ -107,7 +107,8 @@ homebrew_Scc() {
 }
 
 homebrew_Sccc() {
-  rm -rf $(brew --cache)
+  # FIXME: @James Pearson: Is the expansion $(brew --cache) safe?
+  _removing_is_dangerous "rm -rf $(brew --cache)"
 }
 
 homebrew_S() {
