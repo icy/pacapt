@@ -70,20 +70,3 @@ NOTES
   it's always the best to combine them
 
       $ pacapt -Syu
-
-AUTHORS
-
-  10sr
-  Alexander Dupuy
-  Anh K. Huynh
-  Arcterus
-  Cuong Manh Le
-  Danny George
-  Darshit Shah
-  Hà-Dương Nguyễn
-  Huy Ngô
-  James Pearson
-  Karol Blazewicz
-  Konrad Borowski
-  Somasis
-  Vojtech Letal
