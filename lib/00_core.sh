@@ -26,6 +26,11 @@ _not_implemented() {
   return 1
 }
 
+_removing_is_dangerous() {
+  echo >&2 "${_PACMAN}: removing with '$*' is too dangerous"
+  return 1
+}
+
 # Detect package type from /etc/issue
 # FIXME: Using new `issue` file (location)
 _issue2pacman() {
