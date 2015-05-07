@@ -25,7 +25,7 @@ install.dev: pacapt.dev
 		echo >&2 "Makefile Will not overwrite non-script $(@)"; \
 		exit 1; \
 	else \
-		install -m755 pacapt.dev $(BINDIR)/pacapt; \
+		install -vm755 pacapt.dev $(BINDIR)/pacapt; \
 	fi
 
 # Build and install stable script
