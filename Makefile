@@ -22,7 +22,7 @@ pacapt.dev: ./lib/*.sh compile.sh
 	@chmod 755 $(@)
 	@echo 1>&2 "The output file is '$(@)' (unstable version)"
 
-install.dev: pacapt.dev
+install.dev: pacapt.dev $(BINDIR)/pacman
 	@if [ -e $(@) ] && ! file $(@) | grep -q 'script'; then \
 		echo >&2 "Makefile Will not overwrite non-script $(@)"; \
 		exit 1; \
@@ -40,7 +40,12 @@ pacapt: ./lib/*.sh compile.sh
 
 install: $(BINDIR)/pacapt
 
-$(BINDIR)/pacapt: pacapt
+$(BINDIR)/pacman:
+	@if [ ! -e $(@) ]; then \
+		ln -vs $(BINDIR)/pacapt $(@); \
+	fi
+
+$(BINDIR)/pacapt: pacapt $(BINDIR)/pacman
 	@if [ -e $(@) ] && ! file $(@) | grep -q 'script'; then \
 		echo >&2 "Makefile Will not overwrite non-script $(@)"; \
 		exit 1; \

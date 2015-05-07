@@ -43,6 +43,8 @@ $ wget -O /usr/local/bin/pacapt \
     https://github.com/icy/pacapt/raw/ng/pacapt
 
 $ chmod 755 /usr/local/bin/pacapt
+
+$ ln -sv /usr/local/bin/pacapt /usr/local/bin/pacman || true
 ````
 
 This scrip is actually picked from the latest stable branch,
