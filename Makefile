@@ -1,4 +1,5 @@
 BINDIR=/usr/local/bin/
+DISTRO=debian:stable
 
 default:
 	@echo "This is an experimental Makefile. Use it at your own risk."
@@ -8,11 +9,14 @@ default:
 	@echo "  pacapt      : Generate stable script"
 	@echo '  install     : Install stable script into $$BINDIR'
 	@echo "  clean       : (Experimental) Remove git-ignored files"
+	@echo "  docker.i    : Launch interactive Docker container which mounts"
+	@echo "                your local 'pacapt.dev' script to $$BINDIR/pacman."
 	@echo ""
 	@echo "Environments"
 	@echo ""
 	@echo "  VERSION     : Version informaiton. Default: git commit hash."
 	@echo "  BINDIR      : Destination directory. Default: /usr/local/bin."
+	@echo "  DISTRO      : Container image. Default: debian:stable."
 
 # Build and install development script
 
@@ -52,6 +56,11 @@ $(BINDIR)/pacapt: pacapt $(BINDIR)/pacman
 	else \
 		install -vm755 pacapt $(BINDIR)/pacapt; \
 	fi
+
+docker.i:
+	@docker run --rm -ti \
+    -v $(PWD)/pacapt.dev:$(BINDIR)/pacman \
+    $(DISTRO) /bin/bash
 
 clean:
 	@if git clean -nX | grep -q .; then \

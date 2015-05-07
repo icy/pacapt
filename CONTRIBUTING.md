@@ -12,7 +12,7 @@
    (`dpkg`, `pacman`, `zypper`, ...) to print what `pacapt` will do.
    Use `PACAPT_DEBUG=auto` for auto-detection.
 6. You can use `docker` for testing, by mounting the `pacapt.dev` script
-   to the container. Example
+   to the container. See also `docker.i` section in `Makefile`. Example:
 
 ````
 $ make pacapt.dev
