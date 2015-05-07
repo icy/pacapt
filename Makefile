@@ -10,7 +10,7 @@ default:
 	@echo '  install     : Install stable script into $$BINDIR'
 	@echo "  clean       : (Experimental) Remove git-ignored files"
 	@echo "  docker.i    : Launch interactive Docker container which mounts"
-	@echo "                your local 'pacapt.dev' script to $$BINDIR/pacman."
+	@echo '                your local 'pacapt.dev' script to $$BINDIR/pacman.'
 	@echo ""
 	@echo "Environments"
 	@echo ""
