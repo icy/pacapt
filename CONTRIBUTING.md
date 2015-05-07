@@ -6,7 +6,7 @@
 5. We try to follow the convention from
     https://github.com/icy/bash-coding-style
 
-## Testing
+## Testing. Docker
 
 5. Use `PACAPT_DEBUG=foo` where `foo` is a package manager
    (`dpkg`, `pacman`, `zypper`, ...) to print what `pacapt` will do.
@@ -16,7 +16,9 @@
 
 ````
 $ make pacapt.dev
-$ docker run --rm -ti -v $PWD/pacapt.dev:/usr/bin/pacman debian:stable /bin/bash
+$ docker run --rm -ti \
+    -v $PWD/pacapt.dev:/usr/bin/pacman \
+    debian:stable /bin/bash
 # you are in container now
 ````
 
