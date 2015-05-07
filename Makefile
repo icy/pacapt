@@ -43,7 +43,7 @@ $(BINDIR)/pacapt: pacapt
 		echo >&2 "Makefile Will not overwrite non-script $(@)"; \
 		exit 1; \
 	else \
-		install -m755 $(@) $(BINDIR)/pacapt; \
+		install -vm755 pacapt $(BINDIR)/pacapt; \
 	fi
 
 clean:
