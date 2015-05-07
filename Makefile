@@ -3,14 +3,16 @@ BINDIR=/usr/local/bin/
 default:
 	@echo "This is an experimental Makefile. Use it at your own risk."
 	@echo ""
-	@echo "  pacapt.dev  : generate development script"
-	@echo "  install.dev : install development script into '$(BINDIR)'"
-	@echo "  pacapt      : generate stable script"
-	@echo "  install     : install stable script into '$(BINDIR)'"
-	@echo "  clean       : (experimental) remove git-ignored files"
+	@echo "  pacapt.dev  : Generate development script"
+	@echo '  install.dev : Install development script into $$BINDIR'
+	@echo "  pacapt      : Generate stable script"
+	@echo '  install     : Install stable script into $$BINDIR'
+	@echo "  clean       : (Experimental) Remove git-ignored files"
 	@echo ""
-	@echo "The VERSION environment is to provide version information."
-	@echo "If VERSION isn't set, the last git commit hash will be used."
+	@echo "Environments"
+	@echo ""
+	@echo "  VERSION     : Version informaiton. Default: git commit hash."
+	@echo "  BINDIR      : Destination directory. Default: /usr/local/bin."
 
 # Build and install development script
 
