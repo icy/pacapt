@@ -38,6 +38,12 @@ $ docker run --rm -ti -v $PWD/pacapt.dev:/usr/bin/pacman debian:stable /bin/bash
     The current stable branch.
     All future `v2.x` releases come from this branch.
 
+5. `your feature branch`:
+    For new feature or bug fix, please work on your own branch
+    and create pull request.
+    Do not put different ideas on a same branch
+    because that makes future tracking harder.
+
 ## Closed branches
 
 1. `master`:
