@@ -3,7 +3,8 @@
 * `openbsd/pkg_tools`: Add (Thanks to `Somasis`)
 * `homebrew/Su*`: Use `--all` flag when upgrading
 * `homebrew/*`: Some typo fixes
-* `compile.sh`: `git` becomes optional. Useful for `docker` tester.
+* `compile.sh`: `git` becomes optional (useful for `docker` tester.)
+* `compile.sh`: Get list of authors from `README.md`
 * `Makefile`: Various improvements
 * `lib/00_core`: Add `_removing_is_dangerous` method
 * `lib/00_core`: `_not_implemented` now returns `1`
