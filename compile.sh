@@ -19,7 +19,7 @@ unset GREP_OPTIONS
 
 _SUPPORTED_PACMAN="(pkgng|dpkg|homebrew|macports|portage|yum|zypper|cave|pkg_tools)"
 
-VERSION="${VERSION:-$(git log --pretty="%h" -1 2>/dev/null)}"
+VERSION="${VERSION:-$(git log --pretty="%h" -1 2>/dev/null || true)}"
 VERSION="${VERSION:-unknown}"
 
 cat <<EOF
