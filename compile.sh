@@ -31,19 +31,12 @@ cat <<EOF
 # Version: $VERSION
 # Authors: Anh K. Huynh et al.
 
-# Copyright (C) 2010 - $(date +%Y) | 10sr
-#                           | Alexander Dupuy
-#                           | Anh K. Huynh
-#                           | Arcterus
-#                           | Cuong Manh Le
-#                           | Danny George
-#                           | Darshit Shah
-#                           | Hà-Dương Nguyễn
-#                           | Huy Ngô
-#                           | James Pearson
-#                           | Karol Blazewicz
-#                           | Konrad Borowski
-#                           | Somasis
+# Copyright (C) 2010 - $(date +%Y) \\
+$( \
+  cat README.md \
+  | sed -e '1,/AUTHORS/d' \
+  | grep '*' \
+  | sed -e 's,*,#                           |,g')
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
