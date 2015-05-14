@@ -1,16 +1,22 @@
 BINDIR=/usr/local/bin/
+DISTRO=debian:stable
 
 default:
 	@echo "This is an experimental Makefile. Use it at your own risk."
 	@echo ""
-	@echo "  pacapt.dev  : generate development script"
-	@echo "  install.dev : install development script into '$(BINDIR)'"
-	@echo "  pacapt      : generate stable script"
-	@echo "  install     : install stable script into '$(BINDIR)'"
-	@echo "  clean       : (experimental) remove git-ignored files"
+	@echo "  pacapt.dev  : Generate development script"
+	@echo '  install.dev : Install development script into $$BINDIR'
+	@echo "  pacapt      : Generate stable script"
+	@echo '  install     : Install stable script into $$BINDIR'
+	@echo "  clean       : (Experimental) Remove git-ignored files"
+	@echo "  docker.i    : Launch interactive Docker container which mounts"
+	@echo '                your local 'pacapt.dev' script to $$BINDIR/pacman.'
 	@echo ""
-	@echo "The VERSION environment is to provide version information."
-	@echo "If VERSION isn't set, the last git commit hash will be used."
+	@echo "Environments"
+	@echo ""
+	@echo "  VERSION     : Version informaiton. Default: git commit hash."
+	@echo "  BINDIR      : Destination directory. Default: /usr/local/bin."
+	@echo "  DISTRO      : Container image. Default: debian:stable."
 
 # Build and install development script
 
@@ -21,11 +27,11 @@ pacapt.dev: ./lib/*.sh compile.sh
 	@echo 1>&2 "The output file is '$(@)' (unstable version)"
 
 install.dev: pacapt.dev
-	@if [ -e $(@) ] && ! file $(@) | grep -q 'shell script'; then \
+	@if [ -e $(@) ] && ! file $(@) | grep -q 'script'; then \
 		echo >&2 "Makefile Will not overwrite non-script $(@)"; \
 		exit 1; \
 	else \
-		install -m755 $(<) $(BINDIR)/pacapt; \
+		install -vm755 pacapt.dev $(BINDIR)/pacapt; \
 	fi
 
 # Build and install stable script
@@ -38,13 +44,23 @@ pacapt: ./lib/*.sh compile.sh
 
 install: $(BINDIR)/pacapt
 
+$(BINDIR)/pacman:
+	@if [ ! -e $(@) ]; then \
+		ln -vs $(BINDIR)/pacapt $(@); \
+	fi
+
 $(BINDIR)/pacapt: pacapt
-	@if [ -e $(@) ] && ! file $(@) | grep -q 'shell script'; then \
+	@if [ -e $(@) ] && ! file $(@) | grep -q 'script'; then \
 		echo >&2 "Makefile Will not overwrite non-script $(@)"; \
 		exit 1; \
 	else \
-		install -m755 $(<) $(BINDIR)/pacapt; \
+		install -vm755 pacapt $(BINDIR)/pacapt; \
 	fi
+
+docker.i:
+	@docker run --rm -ti \
+    -v $(PWD)/pacapt.dev:$(BINDIR)/pacman \
+    $(DISTRO) /bin/bash
 
 clean:
 	@if git clean -nX | grep -q .; then \

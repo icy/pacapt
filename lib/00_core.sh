@@ -23,6 +23,12 @@ _die() {
 
 _not_implemented() {
   echo >&2 "${_PACMAN}: '${_POPT}:${_SOPT}:${_TOPT}' operation is invalid or not implemented."
+  return 1
+}
+
+_removing_is_dangerous() {
+  echo >&2 "${_PACMAN}: removing with '$*' is too dangerous"
+  return 1
 }
 
 # Detect package type from /etc/issue
@@ -49,6 +55,8 @@ _PACMAN_detect() {
   _issue2pacman yum "Red Hat" && return
   _issue2pacman yum "Fedora" && return
   _issue2pacman zypper "SUSE" && return
+  _issue2pacman pkg_tools "OpenBSD" && return
+  _issue2pacman pkg_tools "Bitrig" && return
 
   [[ -z "$_PACMAN" ]] || return
 
@@ -66,6 +74,8 @@ _PACMAN_detect() {
   [[ -x "/usr/bin/emerge" ]] && _PACMAN="portage" && return
   [[ -x "/usr/bin/zypper" ]] && _PACMAN="zypper" && return
   [[ -x "/usr/sbin/pkg" ]] && _PACMAN="pkgng" && return
+  # make sure pkg_add is after pkgng, FreeBSD base comes with it until converted
+  [[ -x "/usr/sbin/pkg_add" ]] && _PACMAN="pkg_tools" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 

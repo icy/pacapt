@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Purpose: A wrapper for all Unix package managers
 # Author : Anh K. Huynh
@@ -17,9 +17,9 @@ set -u
 set -e
 unset GREP_OPTIONS
 
-_SUPPORTED_PACMAN="(pkgng|dpkg|homebrew|macports|portage|yum|zypper|cave)"
+_SUPPORTED_PACMAN="(pkgng|dpkg|homebrew|macports|portage|yum|zypper|cave|pkg_tools)"
 
-VERSION="${VERSION:-$(git log --pretty="%h" -1 2>/dev/null)}"
+VERSION="${VERSION:-$(git log --pretty="%h" -1 2>/dev/null || true)}"
 VERSION="${VERSION:-unknown}"
 
 cat <<EOF
@@ -31,19 +31,12 @@ cat <<EOF
 # Version: $VERSION
 # Authors: Anh K. Huynh et al.
 
-# Copyright (C) 2010 - $(date +%Y) | 10sr
-#                           | Alexander Dupuy
-#                           | Anh K. Huynh
-#                           | Arcterus
-#                           | Cuong Manh Le
-#                           | Danny George
-#                           | Darshit Shah
-#                           | Hà-Dương Nguyễn
-#                           | Huy Ngô
-#                           | James Pearson
-#                           | Karol Blazewicz
-#                           | Konrad Borowski
-#                           | Somasis
+# Copyright (C) 2010 - $(date +%Y) \\
+$( \
+  cat README.md \
+  | sed -e '1,/AUTHORS/d' \
+  | grep '*' \
+  | sed -e 's,*,#                           |,g')
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
