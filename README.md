@@ -85,6 +85,11 @@ After installing `pacapt` script, you can get help message by
 
 Please use the ticket system at https://github.com/icy/pacapt/issues .
 
+## LICENSE
+
+This work is released under the terms of Fair license
+(http://opensource.org/licenses/fair).
+
 ## AUTHORS
 
 * 10sr
