@@ -15,6 +15,10 @@ _dpkg_init() {
   :
 }
 
+dpkg_noconfirm() {
+  [[ "$_NO_CONFIRM" == "yes" ]] && _TOPT="$_TOPT --assume-yes"
+}
+
 dpkg_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     dpkg -l \
@@ -78,15 +82,18 @@ dpkg_Rs() {
 }
 
 dpkg_Rn() {
-  apt-get purge "$@"
+  dpkg_noconfirm
+  apt-get purge $_TOPT "$@"
 }
 
 dpkg_Rns() {
-  apt-get --purge autoremove "$@"
+  dpkg_noconfirm
+  apt-get --purge autoremove $_TOPT "$@"
 }
 
 dpkg_R() {
-  apt-get remove "$@"
+  dpkg_noconfirm
+  apt-get remove $_TOPT "$@"
 }
 
 dpkg_Si() {
@@ -94,17 +101,20 @@ dpkg_Si() {
 }
 
 dpkg_Suy() {
+  dpkg_noconfirm
   apt-get update \
-  && apt-get upgrade "$@"
+  && apt-get upgrade $_TOPT "$@"
 }
 
 dpkg_Su() {
-  apt-get upgrade "$@"
+  dpkg_noconfirm
+  apt-get upgrade $_TOPT "$@"
 }
 
 # FIXME: Should we remove "$@"?
 dpkg_Sy() {
-  apt-get update "$@"
+  dpkg_noconfirm
+  apt-get update $_TOPT "$@"
 }
 
 dpkg_Ss() {
@@ -112,6 +122,7 @@ dpkg_Ss() {
 }
 
 dpkg_Sc() {
+
   apt-get clean "$@"
 }
 
