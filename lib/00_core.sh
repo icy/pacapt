@@ -84,7 +84,7 @@ _PACMAN_detect() {
 
 # Translate -w option. Please note this is only valid when installing
 # a package from remote, aka. when '-S' operation is performed.
-_tranlate_w() {
+_translate_w() {
   case "$_PACMAN" in
   "dpkg")
     _TOPT="-d"

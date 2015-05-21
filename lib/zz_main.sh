@@ -122,7 +122,7 @@ while :; do
       ;;
 
     w)
-      _tranlate_w
+      _translate_w
       ;;
 
     v)
@@ -140,7 +140,7 @@ while :; do
   if [[ -n "$_POPT" && -n "$_SOPT" ]]; then
     if [[ -z "$_TOPT" && "${1-}" == "-w" ]]; then
       shift
-      _tranlate_w
+      _translate_w
     fi
     #break
   # Don't have anything from the first argument. Something wrong.
