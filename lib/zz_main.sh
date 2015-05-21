@@ -81,7 +81,7 @@ while :; do
         if [[ "${_SOPT:0:1}" == "s" ]]; then
           _SOPT="ns"
         else
-          _SOPT="n"
+          _SOPT="$_SOPT$_opt"
         fi
       fi
       ;;
