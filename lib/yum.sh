@@ -15,6 +15,10 @@ _yum_init() {
   :
 }
 
+yum_noconfirm() {
+  [[ "$_NO_CONFIRM" == "yes" ]] && _TOPT="$_TOPT --assumeyes"
+}
+
 yum_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     rpm -qa --qf "%{NAME}\n"
@@ -54,15 +58,17 @@ yum_Qm() {
 }
 
 yum_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
-    yum erase "$@"
+  yum_noconfirm
+  if [[ "$_TOPT" != "--assumeyes" ]]; then
+    yum erase $_TOPT "$@"
   else
     _not_implemented
   fi
 }
 
 yum_R() {
-  yum erase "$@"
+  yum_noconfirm
+  yum erase $_TOPT "$@"
 }
 
 yum_Si() {
@@ -70,11 +76,13 @@ yum_Si() {
 }
 
 yum_Suy() {
-  yum update "$@"
+  yum_noconfirm
+  yum update $_TOPT "$@"
 }
 
 yum_Su() {
-  yum update "$@"
+  yum_noconfirm
+  yum update $_TOPT "$@"
 }
 
 yum_Sy() {
@@ -98,6 +106,7 @@ yum_Sccc() {
 }
 
 yum_S() {
+  yum_noconfirm
   yum install $_TOPT "$@"
 }
 
