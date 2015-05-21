@@ -138,6 +138,7 @@ dpkg_Sccc() {
 }
 
 dpkg_S() {
+  dpkg_noconfirm
   apt-get install $_TOPT "$@"
 }
 
