@@ -95,8 +95,8 @@ _translate_w() {
 
   "yum")
     _TOPT="--downloadonly"
-    if ! rpm -qa --pipe "grep downloadonly" > /dev/null 2>&1; then
-      _error "'yum-downloadonly' package is required when '-w' is used."
+    if ! [[ $(rpm -qa --pipe "grep downloadonly") ]]; then
+      _error "'yum-downloadonly' or 'yum-plugin-downloadonly' package is required when '-w' is used."
       exit 1
     fi
     ;;
