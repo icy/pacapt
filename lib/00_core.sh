@@ -84,7 +84,7 @@ _PACMAN_detect() {
 
 # Translate -w option. Please note this is only valid when installing
 # a package from remote, aka. when '-S' operation is performed.
-_tranlate_w() {
+_translate_w() {
   case "$_PACMAN" in
   "dpkg")
     _TOPT="-d"
@@ -95,8 +95,8 @@ _tranlate_w() {
 
   "yum")
     _TOPT="--downloadonly"
-    if ! rpm -q 'yum-downloadonly' >/dev/null 2>&1; then
-      _error "'yum-downloadonly' package is required when '-w' is used."
+    if ! [[ $(rpm -qa --pipe "grep downloadonly") ]]; then
+      _error "'yum-downloadonly' or 'yum-plugin-downloadonly' package is required when '-w' is used."
       exit 1
     fi
     ;;

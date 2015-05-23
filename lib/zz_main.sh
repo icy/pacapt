@@ -20,6 +20,7 @@ _SOPT="" # secondary operation
 _TOPT="" # options for operations
 _EOPT="" # extra options (directly given to package manager)
 _PACMAN="" # name of the package manager
+_NO_CONFIRM="" # Flag for noconfirm option
 
 _PACMAN_detect \
 || _die "'pacapt' doesn't support your package manager."
@@ -40,6 +41,11 @@ while :; do
   "--help")
     _help
     exit 0
+    ;;
+  "--noconfirm")
+    _NO_CONFIRM="yes"
+    shift
+    continue
     ;;
   "-"|"--")
     break
@@ -74,14 +80,14 @@ while :; do
       ;;
 
     # FIXME: Please check pacman(8) to see if they are really 2nd operation
-    s|l|i|p|o|m|n)
+    s|l|i|p|o|m|n|g)
       if [[ "$_SOPT" == '' ]]; then
         _SOPT="$_opt"
       else
         if [[ "${_SOPT:0:1}" == "s" ]]; then
           _SOPT="ns"
         else
-          _SOPT="n"
+          _SOPT="$_SOPT$_opt"
         fi
       fi
       ;;
@@ -116,7 +122,7 @@ while :; do
       ;;
 
     w)
-      _tranlate_w
+      _translate_w
       ;;
 
     v)
@@ -134,9 +140,9 @@ while :; do
   if [[ -n "$_POPT" && -n "$_SOPT" ]]; then
     if [[ -z "$_TOPT" && "${1-}" == "-w" ]]; then
       shift
-      _tranlate_w
+      _translate_w
     fi
-    break
+    #break
   # Don't have anything from the first argument. Something wrong.
   elif [[ -z "${_POPT}${_SOPT}${_TOPT}${_EOPT}" ]]; then
     break
