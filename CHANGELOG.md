@@ -1,3 +1,8 @@
+## v2.0.5
+
+* `lib/zz_main`: Improve secondary option parsing
+* `lib/pkg_tools`: Remove `Rns` support
+
 ## v2.0.4
 
 * `openbsd/pkg_tools`: Add (Thanks to `Somasis`)

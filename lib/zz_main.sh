@@ -73,17 +73,54 @@ while :; do
       _POPT="$_opt"
       ;;
 
+    # Comment 2015 May 26th: This part deals with the 2nd option.
+    # Most of the time, there is only one 2nd option. But some
+    # operation may need extra and/or duplicate (e.g, Sy <> Syy).
+    #
+    # See also
+    #
+    # * https://github.com/icy/pacapt/issues/13
+    #
+    #   This implementation works, but with a bug. #Rsn works
+    #   but #Rns is translated to #Rn (incorrectly.)
+    #   Thanks Huy-Ngo for this nice catch.
+    #
     # FIXME: Please check pacman(8) to see if they are really 2nd operation
+    #
     s|l|i|p|o|m|n)
       if [[ "$_SOPT" == '' ]]; then
         _SOPT="$_opt"
-      else
-        if [[ "${_SOPT:0:1}" == "s" ]]; then
-          _SOPT="ns"
-        else
-          _SOPT="n"
-        fi
+        continue
       fi
+
+      # Understand it:
+      # If there is already an option recorded, the incoming option
+      # will come and compare itself with known one.
+      # We have a table
+      #
+      #     known one vs. incoming ? | result
+      #                <             | one-new
+      #                =             | one-one
+      #                >             | new-one
+      #
+      # Let's say, after this step, the 3rd option comes (named X),
+      # and the current result is "a-b". We have a table
+      #
+      #    a(b) vs. X  | result
+      #         <      | aX (b dropped)
+      #         =      | aa (b dropped)
+      #         >      | Xa (b dropped)
+      #
+      # In any case, the first one matters.
+      #
+      if [[ "${_SOPT:0:1}" < "$_opt" ]]; then
+        _SOPT="${_SOPT:0:1}$_opt"
+      elif [[ "${_SOPT:0:1}" == "$_opt" ]]; then
+        _SOPT="$_opt$_opt"
+      else
+        _SOPT="$_opt${_SOPT:0:1}"
+      fi
+
       ;;
 
     q)

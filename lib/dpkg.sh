@@ -133,3 +133,7 @@ dpkg_S() {
 dpkg_U() {
   dpkg -i "$@"
 }
+
+dpkg_Sii() {
+  apt-cache rdepends "$@"
+}
