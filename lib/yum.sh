@@ -104,3 +104,7 @@ yum_S() {
 yum_U() {
   yum localinstall "$@"
 }
+
+yum_Sii() {
+  yum resolvedep "$@"
+}
