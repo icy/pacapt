@@ -100,14 +100,15 @@ while :; do
       #
       #     known one vs. incoming ? | result
       #                <             | one-new
-      #                =             | one
+      #                =             | one-one
       #                >             | new-one
+      #
       # Let's say, after this step, the 3rd option comes (named X),
       # and the current result is "a-b". We have a table
       #
       #    a(b) vs. X  | result
       #         <      | aX (b dropped)
-      #         =      | ab (X discarded)
+      #         =      | aa (b dropped)
       #         >      | Xa (b dropped)
       #
       # In any case, the first one matters.
@@ -115,7 +116,7 @@ while :; do
       if [[ "${_SOPT:0:1}" < "$_opt" ]]; then
         _SOPT="${_SOPT:0:1}$_opt"
       elif [[ "${_SOPT:0:1}" == "$_opt" ]]; then
-        _SOPT="$_SOPT"
+        _SOPT="$_opt$_opt"
       else
         _SOPT="$_opt${_SOPT:0:1}"
       fi
