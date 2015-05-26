@@ -73,11 +73,7 @@ pkg_tools_Rn() {
 }
 
 pkg_tools_Rns() {
-  if [[ "$_TOPT" == "" ]];then
-    pkg_delete -c "$@"
-  else
-    _not_implemented
-  fi
+  _not_implemented
 }
 
 pkg_tools_R() {
