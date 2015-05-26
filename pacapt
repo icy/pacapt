@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.0.4
+# Version: 2.0.5
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2015 \
@@ -29,7 +29,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.0.4'
+export PACAPT_VERSION='2.0.5'
 
 _help() {
   cat <<'EOF'
@@ -508,6 +508,10 @@ dpkg_U() {
   dpkg -i "$@"
 }
 
+dpkg_Sii() {
+  apt-cache rdepends "$@"
+}
+
 
 _homebrew_init() {
   :
@@ -831,11 +835,7 @@ pkg_tools_Rn() {
 }
 
 pkg_tools_Rns() {
-  if [[ "$_TOPT" == "" ]];then
-    pkg_delete -c "$@"
-  else
-    _not_implemented
-  fi
+  _not_implemented
 }
 
 pkg_tools_R() {
@@ -1111,6 +1111,10 @@ yum_U() {
   yum localinstall "$@"
 }
 
+yum_Sii() {
+  yum resolvedep "$@"
+}
+
 
 _zypper_init() {
   :
@@ -1232,6 +1236,7 @@ _validate_operation() {
   "dpkg_Sccc") ;;
   "dpkg_S") ;;
   "dpkg_U") ;;
+  "dpkg_Sii") ;;
   "homebrew_Qi") ;;
   "homebrew_Ql") ;;
   "homebrew_Qo") ;;
@@ -1336,6 +1341,7 @@ _validate_operation() {
   "yum_Sccc") ;;
   "yum_S") ;;
   "yum_U") ;;
+  "yum_Sii") ;;
   "zypper_Qi") ;;
   "zypper_Qu") ;;
   "zypper_Qm") ;;
@@ -1417,17 +1423,54 @@ while :; do
       _POPT="$_opt"
       ;;
 
+    # Comment 2015 May 26th: This part deals with the 2nd option.
+    # Most of the time, there is only one 2nd option. But some
+    # operation may need extra and/or duplicate (e.g, Sy <> Syy).
+    #
+    # See also
+    #
+    # * https://github.com/icy/pacapt/issues/13
+    #
+    #   This implementation works, but with a bug. #Rsn works
+    #   but #Rns is translated to #Rn (incorrectly.)
+    #   Thanks Huy-Ngo for this nice catch.
+    #
     # FIXME: Please check pacman(8) to see if they are really 2nd operation
+    #
     s|l|i|p|o|m|n)
       if [[ "$_SOPT" == '' ]]; then
         _SOPT="$_opt"
-      else
-        if [[ "${_SOPT:0:1}" == "s" ]]; then
-          _SOPT="ns"
-        else
-          _SOPT="n"
-        fi
+        continue
       fi
+
+      # Understand it:
+      # If there is already an option recorded, the incoming option
+      # will come and compare itself with known one.
+      # We have a table
+      #
+      #     known one vs. incoming ? | result
+      #                <             | one-new
+      #                =             | one-one
+      #                >             | new-one
+      #
+      # Let's say, after this step, the 3rd option comes (named X),
+      # and the current result is "a-b". We have a table
+      #
+      #    a(b) vs. X  | result
+      #         <      | aX (b dropped)
+      #         =      | aa (b dropped)
+      #         >      | Xa (b dropped)
+      #
+      # In any case, the first one matters.
+      #
+      if [[ "${_SOPT:0:1}" < "$_opt" ]]; then
+        _SOPT="${_SOPT:0:1}$_opt"
+      elif [[ "${_SOPT:0:1}" == "$_opt" ]]; then
+        _SOPT="$_opt$_opt"
+      else
+        _SOPT="$_opt${_SOPT:0:1}"
+      fi
+
       ;;
 
     q)
