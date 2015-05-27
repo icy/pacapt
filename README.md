@@ -4,17 +4,17 @@
 * [Description](#description)
 * [Installation](#installation)
 * [Usage](#usage)
-* [Implemented Operations](#implemented_operations)
+* [Implemented Operations](#implemented-operations)
 * [Support](#support)
 * [Development](#development)
 * [License](#license)
 * [Authors](#authors)
 
-## NAME
+## Name
 
 `pacapt` - An `Arch`'s pacman-like package manager for some `Unices`.
 
-## DESCRIPTION
+## Description
 
 An `Arch`'s pacman-like package manager for some `Unices`.
 Actually this `Bash` script provides a wrapper for system's package manager.
@@ -44,7 +44,7 @@ The tool supports the following package managers:
 * `cave`          by `Exherbo Linux`
 * `pkg_tools`     by `OpenBSD`
 
-## INSTALLATION
+## Installation
 
 1. This script shouldn't be installed on an Arch-based system.
 2. On `FreeBSD`, please install `bash` package first
@@ -64,7 +64,7 @@ which is `v2.0` at the moment. If you want to compile a script
 from its components, please make sure you use a correct branch.
 See `CONTRIBUTING.md` for details.
 
-## USAGE
+## Usage
 
 Some basic command line options
 
@@ -87,11 +87,11 @@ pkg_tools  y  .  y  y  .  y  y  .  y y  y   y  y y  y   y    .  y   .  y  y  y  
    zypper  y  .  y  .  y  .  .  .  y y  .   .  y y  y   y    .  .   .  .  y  .   y  y y
 ````
 
-## SUPPORT
+## Support
 
 Please use the ticket system at https://github.com/icy/pacapt/issues .
 
-## DEVELOPMENT
+## Development
 
 Make sure you read some instructions in `CONTRIBUTING.md`.
 
@@ -115,7 +115,7 @@ $ install -m755 ./pacapt.dev /usr/local/bin/pacapt
 
 Please read the sample `Makefile` for some details.
 
-## LICENSE
+## License
 
 This work is released under the terms of Fair license
 (http://opensource.org/licenses/fair).
