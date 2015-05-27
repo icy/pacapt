@@ -122,12 +122,6 @@ echo "}"
 grep -v '^#' lib/zz_main.sh
 
 ########################################################################
-# Print statistics and the fancy table
-########################################################################
-
-echo >&2 "pacapt version '$VERSION' has been generated"
-
-########################################################################
 # For developers only
 #
 #  PxO  Q Qi Qs ...
@@ -217,3 +211,9 @@ while :; do
     printf >&2 "| %9s %s\n" "$_cur_pkg" "$_ret"
   fi
 done
+
+########################################################################
+# Print statistics and the fancy table
+########################################################################
+
+echo >&2 "pacapt version '$VERSION' has been generated"
