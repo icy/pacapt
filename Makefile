@@ -20,7 +20,7 @@ default:
 
 # Build and install development script
 
-pacapt.dev: ./lib/*.sh compile.sh
+pacapt.dev: ./lib/*.sh ./lib/*.txt compile.sh
 	@./compile.sh > $(@)
 	@bash -n $(@)
 	@chmod 755 $(@)
@@ -36,7 +36,7 @@ install.dev: pacapt.dev
 
 # Build and install stable script
 
-pacapt: ./lib/*.sh compile.sh
+pacapt: ./lib/*.sh ./lib/*.txt compile.sh
 	@./compile.sh > $(@)
 	@bash -n $(@)
 	@chmod 755 $(@)
