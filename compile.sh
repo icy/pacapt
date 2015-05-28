@@ -122,6 +122,15 @@ echo "}"
 grep -v '^#' lib/zz_main.sh
 
 ########################################################################
+# Stop here, or continue...
+########################################################################
+
+if [[ -z "${PACAPT_STATS:-}" ]]; then
+  echo >&2 "pacapt version '$VERSION' has been generated"
+  exit
+fi
+
+########################################################################
 # For developers only
 #
 #  PxO  Q Qi Qs ...
