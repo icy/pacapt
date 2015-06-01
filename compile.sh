@@ -193,7 +193,7 @@ while :; do
           _flag="y"
           break
         else
-          let i++||:
+          (( i ++ )) ||:
         fi
       fi
     done
@@ -213,7 +213,7 @@ while :; do
       break
     fi
 
-    let i++||:
+    (( i ++ )) ||:
   done
 
   if [[ "$_cur_pkg" != "xxx" ]]; then
