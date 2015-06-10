@@ -12,7 +12,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
 _yum_init() {
-  :
+  [[ "$_NOCONFIRM_FLAG" == "yes" ]] && _TOPT="$_TOPT --assumeyes"
 }
 
 yum_Q() {
@@ -54,15 +54,15 @@ yum_Qm() {
 }
 
 yum_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
-    yum erase "$@"
+  if [[ "$_TOPT" == " --assumeyes" ]] || [[ "$_TOPT" == "" ]]; then
+    yum erase $_TOPT "$@"
   else
     _not_implemented
   fi
 }
 
 yum_R() {
-  yum erase "$@"
+  yum erase $_TOPT "$@"
 }
 
 yum_Si() {
@@ -70,11 +70,11 @@ yum_Si() {
 }
 
 yum_Suy() {
-  yum update "$@"
+  yum update $_TOPT "$@"
 }
 
 yum_Su() {
-  yum update "$@"
+  yum update $_TOPT "$@"
 }
 
 yum_Sy() {
