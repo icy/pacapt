@@ -12,7 +12,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
 _dpkg_init() {
-  :
+  [[ "$_NOCONFIRM_FLAG" == "yes" ]] && _TOPT="$_TOPT --assume-yes"
 }
 
 dpkg_Q() {
@@ -70,23 +70,23 @@ dpkg_Qs() {
 }
 
 dpkg_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
-    apt-get autoremove "$@"
+  if [[ "$_TOPT" == " --assume-yes" ]] || [[ "$_TOPT" == "" ]]; then
+    apt-get autoremove $_TOPT "$@"
   else
     _not_implemented
   fi
 }
 
 dpkg_Rn() {
-  apt-get purge "$@"
+  apt-get purge $_TOPT "$@"
 }
 
 dpkg_Rns() {
-  apt-get --purge autoremove "$@"
+  apt-get --purge autoremove $_TOPT "$@"
 }
 
 dpkg_R() {
-  apt-get remove "$@"
+  apt-get remove $_TOPT "$@"
 }
 
 dpkg_Si() {
@@ -95,11 +95,11 @@ dpkg_Si() {
 
 dpkg_Suy() {
   apt-get update \
-  && apt-get upgrade "$@"
+  && apt-get upgrade $_TOPT "$@"
 }
 
 dpkg_Su() {
-  apt-get upgrade "$@"
+  apt-get upgrade $_TOPT "$@"
 }
 
 # FIXME: Should we remove "$@"?
