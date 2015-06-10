@@ -20,6 +20,7 @@ _SOPT="" # secondary operation
 _TOPT="" # options for operations
 _EOPT="" # extra options (directly given to package manager)
 _PACMAN="" # name of the package manager
+_NOCONFIRM_FLAG="" # flag for noconfirm option
 
 _PACMAN_detect \
 || _die "'pacapt' doesn't support your package manager."
@@ -43,6 +44,11 @@ while :; do
     ;;
   "-"|"--")
     break
+    ;;
+  "--noconfirm")
+    _NOCONFIRM_FLAG="yes"
+    shift
+    continue
     ;;
   esac
 
@@ -173,7 +179,7 @@ while :; do
       shift
       _tranlate_w
     fi
-    break
+    #break
   # Don't have anything from the first argument. Something wrong.
   elif [[ -z "${_POPT}${_SOPT}${_TOPT}${_EOPT}" ]]; then
     break
