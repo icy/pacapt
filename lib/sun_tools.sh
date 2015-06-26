@@ -37,7 +37,7 @@ sun_tools_Q() {
   # because all packages in openbsd have the format 'pkgname-pkgver'
   if [[ "$_TOPT" == "q" && ! -z "$@" ]]; then
     pkginfo | grep "$@"
-  elif [[ "$_TOPT" == "q" && -z "$@" ]];then
+  elif [[ "$_TOPT" == "q" && -z "$@" ]]; then
     pkginfo
   else
     pkginfo "$@"
