@@ -38,6 +38,8 @@ _issue2pacman() {
 
   _pacman="$1"; shift
 
+  [ `uname` = $1 ] && _PACMAN="$_pacman" && return
+
   grep -qis "$@" /etc/issue \
   && _PACMAN="$_pacman" && return
 
@@ -57,6 +59,7 @@ _PACMAN_detect() {
   _issue2pacman zypper "SUSE" && return
   _issue2pacman pkg_tools "OpenBSD" && return
   _issue2pacman pkg_tools "Bitrig" && return
+  _issue2pacman sun_tools "SunOS" && return
 
   [[ -z "$_PACMAN" ]] || return
 
@@ -76,6 +79,7 @@ _PACMAN_detect() {
   [[ -x "/usr/sbin/pkg" ]] && _PACMAN="pkgng" && return
   # make sure pkg_add is after pkgng, FreeBSD base comes with it until converted
   [[ -x "/usr/sbin/pkg_add" ]] && _PACMAN="pkg_tools" && return
+  [[ -x "/usr/sbin/pkgadd" ]] && _PACMAN="sun_tools" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 

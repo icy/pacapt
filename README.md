@@ -85,6 +85,7 @@ pkg_tools  y  .  y  y  .  y  y  .  y y  y   y  y y  y   y    .  y   .  y  y  y  
   portage  y  y  y  y  .  y  .  .  y y  .   .  y y  y   y    y  y   .  .  y  y   y  y .
       yum  y  y  y  y  y  y  y  .  y y  .   .  y y  y   y    y  y   y  .  y  y   y  y y
    zypper  y  .  y  .  y  .  .  .  y y  .   .  y y  y   y    .  .   .  .  y  .   y  y y
+sun_tools  y  .  y  y  .  y  .  .  . y  .   .  . .  .   .    .  .   .  .  .  .   .  . y
 ````
 
 ## Support
@@ -136,3 +137,4 @@ This work is released under the terms of Fair license
 * Konrad Borowski
 * Somasis
 * Vojtech Letal
+* Daniel YC Lin
