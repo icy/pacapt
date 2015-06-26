@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.0.5
+# Version: 291163c
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2015 \
@@ -21,6 +21,7 @@
 #                           | Konrad Borowski
 #                           | Somasis
 #                           | Vojtech Letal
+#                           | Daniel YC Lin
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
@@ -29,7 +30,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.0.5'
+export PACAPT_VERSION='291163c'
 
 _help() {
   cat <<'EOF'
@@ -42,6 +43,11 @@ SYNTAX
   $ pacapt <option(s)> <operation(s)> <package(s)>
 
 OPERATIONS
+
+  Basic
+    -h or --help    print this help message
+    -P              print supported operations
+    -V              print version information
 
   Query
     -Q              list all installed packages
@@ -68,12 +74,6 @@ OPERATIONS
     -Sccc           clean variant files.
                     (debian) See also http://dragula.viettug.org/blogs/646
 
-  Miscellaneous
-
-    -h or --help    print this help message
-    -P              print supported operations
-    -V              print version information
-
 OPTIONS
 
     -w              download packages but don't install them
@@ -81,16 +81,13 @@ OPTIONS
 EXAMPLES
 
   1. To install a package from Debian's backports repository
-
       $ pacapt -S foobar -t lenny-backports
       $ pacapt -S -- -t lenny-backports foobar
 
   2. To update package database and then update your system
-
       $ pacapt -Syu
 
   3. To download a package without installing it
-
       $ pacapt -Sw foobar
 
 NOTES
@@ -99,11 +96,9 @@ NOTES
   the system package manager (`/usr/bin/pacman`.)
 
   Though you can specify option by its own word, for example,
-
       $ pacapt -S -y -u
 
   it's always the best to combine them
-
       $ pacapt -Syu
 EOF
 
@@ -136,6 +131,8 @@ _issue2pacman() {
 
   _pacman="$1"; shift
 
+  [ `uname` = "$1" ] && _PACMAN="$_pacman" && return
+
   grep -qis "$@" /etc/issue \
   && _PACMAN="$_pacman" && return
 
@@ -144,6 +141,7 @@ _issue2pacman() {
 }
 
 _PACMAN_detect() {
+  _issue2pacman sun_tools "SunOS" && return
   _issue2pacman pacman "Arch Linux" && return
   _issue2pacman dpkg "Debian GNU/Linux" && return
   _issue2pacman dpkg "Ubuntu" && return
@@ -173,6 +171,7 @@ _PACMAN_detect() {
   [[ -x "/usr/sbin/pkg" ]] && _PACMAN="pkgng" && return
   # make sure pkg_add is after pkgng, FreeBSD base comes with it until converted
   [[ -x "/usr/sbin/pkg_add" ]] && _PACMAN="pkg_tools" && return
+  [[ -x "/usr/sbin/pkgadd" ]] && _PACMAN="sun_tools" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
@@ -1017,6 +1016,98 @@ portage_S() {
 }
 
 
+_pkg_tools_init() {
+  :
+}
+
+pkg_tools_Qi() {
+  pkginfo -l "$@"
+}
+
+pkg_tools_Ql() {
+  pkginfo -l "$@"
+}
+
+pkg_tools_Qo() {
+  grep "$@" /var/sadm/install/contents
+}
+
+pkg_tools_Qp() {
+  _not_implemented
+}
+
+pkg_tools_Qu() {
+  _not_implemented
+}
+
+pkg_tools_Q() {
+  # the dash after the pkg name is so we don't catch partial matches
+  # because all packages in openbsd have the format 'pkgname-pkgver'
+  if [[ "$_TOPT" == "q" && ! -z "$@" ]]; then
+    pkginfo | grep "$@"
+  elif [[ "$_TOPT" == "q" && -z "$@" ]];then
+    pkg_info
+  else
+    pkg_info "$@"
+  fi
+}
+
+pkg_tools_Rs() {
+  _not_implemented
+}
+
+pkg_tools_Rn() {
+  _not_implemented
+}
+
+pkg_tools_Rns() {
+  _not_implemented
+}
+
+pkg_tools_R() {
+  pkgrm "$@"
+}
+
+pkg_tools_Si() {
+  _not_implemented
+}
+
+pkg_tools_Sl() {
+  _not_implemented
+}
+
+pkg_tools_Suy() {
+  _not_implemented
+}
+
+pkg_tools_Su() {
+  _not_implemented
+}
+
+pkg_tools_Sy() {
+  _not_implemented
+}
+
+pkg_tools_Ss() {
+  _not_implemented
+}
+
+pkg_tools_Sc() {
+  _not_implemented
+}
+
+pkg_tools_Scc() {
+  _not_implemented
+}
+
+pkg_tools_S() {
+  _not_implemented
+}
+pkg_tools_U() {
+  pkgadd "$@"
+}
+
+
 _yum_init() {
   :
 }
@@ -1554,6 +1645,7 @@ fi
 if [[ -n "$PACAPT_DEBUG" ]]; then
   echo "pacapt: $_PACMAN, p=$_POPT, s=$_SOPT, t=$_TOPT, e=$_EOPT"
   echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT $@'"
+  declare -f "${_PACMAN}_${_POPT}${_SOPT}"
 else
   "_${_PACMAN}_init"
   "${_PACMAN}_${_POPT}${_SOPT}" $_EOPT "$@"
