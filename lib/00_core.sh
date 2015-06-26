@@ -11,6 +11,8 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+GREP=grep
+
 _error() {
   echo >&2 "Error: $@"
   return 1
@@ -40,10 +42,10 @@ _issue2pacman() {
 
   [ `uname` = "$1" ] && _PACMAN="$_pacman" && return
 
-  grep -qis "$@" /etc/issue \
+  $GREP -qis "$@" /etc/issue \
   && _PACMAN="$_pacman" && return
 
-  grep -qis "$@" /etc/os-release \
+  $GREP -qis "$@" /etc/os-release \
   && _PACMAN="$_pacman" && return
 }
 
@@ -65,7 +67,7 @@ _PACMAN_detect() {
 
   # Prevent a loop when this script is installed on non-standard system
   if [[ -x "/usr/bin/pacman" ]]; then
-    grep -q "$FUNCNAME" '/usr/bin/pacman' >/dev/null 2>&1
+    $GREP -q "$FUNCNAME" '/usr/bin/pacman' >/dev/null 2>&1
     [[ $? -ge 1 ]] && _PACMAN="pacman" \
     && return
   fi
@@ -131,8 +133,9 @@ _tranlate_w() {
 _print_supported_operations() {
   local _pacman="$1"
   echo -n "pacapt: available operations:"
-  grep -E "^${_pacman}_[^ \t]+\(\)" "$0" \
-  | awk -F '(' '{print $1}' \
+  [[ $(uname) == SunOS ]] && GREP=/usr/xpg4/bin/grep && AWK=nawk
+  $GREP -E "^${_pacman}_[^ \t]+\(\)" "$0" \
+  | $AWK -F '(' '{print $1}' \
   | sed -e "s/${_pacman}_//g" \
   | while read O; do
       echo -n " $O"

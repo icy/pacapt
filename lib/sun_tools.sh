@@ -11,93 +11,43 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
-_pkg_tools_init() {
-  :
+_sun_tools_init() {
+  GREP=/usr/xpg4/bin/grep
+  AWK=nawk
 }
 
-pkg_tools_Qi() {
+sun_tools_Qi() {
   pkginfo -l "$@"
 }
 
-pkg_tools_Ql() {
+sun_tools_Ql() {
   pkginfo -l "$@"
 }
 
-pkg_tools_Qo() {
+sun_tools_Qo() {
   grep "$@" /var/sadm/install/contents
 }
 
-pkg_tools_Qp() {
-  _not_implemented
+sun_tools_Qs() {
+  pkginfo | grep -i "$@"
 }
 
-pkg_tools_Qu() {
-  _not_implemented
-}
-
-pkg_tools_Q() {
+sun_tools_Q() {
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
   if [[ "$_TOPT" == "q" && ! -z "$@" ]]; then
     pkginfo | grep "$@"
   elif [[ "$_TOPT" == "q" && -z "$@" ]];then
-    pkg_info
+    pkginfo
   else
-    pkg_info "$@"
+    pkginfo "$@"
   fi
 }
 
-pkg_tools_Rs() {
-  _not_implemented
-}
-
-pkg_tools_Rn() {
-  _not_implemented
-}
-
-pkg_tools_Rns() {
-  _not_implemented
-}
-
-pkg_tools_R() {
+sun_tools_R() {
   pkgrm "$@"
 }
 
-pkg_tools_Si() {
-  _not_implemented
-}
-
-pkg_tools_Sl() {
-  _not_implemented
-}
-
-pkg_tools_Suy() {
-  _not_implemented
-}
-
-pkg_tools_Su() {
-  _not_implemented
-}
-
-pkg_tools_Sy() {
-  _not_implemented
-}
-
-pkg_tools_Ss() {
-  _not_implemented
-}
-
-pkg_tools_Sc() {
-  _not_implemented
-}
-
-pkg_tools_Scc() {
-  _not_implemented
-}
-
-pkg_tools_S() {
-  _not_implemented
-}
-pkg_tools_U() {
+sun_tools_U() {
   pkgadd "$@"
 }

@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 291163c
+# Version: 4fdd57e
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2015 \
@@ -30,7 +30,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='291163c'
+export PACAPT_VERSION='4fdd57e'
 
 _help() {
   cat <<'EOF'
@@ -106,6 +106,8 @@ EOF
 
 
 
+GREP=grep
+
 _error() {
   echo >&2 "Error: $@"
   return 1
@@ -133,10 +135,10 @@ _issue2pacman() {
 
   [ `uname` = "$1" ] && _PACMAN="$_pacman" && return
 
-  grep -qis "$@" /etc/issue \
+  $GREP -qis "$@" /etc/issue \
   && _PACMAN="$_pacman" && return
 
-  grep -qis "$@" /etc/os-release \
+  $GREP -qis "$@" /etc/os-release \
   && _PACMAN="$_pacman" && return
 }
 
@@ -157,7 +159,7 @@ _PACMAN_detect() {
 
   # Prevent a loop when this script is installed on non-standard system
   if [[ -x "/usr/bin/pacman" ]]; then
-    grep -q "$FUNCNAME" '/usr/bin/pacman' >/dev/null 2>&1
+    $GREP -q "$FUNCNAME" '/usr/bin/pacman' >/dev/null 2>&1
     [[ $? -ge 1 ]] && _PACMAN="pacman" \
     && return
   fi
@@ -221,8 +223,9 @@ _tranlate_w() {
 _print_supported_operations() {
   local _pacman="$1"
   echo -n "pacapt: available operations:"
-  grep -E "^${_pacman}_[^ \t]+\(\)" "$0" \
-  | awk -F '(' '{print $1}' \
+  [[ $(uname) == SunOS ]] && GREP=/usr/xpg4/bin/grep && AWK=nawk
+  $GREP -E "^${_pacman}_[^ \t]+\(\)" "$0" \
+  | $AWK -F '(' '{print $1}' \
   | sed -e "s/${_pacman}_//g" \
   | while read O; do
       echo -n " $O"
@@ -1016,94 +1019,44 @@ portage_S() {
 }
 
 
-_pkg_tools_init() {
-  :
+_sun_tools_init() {
+  GREP=/usr/xpg4/bin/grep
+  AWK=nawk
 }
 
-pkg_tools_Qi() {
+sun_tools_Qi() {
   pkginfo -l "$@"
 }
 
-pkg_tools_Ql() {
+sun_tools_Ql() {
   pkginfo -l "$@"
 }
 
-pkg_tools_Qo() {
+sun_tools_Qo() {
   grep "$@" /var/sadm/install/contents
 }
 
-pkg_tools_Qp() {
-  _not_implemented
+sun_tools_Qs() {
+  pkginfo | grep -i "$@"
 }
 
-pkg_tools_Qu() {
-  _not_implemented
-}
-
-pkg_tools_Q() {
+sun_tools_Q() {
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
   if [[ "$_TOPT" == "q" && ! -z "$@" ]]; then
     pkginfo | grep "$@"
   elif [[ "$_TOPT" == "q" && -z "$@" ]];then
-    pkg_info
+    pkginfo
   else
-    pkg_info "$@"
+    pkginfo "$@"
   fi
 }
 
-pkg_tools_Rs() {
-  _not_implemented
-}
-
-pkg_tools_Rn() {
-  _not_implemented
-}
-
-pkg_tools_Rns() {
-  _not_implemented
-}
-
-pkg_tools_R() {
+sun_tools_R() {
   pkgrm "$@"
 }
 
-pkg_tools_Si() {
-  _not_implemented
-}
-
-pkg_tools_Sl() {
-  _not_implemented
-}
-
-pkg_tools_Suy() {
-  _not_implemented
-}
-
-pkg_tools_Su() {
-  _not_implemented
-}
-
-pkg_tools_Sy() {
-  _not_implemented
-}
-
-pkg_tools_Ss() {
-  _not_implemented
-}
-
-pkg_tools_Sc() {
-  _not_implemented
-}
-
-pkg_tools_Scc() {
-  _not_implemented
-}
-
-pkg_tools_S() {
-  _not_implemented
-}
-pkg_tools_U() {
+sun_tools_U() {
   pkgadd "$@"
 }
 
@@ -1412,6 +1365,13 @@ _validate_operation() {
   "portage_Scc") ;;
   "portage_Sccc") ;;
   "portage_S") ;;
+  "sun_tools_Qi") ;;
+  "sun_tools_Ql") ;;
+  "sun_tools_Qo") ;;
+  "sun_tools_Qs") ;;
+  "sun_tools_Q") ;;
+  "sun_tools_R") ;;
+  "sun_tools_U") ;;
   "yum_Q") ;;
   "yum_Qi") ;;
   "yum_Ql") ;;
@@ -1622,7 +1582,7 @@ while :; do
 done
 
 [[ -n "$_POPT" ]] \
-|| _die "pacapt: Please specify a primary operation (Q, S, R, U)."
+|| _die "Usage: pacapt <options>   # -h for help, -P list supported functions"
 
 _validate_operation "${_PACMAN}_${_POPT}${_SOPT}" \
 || {
