@@ -38,7 +38,7 @@ _issue2pacman() {
 
   _pacman="$1"; shift
 
-  [ `uname` = $1 ] && _PACMAN="$_pacman" && return
+  [ `uname` = "$1" ] && _PACMAN="$_pacman" && return
 
   grep -qis "$@" /etc/issue \
   && _PACMAN="$_pacman" && return
@@ -49,6 +49,7 @@ _issue2pacman() {
 
 # Detect package type
 _PACMAN_detect() {
+  _issue2pacman sun_tools "SunOS" && return
   _issue2pacman pacman "Arch Linux" && return
   _issue2pacman dpkg "Debian GNU/Linux" && return
   _issue2pacman dpkg "Ubuntu" && return
@@ -59,7 +60,6 @@ _PACMAN_detect() {
   _issue2pacman zypper "SUSE" && return
   _issue2pacman pkg_tools "OpenBSD" && return
   _issue2pacman pkg_tools "Bitrig" && return
-  _issue2pacman sun_tools "SunOS" && return
 
   [[ -z "$_PACMAN" ]] || return
 
