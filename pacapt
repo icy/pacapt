@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 4fdd57e
+# Version: bb9c5ca
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2015 \
@@ -12,6 +12,7 @@
 #                           | Anh K. Huynh
 #                           | Arcterus
 #                           | Cuong Manh Le
+#                           | Daniel YC Lin
 #                           | Danny George
 #                           | Darshit Shah
 #                           | Hà-Dương Nguyễn
@@ -21,7 +22,6 @@
 #                           | Konrad Borowski
 #                           | Somasis
 #                           | Vojtech Letal
-#                           | Daniel YC Lin
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
@@ -30,7 +30,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='4fdd57e'
+export PACAPT_VERSION='bb9c5ca'
 
 _help() {
   cat <<'EOF'

@@ -43,6 +43,7 @@ The tool supports the following package managers:
 * `pkgng`         by `FreeBSD`
 * `cave`          by `Exherbo Linux`
 * `pkg_tools`     by `OpenBSD`
+* `sun_tools`     by `Solaris(SunOS)`
 
 ## Installation
 
@@ -128,6 +129,7 @@ This work is released under the terms of Fair license
 * Anh K. Huynh
 * Arcterus
 * Cuong Manh Le
+* Daniel YC Lin
 * Danny George
 * Darshit Shah
 * Hà-Dương Nguyễn
@@ -137,4 +139,3 @@ This work is released under the terms of Fair license
 * Konrad Borowski
 * Somasis
 * Vojtech Letal
-* Daniel YC Lin
