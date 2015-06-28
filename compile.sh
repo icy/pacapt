@@ -20,6 +20,12 @@ unset GREP_OPTIONS
 VERSION="${VERSION:-$(git log --pretty="%h" -1 2>/dev/null || true)}"
 VERSION="${VERSION:-unknown}"
 
+if [[ "${VERSION}" == "unknown" ]]; then
+  echo >&2 ":: Unable to get version information."
+  echo >&2 ":: You may to install or reconfigure your 'git' package."
+  exit 1
+fi
+
 : "${PACAPT_STATS=}"  # List implemented operations to STDERR
 : "${GREP:=grep}"     # Need to update on SunOS
 : "${AWK:=awk}"       # Need to update on SunOS
