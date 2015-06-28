@@ -181,7 +181,7 @@ while :; do
 done
 
 [[ -n "$_POPT" ]] \
-|| _die "pacapt: Please specify a primary operation (Q, S, R, U)."
+|| _die "Usage: pacapt <options>   # -h for help, -P list supported functions"
 
 _validate_operation "${_PACMAN}_${_POPT}${_SOPT}" \
 || {

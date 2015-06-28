@@ -104,9 +104,15 @@ for L in ./lib/*.sh; do
     _operations+=( "$F" )
   done < \
     <(
-      grep -hE "^${_PKGNAME}_[^ \t]+\(\)" $L \
-      | awk -F '(' '{print $1}'
+      if [ `uname` = SunOS ] ; then
+        /usr/xpg4/bin/grep -hE "^${_PKGNAME}_[^ \t]+\(\)" $L \
+          | nawk -F '(' '{print $1}'
+      else
+        grep -hE "^${_PKGNAME}_[^ \t]+\(\)" $L \
+          | awk -F '(' '{print $1}'
+      fi
     )
+
 done
 
 echo "  *) return 1 ;;"
