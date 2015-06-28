@@ -49,6 +49,7 @@ while :; do
     exit 0
     ;;
   "-"|"--")
+    shift
     break
     ;;
   esac
