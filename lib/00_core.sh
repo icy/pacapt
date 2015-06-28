@@ -11,8 +11,6 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
-GREP=grep
-
 _error() {
   echo >&2 "Error: $@"
   return 1
@@ -40,7 +38,15 @@ _issue2pacman() {
 
   _pacman="$1"; shift
 
-  [ `uname` = "$1" ] && _PACMAN="$_pacman" && return
+  # The following line is added by Daniel YC Lin to support SunOS.
+  #
+  #   [ `uname` = "$1" ] && _PACMAN="$_pacman" && return
+  #
+  # This is quite tricky and fast, however I don't think it works
+  # on Linux/BSD systems. To avoid extra check, I slightly modify
+  # the code to make sure it's only applicable on SunOS.
+  #
+  [[ "$(uname)" == "SunOS" ]] && _PACMAN="$_pacman" && return
 
   $GREP -qis "$@" /etc/issue \
   && _PACMAN="$_pacman" && return
@@ -133,7 +139,6 @@ _tranlate_w() {
 _print_supported_operations() {
   local _pacman="$1"
   echo -n "pacapt: available operations:"
-  [[ $(uname) == SunOS ]] && GREP=/usr/xpg4/bin/grep && AWK=nawk
   $GREP -E "^${_pacman}_[^ \t]+\(\)" "$0" \
   | $AWK -F '(' '{print $1}' \
   | sed -e "s/${_pacman}_//g" \

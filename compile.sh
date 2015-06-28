@@ -20,6 +20,18 @@ unset GREP_OPTIONS
 VERSION="${VERSION:-$(git log --pretty="%h" -1 2>/dev/null || true)}"
 VERSION="${VERSION:-unknown}"
 
+: "${PACAPT_STATS=}"  # List implemented operations to STDERR
+: "${GREP:=grep}"     # Need to update on SunOS
+: "${AWK:=awk}"       # Need to update on SunOS
+
+# At compile time, `_sun_tools_init` is not yet defined.
+if [[ -f "lib/sun_tools.sh" ]]; then
+  source "lib/sun_tools.sh" :
+  _sun_tools_init
+fi
+
+export GREP AWK VERSION PACAPT_STATS
+
 ########################################################################
 # Print the shebang and header
 ########################################################################
@@ -37,7 +49,7 @@ cat <<EOF
 $( \
   cat README.md \
   | sed -e '1,/AUTHORS/d' \
-  | grep '*' \
+  | $GREP '*' \
   | sed -e 's,*,#                           |,g')
 #
 # Usage of the works is permitted provided that this instrument is
@@ -78,7 +90,7 @@ for L in ./lib/*.sh; do
   [[ "${L##*/}" != "zz_main.sh" ]] \
   || continue
 
-  grep -v '^#' $L
+  $GREP -v '^#' $L
 done
 
 ########################################################################
@@ -104,15 +116,9 @@ for L in ./lib/*.sh; do
     _operations+=( "$F" )
   done < \
     <(
-      if [ `uname` = SunOS ] ; then
-        /usr/xpg4/bin/grep -hE "^${_PKGNAME}_[^ \t]+\(\)" $L \
-          | nawk -F '(' '{print $1}'
-      else
-        grep -hE "^${_PKGNAME}_[^ \t]+\(\)" $L \
-          | awk -F '(' '{print $1}'
-      fi
+      $GREP -hE "^${_PKGNAME}_[^ \t]+\(\)" $L \
+       | $AWK -F '(' '{print $1}'
     )
-
 done
 
 echo "  *) return 1 ;;"
@@ -125,7 +131,7 @@ echo "}"
 # It should be included in the last part of the script.
 ########################################################################
 
-grep -v '^#' lib/zz_main.sh
+$GREP -v '^#' lib/zz_main.sh
 
 ########################################################################
 # Stop here, or continue...

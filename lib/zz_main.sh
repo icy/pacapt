@@ -13,7 +13,14 @@
 
 set -u
 unset GREP_OPTIONS
-: "${PACAPT_DEBUG=}"
+
+: "${PACAPT_DEBUG=}"  # Show what will be going
+: "${GREP:=grep}"     # Need to update in, e.g, _sun_tools_init
+: "${AWK:=awk}"       # Need to update in, e.g, _sun_tools_init
+
+_sun_tools_init       # Dirty tricky patch for SunOS
+
+export PACAPT_DEBUG GREP AWK
 
 _POPT="" # primary operation
 _SOPT="" # secondary operation
