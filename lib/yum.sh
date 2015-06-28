@@ -54,7 +54,7 @@ yum_Qm() {
 }
 
 yum_Rs() {
-  if [[ "$_TOPT" == " --assumeyes" ]] || [[ "$_TOPT" == "" ]]; then
+  if [[ "${_TOPT:-yes}" == "yes" ]] || [[ "$_TOPT" =~ "assumeyes" ]]; then
     yum erase $_TOPT "$@"
   else
     _not_implemented

@@ -70,7 +70,7 @@ dpkg_Qs() {
 }
 
 dpkg_Rs() {
-  if [[ "$_TOPT" == " --assume-yes" ]] || [[ "$_TOPT" == "" ]]; then
+  if [[ "${_TOPT:-yes}" == "yes" ]] || [[ "$_TOPT" =~ "assume-yes"  ]]; then
     apt-get autoremove $_TOPT "$@"
   else
     _not_implemented
