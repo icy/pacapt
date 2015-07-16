@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.0.5
+# Version: 2.1.6
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2015 \
@@ -12,6 +12,7 @@
 #                           | Anh K. Huynh
 #                           | Arcterus
 #                           | Cuong Manh Le
+#                           | Daniel YC Lin
 #                           | Danny George
 #                           | Darshit Shah
 #                           | Hà-Dương Nguyễn
@@ -29,7 +30,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.0.5'
+export PACAPT_VERSION='2.1.6'
 
 _help() {
   cat <<'EOF'
@@ -42,6 +43,11 @@ SYNTAX
   $ pacapt <option(s)> <operation(s)> <package(s)>
 
 OPERATIONS
+
+  Basic
+    -h or --help    print this help message
+    -P              print supported operations
+    -V              print version information
 
   Query
     -Q              list all installed packages
@@ -68,12 +74,6 @@ OPERATIONS
     -Sccc           clean variant files.
                     (debian) See also http://dragula.viettug.org/blogs/646
 
-  Miscellaneous
-
-    -h or --help    print this help message
-    -P              print supported operations
-    -V              print version information
-
 OPTIONS
 
     -w              download packages but don't install them
@@ -81,16 +81,13 @@ OPTIONS
 EXAMPLES
 
   1. To install a package from Debian's backports repository
-
       $ pacapt -S foobar -t lenny-backports
       $ pacapt -S -- -t lenny-backports foobar
 
   2. To update package database and then update your system
-
       $ pacapt -Syu
 
   3. To download a package without installing it
-
       $ pacapt -Sw foobar
 
 NOTES
@@ -99,11 +96,9 @@ NOTES
   the system package manager (`/usr/bin/pacman`.)
 
   Though you can specify option by its own word, for example,
-
       $ pacapt -S -y -u
 
   it's always the best to combine them
-
       $ pacapt -Syu
 EOF
 
@@ -136,14 +131,25 @@ _issue2pacman() {
 
   _pacman="$1"; shift
 
-  grep -qis "$@" /etc/issue \
+  # The following line is added by Daniel YC Lin to support SunOS.
+  #
+  #   [ `uname` = "$1" ] && _PACMAN="$_pacman" && return
+  #
+  # This is quite tricky and fast, however I don't think it works
+  # on Linux/BSD systems. To avoid extra check, I slightly modify
+  # the code to make sure it's only applicable on SunOS.
+  #
+  [[ "$(uname)" == "SunOS" ]] && _PACMAN="$_pacman" && return
+
+  $GREP -qis "$@" /etc/issue \
   && _PACMAN="$_pacman" && return
 
-  grep -qis "$@" /etc/os-release \
+  $GREP -qis "$@" /etc/os-release \
   && _PACMAN="$_pacman" && return
 }
 
 _PACMAN_detect() {
+  _issue2pacman sun_tools "SunOS" && return
   _issue2pacman pacman "Arch Linux" && return
   _issue2pacman dpkg "Debian GNU/Linux" && return
   _issue2pacman dpkg "Ubuntu" && return
@@ -159,7 +165,7 @@ _PACMAN_detect() {
 
   # Prevent a loop when this script is installed on non-standard system
   if [[ -x "/usr/bin/pacman" ]]; then
-    grep -q "$FUNCNAME" '/usr/bin/pacman' >/dev/null 2>&1
+    $GREP -q "$FUNCNAME" '/usr/bin/pacman' >/dev/null 2>&1
     [[ $? -ge 1 ]] && _PACMAN="pacman" \
     && return
   fi
@@ -173,6 +179,7 @@ _PACMAN_detect() {
   [[ -x "/usr/sbin/pkg" ]] && _PACMAN="pkgng" && return
   # make sure pkg_add is after pkgng, FreeBSD base comes with it until converted
   [[ -x "/usr/sbin/pkg_add" ]] && _PACMAN="pkg_tools" && return
+  [[ -x "/usr/sbin/pkgadd" ]] && _PACMAN="sun_tools" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
@@ -222,8 +229,8 @@ _tranlate_w() {
 _print_supported_operations() {
   local _pacman="$1"
   echo -n "pacapt: available operations:"
-  grep -E "^${_pacman}_[^ \t]+\(\)" "$0" \
-  | awk -F '(' '{print $1}' \
+  $GREP -E "^${_pacman}_[^ \t]+\(\)" "$0" \
+  | $AWK -F '(' '{print $1}' \
   | sed -e "s/${_pacman}_//g" \
   | while read O; do
       echo -n " $O"
@@ -383,6 +390,10 @@ cave_S() {
 
 cave_U() {
   _not_implemented
+}
+
+dnf_S() {
+  dnf install $_TOPT "$@"
 }
 
 
@@ -1017,6 +1028,52 @@ portage_S() {
 }
 
 
+_sun_tools_init() {
+  # The purpose of `if` is to make sure this function
+  # can be invoked on other system (Linux, BSD).
+  if [[ "$(uname)" == "SunOS" ]]; then
+    export GREP=/usr/xpg4/bin/grep
+    export AWK=nawk
+  fi
+}
+
+sun_tools_Qi() {
+  pkginfo -l "$@"
+}
+
+sun_tools_Ql() {
+  pkginfo -l "$@"
+}
+
+sun_tools_Qo() {
+  $GREP "$@" /var/sadm/install/contents
+}
+
+sun_tools_Qs() {
+  pkginfo | $GREP -i "$@"
+}
+
+sun_tools_Q() {
+  # the dash after the pkg name is so we don't catch partial matches
+  # because all packages in openbsd have the format 'pkgname-pkgver'
+  if [[ "$_TOPT" == "q" && ! -z "$@" ]]; then
+    pkginfo | $GREP "$@"
+  elif [[ "$_TOPT" == "q" && -z "$@" ]]; then
+    pkginfo
+  else
+    pkginfo "$@"
+  fi
+}
+
+sun_tools_R() {
+  pkgrm "$@"
+}
+
+sun_tools_U() {
+  pkgadd "$@"
+}
+
+
 _yum_init() {
   :
 }
@@ -1215,6 +1272,7 @@ _validate_operation() {
   "cave_Sccc") ;;
   "cave_S") ;;
   "cave_U") ;;
+  "dnf_S") ;;
   "dpkg_Q") ;;
   "dpkg_Qi") ;;
   "dpkg_Ql") ;;
@@ -1321,6 +1379,13 @@ _validate_operation() {
   "portage_Scc") ;;
   "portage_Sccc") ;;
   "portage_S") ;;
+  "sun_tools_Qi") ;;
+  "sun_tools_Ql") ;;
+  "sun_tools_Qo") ;;
+  "sun_tools_Qs") ;;
+  "sun_tools_Q") ;;
+  "sun_tools_R") ;;
+  "sun_tools_U") ;;
   "yum_Q") ;;
   "yum_Qi") ;;
   "yum_Ql") ;;
@@ -1363,7 +1428,14 @@ _validate_operation() {
 
 set -u
 unset GREP_OPTIONS
-: "${PACAPT_DEBUG=}"
+
+: "${PACAPT_DEBUG=}"  # Show what will be going
+: "${GREP:=grep}"     # Need to update in, e.g, _sun_tools_init
+: "${AWK:=awk}"       # Need to update in, e.g, _sun_tools_init
+
+_sun_tools_init       # Dirty tricky patch for SunOS
+
+export PACAPT_DEBUG GREP AWK
 
 _POPT="" # primary operation
 _SOPT="" # secondary operation
@@ -1392,6 +1464,7 @@ while :; do
     exit 0
     ;;
   "-"|"--")
+    shift
     break
     ;;
   esac
@@ -1531,7 +1604,7 @@ while :; do
 done
 
 [[ -n "$_POPT" ]] \
-|| _die "pacapt: Please specify a primary operation (Q, S, R, U)."
+|| _die "Usage: pacapt <options>   # -h for help, -P list supported functions"
 
 _validate_operation "${_PACMAN}_${_POPT}${_SOPT}" \
 || {
@@ -1554,6 +1627,7 @@ fi
 if [[ -n "$PACAPT_DEBUG" ]]; then
   echo "pacapt: $_PACMAN, p=$_POPT, s=$_SOPT, t=$_TOPT, e=$_EOPT"
   echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT $@'"
+  declare -f "${_PACMAN}_${_POPT}${_SOPT}"
 else
   "_${_PACMAN}_init"
   "${_PACMAN}_${_POPT}${_SOPT}" $_EOPT "$@"
