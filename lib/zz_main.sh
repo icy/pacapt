@@ -13,7 +13,14 @@
 
 set -u
 unset GREP_OPTIONS
-: "${PACAPT_DEBUG=}"
+
+: "${PACAPT_DEBUG=}"  # Show what will be going
+: "${GREP:=grep}"     # Need to update in, e.g, _sun_tools_init
+: "${AWK:=awk}"       # Need to update in, e.g, _sun_tools_init
+
+_sun_tools_init       # Dirty tricky patch for SunOS
+
+export PACAPT_DEBUG GREP AWK
 
 _POPT="" # primary operation
 _SOPT="" # secondary operation
@@ -42,6 +49,7 @@ while :; do
     exit 0
     ;;
   "-"|"--")
+    shift
     break
     ;;
   esac
@@ -181,7 +189,7 @@ while :; do
 done
 
 [[ -n "$_POPT" ]] \
-|| _die "pacapt: Please specify a primary operation (Q, S, R, U)."
+|| _die "Usage: pacapt <options>   # -h for help, -P list supported functions"
 
 _validate_operation "${_PACMAN}_${_POPT}${_SOPT}" \
 || {
@@ -212,6 +220,7 @@ fi
 if [[ -n "$PACAPT_DEBUG" ]]; then
   echo "pacapt: $_PACMAN, p=$_POPT, s=$_SOPT, t=$_TOPT, e=$_EOPT"
   echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT $@'"
+  declare -f "${_PACMAN}_${_POPT}${_SOPT}"
 else
   "_${_PACMAN}_init"
   "${_PACMAN}_${_POPT}${_SOPT}" $_EOPT "$@"

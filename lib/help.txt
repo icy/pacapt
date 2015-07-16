@@ -8,6 +8,11 @@ SYNTAX
 
 OPERATIONS
 
+  Basic
+    -h or --help    print this help message
+    -P              print supported operations
+    -V              print version information
+
   Query
     -Q              list all installed packages
     -Qc <package>   show package's changelog
@@ -33,12 +38,6 @@ OPERATIONS
     -Sccc           clean variant files.
                     (debian) See also http://dragula.viettug.org/blogs/646
 
-  Miscellaneous
-
-    -h or --help    print this help message
-    -P              print supported operations
-    -V              print version information
-
 OPTIONS
 
     -w              download packages but don't install them
@@ -46,16 +45,13 @@ OPTIONS
 EXAMPLES
 
   1. To install a package from Debian's backports repository
-
       $ pacapt -S foobar -t lenny-backports
       $ pacapt -S -- -t lenny-backports foobar
 
   2. To update package database and then update your system
-
       $ pacapt -Syu
 
   3. To download a package without installing it
-
       $ pacapt -Sw foobar
 
 NOTES
@@ -64,9 +60,7 @@ NOTES
   the system package manager (`/usr/bin/pacman`.)
 
   Though you can specify option by its own word, for example,
-
       $ pacapt -S -y -u
 
   it's always the best to combine them
-
       $ pacapt -Syu

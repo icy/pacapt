@@ -1,8 +1,20 @@
-## NAME
+## Table of contents
+
+* [Name](#name)
+* [Description](#description)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Implemented Operations](#implemented-operations)
+* [Support](#support)
+* [Development](#development)
+* [License](#license)
+* [Authors](#authors)
+
+## Name
 
 `pacapt` - An `Arch`'s pacman-like package manager for some `Unices`.
 
-## DESCRIPTION
+## Description
 
 An `Arch`'s pacman-like package manager for some `Unices`.
 Actually this `Bash` script provides a wrapper for system's package manager.
@@ -31,8 +43,9 @@ The tool supports the following package managers:
 * `pkgng`         by `FreeBSD`
 * `cave`          by `Exherbo Linux`
 * `pkg_tools`     by `OpenBSD`
+* `sun_tools`     by `Solaris(SunOS)`
 
-## INSTALLATION
+## Installation
 
 1. This script shouldn't be installed on an Arch-based system.
 2. On `FreeBSD`, please install `bash` package first
@@ -52,7 +65,38 @@ which is `v2.0` at the moment. If you want to compile a script
 from its components, please make sure you use a correct branch.
 See `CONTRIBUTING.md` for details.
 
-## DEVELOPMENT
+## Usage
+
+Some basic command line options
+
+* `-h` (`--help`): Print help message;
+* `-P`: Print list of suppoted operations;
+* `-V`: Print script version;
+
+## Implemented operations
+
+````
+           Q Qc Qi Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Si Sii Sl Ss Su Suy Sy U
+     cave  y  .  y  y  .  y  y  y  y y  y   y  y y  y   y    y  y   .  .  y  y   y  y y
+      dnf  .  .  .  .  .  .  .  .  . .  .   .  . y  .   .    .  .   .  .  .  .   .  . .
+     dpkg  y  .  y  y  .  y  y  y  y y  y   y  y y  y   y    y  y   y  .  y  y   y  y y
+ homebrew  y  y  y  y  .  y  .  y  y y  .   .  y y  y   y    y  y   .  .  y  y   y  y .
+ macports  .  y  .  y  .  y  .  .  y y  .   .  y y  y   y    .  y   .  .  y  y   y  y .
+    pkgng  y  .  y  y  .  y  y  .  y y  .   .  y y  y   y    .  y   .  .  y  y   y  y .
+pkg_tools  y  .  y  y  .  y  y  .  y y  y   y  y y  y   y    .  y   .  y  y  y   y  y .
+  portage  y  y  y  y  .  y  .  .  y y  .   .  y y  y   y    y  y   .  .  y  y   y  y .
+sun_tools  y  .  y  y  .  y  .  y  . y  .   .  . .  .   .    .  .   .  .  .  .   .  . y
+      yum  y  y  y  y  y  y  y  .  y y  .   .  y y  y   y    y  y   y  .  y  y   y  y y
+   zypper  y  .  y  .  y  .  .  .  y y  .   .  y y  y   y    .  .   .  .  y  .   y  y y
+````
+
+## Support
+
+Please use the ticket system at https://github.com/icy/pacapt/issues .
+
+## Development
+
+Make sure you read some instructions in `CONTRIBUTING.md`.
 
 A development script can be compiled from the source code.
 
@@ -73,19 +117,8 @@ $ install -m755 ./pacapt.dev /usr/local/bin/pacapt
 ````
 
 Please read the sample `Makefile` for some details.
-Some conventions are provided in `CONTRIBUTING.md`.
 
-## USAGE
-
-After installing `pacapt` script, you can get help message by
-
-    $ pacapt -h # or pacapt --help
-
-## SUPPORT
-
-Please use the ticket system at https://github.com/icy/pacapt/issues .
-
-## LICENSE
+## License
 
 This work is released under the terms of Fair license
 (http://opensource.org/licenses/fair).
@@ -97,6 +130,7 @@ This work is released under the terms of Fair license
 * Anh K. Huynh
 * Arcterus
 * Cuong Manh Le
+* Daniel YC Lin
 * Danny George
 * Darshit Shah
 * Hà-Dương Nguyễn
