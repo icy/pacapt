@@ -94,6 +94,20 @@ zypper_Rs() {
   fi
 }
 
+zypper_Rns() {
+  files=`rpm -ql $@`
+  zypper remove "$@" --clean-deps
+  if [[ "$?" != 0 ]]; then
+    return 1;
+  fi
+  # Remove config files
+  for file in files; do
+    if [ -f $file ]; then
+      rm -rf $file
+    fi
+  done
+}
+
 zypper_Suy() {
   zypper dup "$@"
 }
