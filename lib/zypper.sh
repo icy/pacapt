@@ -32,6 +32,10 @@ zypper_Qm() {
   | grep 'System Packages'
 }
 
+zypper_Qo() {
+  rpm -qf $@
+}
+
 zypper_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     zypper search -i "$@" \
