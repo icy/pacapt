@@ -40,6 +40,10 @@ zypper_Qp() {
   rpm -qip $@
 }
 
+zypper_Qs() {
+  zypper search --installed-only $@
+}
+
 zypper_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     zypper search -i "$@" \
