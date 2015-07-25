@@ -36,6 +36,10 @@ zypper_Qo() {
   rpm -qf $@
 }
 
+zypper_Qp() {
+  rpm -qip $@
+}
+
 zypper_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     zypper search -i "$@" \
