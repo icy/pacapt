@@ -15,6 +15,10 @@ _zypper_init() {
   :
 }
 
+zypper_Qc() {
+  rpm -q --changelog $@
+}
+
 zypper_Qi() {
   zypper info "$@"
 }
