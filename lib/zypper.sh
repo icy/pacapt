@@ -23,6 +23,10 @@ zypper_Qi() {
   zypper info "$@"
 }
 
+zypper_Ql() {
+  rpm -ql $@
+}
+
 zypper_Qu() {
   zypper list-updates "$@"
 }
