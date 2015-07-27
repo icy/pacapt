@@ -112,6 +112,11 @@ zypper_Scc() {
   zypper clean "$@"
 }
 
+zypper_Sccc() {
+  # Not way to do this in zypper
+  _not_implemented
+}
+
 zypper_Si() {
   zypper info --requires "$@"
 }
