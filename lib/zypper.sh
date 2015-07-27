@@ -15,8 +15,16 @@ _zypper_init() {
   :
 }
 
+zypper_Qc() {
+  rpm -q --changelog $@
+}
+
 zypper_Qi() {
   zypper info "$@"
+}
+
+zypper_Ql() {
+  rpm -ql $@
 }
 
 zypper_Qu() {
@@ -26,6 +34,18 @@ zypper_Qu() {
 zypper_Qm() {
   zypper search -si "$@" \
   | grep 'System Packages'
+}
+
+zypper_Qo() {
+  rpm -qf $@
+}
+
+zypper_Qp() {
+  rpm -qip $@
+}
+
+zypper_Qs() {
+  zypper search --installed-only $@
 }
 
 zypper_Q() {
