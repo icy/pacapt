@@ -112,6 +112,10 @@ zypper_Scc() {
   zypper clean "$@"
 }
 
+zypper_Si() {
+  zypper info --requires "$@"
+}
+
 zypper_S() {
   zypper install $_TOPT "$@"
 }
