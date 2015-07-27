@@ -116,6 +116,14 @@ zypper_Si() {
   zypper info --requires "$@"
 }
 
+zypper_Sii() {
+  # Ugly and slow, but does the trick
+  local packages=`zypper pa -R | cut -d \| -f 3 | tr -s '\n' ' '`
+  for package in $packages; do
+    zypper info --requires "$package" | grep -q "$@" && echo $package
+  done
+}
+
 zypper_S() {
   zypper install $_TOPT "$@"
 }
