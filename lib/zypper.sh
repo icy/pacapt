@@ -88,6 +88,14 @@ zypper_Sy() {
   zypper refresh "$@"
 }
 
+zypper_Sl() {
+  if [ $# -eq 0 ]; then
+    zypper pa -R
+  else
+    zypper pa -r "$@"
+  fi
+}
+
 zypper_Ss() {
   zypper search "$@"
 }
