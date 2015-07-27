@@ -88,8 +88,20 @@ zypper_Sy() {
   zypper refresh "$@"
 }
 
+zypper_Sl() {
+  if [ $# -eq 0 ]; then
+    zypper pa -R
+  else
+    zypper pa -r "$@"
+  fi
+}
+
 zypper_Ss() {
   zypper search "$@"
+}
+
+zypper_Su() {
+  zypper --no-refresh dup "$@"
 }
 
 zypper_Sc() {
@@ -98,6 +110,23 @@ zypper_Sc() {
 
 zypper_Scc() {
   zypper clean "$@"
+}
+
+zypper_Sccc() {
+  # Not way to do this in zypper
+  _not_implemented
+}
+
+zypper_Si() {
+  zypper info --requires "$@"
+}
+
+zypper_Sii() {
+  # Ugly and slow, but does the trick
+  local packages=`zypper pa -R | cut -d \| -f 3 | tr -s '\n' ' '`
+  for package in $packages; do
+    zypper info --requires "$package" | grep -q "$@" && echo $package
+  done
 }
 
 zypper_S() {
