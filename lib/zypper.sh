@@ -100,6 +100,10 @@ zypper_Ss() {
   zypper search "$@"
 }
 
+zypper_Su() {
+  zypper --no-refresh dup "$@"
+}
+
 zypper_Sc() {
   zypper clean "$@"
 }
