@@ -89,7 +89,7 @@ zypper_Sy() {
 }
 
 zypper_Sl() {
-  if [ $# -eq 0 ]; then
+  if [[ $# -eq 0 ]]; then
     zypper pa -R
   else
     zypper pa -r "$@"
@@ -123,9 +123,11 @@ zypper_Si() {
 
 zypper_Sii() {
   # Ugly and slow, but does the trick
-  local packages=`zypper pa -R | cut -d \| -f 3 | tr -s '\n' ' '`
+  local packages="$(zypper pa -R | cut -d \| -f 3 | tr -s '\n' ' ')"
+
   for package in $packages; do
-    zypper info --requires "$package" | grep -q "$@" && echo $package
+    zypper info --requires "$package" \
+    | grep -q "$@" && echo $package
   done
 }
 
