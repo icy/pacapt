@@ -53,8 +53,8 @@ cat <<EOF
 
 # Copyright (C) 2010 - $(date +%Y) \\
 $( \
-  cat README.md \
-  | sed -e '1,/AUTHORS/d' \
+  < README.md \
+  sed -e '1,/AUTHORS/d' \
   | $GREP '*' \
   | sed -e 's,*,#                           |,g')
 #
