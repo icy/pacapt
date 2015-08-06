@@ -70,8 +70,9 @@ _check_file() {
   }
 
   _simple_check "$_file" || return
-  _perl_check || return
   _shellcheck < "$_file"
 }
+
+_perl_check || exit 1
 
 "$@"
