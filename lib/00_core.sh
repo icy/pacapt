@@ -12,7 +12,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
 _error() {
-  echo >&2 "Error: $@"
+  echo >&2 "Error: $*"
   return 1
 }
 

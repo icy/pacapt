@@ -66,7 +66,7 @@ dpkg_Qu() {
 }
 
 dpkg_Qs() {
-  dpkg-query -W "*$@*" | cut -f1
+  dpkg-query -W "*${*}*" | cut -f1
 }
 
 dpkg_Rs() {
