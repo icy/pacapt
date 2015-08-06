@@ -77,5 +77,5 @@ shellcheck:
 
 	@for f in bin/*.sh lib/*.sh; do \
 			echo >&2 ":: Checking $$f..." ; \
-			cat "$$f" | ./bin/check.sh _check_file "$$f"; \
+			./bin/check.sh _check_file "$$f"; \
 		done
