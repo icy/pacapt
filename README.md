@@ -18,6 +18,9 @@
 
 An `Arch`'s pacman-like package manager for some `Unices`.
 Actually this `Bash` script provides a wrapper for system's package manager.
+For example, on `CentOS` machines, you can install `htop` with command
+
+    $ pacapt -S htop
 
 Instead of remembering various options/tools on different `OS`s, you only
 need a common way to manipulate packages. Not all options of the native
@@ -71,7 +74,13 @@ Some basic command line options
 
 * `-h` (`--help`): Print help message;
 * `-P`: Print list of suppoted operations;
-* `-V`: Print script version;
+* `-V`: Print script version
+
+Some popular options of the original `ArchLinux`'s `pacman` program
+are supported and listed in the table in the next section.
+A short description can be found at
+
+https://github.com/icy/pacapt/blob/ng/lib/help.txt.
 
 ## Implemented operations
 
