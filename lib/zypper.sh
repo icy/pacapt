@@ -81,8 +81,7 @@ zypper_Rn() {
   done < <(rpm -ql "$@")
 
   # Now remove the package per-se
-  zypper remove "$@" \
-  || return 1
+  zypper remove "$@"
 }
 
 zypper_Rs() {
