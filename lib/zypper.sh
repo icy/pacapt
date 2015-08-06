@@ -94,17 +94,14 @@ zypper_Rs() {
 }
 
 zypper_Rns() {
-  files=`rpm -ql $@`
-  zypper remove "$@" --clean-deps
-  if [[ "$?" != 0 ]]; then
-    return 1;
-  fi
-  # Remove config files
-  for file in files; do
-    if [ -f $file ]; then
-      rm -rf $file
+  # Remove configuration files
+  while read file; do
+    if [[ -f "$file" ]]; then
+      rm -fv "$file"
     fi
-  done
+  done < <(rpm -ql "$@")
+
+  zypper remove "$@" --clean-deps
 }
 
 zypper_Suy() {
