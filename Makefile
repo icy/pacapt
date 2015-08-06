@@ -72,3 +72,10 @@ clean:
 			*) exit 1;; \
 		esac ; \
 	fi
+
+shellcheck:
+
+	@for f in bin/*.sh lib/*.sh; do \
+			echo >&2 ":: Checking $$f..." ; \
+			cat "$$f" | ./bin/check.sh _shellcheck; \
+		done
