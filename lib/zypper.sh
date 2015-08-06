@@ -73,17 +73,16 @@ zypper_R() {
 }
 
 zypper_Rn() {
-  files=`rpm -ql $@`
-  zypper remove "$@"
-  if [[ "$?" != 0 ]]; then
-    return 1;
-  fi
-  # Remove config files
-  for file in files; do
-    if [ -f $file ]; then
-      rm -rf $file
+  # Remove configuration files
+  while read file; do
+    if [[ -f "$file" ]]; then
+      rm -fv "$file"
     fi
-  done
+  done < <(rpm -ql "$@")
+
+  # Now remove the package per-se
+  zypper remove "$@" \
+  || return 1
 }
 
 zypper_Rs() {
