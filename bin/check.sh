@@ -37,11 +37,24 @@ _shellcheck() {
       use JSON;
       my $stream = do { local $/; <>; };
       my $output = decode_json($stream);
+      my $colors = {
+          "error" => "\e[1;31m",
+          "warning" => "\e[1;33m",
+          "default" => "\e[0m",
+          "reset" => "\e[0m"
+          };
+
       foreach (keys @{$output}) {
         my $comment = @{$output}[$_];
-        printf("%7s %4d: line %4d col %2d, msg %s\n",
+        my $color = $colors->{$comment->{"level"}} || $colors->{"default"};
+
+        printf("%s%7s %4d: line %4d col %2d, msg %s%s\n",
+          $color,
           $comment->{"level"}, $comment->{"code"},
-          $comment->{"line"}, $comment->{"column"}, $comment->{"message"});
+          $comment->{"line"}, $comment->{"column"},
+          $comment->{"message"},
+          $colors->{"reset"}
+          );
       }
     '
 }
