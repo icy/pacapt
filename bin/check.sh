@@ -46,4 +46,17 @@ _shellcheck() {
     '
 }
 
+_check_file() {
+  local _file="${1:-/x/x/x/x/x/x/x/}"
+
+  [[ -f "$_file" ]] \
+  || {
+    echo >&2 ":: File not found '$_file'"
+    return 1
+  }
+
+  _simple_check "$_file" || return
+  _shellcheck < "$_file"
+}
+
 "$@"
