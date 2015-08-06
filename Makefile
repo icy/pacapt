@@ -4,12 +4,13 @@ DISTRO=debian:stable
 default:
 	@echo "This is an experimental Makefile. Use it at your own risk."
 	@echo ""
-	@echo "  pacapt.dev  : Generate development script"
-	@echo '  install.dev : Install development script into $$BINDIR'
-	@echo "  pacapt      : Generate stable script"
-	@echo '  install     : Install stable script into $$BINDIR'
-	@echo "  clean       : (Experimental) Remove git-ignored files"
-	@echo "  docker.i    : Launch interactive Docker container which mounts"
+	@echo "  pacapt.dev  : Generate development script."
+	@echo '  install.dev : Install development script into $$BINDIR.'
+	@echo "  pacapt      : Generate stable script."
+	@echo '  install     : Install stable script into $$BINDIR.'
+	@echo "  clean       : (Experimental) Remove git-ignored files."
+	@echo "  shellcheck  : Syntax and style checking. Use http://shellcheck.net/."
+	@echo "  docker.i    : Launch interactive Docker container which mounts."
 	@echo '                your local 'pacapt.dev' script to $$BINDIR/pacman.'
 	@echo ""
 	@echo "Environments"
