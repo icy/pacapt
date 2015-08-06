@@ -1,3 +1,7 @@
+## v2.1.7
+
+* `lib/zypper`: Complete query/removal options (Thanks to `Janne Heß`)
+
 ## v2.1.6
 
 * `lib/sun_tools`: `SunOS` support (Thanks to `Daniel YC Lin`)
