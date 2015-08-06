@@ -16,7 +16,7 @@ _zypper_init() {
 }
 
 zypper_Qc() {
-  rpm -q --changelog $@
+  rpm -q --changelog "$@"
 }
 
 zypper_Qi() {
@@ -24,7 +24,7 @@ zypper_Qi() {
 }
 
 zypper_Ql() {
-  rpm -ql $@
+  rpm -ql "$@"
 }
 
 zypper_Qu() {
@@ -37,15 +37,15 @@ zypper_Qm() {
 }
 
 zypper_Qo() {
-  rpm -qf $@
+  rpm -qf "$@"
 }
 
 zypper_Qp() {
-  rpm -qip $@
+  rpm -qip "$@"
 }
 
 zypper_Qs() {
-  zypper search --installed-only $@
+  zypper search --installed-only "$@"
 }
 
 zypper_Q() {
