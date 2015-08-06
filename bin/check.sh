@@ -40,6 +40,7 @@ _shellcheck() {
       my $colors = {
           "error" => "\e[1;31m",
           "warning" => "\e[1;33m",
+          "style" => "\e[1;36m",
           "default" => "\e[0m",
           "reset" => "\e[0m"
           };
