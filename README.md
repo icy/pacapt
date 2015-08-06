@@ -117,7 +117,7 @@ $ cd pacapt
 $ git checkout ng
 
 # compile the script
-$ ./compile.sh > pacapt.dev
+$ ./bin/compile.sh > pacapt.dev
 
 # check if syntax is good
 $ bash -n pacapt.dev

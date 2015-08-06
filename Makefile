@@ -20,8 +20,8 @@ default:
 
 # Build and install development script
 
-pacapt.dev: ./lib/*.sh ./lib/*.txt compile.sh
-	@./compile.sh > $(@)
+pacapt.dev: ./lib/*.sh ./lib/*.txt bin/compile.sh
+	@./bin/compile.sh > $(@)
 	@bash -n $(@)
 	@chmod 755 $(@)
 	@echo 1>&2 "The output file is '$(@)' (unstable version)"
@@ -36,8 +36,8 @@ install.dev: pacapt.dev
 
 # Build and install stable script
 
-pacapt: ./lib/*.sh ./lib/*.txt compile.sh
-	@./compile.sh > $(@)
+pacapt: ./lib/*.sh ./lib/*.txt bin/compile.sh
+	@./bin/compile.sh > $(@)
 	@bash -n $(@)
 	@chmod 755 $(@)
 	@echo 1>&2 "The output file is '$(@)' (stable version)"
