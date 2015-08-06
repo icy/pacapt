@@ -41,7 +41,7 @@ _shellcheck() {
         my $comment = @{$output}[$_];
         printf("%7s %4d: line %4d col %2d, msg %s\n",
           $comment->{"level"}, $comment->{"code"},
-          $comment->{"line"}, $comment->{"col"}, $comment->{"message"});
+          $comment->{"line"}, $comment->{"column"}, $comment->{"message"});
       }
     '
 }
