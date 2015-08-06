@@ -15,7 +15,7 @@ default:
 	@echo ""
 	@echo "Environments"
 	@echo ""
-	@echo "  VERSION     : Version informaiton. Default: git commit hash."
+	@echo "  VERSION     : Version information. Default: git commit hash."
 	@echo "  BINDIR      : Destination directory. Default: /usr/local/bin."
 	@echo "  DISTRO      : Container image. Default: debian:stable."
 
