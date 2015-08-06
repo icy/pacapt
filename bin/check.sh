@@ -10,7 +10,7 @@ _simple_check() {
 }
 
 _perl_check() {
-  perl -MURI::Escape -e 'exit(0)'
+  perl -MURI::Escape -MJSON -e 'exit(0)'
 }
 
 _shellcheck() {
@@ -56,6 +56,7 @@ _check_file() {
   }
 
   _simple_check "$_file" || return
+  _perl_check || return
   _shellcheck < "$_file"
 }
 
