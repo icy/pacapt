@@ -32,32 +32,40 @@ _shellcheck() {
     -H 'Referer: http://www.shellcheck.net/' \
     -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0' \
     -H 'X-Requested-With: XMLHttpRequest' \
-    --data "script=$_data" \
-  | perl -e '
-      use JSON;
-      my $stream = do { local $/; <>; };
-      my $output = decode_json($stream);
-      my $colors = {
-          "error" => "\e[1;31m",
-          "warning" => "\e[1;33m",
-          "style" => "\e[1;36m",
-          "default" => "\e[0m",
-          "reset" => "\e[0m"
-          };
+    --data "script=$_data"
+}
 
-      foreach (keys @{$output}) {
-        my $comment = @{$output}[$_];
-        my $color = $colors->{$comment->{"level"}} || $colors->{"default"};
+_shellcheck_output_format() {
+  perl -e '
+    use JSON;
+    my $stream = do { local $/; <>; };
+    my $output = decode_json($stream);
+    my $colors = {
+        "error" => "\e[1;31m",
+        "warning" => "\e[1;33m",
+        "style" => "\e[1;36m",
+        "default" => "\e[0m",
+        "reset" => "\e[0m"
+        };
 
-        printf("%s%7s %4d: line %4d col %2d, msg %s%s\n",
-          $color,
-          $comment->{"level"}, $comment->{"code"},
-          $comment->{"line"}, $comment->{"column"},
-          $comment->{"message"},
-          $colors->{"reset"}
-          );
-      }
-    '
+    foreach (keys @{$output}) {
+      my $comment = @{$output}[$_];
+      my $color = $colors->{$comment->{"level"}} || $colors->{"default"};
+
+      printf("%s%7s %4d: line %4d col %2d, msg %s%s\n",
+        $color,
+        $comment->{"level"}, $comment->{"code"},
+        $comment->{"line"}, $comment->{"column"},
+        $comment->{"message"},
+        $colors->{"reset"}
+        );
+    }
+  '
+}
+
+_has_shellcheck() {
+  shellcheck -V 2>/dev/null \
+  | grep http://www.shellcheck.net -q
 }
 
 _check_file() {
@@ -70,7 +78,12 @@ _check_file() {
   }
 
   _simple_check "$_file" || return
-  _shellcheck < "$_file"
+
+  if _has_shellcheck; then
+    shellcheck -f json "$_file" | _shellcheck_output_format
+  else
+    _shellcheck < "$_file" | _shellcheck_output_format
+  fi
 }
 
 _perl_check || exit 1
