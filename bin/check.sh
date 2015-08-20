@@ -64,8 +64,7 @@ _shellcheck_output_format() {
 }
 
 _has_shellcheck() {
-  shellcheck -V 2>/dev/null \
-  | grep http://www.shellcheck.net -q
+  command -v shellcheck >/dev/null 2>&1
 }
 
 _check_file() {
