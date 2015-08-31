@@ -98,7 +98,7 @@ cave_R() {
   cave uninstall "$@" \
   && echo "Control-C to stop uninstalling..." \
   && sleep 2s \
-  cave uninstall -x "$@"
+  && cave uninstall -x "$@"
 }
 
 cave_Si() {
