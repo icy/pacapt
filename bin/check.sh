@@ -88,6 +88,7 @@ _check_file() {
 
 _check_files() {
   while (( $# )); do
+    echo >&2 ":: $FUNCNAME: $1"
     _check_file "$1"
     shift
   done
