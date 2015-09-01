@@ -176,6 +176,9 @@ while :; do
 
   shift
 
+  # FIXME: This is to support a special case, e.g,
+  #   pacman -Su -- -w
+  #
   if [[ -n "$_POPT" && -n "$_SOPT" ]]; then
     if [[ -z "$_TOPT" && "${1-}" == "-w" ]]; then
       shift
