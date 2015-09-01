@@ -157,9 +157,8 @@ _translate_noconfirm() {
   local _ret=0
 
   case "$_PACMAN" in
-  "dpkg")
-    _opt="--yes";;
-
+  "dpkg") _opt="--yes";;
+  "yum")  _opt="--assumeyes";;
   *)
     _opt=""
     _ret=1
@@ -168,7 +167,7 @@ _translate_noconfirm() {
   esac
 
   echo $_opt
-  return "$_ret"
+  return $_ret
 }
 
 _translate_all() {
