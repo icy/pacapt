@@ -104,35 +104,17 @@ _translate_w() {
   local _ret=0
 
   case "$_PACMAN" in
-  "dpkg")
-    _opt="-d"
-    ;;
-  "cave")
-    _opt="-f"
-    ;;
-
-  "yum")
-    _opt="--downloadonly"
+  "dpkg")     _opt="-d";;
+  "cave")     _opt="-f";;
+  "macports") _opt="fetch";;
+  "portage")  _opt="--fetchonly";;
+  "zypper")   _opt="--download-only";;
+  "pkgng")    _opt="fetch";;
+  "yum")     _opt="--downloadonly";
     if ! rpm -q 'yum-downloadonly' >/dev/null 2>&1; then
       _error "'yum-downloadonly' package is required when '-w' is used."
       _ret=1
     fi
-    ;;
-
-  "macports")
-    _opt="fetch"
-    ;;
-
-  "portage")
-    _opt="--fetchonly"
-    ;;
-
-  "zypper")
-    _opt="--download-only"
-    ;;
-
-  "pkgng")
-    _opt="fetch"
     ;;
 
   *)
