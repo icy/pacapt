@@ -26,6 +26,7 @@ _POPT="" # primary operation
 _SOPT="" # secondary operation
 _TOPT="" # options for operations
 _EOPT="" # extra options (directly given to package manager)
+         # these options will be translated
 _PACMAN="" # name of the package manager
 
 _PACMAN_detect \
@@ -186,7 +187,7 @@ while :; do
     fi
     break
   # Don't have anything from the first argument. Something wrong.
-  elif [[ -z "${_POPT}${_SOPT}${_TOPT}${_EOPT}" ]]; then
+  elif [[ -z "${_POPT}${_SOPT}${_TOPT}" ]]; then
     break
   fi
 done
