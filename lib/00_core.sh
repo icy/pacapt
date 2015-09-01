@@ -141,8 +141,12 @@ _translate_noconfirm() {
   local _ret=0
 
   case "$_PACMAN" in
-  "dpkg") _opt="--yes";;
-  "yum")  _opt="--assumeyes";;
+  # FIXME: Update environment DEBIAN_FRONTEND=noninteractive
+  "dpkg")   _opt="--yes";;
+  "yum")    _opt="--assumeyes";;
+  # FIXME: pacman has 'assume-yes' and 'assume-no'
+  # FIXME: zypper has better mode. Similar to dpkg (Debian).
+  "zypper") _opt="--non-interactive";;
   *)
     _opt=""
     _ret=1
