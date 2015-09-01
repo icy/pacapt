@@ -26,7 +26,7 @@ _POPT="" # primary operation
 _SOPT="" # secondary operation
 _TOPT="" # options for operations
 _EOPT="" # extra options (directly given to package manager)
-         # these options will be translated
+         # these options will be translated by (_translate_all) method.
 _PACMAN="" # name of the package manager
 
 _PACMAN_detect \
@@ -49,6 +49,13 @@ while :; do
     _help
     exit 0
     ;;
+
+  "--noconfirm")
+    shift
+    _EOPT="$_EOPT:noconfirm:"
+    continue
+    ;;
+
   "-"|"--")
     shift
     break
@@ -161,15 +168,13 @@ while :; do
       fi
       ;;
 
-    w)
-      _translate_w
-      ;;
-
-    v)
-      _EOPT="-v"
+    w|v)
+      _EOPT="$_EOPT:$_opt:"
       ;;
 
     *)
+      # FIXME: If option is unknown, we will break the loop
+      # FIXME: and this option will be used by the native program.
       _die "pacapt: Unknown option '$_opt'."
       ;;
     esac
@@ -177,16 +182,18 @@ while :; do
 
   shift
 
-  # FIXME: This is to support a special case, e.g,
-  #   pacman -Su -- -w
-  #
+  # If the primary option and the secondary are known
+  # we would break the argument detection, but for sure we will look
+  # forward to see there is anything interesting...
   if [[ -n "$_POPT" && -n "$_SOPT" ]]; then
-    if [[ -z "$_TOPT" && "${1-}" == "-w" ]]; then
-      shift
-      _translate_w
-    fi
-    break
-  # Don't have anything from the first argument. Something wrong.
+    case "${1:-}" in
+    "-w"|"--noconfirm") ;;
+    *) break;;
+    esac
+
+  # Don't have anything from the **first** argument. Something wrong.
+  # FIXME: This means that user must enter at least primary action
+  # FIXME: or secondary action in the very first part...
   elif [[ -z "${_POPT}${_SOPT}${_TOPT}" ]]; then
     break
   fi
@@ -200,6 +207,8 @@ _validate_operation "${_PACMAN}_${_POPT}${_SOPT}" \
   _not_implemented
   exit 1
 }
+
+_translate_all || exit
 
 # pacman man page (examples) says:
 #   "pacman -Syu gpm = Update package list, upgrade all packages,

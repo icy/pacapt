@@ -97,43 +97,88 @@ _PACMAN_detect() {
 # Translate -w option. Please note this is only valid when installing
 # a package from remote, aka. when '-S' operation is performed.
 _translate_w() {
+
+  echo "$_EOPT" | $GREP -q ":w:" || return 0
+
+  local _opt=
+  local _ret=0
+
   case "$_PACMAN" in
   "dpkg")
-    _TOPT="-d"
+    _opt="-d"
     ;;
   "cave")
-    _TOPT="-f"
+    _opt="-f"
     ;;
 
   "yum")
-    _TOPT="--downloadonly"
+    _opt="--downloadonly"
     if ! rpm -q 'yum-downloadonly' >/dev/null 2>&1; then
       _error "'yum-downloadonly' package is required when '-w' is used."
-      exit 1
+      _ret=1
     fi
     ;;
 
   "macports")
-    _TOPT="fetch"
+    _opt="fetch"
     ;;
 
   "portage")
-    _TOPT="--fetchonly"
+    _opt="--fetchonly"
     ;;
 
   "zypper")
-    _TOPT="--download-only"
+    _opt="--download-only"
     ;;
 
   "pkgng")
-    _TOPT="fetch"
+    _opt="fetch"
     ;;
 
   *)
-    _TOPT=""
-    return 1
+    _opt=""
+    _ret=1
+
+    _error "$_PACMAN: Option '-w' is not supported/implemented."
     ;;
   esac
+
+  echo $_opt
+  return "$_ret"
+}
+
+# Translate the --noconfirm option.
+# FIXME: does "yes | pacapt" just help?
+_translate_nonconfirm() {
+
+  echo "$_EOPT" | $GREP -q ":noconfirm:" || return 0
+
+  local _opt=
+  local _ret=0
+
+  case "$_PACMAN" in
+  "dpkg")
+    _opt="--yes"
+    ;;
+
+  *)
+    _opt=""
+    _ret=1
+    _error "$_PACMAN: Option '--noconfirm' is not supported/implemented."
+    ;;
+  esac
+
+  echo $_opt
+  return "$_ret"
+}
+
+_translate_all() {
+  local _args=""
+
+  _args="$(_translate_w)" || return 1
+  _args="$_args $(_translate_nonconfirm)" || return 1
+
+  export _EOPT="$_args"
 }
 
 _print_supported_operations() {
