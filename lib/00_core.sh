@@ -142,6 +142,7 @@ _translate_noconfirm() {
 
   case "$_PACMAN" in
   # FIXME: Update environment DEBIAN_FRONTEND=noninteractive
+  # FIXME: There is also --force-yes for a stronger case
   "dpkg")   _opt="--yes";;
   "yum")    _opt="--assumeyes";;
   # FIXME: pacman has 'assume-yes' and 'assume-no'
