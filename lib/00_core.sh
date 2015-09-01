@@ -149,7 +149,7 @@ _translate_w() {
 
 # Translate the --noconfirm option.
 # FIXME: does "yes | pacapt" just help?
-_translate_nonconfirm() {
+_translate_noconfirm() {
 
   echo "$_EOPT" | $GREP -q ":noconfirm:" || return 0
 
@@ -158,8 +158,7 @@ _translate_nonconfirm() {
 
   case "$_PACMAN" in
   "dpkg")
-    _opt="--yes"
-    ;;
+    _opt="--yes";;
 
   *)
     _opt=""
@@ -176,7 +175,7 @@ _translate_all() {
   local _args=""
 
   _args="$(_translate_w)" || return 1
-  _args="$_args $(_translate_nonconfirm)" || return 1
+  _args="$_args $(_translate_noconfirm)" || return 1
 
   export _EOPT="$_args"
 }
