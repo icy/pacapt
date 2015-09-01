@@ -86,6 +86,13 @@ _check_file() {
   fi
 }
 
+_check_files() {
+  while (( $# )); do
+    _check_file "$1"
+    shift
+  done
+}
+
 _perl_check || exit 1
 
 "$@"
