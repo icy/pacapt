@@ -67,6 +67,8 @@ homebrew_Q() {
   fi
 }
 
+# FIXME: make sure "join" does exit
+# FIXME: Add quoting support, be cause "join" can fail
 homebrew_Rs() {
   if [[ "$_TOPT" == "s" ]]; then
     brew rm "$@"
@@ -113,7 +115,9 @@ homebrew_Sccc() {
   # See more discussion in
   #   https://github.com/icy/pacapt/issues/47
 
-  local _dcache="$(brew --cache)"
+  local _dcache
+
+  _dcache="$(brew --cache)"
   case "$_dcache" in
   ""|"/"|" ")
     _error "$FUNCNAME: Unable to delete '$_dcache'."
