@@ -175,6 +175,7 @@ while :; do
     *)
       # FIXME: If option is unknown, we will break the loop
       # FIXME: and this option will be used by the native program.
+      # FIXME: break 2
       _die "pacapt: Unknown option '$_opt'."
       ;;
     esac
