@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Purpose: FreeBSD support
 # Author : Konrad Borowski
 # Date   : Dec 18 2013

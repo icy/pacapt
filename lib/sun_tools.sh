@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Purpose: SunOS support
 # Author : Daniel YC Lin <dlin.tw@gmail.com>
 # License: Fair license (http://www.opensource.org/licenses/fair)

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Purpose: Gentoo support
 # Author : Hà-Dương Nguyễn
 # License: Fair license (http://www.opensource.org/licenses/fair)

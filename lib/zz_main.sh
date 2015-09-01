@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Purpose: A wrapper for all Unix package managers
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)

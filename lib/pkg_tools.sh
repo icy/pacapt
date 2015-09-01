@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Purpose: OpenBSD support
 # Author : Somasis <somasissounds@gmail.com>
 # License: Fair license (http://www.opensource.org/licenses/fair)

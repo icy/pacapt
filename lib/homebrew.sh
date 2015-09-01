@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Purpose: Homebrew support
 # Author : James Pearson
 # License: Fair license (http://www.opensource.org/licenses/fair)
