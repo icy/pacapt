@@ -112,7 +112,20 @@ homebrew_Scc() {
 homebrew_Sccc() {
   # See more discussion in
   #   https://github.com/icy/pacapt/issues/47
-  rm -rf "$(brew --cache)/"
+
+  local _dcache="$(brew --cache)"
+  case "$_dcache" in
+  ""|"/"|" ")
+    _error "$FUNCNAME: Unable to delete '$_dcache'."
+    ;;
+
+  *)
+    # FIXME: This is quite stupid!!! But it's an easy way
+    # FIXME: to avoid some warning from #shellcheck.
+    # FIXME: Please note that, $_dcache is not empty now.
+    rm -rf "${_dcache:-/x/x/x/x/x/x/x/x/x/x/x//x/x/x/x/x/}/"
+    ;;
+  esac
 }
 
 homebrew_S() {
