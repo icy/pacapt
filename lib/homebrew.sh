@@ -28,7 +28,8 @@ homebrew_Ql() {
 homebrew_Qo() {
   local pkg prefix cellar
 
-  cd "$(dirname -- $(which "$@"))"
+  # FIXME: What happens if the file is not exectutable?
+  cd "$(dirname -- "$(which "$@")")"
   pkg="$(pwd -P)/$(basename -- "$@")"
   prefix="$(brew --prefix)"
   cellar="$(brew --cellar)"
