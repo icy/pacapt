@@ -131,6 +131,12 @@ _translate_w() {
   return "$_ret"
 }
 
+_translate_debug() {
+  echo "$_EOPT" | $GREP -q ":v:" || return 0
+
+  echo "-v"
+}
+
 # Translate the --noconfirm option.
 # FIXME: does "yes | pacapt" just help?
 _translate_noconfirm() {
@@ -164,7 +170,8 @@ _translate_all() {
   local _args=""
 
   _args="$(_translate_w)" || return 1
-  _args="$_args $(_translate_noconfirm)" || return 1
+  _args="${_args:+$_args }$(_translate_noconfirm)" || return 1
+  _args="${_args:+$_args }$(_translate_debug)" || return 1
 
   export _EOPT="$_args"
 }
