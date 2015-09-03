@@ -1,8 +1,8 @@
 ## v2.2.7
 
 * `lib/zypper`: Complete query/removal options (Thanks to `Janne Heß`);
-* Support `--noconfirm` option for `pkgng`, `yum`, `dpkg` and `zypper`;
 * New option `--noconfirm` to help non-interactive scripts (Cf. #43).
+  Currently available for `pkgng`, `yum`, `dpkg` and `zypper`.
 
 For developers:
 
