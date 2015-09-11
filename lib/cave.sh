@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Purpose: Gentoo (+ Paludis) / Exherbo support
 # Author : Somasis <somasissounds@gmail.com>
 # License: Fair license (http://www.opensource.org/licenses/fair)
@@ -98,7 +100,7 @@ cave_R() {
   cave uninstall "$@" \
   && echo "Control-C to stop uninstalling..." \
   && sleep 2s \
-  cave uninstall -x "$@"
+  && cave uninstall -x "$@"
 }
 
 cave_Si() {

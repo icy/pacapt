@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Purpose: Macports support
 # Author : 10sr
 # License: Fair license (http://www.opensource.org/licenses/fair)

@@ -53,8 +53,8 @@ cat <<EOF
 
 # Copyright (C) 2010 - $(date +%Y) \\
 $( \
-  cat README.md \
-  | sed -e '1,/AUTHORS/d' \
+  < README.md \
+  sed -e '1,/AUTHORS/d' \
   | $GREP '*' \
   | sed -e 's,*,#                           |,g')
 #
@@ -96,7 +96,7 @@ for L in ./lib/*.sh; do
   [[ "${L##*/}" != "zz_main.sh" ]] \
   || continue
 
-  $GREP -v '^#' $L
+  $GREP -v '^#' "$L"
 done
 
 ########################################################################
@@ -122,7 +122,7 @@ for L in ./lib/*.sh; do
     _operations+=( "$F" )
   done < \
     <(
-      $GREP -hE "^${_PKGNAME}_[^ \t]+\(\)" $L \
+      $GREP -hE "^${_PKGNAME}_[^ \t]+\(\)" "$L" \
        | $AWK -F '(' '{print $1}'
     )
 done
@@ -158,7 +158,7 @@ fi
 ########################################################################
 
 _soperations="$(
-  echo ${_operations[@]} \
+  echo "${_operations[@]}" \
   | sed -e 's# #\n#g' \
   | sed -e 's#^.*_\([A-Z][a-z]*\)#\1#g' \
   | sort -u

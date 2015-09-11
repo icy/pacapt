@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Purpose: Debian / Ubuntu support
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
@@ -66,7 +68,7 @@ dpkg_Qu() {
 }
 
 dpkg_Qs() {
-  dpkg-query -W "*$@*" | cut -f1
+  dpkg-query -W "*${*}*" | cut -f1
 }
 
 dpkg_Rs() {

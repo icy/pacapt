@@ -4,24 +4,25 @@ DISTRO=debian:stable
 default:
 	@echo "This is an experimental Makefile. Use it at your own risk."
 	@echo ""
-	@echo "  pacapt.dev  : Generate development script"
-	@echo '  install.dev : Install development script into $$BINDIR'
-	@echo "  pacapt      : Generate stable script"
-	@echo '  install     : Install stable script into $$BINDIR'
-	@echo "  clean       : (Experimental) Remove git-ignored files"
-	@echo "  docker.i    : Launch interactive Docker container which mounts"
+	@echo "  pacapt.dev  : Generate development script."
+	@echo '  install.dev : Install development script into $$BINDIR.'
+	@echo "  pacapt      : Generate stable script."
+	@echo '  install     : Install stable script into $$BINDIR.'
+	@echo "  clean       : (Experimental) Remove git-ignored files."
+	@echo "  shellcheck  : Syntax and style checking. Use http://shellcheck.net/."
+	@echo "  docker.i    : Launch interactive Docker container which mounts."
 	@echo '                your local 'pacapt.dev' script to $$BINDIR/pacman.'
 	@echo ""
 	@echo "Environments"
 	@echo ""
-	@echo "  VERSION     : Version informaiton. Default: git commit hash."
+	@echo "  VERSION     : Version information. Default: git commit hash."
 	@echo "  BINDIR      : Destination directory. Default: /usr/local/bin."
 	@echo "  DISTRO      : Container image. Default: debian:stable."
 
 # Build and install development script
 
-pacapt.dev: ./lib/*.sh ./lib/*.txt compile.sh
-	@./compile.sh > $(@)
+pacapt.dev: ./lib/*.sh ./lib/*.txt bin/compile.sh
+	@./bin/compile.sh > $(@)
 	@bash -n $(@)
 	@chmod 755 $(@)
 	@echo 1>&2 "The output file is '$(@)' (unstable version)"
@@ -36,8 +37,8 @@ install.dev: pacapt.dev
 
 # Build and install stable script
 
-pacapt: ./lib/*.sh ./lib/*.txt compile.sh
-	@./compile.sh > $(@)
+pacapt: ./lib/*.sh ./lib/*.txt bin/compile.sh
+	@./bin/compile.sh > $(@)
 	@bash -n $(@)
 	@chmod 755 $(@)
 	@echo 1>&2 "The output file is '$(@)' (stable version)"
@@ -72,3 +73,6 @@ clean:
 			*) exit 1;; \
 		esac ; \
 	fi
+
+shellcheck:
+	@./bin/check.sh _check_files bin/*.sh lib/*.sh

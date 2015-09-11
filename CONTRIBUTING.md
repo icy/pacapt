@@ -8,17 +8,19 @@
 
 ## Coding style
 
-1. Don't use tab or smart tab
-1. Use `2-space` instead of a tab
-1. Contribute to library file under `./lib/` directory
-1. We try to follow the convention from
-    https://github.com/icy/bash-coding-style
+1. Don't use tab or smart tab;
+1. Use `2-space` instead of a tab;
+1. Contribute to library file under `./lib/` directory;
+1. We try to follow the convention from:
+    https://github.com/icy/bash-coding-style.
 
 ## Testing. Docker
 
+1. Use `make shellcheck` if you have a network connection,
+   and enough `Perl` packages (`JSON`, `URI::Escape`) on your system;
 1. Use `PACAPT_DEBUG=foo` where `foo` is a package manager
    (`dpkg`, `pacman`, `zypper`, ...) to print what `pacapt` will do.
-   Use `PACAPT_DEBUG=auto` for auto-detection.
+   Use `PACAPT_DEBUG=auto` for auto-detection;
 1. You can use `docker` for testing, by mounting the `pacapt.dev` script
    to the container. See also `docker.i` section in `Makefile`. Example:
 

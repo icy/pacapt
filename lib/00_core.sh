@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Purpose: Provide some basic functions
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
@@ -12,7 +14,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
 _error() {
-  echo >&2 "Error: $@"
+  echo >&2 "Error: $*"
   return 1
 }
 
@@ -96,44 +98,82 @@ _PACMAN_detect() {
 
 # Translate -w option. Please note this is only valid when installing
 # a package from remote, aka. when '-S' operation is performed.
-_tranlate_w() {
-  case "$_PACMAN" in
-  "dpkg")
-    _TOPT="-d"
-    ;;
-  "cave")
-    _TOPT="-f"
-    ;;
+_translate_w() {
 
-  "yum")
-    _TOPT="--downloadonly"
+  echo "$_EOPT" | $GREP -q ":w:" || return 0
+
+  local _opt=
+  local _ret=0
+
+  case "$_PACMAN" in
+  "dpkg")     _opt="-d";;
+  "cave")     _opt="-f";;
+  "macports") _opt="fetch";;
+  "portage")  _opt="--fetchonly";;
+  "zypper")   _opt="--download-only";;
+  "pkgng")    _opt="fetch";;
+  "yum")     _opt="--downloadonly";
     if ! rpm -q 'yum-downloadonly' >/dev/null 2>&1; then
       _error "'yum-downloadonly' package is required when '-w' is used."
-      exit 1
+      _ret=1
     fi
     ;;
 
-  "macports")
-    _TOPT="fetch"
-    ;;
-
-  "portage")
-    _TOPT="--fetchonly"
-    ;;
-
-  "zypper")
-    _TOPT="--download-only"
-    ;;
-
-  "pkgng")
-    _TOPT="fetch"
-    ;;
-
   *)
-    _TOPT=""
-    return 1
+    _opt=""
+    _ret=1
+
+    _error "$_PACMAN: Option '-w' is not supported/implemented."
     ;;
   esac
+
+  echo $_opt
+  return "$_ret"
+}
+
+_translate_debug() {
+  echo "$_EOPT" | $GREP -q ":v:" || return 0
+
+  echo "-v"
+}
+
+# Translate the --noconfirm option.
+# FIXME: does "yes | pacapt" just help?
+_translate_noconfirm() {
+
+  echo "$_EOPT" | $GREP -q ":noconfirm:" || return 0
+
+  local _opt=
+  local _ret=0
+
+  case "$_PACMAN" in
+  # FIXME: Update environment DEBIAN_FRONTEND=noninteractive
+  # FIXME: There is also --force-yes for a stronger case
+  "dpkg")   _opt="--yes";;
+  "yum")    _opt="--assumeyes";;
+  # FIXME: pacman has 'assume-yes' and 'assume-no'
+  # FIXME: zypper has better mode. Similar to dpkg (Debian).
+  "zypper") _opt="--non-interactive";;
+  "pkgng")  _opt="-y";;
+  *)
+    _opt=""
+    _ret=1
+    _error "$_PACMAN: Option '--noconfirm' is not supported/implemented."
+    ;;
+  esac
+
+  echo $_opt
+  return $_ret
+}
+
+_translate_all() {
+  local _args=""
+
+  _args="$(_translate_w)" || return 1
+  _args="${_args:+$_args }$(_translate_noconfirm)" || return 1
+  _args="${_args:+$_args }$(_translate_debug)" || return 1
+
+  export _EOPT="$_args"
 }
 
 _print_supported_operations() {

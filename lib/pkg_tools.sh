@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Purpose: OpenBSD support
 # Author : Somasis <somasissounds@gmail.com>
 # License: Fair license (http://www.opensource.org/licenses/fair)
@@ -16,7 +18,8 @@ _pkg_tools_init() {
 }
 
 pkg_tools_Qi() {
-  export PKG_PATH= # disable searching mirrors for packages
+  # disable searching mirrors for packages
+  export PKG_PATH=
   pkg_info "$@"
 }
 
@@ -44,11 +47,11 @@ pkg_tools_Q() {
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
   if [[ "$_TOPT" == "q" && ! -z "$@" ]]; then
-    pkg_info -q | grep "^$@-"
+    pkg_info -q | grep "^${*}-"
   elif [[ "$_TOPT" == "q" && -z "$@" ]];then
     pkg_info -q
   elif [[ "$_TOPT" == "" && ! -z "$@" ]]; then
-    pkg_info | grep "^$@-"
+    pkg_info | grep "^${*}-"
   elif [[ "$_TOPT" == "" && -z "$@" ]];then
     pkg_info
   else

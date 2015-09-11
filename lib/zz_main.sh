@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Purpose: A wrapper for all Unix package managers
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
@@ -26,6 +28,7 @@ _POPT="" # primary operation
 _SOPT="" # secondary operation
 _TOPT="" # options for operations
 _EOPT="" # extra options (directly given to package manager)
+         # these options will be translated by (_translate_all) method.
 _PACMAN="" # name of the package manager
 
 _PACMAN_detect \
@@ -48,6 +51,13 @@ while :; do
     _help
     exit 0
     ;;
+
+  "--noconfirm")
+    shift
+    _EOPT="$_EOPT:noconfirm:"
+    continue
+    ;;
+
   "-"|"--")
     shift
     break
@@ -160,15 +170,14 @@ while :; do
       fi
       ;;
 
-    w)
-      _tranlate_w
-      ;;
-
-    v)
-      _EOPT="-v"
+    w|v)
+      _EOPT="$_EOPT:$_opt:"
       ;;
 
     *)
+      # FIXME: If option is unknown, we will break the loop
+      # FIXME: and this option will be used by the native program.
+      # FIXME: break 2
       _die "pacapt: Unknown option '$_opt'."
       ;;
     esac
@@ -176,14 +185,19 @@ while :; do
 
   shift
 
+  # If the primary option and the secondary are known
+  # we would break the argument detection, but for sure we will look
+  # forward to see there is anything interesting...
   if [[ -n "$_POPT" && -n "$_SOPT" ]]; then
-    if [[ -z "$_TOPT" && "${1-}" == "-w" ]]; then
-      shift
-      _tranlate_w
-    fi
-    break
-  # Don't have anything from the first argument. Something wrong.
-  elif [[ -z "${_POPT}${_SOPT}${_TOPT}${_EOPT}" ]]; then
+    case "${1:-}" in
+    "-w"|"--noconfirm") ;;
+    *) break;;
+    esac
+
+  # Don't have anything from the **first** argument. Something wrong.
+  # FIXME: This means that user must enter at least primary action
+  # FIXME: or secondary action in the very first part...
+  elif [[ -z "${_POPT}${_SOPT}${_TOPT}" ]]; then
     break
   fi
 done
@@ -196,6 +210,8 @@ _validate_operation "${_PACMAN}_${_POPT}${_SOPT}" \
   _not_implemented
   exit 1
 }
+
+_translate_all || exit
 
 # pacman man page (examples) says:
 #   "pacman -Syu gpm = Update package list, upgrade all packages,
@@ -212,14 +228,14 @@ if [[ -n "$@" ]]; then
     echo 1>&2 "  The -Sy/u options refresh and/or upgrade all packages."
     echo 1>&2 "  To install packages as well, use separate commands:"
     echo 1>&2
-    echo 1>&2 "    $0 -S$_SOPT; $0 -S $@"
+    echo 1>&2 "    $0 -S$_SOPT; $0 -S ${*}"
     echo 1>&2 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
   esac
 fi
 
 if [[ -n "$PACAPT_DEBUG" ]]; then
   echo "pacapt: $_PACMAN, p=$_POPT, s=$_SOPT, t=$_TOPT, e=$_EOPT"
-  echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT $@'"
+  echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT ${*}'"
   declare -f "${_PACMAN}_${_POPT}${_SOPT}"
 else
   "_${_PACMAN}_init"

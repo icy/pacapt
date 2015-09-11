@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Purpose: Homebrew support
 # Author : James Pearson
 # License: Fair license (http://www.opensource.org/licenses/fair)
@@ -26,7 +28,8 @@ homebrew_Ql() {
 homebrew_Qo() {
   local pkg prefix cellar
 
-  cd "$(dirname -- $(which "$@"))"
+  # FIXME: What happens if the file is not exectutable?
+  cd "$(dirname -- "$(which "$@")")"
   pkg="$(pwd -P)/$(basename -- "$@")"
   prefix="$(brew --prefix)"
   cellar="$(brew --cellar)"
@@ -64,6 +67,8 @@ homebrew_Q() {
   fi
 }
 
+# FIXME: make sure "join" does exit
+# FIXME: Add quoting support, be cause "join" can fail
 homebrew_Rs() {
   if [[ "$_TOPT" == "s" ]]; then
     brew rm "$@"
@@ -109,7 +114,22 @@ homebrew_Scc() {
 homebrew_Sccc() {
   # See more discussion in
   #   https://github.com/icy/pacapt/issues/47
-  rm -rf "$(brew --cache)/"
+
+  local _dcache
+
+  _dcache="$(brew --cache)"
+  case "$_dcache" in
+  ""|"/"|" ")
+    _error "$FUNCNAME: Unable to delete '$_dcache'."
+    ;;
+
+  *)
+    # FIXME: This is quite stupid!!! But it's an easy way
+    # FIXME: to avoid some warning from #shellcheck.
+    # FIXME: Please note that, $_dcache is not empty now.
+    rm -rf "${_dcache:-/x/x/x/x/x/x/x/x/x/x/x//x/x/x/x/x/}/"
+    ;;
+  esac
 }
 
 homebrew_S() {

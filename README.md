@@ -18,6 +18,9 @@
 
 An `Arch`'s pacman-like package manager for some `Unices`.
 Actually this `Bash` script provides a wrapper for system's package manager.
+For example, on `CentOS` machines, you can install `htop` with command
+
+    $ pacapt -S htop
 
 Instead of remembering various options/tools on different `OS`s, you only
 need a common way to manipulate packages. Not all options of the native
@@ -52,12 +55,12 @@ The tool supports the following package managers:
 3. Use the stable script
 
 ````
-$ wget -O /usr/local/bin/pacapt \
-    https://github.com/icy/pacapt/raw/ng/pacapt
+$ sudo wget -O /usr/local/bin/pacapt \
+https://github.com/icy/pacapt/raw/ng/pacapt
 
-$ chmod 755 /usr/local/bin/pacapt
+$ sudo chmod 755 /usr/local/bin/pacapt
 
-$ ln -sv /usr/local/bin/pacapt /usr/local/bin/pacman || true
+$ sudo ln -sv /usr/local/bin/pacapt /usr/local/bin/pacman || true
 ````
 
 This scrip is actually picked from the latest stable branch,
@@ -71,7 +74,13 @@ Some basic command line options
 
 * `-h` (`--help`): Print help message;
 * `-P`: Print list of suppoted operations;
-* `-V`: Print script version;
+* `-V`: Print script version
+
+Some popular options of the original `ArchLinux`'s `pacman` program
+are supported and listed in the table in the next section.
+A short description can be found at
+
+https://github.com/icy/pacapt/blob/ng/lib/help.txt.
 
 ## Implemented operations
 
@@ -87,7 +96,7 @@ pkg_tools  y  .  y  y  .  y  y  .  y y  y   y  y y  y   y    .  y   .  y  y  y  
   portage  y  y  y  y  .  y  .  .  y y  .   .  y y  y   y    y  y   .  .  y  y   y  y .
 sun_tools  y  .  y  y  .  y  .  y  . y  .   .  . .  .   .    .  .   .  .  .  .   .  . y
       yum  y  y  y  y  y  y  y  .  y y  .   .  y y  y   y    y  y   y  .  y  y   y  y y
-   zypper  y  .  y  .  y  .  .  .  y y  .   .  y y  y   y    .  .   .  .  y  .   y  y y
+   zypper  y  y  y  y  y  y  y  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y y
 ````
 
 ## Support
@@ -108,7 +117,7 @@ $ cd pacapt
 $ git checkout ng
 
 # compile the script
-$ ./compile.sh > pacapt.dev
+$ ./bin/compile.sh > pacapt.dev
 
 # check if syntax is good
 $ bash -n pacapt.dev
@@ -133,9 +142,11 @@ This work is released under the terms of Fair license
 * Daniel YC Lin
 * Danny George
 * Darshit Shah
+* GijsTimmers
 * Hà-Dương Nguyễn
 * Huy Ngô
 * James Pearson
+* Janne Heß
 * Karol Blazewicz
 * Konrad Borowski
 * Somasis
