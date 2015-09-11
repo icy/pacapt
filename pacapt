@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.1.6
+# Version: 2.2.7
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2015 \
@@ -15,9 +15,11 @@
 #                           | Daniel YC Lin
 #                           | Danny George
 #                           | Darshit Shah
+#                           | GijsTimmers
 #                           | Hà-Dương Nguyễn
 #                           | Huy Ngô
 #                           | James Pearson
+#                           | Janne Heß
 #                           | Karol Blazewicz
 #                           | Konrad Borowski
 #                           | Somasis
@@ -30,7 +32,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.1.6'
+export PACAPT_VERSION='2.2.7'
 
 _help() {
   cat <<'EOF'
@@ -106,8 +108,9 @@ EOF
 
 
 
+
 _error() {
-  echo >&2 "Error: $@"
+  echo >&2 "Error: $*"
   return 1
 }
 
@@ -186,44 +189,80 @@ _PACMAN_detect() {
   return 1
 }
 
-_tranlate_w() {
-  case "$_PACMAN" in
-  "dpkg")
-    _TOPT="-d"
-    ;;
-  "cave")
-    _TOPT="-f"
-    ;;
+_translate_w() {
 
-  "yum")
-    _TOPT="--downloadonly"
+  echo "$_EOPT" | $GREP -q ":w:" || return 0
+
+  local _opt=
+  local _ret=0
+
+  case "$_PACMAN" in
+  "dpkg")     _opt="-d";;
+  "cave")     _opt="-f";;
+  "macports") _opt="fetch";;
+  "portage")  _opt="--fetchonly";;
+  "zypper")   _opt="--download-only";;
+  "pkgng")    _opt="fetch";;
+  "yum")     _opt="--downloadonly";
     if ! rpm -q 'yum-downloadonly' >/dev/null 2>&1; then
       _error "'yum-downloadonly' package is required when '-w' is used."
-      exit 1
+      _ret=1
     fi
     ;;
 
-  "macports")
-    _TOPT="fetch"
-    ;;
-
-  "portage")
-    _TOPT="--fetchonly"
-    ;;
-
-  "zypper")
-    _TOPT="--download-only"
-    ;;
-
-  "pkgng")
-    _TOPT="fetch"
-    ;;
-
   *)
-    _TOPT=""
-    return 1
+    _opt=""
+    _ret=1
+
+    _error "$_PACMAN: Option '-w' is not supported/implemented."
     ;;
   esac
+
+  echo $_opt
+  return "$_ret"
+}
+
+_translate_debug() {
+  echo "$_EOPT" | $GREP -q ":v:" || return 0
+
+  echo "-v"
+}
+
+_translate_noconfirm() {
+
+  echo "$_EOPT" | $GREP -q ":noconfirm:" || return 0
+
+  local _opt=
+  local _ret=0
+
+  case "$_PACMAN" in
+  # FIXME: Update environment DEBIAN_FRONTEND=noninteractive
+  # FIXME: There is also --force-yes for a stronger case
+  "dpkg")   _opt="--yes";;
+  "yum")    _opt="--assumeyes";;
+  # FIXME: pacman has 'assume-yes' and 'assume-no'
+  # FIXME: zypper has better mode. Similar to dpkg (Debian).
+  "zypper") _opt="--non-interactive";;
+  "pkgng")  _opt="-y";;
+  *)
+    _opt=""
+    _ret=1
+    _error "$_PACMAN: Option '--noconfirm' is not supported/implemented."
+    ;;
+  esac
+
+  echo $_opt
+  return $_ret
+}
+
+_translate_all() {
+  local _args=""
+
+  _args="$(_translate_w)" || return 1
+  _args="${_args:+$_args }$(_translate_noconfirm)" || return 1
+  _args="${_args:+$_args }$(_translate_debug)" || return 1
+
+  export _EOPT="$_args"
 }
 
 _print_supported_operations() {
@@ -251,6 +290,7 @@ entity that uses the works is notified of this instrument.
 DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 EOF
 }
+
 
 
 _cave_init() {
@@ -339,7 +379,7 @@ cave_R() {
   cave uninstall "$@" \
   && echo "Control-C to stop uninstalling..." \
   && sleep 2s \
-  cave uninstall -x "$@"
+  && cave uninstall -x "$@"
 }
 
 cave_Si() {
@@ -397,6 +437,7 @@ dnf_S() {
 }
 
 
+
 _dpkg_init() {
   :
 }
@@ -452,7 +493,7 @@ dpkg_Qu() {
 }
 
 dpkg_Qs() {
-  dpkg-query -W "*$@*" | cut -f1
+  dpkg-query -W "*${*}*" | cut -f1
 }
 
 dpkg_Rs() {
@@ -524,6 +565,7 @@ dpkg_Sii() {
 }
 
 
+
 _homebrew_init() {
   :
 }
@@ -539,7 +581,8 @@ homebrew_Ql() {
 homebrew_Qo() {
   local pkg prefix cellar
 
-  cd "$(dirname -- $(which "$@"))"
+  # FIXME: What happens if the file is not exectutable?
+  cd "$(dirname -- "$(which "$@")")"
   pkg="$(pwd -P)/$(basename -- "$@")"
   prefix="$(brew --prefix)"
   cellar="$(brew --cellar)"
@@ -622,12 +665,28 @@ homebrew_Scc() {
 homebrew_Sccc() {
   # See more discussion in
   #   https://github.com/icy/pacapt/issues/47
-  rm -rf "$(brew --cache)/"
+
+  local _dcache
+
+  _dcache="$(brew --cache)"
+  case "$_dcache" in
+  ""|"/"|" ")
+    _error "$FUNCNAME: Unable to delete '$_dcache'."
+    ;;
+
+  *)
+    # FIXME: This is quite stupid!!! But it's an easy way
+    # FIXME: to avoid some warning from #shellcheck.
+    # FIXME: Please note that, $_dcache is not empty now.
+    rm -rf "${_dcache:-/x/x/x/x/x/x/x/x/x/x/x//x/x/x/x/x/}/"
+    ;;
+  esac
 }
 
 homebrew_S() {
   brew install $_TOPT "$@"
 }
+
 
 
 _macports_init() {
@@ -698,6 +757,7 @@ macports_S() {
     port install "$@"
   fi
 }
+
 
 
 _pkgng_init() {
@@ -784,12 +844,14 @@ pkgng_S() {
 }
 
 
+
 _pkg_tools_init() {
   :
 }
 
 pkg_tools_Qi() {
-  export PKG_PATH= # disable searching mirrors for packages
+  # disable searching mirrors for packages
+  export PKG_PATH=
   pkg_info "$@"
 }
 
@@ -817,11 +879,11 @@ pkg_tools_Q() {
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
   if [[ "$_TOPT" == "q" && ! -z "$@" ]]; then
-    pkg_info -q | grep "^$@-"
+    pkg_info -q | grep "^${*}-"
   elif [[ "$_TOPT" == "q" && -z "$@" ]];then
     pkg_info -q
   elif [[ "$_TOPT" == "" && ! -z "$@" ]]; then
-    pkg_info | grep "^$@-"
+    pkg_info | grep "^${*}-"
   elif [[ "$_TOPT" == "" && -z "$@" ]];then
     pkg_info
   else
@@ -904,6 +966,7 @@ pkg_tools_Scc() {
 pkg_tools_S() {
   pkg_add "$@"
 }
+
 
 
 _portage_init() {
@@ -1028,6 +1091,7 @@ portage_S() {
 }
 
 
+
 _sun_tools_init() {
   # The purpose of `if` is to make sure this function
   # can be invoked on other system (Linux, BSD).
@@ -1072,6 +1136,7 @@ sun_tools_R() {
 sun_tools_U() {
   pkgadd "$@"
 }
+
 
 
 _yum_init() {
@@ -1173,12 +1238,21 @@ yum_Sii() {
 }
 
 
+
 _zypper_init() {
   :
 }
 
+zypper_Qc() {
+  rpm -q --changelog "$@"
+}
+
 zypper_Qi() {
   zypper info "$@"
+}
+
+zypper_Ql() {
+  rpm -ql "$@"
 }
 
 zypper_Qu() {
@@ -1188,6 +1262,18 @@ zypper_Qu() {
 zypper_Qm() {
   zypper search -si "$@" \
   | grep 'System Packages'
+}
+
+zypper_Qo() {
+  rpm -qf "$@"
+}
+
+zypper_Qp() {
+  rpm -qip "$@"
+}
+
+zypper_Qs() {
+  zypper search --installed-only "$@"
 }
 
 zypper_Q() {
@@ -1214,12 +1300,35 @@ zypper_R() {
   zypper remove "$@"
 }
 
+zypper_Rn() {
+  # Remove configuration files
+  while read file; do
+    if [[ -f "$file" ]]; then
+      rm -fv "$file"
+    fi
+  done < <(rpm -ql "$@")
+
+  # Now remove the package per-se
+  zypper remove "$@"
+}
+
 zypper_Rs() {
   if [[ "$_TOPT" == "s" ]]; then
     zypper remove "$@" --clean-deps
   else
     _not_implemented
   fi
+}
+
+zypper_Rns() {
+  # Remove configuration files
+  while read file; do
+    if [[ -f "$file" ]]; then
+      rm -fv "$file"
+    fi
+  done < <(rpm -ql "$@")
+
+  zypper remove "$@" --clean-deps
 }
 
 zypper_Suy() {
@@ -1230,8 +1339,20 @@ zypper_Sy() {
   zypper refresh "$@"
 }
 
+zypper_Sl() {
+  if [[ $# -eq 0 ]]; then
+    zypper pa -R
+  else
+    zypper pa -r "$@"
+  fi
+}
+
 zypper_Ss() {
   zypper search "$@"
+}
+
+zypper_Su() {
+  zypper --no-refresh dup "$@"
 }
 
 zypper_Sc() {
@@ -1240,6 +1361,26 @@ zypper_Sc() {
 
 zypper_Scc() {
   zypper clean "$@"
+}
+
+zypper_Sccc() {
+  # Not way to do this in zypper
+  _not_implemented
+}
+
+zypper_Si() {
+  zypper info --requires "$@"
+}
+
+zypper_Sii() {
+  # Ugly and slow, but does the trick
+  local packages=
+
+  packages="$(zypper pa -R | cut -d \| -f 3 | tr -s '\n' ' ')"
+  for package in $packages; do
+    zypper info --requires "$package" \
+    | grep -q "$@" && echo $package
+  done
 }
 
 zypper_S() {
@@ -1407,23 +1548,36 @@ _validate_operation() {
   "yum_S") ;;
   "yum_U") ;;
   "yum_Sii") ;;
+  "zypper_Qc") ;;
   "zypper_Qi") ;;
+  "zypper_Ql") ;;
   "zypper_Qu") ;;
   "zypper_Qm") ;;
+  "zypper_Qo") ;;
+  "zypper_Qp") ;;
+  "zypper_Qs") ;;
   "zypper_Q") ;;
   "zypper_Rs") ;;
   "zypper_R") ;;
+  "zypper_Rn") ;;
   "zypper_Rs") ;;
+  "zypper_Rns") ;;
   "zypper_Suy") ;;
   "zypper_Sy") ;;
+  "zypper_Sl") ;;
   "zypper_Ss") ;;
+  "zypper_Su") ;;
   "zypper_Sc") ;;
   "zypper_Scc") ;;
+  "zypper_Sccc") ;;
+  "zypper_Si") ;;
+  "zypper_Sii") ;;
   "zypper_S") ;;
   "zypper_U") ;;
   *) return 1 ;;
   esac
 }
+
 
 
 set -u
@@ -1441,6 +1595,7 @@ _POPT="" # primary operation
 _SOPT="" # secondary operation
 _TOPT="" # options for operations
 _EOPT="" # extra options (directly given to package manager)
+         # these options will be translated by (_translate_all) method.
 _PACMAN="" # name of the package manager
 
 _PACMAN_detect \
@@ -1463,6 +1618,13 @@ while :; do
     _help
     exit 0
     ;;
+
+  "--noconfirm")
+    shift
+    _EOPT="$_EOPT:noconfirm:"
+    continue
+    ;;
+
   "-"|"--")
     shift
     break
@@ -1575,15 +1737,14 @@ while :; do
       fi
       ;;
 
-    w)
-      _tranlate_w
-      ;;
-
-    v)
-      _EOPT="-v"
+    w|v)
+      _EOPT="$_EOPT:$_opt:"
       ;;
 
     *)
+      # FIXME: If option is unknown, we will break the loop
+      # FIXME: and this option will be used by the native program.
+      # FIXME: break 2
       _die "pacapt: Unknown option '$_opt'."
       ;;
     esac
@@ -1591,14 +1752,19 @@ while :; do
 
   shift
 
+  # If the primary option and the secondary are known
+  # we would break the argument detection, but for sure we will look
+  # forward to see there is anything interesting...
   if [[ -n "$_POPT" && -n "$_SOPT" ]]; then
-    if [[ -z "$_TOPT" && "${1-}" == "-w" ]]; then
-      shift
-      _tranlate_w
-    fi
-    break
-  # Don't have anything from the first argument. Something wrong.
-  elif [[ -z "${_POPT}${_SOPT}${_TOPT}${_EOPT}" ]]; then
+    case "${1:-}" in
+    "-w"|"--noconfirm") ;;
+    *) break;;
+    esac
+
+  # Don't have anything from the **first** argument. Something wrong.
+  # FIXME: This means that user must enter at least primary action
+  # FIXME: or secondary action in the very first part...
+  elif [[ -z "${_POPT}${_SOPT}${_TOPT}" ]]; then
     break
   fi
 done
@@ -1612,6 +1778,8 @@ _validate_operation "${_PACMAN}_${_POPT}${_SOPT}" \
   exit 1
 }
 
+_translate_all || exit
+
 if [[ -n "$@" ]]; then
   case "${_POPT}${_SOPT}" in
   "Su"|"Sy"|"Suy")
@@ -1619,14 +1787,14 @@ if [[ -n "$@" ]]; then
     echo 1>&2 "  The -Sy/u options refresh and/or upgrade all packages."
     echo 1>&2 "  To install packages as well, use separate commands:"
     echo 1>&2
-    echo 1>&2 "    $0 -S$_SOPT; $0 -S $@"
+    echo 1>&2 "    $0 -S$_SOPT; $0 -S ${*}"
     echo 1>&2 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
   esac
 fi
 
 if [[ -n "$PACAPT_DEBUG" ]]; then
   echo "pacapt: $_PACMAN, p=$_POPT, s=$_SOPT, t=$_TOPT, e=$_EOPT"
-  echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT $@'"
+  echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT ${*}'"
   declare -f "${_PACMAN}_${_POPT}${_SOPT}"
 else
   "_${_PACMAN}_init"
