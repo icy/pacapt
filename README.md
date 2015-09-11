@@ -142,6 +142,7 @@ This work is released under the terms of Fair license
 * Daniel YC Lin
 * Danny George
 * Darshit Shah
+* GijsTimmers
 * Hà-Dương Nguyễn
 * Huy Ngô
 * James Pearson
