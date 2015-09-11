@@ -66,9 +66,6 @@ _shellcheck_output_format() {
 # See discussion in https://github.com/icy/pacapt/pull/59
 _has_shellcheck() {
   command -v shellcheck >/dev/null 2>&1
-
-  # shellcheck -V 2>/dev/null \
-  # | grep -q http://www.shellcheck.net
 }
 
 _check_file() {
