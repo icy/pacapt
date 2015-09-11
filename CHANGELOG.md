@@ -1,6 +1,7 @@
 ## v2.2.7
 
 * `lib/zypper`: Complete query/removal options (Thanks to `Janne Heß`);
+* `lib/cave`: Fix an issue with `-R` option;
 * New option `--noconfirm` to help non-interactive scripts (Cf. #43).
   Currently available for `pkgng`, `yum`, `dpkg` and `zypper`.
 
