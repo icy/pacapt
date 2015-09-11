@@ -55,12 +55,12 @@ The tool supports the following package managers:
 3. Use the stable script
 
 ````
-$ wget -O /usr/local/bin/pacapt \
-    https://github.com/icy/pacapt/raw/ng/pacapt
+$ sudo wget -O /usr/local/bin/pacapt \
+https://github.com/icy/pacapt/raw/ng/pacapt
 
-$ chmod 755 /usr/local/bin/pacapt
+$ sudo chmod 755 /usr/local/bin/pacapt
 
-$ ln -sv /usr/local/bin/pacapt /usr/local/bin/pacman || true
+$ sudo ln -sv /usr/local/bin/pacapt /usr/local/bin/pacman || true
 ````
 
 This scrip is actually picked from the latest stable branch,
