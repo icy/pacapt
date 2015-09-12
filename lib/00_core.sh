@@ -112,7 +112,7 @@ _translate_w() {
   "portage")  _opt="--fetchonly";;
   "zypper")   _opt="--download-only";;
   "pkgng")    _opt="fetch";;
-  "yum")     _opt="--downloadonly";
+  "yum")      _opt="--downloadonly";
     if ! rpm -q 'yum-downloadonly' >/dev/null 2>&1; then
       _error "'yum-downloadonly' package is required when '-w' is used."
       _ret=1
