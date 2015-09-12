@@ -122,7 +122,7 @@ $ ./bin/compile.sh > pacapt.dev
 # check if syntax is good
 $ bash -n pacapt.dev
 
-$ install -m755 ./pacapt.dev /usr/local/bin/pacapt
+$ sudo install -m755 ./pacapt.dev /usr/local/bin/pacapt
 ````
 
 Please read the sample `Makefile` for some details.
