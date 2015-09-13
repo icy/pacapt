@@ -78,9 +78,10 @@ Some basic command line options
 
 Some popular options of the original `ArchLinux`'s `pacman` program
 are supported and listed in the table in the next section.
+
 A short description can be found at
 
-https://github.com/icy/pacapt/blob/ng/lib/help.txt.
+  https://github.com/icy/pacapt/blob/ng/lib/help.txt.
 
 ## Implemented operations
 

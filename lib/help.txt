@@ -41,6 +41,7 @@ OPERATIONS
 OPTIONS
 
     -w              download packages but don't install them
+    --noconfirm     don't wait for user's confirmation
 
 EXAMPLES
 
