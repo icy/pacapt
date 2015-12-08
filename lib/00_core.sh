@@ -66,7 +66,7 @@ _PACMAN_detect() {
   _issue2pacman cave "Exherbo Linux" && return
   _issue2pacman yum "CentOS" && return
   _issue2pacman yum "Red Hat" && return
-  _issue2pacman yum "Fedora" && return
+#  _issue2pacman yum "Fedora" && return
   _issue2pacman zypper "SUSE" && return
   _issue2pacman pkg_tools "OpenBSD" && return
   _issue2pacman pkg_tools "Bitrig" && return
@@ -82,6 +82,7 @@ _PACMAN_detect() {
 
   [[ -x "/usr/bin/apt-get" ]] && _PACMAN="dpkg" && return
   [[ -x "/usr/bin/cave" ]] && _PACMAN="cave" && return
+  [[ -x "/usr/bin/dnf" ]] && _PACMAN="dnf" && return
   [[ -x "/usr/bin/yum" ]] && _PACMAN="yum" && return
   [[ -x "/opt/local/bin/port" ]] && _PACMAN="macports" && return
   [[ -x "/usr/bin/emerge" ]] && _PACMAN="portage" && return
@@ -150,6 +151,7 @@ _translate_noconfirm() {
   # FIXME: Update environment DEBIAN_FRONTEND=noninteractive
   # FIXME: There is also --force-yes for a stronger case
   "dpkg")   _opt="--yes";;
+  "dnf")    _opt="--assumeyes";;
   "yum")    _opt="--assumeyes";;
   # FIXME: pacman has 'assume-yes' and 'assume-no'
   # FIXME: zypper has better mode. Similar to dpkg (Debian).
