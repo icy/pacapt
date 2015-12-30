@@ -63,7 +63,7 @@ $ sudo chmod 755 /usr/local/bin/pacapt
 $ sudo ln -sv /usr/local/bin/pacapt /usr/local/bin/pacman || true
 ````
 
-This scrip is actually picked from the latest stable branch,
+This script is actually picked from the latest stable branch,
 which is `v2.0` at the moment. If you want to compile a script
 from its components, please make sure you use a correct branch.
 See `CONTRIBUTING.md` for details.
