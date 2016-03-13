@@ -118,3 +118,7 @@ apk_Sy() {
 apk_Sw() {
   apk fetch -- "$@"
 }
+
+apk_U() {
+  apk add --allow-untrusted -- "$@"
+}
