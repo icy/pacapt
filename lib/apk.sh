@@ -19,7 +19,7 @@ _apk_init() {
 }
 
 apk_Q() {
-  if [[ "$_TOPT" == "" ]]; then
+  if [[ -z "$_TOPT" ]]; then
     apk info
   else
     _not_implemented
@@ -27,35 +27,35 @@ apk_Q() {
 }
 
 apk_Qi() {
-  apk_Si "$@"
+  apk info -a -- "$@"
 }
 
 apk_Ql() {
-  apk info -L "$@"
+  apk info -L -- "$@"
 }
 
 apk_Qo() {
-  apk info --who-owns "$@"
+  apk info --who-owns -- "$@"
 }
 
 apk_Qs() {
-  apk info "*$@*"
+  apk info -- "*$@*"
 }
 
 apk_R() {
-  apk del "$@"
+  apk del -- "$@"
 }
 
 apk_Rn() {
-  apk del --purge "$@"
+  apk del --purge -- "$@"
 }
 
 apk_Rns() {
-  apk del --purge -r "$@"
+  apk del --purge -r -- "$@"
 }
 
 apk_Rs() {
-  apk del -r "$@"
+  apk del -r -- "$@"
 }
 
 apk_S() {
@@ -68,7 +68,7 @@ apk_S() {
 }
 
 apk_Sc() {
-  apk cache -v clean "$@"
+  apk cache -v clean
 }
 
 apk_Scc() {
@@ -76,27 +76,27 @@ apk_Scc() {
 }
 
 apk_Sccc() {
-  rm -rf /var/cache/apk/*
+  apk_Scc
 }
 
 apk_Si() {
-  apk info -a "$@"
+  apk_Qi "$@"
 }
 
 apk_Sii() {
-  apk info -r "$@"
+  apk info -r -- "$@"
 }
 
 apk_Sl() {
-  apk search -v "$@"
+  apk search -v -- "$@"
 }
 
 apk_Ss() {
-  apk search -v "$@"
+  apk_Sl "$@"
 }
 
 apk_Su() {
-  apk upgrade "$@"
+  apk upgrade
 }
 
 apk_Suy() {
@@ -113,5 +113,5 @@ apk_Sy() {
 }
 
 apk_Sw() {
-  apk fetch "$@"
+  apk fetch -- "$@"
 }
