@@ -70,6 +70,7 @@ _PACMAN_detect() {
   _issue2pacman zypper "SUSE" && return
   _issue2pacman pkg_tools "OpenBSD" && return
   _issue2pacman pkg_tools "Bitrig" && return
+  _issue2pacman apk "Alpine Linux" && return
 
   [[ -z "$_PACMAN" ]] || return
 
@@ -91,6 +92,7 @@ _PACMAN_detect() {
   # make sure pkg_add is after pkgng, FreeBSD base comes with it until converted
   [[ -x "/usr/sbin/pkg_add" ]] && _PACMAN="pkg_tools" && return
   [[ -x "/usr/sbin/pkgadd" ]] && _PACMAN="sun_tools" && return
+  [[ -x "/sbin/apk" ]] && _PACMAN="apk" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
@@ -119,7 +121,7 @@ _translate_w() {
       _ret=1
     fi
     ;;
-
+  "apk")      _opt="fetch";;
   *)
     _opt=""
     _ret=1
