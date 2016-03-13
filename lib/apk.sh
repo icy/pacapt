@@ -104,11 +104,10 @@ apk_Su() {
 }
 
 apk_Suy() {
-  apk update
   if [ "$#" -gt 0 ]; then
-    apk add --upgrade "$@"
+    apk add -U -u -- "$@"
   else
-    apk upgrade
+    apk upgrade -U -a
   fi
 }
 
