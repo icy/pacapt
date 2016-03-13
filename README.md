@@ -47,6 +47,7 @@ The tool supports the following package managers:
 * `cave`          by `Exherbo Linux`
 * `pkg_tools`     by `OpenBSD`
 * `sun_tools`     by `Solaris(SunOS)`
+* `apk`           by `Alpine Linux`
 
 ## Installation
 
@@ -87,6 +88,7 @@ A short description can be found at
 
 ````
            Q Qc Qi Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Si Sii Sl Ss Su Suy Sy U
+      apk  y  .  y  y  .  y  .  y  . y  y   y  y y  y   y    y  y   y  y  y  y   y  y .
      cave  y  .  y  y  .  y  y  y  y y  y   y  y y  y   y    y  y   .  .  y  y   y  y y
       dnf  .  .  .  .  .  .  .  .  . .  .   .  . y  .   .    .  .   .  .  .  .   .  . .
      dpkg  y  .  y  y  .  y  y  y  y y  y   y  y y  y   y    y  y   y  .  y  y   y  y y
@@ -139,6 +141,7 @@ This work is released under the terms of Fair license
 * Alexander Dupuy
 * Anh K. Huynh
 * Arcterus
+* Carl X. Su
 * Cuong Manh Le
 * Daniel YC Lin
 * Danny George
