@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Purpose: Support next-generation Alpine Linux apk package manager
-# Author : Cuong Manh Le <cuong.manhle.vn@gmail.com>
+# Author : Carl X. Su <bcbcarl@gmail.com>
+#          Cuong Manh Le <cuong.manhle.vn@gmail.com>
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
 
@@ -17,6 +18,50 @@ _apk_init() {
   :
 }
 
+apk_Q() {
+  if [[ -z "$_TOPT" ]]; then
+    apk info
+  else
+    _not_implemented
+  fi
+}
+
+apk_Qi() {
+  apk info -a -- "$@"
+}
+
+apk_Ql() {
+  apk info -L -- "$@"
+}
+
+apk_Qo() {
+  apk info --who-owns -- "$@"
+}
+
+apk_Qs() {
+  apk info -- "*$@*"
+}
+
+apk_Qu() {
+  apk version -l '<'
+}
+
+apk_R() {
+  apk del -- "$@"
+}
+
+apk_Rn() {
+  apk del --purge -- "$@"
+}
+
+apk_Rns() {
+  apk del --purge -r -- "$@"
+}
+
+apk_Rs() {
+  apk del -r -- "$@"
+}
+
 apk_S() {
   case ${_EOPT} in
     # Download only, _translate_w gave trailing spaces
@@ -26,39 +71,54 @@ apk_S() {
   esac
 }
 
-apk_Sy() {
-  apk update
+apk_Sc() {
+  apk cache -v clean
+}
+
+apk_Scc() {
+  rm -rf /var/cache/apk/*
+}
+
+apk_Sccc() {
+  apk_Scc
+}
+
+apk_Si() {
+  apk_Qi "$@"
+}
+
+apk_Sii() {
+  apk info -r -- "$@"
+}
+
+apk_Sl() {
+  apk search -v -- "$@"
+}
+
+apk_Ss() {
+  apk_Sl "$@"
+}
+
+apk_Su() {
+  apk upgrade
 }
 
 apk_Suy() {
-  apk update
   if [ "$#" -gt 0 ]; then
-    apk add --upgrade -- "$@"
+    apk add -U -u -- "$@"
   else
-    apk upgrade
+    apk upgrade -U -a
   fi
+}
+
+apk_Sy() {
+  apk update
 }
 
 apk_Sw() {
   apk fetch -- "$@"
 }
 
-apk_Si() {
-  apk info -a -- "$@"
-}
-
-apk_Ss() {
-  apk search -- "$@"
-}
-
-apk_Su() {
-  apk_Suy "$@"
-}
-
-apk_Qi() {
-  apk_Si "$@"
-}
-
-apk_R() {
-  apk del -- "$@"
+apk_U() {
+  apk add --allow-untrusted -- "$@"
 }
