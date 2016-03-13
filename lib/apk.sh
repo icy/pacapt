@@ -42,6 +42,10 @@ apk_Qs() {
   apk info -- "*$@*"
 }
 
+apk_Qu() {
+  apk version -l '<'
+}
+
 apk_R() {
   apk del -- "$@"
 }
