@@ -52,8 +52,8 @@ The tool supports the following package managers:
 ## Installation
 
 1. This script shouldn't be installed on an Arch-based system.
-2. On `FreeBSD`, please install `bash` package first
-3. Use the stable script
+2. On `FreeBSD` and `Alphine Linux`, please install `bash` package first.
+3. Use the stable script.
 
 ````
 $ sudo wget -O /usr/local/bin/pacapt \
@@ -86,11 +86,11 @@ A short description can be found at
 
 ## Implemented operations
 
-````
+```
            Q Qc Qi Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Si Sii Sl Ss Su Suy Sy U
       apk  y  .  y  y  .  y  .  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y y
      cave  y  .  y  y  .  y  y  y  y y  y   y  y y  y   y    y  y   .  .  y  y   y  y y
-      dnf  .  .  .  .  .  .  .  .  . .  .   .  . y  .   .    .  .   .  .  .  .   .  . .
+      dnf  y  y  y  y  y  y  y  .  y y  .   .  . y  y   y    y  y   .  y  y  y   y  y y
      dpkg  y  .  y  y  .  y  y  y  y y  y   y  y y  y   y    y  y   y  .  y  y   y  y y
  homebrew  y  y  y  y  .  y  .  y  y y  .   .  y y  y   y    y  y   .  .  y  y   y  y .
  macports  .  y  .  y  .  y  .  .  y y  .   .  y y  y   y    .  y   .  .  y  y   y  y .
@@ -100,7 +100,7 @@ pkg_tools  y  .  y  y  .  y  y  .  y y  y   y  y y  y   y    .  y   .  y  y  y  
 sun_tools  y  .  y  y  .  y  .  y  . y  .   .  . .  .   .    .  .   .  .  .  .   .  . y
       yum  y  y  y  y  y  y  y  .  y y  .   .  y y  y   y    y  y   y  .  y  y   y  y y
    zypper  y  y  y  y  y  y  y  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y y
-````
+```
 
 ## Support
 
