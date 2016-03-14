@@ -172,12 +172,14 @@ _translate_noconfirm() {
 
 _translate_all() {
   local _args=""
+  local _debug="$(_translate_debug)"
+  local _noconfirm="$(_translate_noconfirm)"
 
   _args="$(_translate_w)" || return 1
-  _args="${_args:+$_args }$(_translate_noconfirm)" || return 1
-  _args="${_args:+$_args }$(_translate_debug)" || return 1
+  _args="${_args}${_noconfirm:+ }${_noconfirm}" || return 1
+  _args="${_args}${_debug:+ }${_debug}" || return 1
 
-  export _EOPT="$_args"
+  export _EOPT="${_args# }"
 }
 
 _print_supported_operations() {

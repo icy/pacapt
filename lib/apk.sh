@@ -64,10 +64,10 @@ apk_Rs() {
 
 apk_S() {
   case ${_EOPT} in
-    # Download only, _translate_w gave trailing spaces
-    ("fetch "*) shift
-                apk fetch        -- "$@" ;;
-            (*) apk add   $_TOPT -- "$@" ;;
+    # Download only
+    ("fetch") shift
+              apk fetch        -- "$@" ;;
+          (*) apk add   $_TOPT -- "$@" ;;
   esac
 }
 
