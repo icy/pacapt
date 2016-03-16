@@ -66,7 +66,21 @@ _PACMAN_detect() {
   _issue2pacman cave "Exherbo Linux" && return
   _issue2pacman yum "CentOS" && return
   _issue2pacman yum "Red Hat" && return
-#  _issue2pacman yum "Fedora" && return
+  #
+  # FIXME: The multiple package issue.
+  #
+  # On #63, Huy commented out this line. This is because new generation
+  # of Fedora uses `dnf`, and `yum` becomes a legacy tool. On old Fedora
+  # system, `yum` is still detectable by looking up `yum` binary.
+  #
+  # I'm not sure how to support this case easily. Let's wait, e.g, 5 years
+  # from now to make `dnf` becomes a default? Oh no!
+  #
+  # And here why `pacman` is still smart. Debian has a set of tools.
+  # Fedora has `yum` (and a set of add-ons). Now Fedora moves to `dnf`.
+  # This means that a package manager is not a heart of a system ;)
+  #
+  # _issue2pacman yum "Fedora" && return
   _issue2pacman zypper "SUSE" && return
   _issue2pacman pkg_tools "OpenBSD" && return
   _issue2pacman pkg_tools "Bitrig" && return
