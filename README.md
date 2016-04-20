@@ -99,7 +99,7 @@ pkg_tools  y  .  y  y  .  y  y  .  y y  y   y  y y  y   y    .  y   .  y  y  y  
   portage  y  y  y  y  .  y  .  .  y y  .   .  y y  y   y    y  y   .  .  y  y   y  .  y .
 sun_tools  y  .  y  y  .  y  .  y  . y  .   .  . .  .   .    .  .   .  .  .  .   .  .  . y
       yum  y  y  y  y  y  y  y  .  y y  .   .  y y  y   y    y  y   y  .  y  y   y  .  y y
-   zypper  y  y  y  y  y  y  y  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  .  y y
+   zypper  y  y  y  y  y  y  y  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y  y y
 ```
 
 ## Support
