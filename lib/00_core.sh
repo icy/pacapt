@@ -96,6 +96,7 @@ _PACMAN_detect() {
   fi
 
   [[ -x "/usr/bin/apt-get" ]] && _PACMAN="dpkg" && return
+  [[ -x "/data/data/com.termux/files/usr/bin/apt-get" ]] && _PACMAN="dpkg" && return
   [[ -x "/usr/bin/cave" ]] && _PACMAN="cave" && return
   [[ -x "/usr/bin/dnf" ]] && _PACMAN="dnf" && return
   [[ -x "/usr/bin/yum" ]] && _PACMAN="yum" && return
