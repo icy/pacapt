@@ -1,6 +1,16 @@
+## v2.3.8
+
+* `lib/alpine`: Support `Alpine` distirubtion (Credit: `Carl X. Su`, `Cuong Manh Le`);
+* `lib/dnf`: Support new package manager on `Fedora` system (Credit: `Huy Ngô`);
+* `lib/termux`: Support `termux` on Android (Credit: `Jiawei Zhou`);
+
+For devepers:
+
+* Improve translation method `_translate_all`;
+
 ## v2.2.7
 
-* `lib/zypper`: Complete query/removal options (Thanks to `Janne Heß`);
+* `lib/zypper`: Complete query/removal options (Credit: `Janne Heß`);
 * `lib/cave`: Fix an issue with `-R` option;
 * New option `--noconfirm` to help non-interactive scripts (Cf. #43).
   Currently available for `pkgng`, `yum`, `dpkg` and `zypper`.
@@ -16,7 +26,7 @@ For developers:
 
 ## v2.1.6
 
-* `lib/sun_tools`: `SunOS` support (Thanks to `Daniel YC Lin`);
+* `lib/sun_tools`: `SunOS` support (Credit: `Daniel YC Lin`);
 * Fix a minor bug related to argument parsing (4287ff16e869a0960ea54233);
 * Improve documentation;
 * `lib/dnf`: Add some initial support;
@@ -32,7 +42,7 @@ For developers:
 
 ## v2.0.4
 
-* `openbsd/pkg_tools`: Add (Thanks to `Somasis`);
+* `openbsd/pkg_tools`: Add (Credit: `Somasis`);
 * `homebrew/Su*`: Use `--all` flag when upgrading;
 * `homebrew/*`: Some typo fixes;
 * `compile.sh`: `git` becomes optional (useful for `docker` tester.);
@@ -50,7 +60,7 @@ For developers:
 
 ## v2.0.2
 
-* `lib/zz_main`: Fix quoting issue (Thanks to `Cuong Manh Le`).
+* `lib/zz_main`: Fix quoting issue (Credit: `Cuong Manh Le`).
 
 ## v2.0.1
 
