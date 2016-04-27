@@ -52,7 +52,7 @@ The tool supports the following package managers:
 ## Installation
 
 1. This script shouldn't be installed on an Arch-based system.
-2. On `FreeBSD` and `Alphine Linux`, please install `bash` package first.
+2. On `FreeBSD` and `Alpine Linux`, please install `bash` package first.
 3. Use the stable script.
 
 ````
@@ -151,6 +151,7 @@ This work is released under the terms of Fair license
 * Huy Ngô
 * James Pearson
 * Janne Heß
+* Jiawei Zhou
 * Karol Blazewicz
 * Konrad Borowski
 * Somasis
