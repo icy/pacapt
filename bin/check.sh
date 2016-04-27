@@ -71,6 +71,8 @@ _has_shellcheck() {
 _check_file() {
   local _file="${1:-/x/x/x/x/x/x/x/}"
 
+  echo >&2 ":: $FUNCNAME: $1"
+
   [[ -f "$_file" ]] \
   || {
     echo >&2 ":: File not found '$_file'"
@@ -87,8 +89,12 @@ _check_file() {
 }
 
 _check_files() {
+  _has_shellcheck \
+  || {
+    echo >&2 ":: WARN: shellcheck not found."
+    echo >&2 ":: WARN: Scripts will be checked by remote web server."
+  }
   while (( $# )); do
-    echo >&2 ":: $FUNCNAME: $1"
     _check_file "$1"
     shift
   done
