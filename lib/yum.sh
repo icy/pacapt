@@ -31,6 +31,10 @@ yum_Qi() {
   yum info "$@"
 }
 
+yum_Qs() {
+  rpm -qa "*$@*"
+}
+
 yum_Ql() {
   rpm -ql "$@"
 }
