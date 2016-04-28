@@ -90,7 +90,7 @@ A short description can be found at
            Q Qc Qi Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Si Sii Sl Ss Su Suy Sw Sy U
       apk  y  .  y  y  .  y  .  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y  y y
      cave  y  .  y  y  .  y  y  y  y y  y   y  y y  y   y    y  y   .  .  y  y   y  .  y y
-      dnf  y  y  y  y  y  y  y  .  y y  .   .  . y  y   y    y  y   .  y  y  y   y  y  y y
+      dnf  y  y  y  y  y  y  y  y  y y  .   .  . y  y   y    y  y   .  y  y  y   y  y  y y
      dpkg  y  .  y  y  .  y  y  y  y y  y   y  y y  y   y    y  y   y  .  y  y   y  .  y y
  homebrew  y  y  y  y  .  y  .  y  y y  .   .  y y  y   y    y  y   .  .  y  y   y  .  y .
  macports  .  y  .  y  .  y  .  .  y y  .   .  y y  y   y    .  y   .  .  y  y   y  .  y .

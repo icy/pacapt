@@ -79,6 +79,10 @@ dnf_Qu() {
   dnf list updates "$@"
 }
 
+dnf_Qs() {
+  rpm -qa "*$@*"
+}
+
 dnf_Ql() {
   rpm -ql "$@"
 }
