@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Purpose: Check script for error
 # Author : Anh K. Huynh
