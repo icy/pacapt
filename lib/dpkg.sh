@@ -17,6 +17,10 @@ _dpkg_init() {
   :
 }
 
+# test.in -q
+# test.ou ^apt$
+# test.in
+# test.ou ^ii +apt +.+ubuntu
 dpkg_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     dpkg -l \
@@ -30,6 +34,10 @@ dpkg_Q() {
   fi
 }
 
+# test.in apt
+# test.ou ^Package: apt$
+# test.ou ^Status: install ok installed$
+# test.ou ^Priority: important$
 dpkg_Qi() {
   dpkg-query -s "$@"
 }
@@ -55,6 +63,8 @@ dpkg_Ql() {
     done
 }
 
+# test.in /bin/bash
+# test.ou ^bash: /bin/bash$
 dpkg_Qo() {
   dpkg-query -S "$@"
 }
@@ -87,6 +97,10 @@ dpkg_Rns() {
   apt-get --purge autoremove "$@"
 }
 
+# test.ex pacman -S htop
+# test.in htop
+# test.ex pacman -Qi htop
+# test.ou ^Status: deinstall
 dpkg_R() {
   apt-get remove "$@"
 }
