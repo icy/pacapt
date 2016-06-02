@@ -86,6 +86,9 @@ A short description can be found at
 
 ## Implemented operations
 
+_(Note: This table is updated automatically. Please don't change it
+manually when you create new merge request.)_
+
 ```
            Q Qc Qi Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Si Sii Sl Ss Su Suy Sw Sy U
       apk  y  .  y  y  .  y  .  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y  y y
@@ -99,7 +102,7 @@ pkg_tools  y  .  y  y  .  y  y  .  y y  y   y  y y  y   y    .  y   .  y  y  y  
   portage  y  y  y  y  .  y  .  .  y y  .   .  y y  y   y    y  y   .  .  y  y   y  .  y .
 sun_tools  y  .  y  y  .  y  .  y  . y  .   .  . .  .   .    .  .   .  .  .  .   .  .  . y
       yum  y  y  y  y  y  y  y  y  y y  .   .  y y  y   y    y  y   y  .  y  y   y  .  y y
-   zypper  y  y  y  y  y  y  y  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  .  y y
+   zypper  y  y  y  y  y  y  y  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y  y y
 ```
 
 ## Support
