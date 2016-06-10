@@ -3,6 +3,8 @@
 * `lib/alpine`: Support `Alpine` distirubtion (Credit: `Carl X. Su`, `Cuong Manh Le`);
 * `lib/dnf`: Support new package manager on `Fedora` system (Credit: `Huy Ngô`);
 * `lib/termux`: Support `termux` on Android (Credit: `Jiawei Zhou`);
+* `lib/zypper`: New option `-Sw` (Forgot to merge #72);
+* `lib/yum`: New option `-Qs` (Credit: `Siôn Le Roux`);
 
 For devepers:
 
