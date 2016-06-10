@@ -8,7 +8,7 @@
 * [Support](#support)
 * [Development](#development)
 * [License](#license)
-* [Authors](#authors)
+* [Authors](#authors-contributors)
 
 ## Name
 
@@ -51,9 +51,9 @@ The tool supports the following package managers:
 
 ## Installation
 
-1. This script shouldn't be installed on an Arch-based system.
-2. On `FreeBSD` and `Alpine Linux`, please install `bash` package first.
-3. Use the stable script.
+1. This script shouldn't be installed on an Arch-based system;
+2. On `FreeBSD` and `Alpine Linux`, please install `bash` package first;
+3. Download the stable script and make it executable
 
 ````
 $ sudo wget -O /usr/local/bin/pacapt \
@@ -64,7 +64,11 @@ $ sudo chmod 755 /usr/local/bin/pacapt
 $ sudo ln -sv /usr/local/bin/pacapt /usr/local/bin/pacman || true
 ````
 
-This script is actually picked from the latest stable branch,
+On some system, `/usr/local/bin` is not in the search paths when the
+command is executed by `sudo`. You may want to use `/usr/bin/pacman`
+or `/usr/bin/pacapt` instead.
+
+This stable script is generated from the latest stable branch,
 which is `v2.0` at the moment. If you want to compile a script
 from its components, please make sure you use a correct branch.
 See `CONTRIBUTING.md` for details.
@@ -86,8 +90,10 @@ A short description can be found at
 
 ## Implemented operations
 
-_(Note: This table is updated automatically. Please don't change it
-manually when you create new merge request.)_
+_(Note:
+This table is generated automatically from the latest development work.
+Some features may be missing in the stable script. Please don't change
+this table manually when you create new pull request.)_
 
 ```
            Q Qc Qi Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Si Sii Sl Ss Su Suy Sw Sy U
@@ -138,24 +144,31 @@ Please read the sample `Makefile` for some details.
 This work is released under the terms of Fair license
 (http://opensource.org/licenses/fair).
 
-## AUTHORS
+## AUTHORS. CONTRIBUTORS
 
-* 10sr
-* Alexander Dupuy
-* Anh K. Huynh
-* Arcterus
-* Carl X. Su
-* Cuong Manh Le
-* Daniel YC Lin
-* Danny George
-* Darshit Shah
-* GijsTimmers
-* Hà-Dương Nguyễn
-* Huy Ngô
-* James Pearson
-* Janne Heß
-* Jiawei Zhou
+Many people have contributed to the project by sending pull requests
+and/or reporting on the ticket system. Here is an incomplete list of
+authors and contributors.
+
+* 10sr (10sr)
+* Alexander Dupuy (dupuy)
+* Anh K. Huynh (icy)
+* Alex Lyon (Arcterus)
+* Carl X. Su (bcbcarl)
+* Cuong Manh Le (Gnouc)
+* Daniel YC Lin (dlintw)
+* Danny George (dangets)
+* Darshit Shah (darnir)
+* Eric Crosson (EricCrosson)
+* GijsTimmers (GijsTimmers)
+* Hà-Dương Nguyễn (cmpitg)
+* Huy Ngô (NgoHuy)
+* James Pearson (xiongchiamiov)
+* Janne Heß (dasJ)
+* Jiawei Zhou (4679)
 * Karol Blazewicz
-* Konrad Borowski
-* Somasis
-* Vojtech Letal
+* Kevin Brubeck (unhammer)
+* Konrad Borowski (xfix)
+* Kylie McClain (somasis)
+* Siôn Le Roux (sinisterstuf)
+* Vojtech Letal (letalvoj)
