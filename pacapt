@@ -3,27 +3,32 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.2.7
+# Version: 2.3.8
 # Authors: Anh K. Huynh et al.
 
-# Copyright (C) 2010 - 2015 \
-#                           | 10sr
-#                           | Alexander Dupuy
-#                           | Anh K. Huynh
-#                           | Arcterus
-#                           | Cuong Manh Le
-#                           | Daniel YC Lin
-#                           | Danny George
-#                           | Darshit Shah
-#                           | GijsTimmers
-#                           | Hà-Dương Nguyễn
-#                           | Huy Ngô
-#                           | James Pearson
-#                           | Janne Heß
+# Copyright (C) 2010 - 2016 \
+#                           | 10sr (10sr)
+#                           | Alexander Dupuy (dupuy)
+#                           | Anh K. Huynh (icy)
+#                           | Alex Lyon (Arcterus)
+#                           | Carl X. Su (bcbcarl)
+#                           | Cuong Manh Le (Gnouc)
+#                           | Daniel YC Lin (dlintw)
+#                           | Danny George (dangets)
+#                           | Darshit Shah (darnir)
+#                           | Eric Crosson (EricCrosson)
+#                           | GijsTimmers (GijsTimmers)
+#                           | Hà-Dương Nguyễn (cmpitg)
+#                           | Huy Ngô (NgoHuy)
+#                           | James Pearson (xiongchiamiov)
+#                           | Janne Heß (dasJ)
+#                           | Jiawei Zhou (4679)
 #                           | Karol Blazewicz
-#                           | Konrad Borowski
-#                           | Somasis
-#                           | Vojtech Letal
+#                           | Kevin Brubeck (unhammer)
+#                           | Konrad Borowski (xfix)
+#                           | Kylie McClain (somasis)
+#                           | Siôn Le Roux (sinisterstuf)
+#                           | Vojtech Letal (letalvoj)
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
@@ -32,7 +37,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.2.7'
+export PACAPT_VERSION='2.3.8'
 
 _help() {
   cat <<'EOF'
@@ -79,6 +84,7 @@ OPERATIONS
 OPTIONS
 
     -w              download packages but don't install them
+    --noconfirm     don't wait for user's confirmation
 
 EXAMPLES
 
@@ -159,10 +165,25 @@ _PACMAN_detect() {
   _issue2pacman cave "Exherbo Linux" && return
   _issue2pacman yum "CentOS" && return
   _issue2pacman yum "Red Hat" && return
-  _issue2pacman yum "Fedora" && return
+  #
+  # FIXME: The multiple package issue.
+  #
+  # On #63, Huy commented out this line. This is because new generation
+  # of Fedora uses `dnf`, and `yum` becomes a legacy tool. On old Fedora
+  # system, `yum` is still detectable by looking up `yum` binary.
+  #
+  # I'm not sure how to support this case easily. Let's wait, e.g, 5 years
+  # from now to make `dnf` becomes a default? Oh no!
+  #
+  # And here why `pacman` is still smart. Debian has a set of tools.
+  # Fedora has `yum` (and a set of add-ons). Now Fedora moves to `dnf`.
+  # This means that a package manager is not a heart of a system ;)
+  #
+  # _issue2pacman yum "Fedora" && return
   _issue2pacman zypper "SUSE" && return
   _issue2pacman pkg_tools "OpenBSD" && return
   _issue2pacman pkg_tools "Bitrig" && return
+  _issue2pacman apk "Alpine Linux" && return
 
   [[ -z "$_PACMAN" ]] || return
 
@@ -174,7 +195,9 @@ _PACMAN_detect() {
   fi
 
   [[ -x "/usr/bin/apt-get" ]] && _PACMAN="dpkg" && return
+  [[ -x "/data/data/com.termux/files/usr/bin/apt-get" ]] && _PACMAN="dpkg" && return
   [[ -x "/usr/bin/cave" ]] && _PACMAN="cave" && return
+  [[ -x "/usr/bin/dnf" ]] && _PACMAN="dnf" && return
   [[ -x "/usr/bin/yum" ]] && _PACMAN="yum" && return
   [[ -x "/opt/local/bin/port" ]] && _PACMAN="macports" && return
   [[ -x "/usr/bin/emerge" ]] && _PACMAN="portage" && return
@@ -183,6 +206,7 @@ _PACMAN_detect() {
   # make sure pkg_add is after pkgng, FreeBSD base comes with it until converted
   [[ -x "/usr/sbin/pkg_add" ]] && _PACMAN="pkg_tools" && return
   [[ -x "/usr/sbin/pkgadd" ]] && _PACMAN="sun_tools" && return
+  [[ -x "/sbin/apk" ]] && _PACMAN="apk" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
@@ -203,13 +227,13 @@ _translate_w() {
   "portage")  _opt="--fetchonly";;
   "zypper")   _opt="--download-only";;
   "pkgng")    _opt="fetch";;
-  "yum")     _opt="--downloadonly";
+  "yum")      _opt="--downloadonly";
     if ! rpm -q 'yum-downloadonly' >/dev/null 2>&1; then
       _error "'yum-downloadonly' package is required when '-w' is used."
       _ret=1
     fi
     ;;
-
+  "apk")      _opt="fetch";;
   *)
     _opt=""
     _ret=1
@@ -239,6 +263,7 @@ _translate_noconfirm() {
   # FIXME: Update environment DEBIAN_FRONTEND=noninteractive
   # FIXME: There is also --force-yes for a stronger case
   "dpkg")   _opt="--yes";;
+  "dnf")    _opt="--assumeyes";;
   "yum")    _opt="--assumeyes";;
   # FIXME: pacman has 'assume-yes' and 'assume-no'
   # FIXME: zypper has better mode. Similar to dpkg (Debian).
@@ -257,12 +282,14 @@ _translate_noconfirm() {
 
 _translate_all() {
   local _args=""
+  local _debug="$(_translate_debug)"
+  local _noconfirm="$(_translate_noconfirm)"
 
   _args="$(_translate_w)" || return 1
-  _args="${_args:+$_args }$(_translate_noconfirm)" || return 1
-  _args="${_args:+$_args }$(_translate_debug)" || return 1
+  _args="${_args}${_noconfirm:+ }${_noconfirm}" || return 1
+  _args="${_args}${_debug:+ }${_debug}" || return 1
 
-  export _EOPT="$_args"
+  export _EOPT="${_args# }"
 }
 
 _print_supported_operations() {
@@ -289,6 +316,117 @@ entity that uses the works is notified of this instrument.
 
 DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 EOF
+}
+
+
+
+_apk_init() {
+  :
+}
+
+apk_Q() {
+  if [[ -z "$_TOPT" ]]; then
+    apk info
+  else
+    _not_implemented
+  fi
+}
+
+apk_Qi() {
+  apk info -a -- "$@"
+}
+
+apk_Ql() {
+  apk info -L -- "$@"
+}
+
+apk_Qo() {
+  apk info --who-owns -- "$@"
+}
+
+apk_Qs() {
+  apk info -- "*$@*"
+}
+
+apk_Qu() {
+  apk version -l '<'
+}
+
+apk_R() {
+  apk del -- "$@"
+}
+
+apk_Rn() {
+  apk del --purge -- "$@"
+}
+
+apk_Rns() {
+  apk del --purge -r -- "$@"
+}
+
+apk_Rs() {
+  apk del -r -- "$@"
+}
+
+apk_S() {
+  case ${_EOPT} in
+    # Download only
+    ("fetch") shift
+              apk fetch        -- "$@" ;;
+          (*) apk add   $_TOPT -- "$@" ;;
+  esac
+}
+
+apk_Sc() {
+  apk cache -v clean
+}
+
+apk_Scc() {
+  rm -rf /var/cache/apk/*
+}
+
+apk_Sccc() {
+  apk_Scc
+}
+
+apk_Si() {
+  apk_Qi "$@"
+}
+
+apk_Sii() {
+  apk info -r -- "$@"
+}
+
+apk_Sl() {
+  apk search -v -- "$@"
+}
+
+apk_Ss() {
+  apk_Sl "$@"
+}
+
+apk_Su() {
+  apk upgrade
+}
+
+apk_Suy() {
+  if [ "$#" -gt 0 ]; then
+    apk add -U -u -- "$@"
+  else
+    apk upgrade -U -a
+  fi
+}
+
+apk_Sy() {
+  apk update
+}
+
+apk_Sw() {
+  apk fetch -- "$@"
+}
+
+apk_U() {
+  apk add --allow-untrusted -- "$@"
 }
 
 
@@ -432,8 +570,104 @@ cave_U() {
   _not_implemented
 }
 
+
+
+_dnf_init() {
+  :
+}
+
 dnf_S() {
   dnf install $_TOPT "$@"
+}
+
+dnf_Suy() {
+  dnf upgrade "$@"
+}
+
+dnf_Sw() {
+  dnf download "$@"
+}
+
+dnf_Si() {
+  dnf info "$@"
+}
+
+dnf_Sl() {
+  dnf list available "$@"
+}
+
+dnf_Ss() {
+  dnf search "$@"
+}
+
+dnf_Sc() {
+  dnf clean expire-cache "$@"
+}
+
+dnf_Scc() {
+   dnf clean packages "$@"
+}
+
+dnf_Sccc() {
+    dnf clean all "$@"
+}
+
+dnf_Su() {
+  dnf upgrade "$@"
+}
+
+dnf_Sy() {
+  dnf clean expire-cache && dnf check-update
+}
+
+dnf_Q() {
+  if [[ "$_TOPT" == "q" ]]; then
+    rpm -qa --qf "%{NAME}\n"
+  elif [[ "$_TOPT" == "" ]]; then
+    rpm -qa --qf "%{NAME} %{VERSION}\n"
+  else
+    _not_implemented
+  fi
+}
+
+dnf_Qi() {
+  dnf info "$@"
+}
+
+dnf_Qu() {
+  dnf list updates "$@"
+}
+
+dnf_Qs() {
+  rpm -qa "*$@*"
+}
+
+dnf_Ql() {
+  rpm -ql "$@"
+}
+
+dnf_Qo() {
+  rpm -qf "$@"
+}
+
+dnf_Qp() {
+  rpm -qp "$@"
+}
+
+dnf_Qc() {
+  rpm -q --changelog "$@"
+}
+
+dnf_Qm() {
+  dnf list extras
+}
+
+dnf_R() {
+  dnf remove "$@"
+}
+
+dnf_U() {
+  dnf install "$@"
 }
 
 
@@ -1157,6 +1391,10 @@ yum_Qi() {
   yum info "$@"
 }
 
+yum_Qs() {
+  rpm -qa "*$@*"
+}
+
 yum_Ql() {
   rpm -ql "$@"
 }
@@ -1387,11 +1625,38 @@ zypper_S() {
   zypper install $_TOPT "$@"
 }
 
+zypper_Sw() {
+  zypper install --download-only "$@"
+}
+
 zypper_U() {
   zypper install "$@"
 }
 _validate_operation() {
   case "$1" in
+  "apk_Q") ;;
+  "apk_Qi") ;;
+  "apk_Ql") ;;
+  "apk_Qo") ;;
+  "apk_Qs") ;;
+  "apk_Qu") ;;
+  "apk_R") ;;
+  "apk_Rn") ;;
+  "apk_Rns") ;;
+  "apk_Rs") ;;
+  "apk_S") ;;
+  "apk_Sc") ;;
+  "apk_Scc") ;;
+  "apk_Sccc") ;;
+  "apk_Si") ;;
+  "apk_Sii") ;;
+  "apk_Sl") ;;
+  "apk_Ss") ;;
+  "apk_Su") ;;
+  "apk_Suy") ;;
+  "apk_Sy") ;;
+  "apk_Sw") ;;
+  "apk_U") ;;
   "cave_Q") ;;
   "cave_Qi") ;;
   "cave_Ql") ;;
@@ -1414,6 +1679,27 @@ _validate_operation() {
   "cave_S") ;;
   "cave_U") ;;
   "dnf_S") ;;
+  "dnf_Suy") ;;
+  "dnf_Sw") ;;
+  "dnf_Si") ;;
+  "dnf_Sl") ;;
+  "dnf_Ss") ;;
+  "dnf_Sc") ;;
+  "dnf_Scc") ;;
+  "dnf_Sccc") ;;
+  "dnf_Su") ;;
+  "dnf_Sy") ;;
+  "dnf_Q") ;;
+  "dnf_Qi") ;;
+  "dnf_Qu") ;;
+  "dnf_Qs") ;;
+  "dnf_Ql") ;;
+  "dnf_Qo") ;;
+  "dnf_Qp") ;;
+  "dnf_Qc") ;;
+  "dnf_Qm") ;;
+  "dnf_R") ;;
+  "dnf_U") ;;
   "dpkg_Q") ;;
   "dpkg_Qi") ;;
   "dpkg_Ql") ;;
@@ -1529,6 +1815,7 @@ _validate_operation() {
   "sun_tools_U") ;;
   "yum_Q") ;;
   "yum_Qi") ;;
+  "yum_Qs") ;;
   "yum_Ql") ;;
   "yum_Qo") ;;
   "yum_Qp") ;;
@@ -1573,6 +1860,7 @@ _validate_operation() {
   "zypper_Si") ;;
   "zypper_Sii") ;;
   "zypper_S") ;;
+  "zypper_Sw") ;;
   "zypper_U") ;;
   *) return 1 ;;
   esac
