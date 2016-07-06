@@ -118,6 +118,10 @@ dpkg_Su() {
   apt-get upgrade "$@"
 }
 
+dpkg_Sw() {
+  apt-get --download-only install "$@"
+}
+
 # FIXME: Should we remove "$@"?
 dpkg_Sy() {
   apt-get update "$@"
