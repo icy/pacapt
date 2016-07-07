@@ -118,9 +118,12 @@ dpkg_Su() {
   apt-get upgrade "$@"
 }
 
-dpkg_Sw() {
-  apt-get --download-only install "$@"
-}
+# See also https://github.com/icy/pacapt/pull/78
+# This `-w` option is implemented in `00_core/_translate_w`
+#
+# dpkg_Sw() {
+#   apt-get --download-only install "$@"
+# }
 
 # FIXME: Should we remove "$@"?
 dpkg_Sy() {
