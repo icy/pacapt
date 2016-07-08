@@ -51,6 +51,8 @@ rm -rf %_buildrootdir
 /usr/local/bin/pacman
 
 %changelog
+* Fri Jul 8 2016 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1
+- Updated version (2.3.8 -> 2.3.9)
 * Fri Jul 8 2016 Valerio Pizzi(Pival81) <pival81@yahoo.com> - 1
 - Changed the installation directory (/usr/local/bin instead of /bin).
 * Fri Jun 10 2016 Valerio Pizzi(Pival81) <pival81@yahoo.com> - 1
