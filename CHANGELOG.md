@@ -1,3 +1,11 @@
+## v2.3.9
+
+* `lib/tazpkg`: Support `SliTaz` distribution;
+
+For developers:
+
+* `contrib/*`: Add instructions to build packages on some distributions (Credit: `Pival81`).
+
 ## v2.3.8
 
 * `lib/alpine`: Support `Alpine` distirubtion (Credit: `Carl X. Su`, `Cuong Manh Le`);
@@ -6,7 +14,7 @@
 * `lib/zypper`: New option `-Sw` (Forgot to merge #72);
 * `lib/yum`: New option `-Qs` (Credit: `Siôn Le Roux`);
 
-For devepers:
+For developers:
 
 * Improve translation method `_translate_all`;
 
