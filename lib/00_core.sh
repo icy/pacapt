@@ -155,14 +155,14 @@ _translate_w() {
 }
 
 _translate_debug() {
+  echo "$_EOPT" | $GREP -q ":v:" || return 0
+
   case "$_PACMAN" in
   "tazpkg")
     _error "$_PACMAN: Option '-v' (debug) is not supported/implemented by tazpkg"
     return 1
     ;;
   esac
-
-  echo "$_EOPT" | $GREP -q ":v:" || return 0
 
   echo "-v"
 }
