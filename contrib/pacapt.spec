@@ -1,6 +1,6 @@
 %global debug_package %{nil}
 Name:           pacapt
-Version:        2.3.8
+Version:        2.3.9
 Release:        1%{?dist}
 Summary:        An Arch's pacman-like package manager for some Unices.
 License:        custom
@@ -57,4 +57,3 @@ rm -rf %_buildrootdir
 - Updated version (2.2.7 -> 2.3.8)
 * Thu Jun 9 2016 Valerio Pizzi(Pival81) <pival81@yahoo.com> - 1
 - Initial package.
-
