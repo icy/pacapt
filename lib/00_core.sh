@@ -108,6 +108,7 @@ _PACMAN_detect() {
   [[ -x "/usr/sbin/pkg_add" ]] && _PACMAN="pkg_tools" && return
   [[ -x "/usr/sbin/pkgadd" ]] && _PACMAN="sun_tools" && return
   [[ -x "/sbin/apk" ]] && _PACMAN="apk" && return
+  [[ -x "/usr/bin/tazpkg" ]] && _PACMAN="tazpkg" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
@@ -136,6 +137,10 @@ _translate_w() {
       _ret=1
     fi
     ;;
+  "tazpkg")
+    _error "$_PACMAN: Use '$_PACMAN get' to download and save packages to current directory."
+    _ret=1
+    ;;
   "apk")      _opt="fetch";;
   *)
     _opt=""
@@ -150,6 +155,13 @@ _translate_w() {
 }
 
 _translate_debug() {
+  case "$_PACMAN" in
+  "tazpkg")
+    _error "$_PACMAN: Option '-v' (debug) is not supported/implemented by tazpkg"
+    return 1
+    ;;
+  esac
+
   echo "$_EOPT" | $GREP -q ":v:" || return 0
 
   echo "-v"
@@ -174,6 +186,7 @@ _translate_noconfirm() {
   # FIXME: zypper has better mode. Similar to dpkg (Debian).
   "zypper") _opt="--non-interactive";;
   "pkgng")  _opt="-y";;
+  "tazpkg") _opt="--forced";;
   *)
     _opt=""
     _ret=1
