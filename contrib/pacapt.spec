@@ -6,6 +6,7 @@ Summary:        An Arch's pacman-like package manager for some Unices.
 License:        custom
 URL:            github.com/icy/pacapt
 Source0:        %{name}-%{version}.tar.gz
+BuildArch:	     noarch
 
 %description
 An Arch's pacman-like package manager for some Unices. Actually this Bash script provides a wrapper for system's package manager. For example, on CentOS machines, you can install htop with command
