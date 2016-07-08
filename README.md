@@ -48,7 +48,7 @@ The tool supports the following package managers:
 * `pkg_tools`     by `OpenBSD`
 * `sun_tools`     by `Solaris(SunOS)`
 * `apk`           by `Alpine Linux`
-* `tazpkg`        by `SlaTiz Linux`
+* `tazpkg`        by `SliTaz Linux`
 
 ## Installation
 
