@@ -172,5 +172,6 @@ authors and contributors.
 * Kevin Brubeck (unhammer)
 * Konrad Borowski (xfix)
 * Kylie McClain (somasis)
+* Pival81
 * Siôn Le Roux (sinisterstuf)
 * Vojtech Letal (letalvoj)
