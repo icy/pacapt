@@ -58,7 +58,7 @@ tazpkg_Suy() {
 tazpkg_S() {
   local _forced=""
 
-  grep -q "--forced" <<<"*"
+  grep -q -- "--forced" <<<"*"
   if [[ $? -eq 0 ]]; then
     _forced="--forced"
   fi
@@ -78,7 +78,7 @@ tazpkg_S() {
 tazpkg_R() {
   local _auto=""
 
-  grep -q "--auto" <<<"*"
+  grep -q -- "--auto" <<<"*"
   if [[ $? -eq 0 ]]; then
     _auto="--auto"
   fi
