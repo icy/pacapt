@@ -30,4 +30,4 @@ Then, compile it:
 ````
 $ rpmbuild -ba $HOME/rpmbuild/SPECS/pacapt.spec
 ````
-And you're done! Your generated RPM will be in ````$HOME/rpmbuild/RPMS/<yourarchitecture>/````
+And you're done! Your generated RPM will be in ````$HOME/rpmbuild/RPMS/noarch>/````
