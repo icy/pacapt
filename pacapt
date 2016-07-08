@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.3.8
+# Version: 2.3.9
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2016 \
@@ -27,6 +27,7 @@
 #                           | Kevin Brubeck (unhammer)
 #                           | Konrad Borowski (xfix)
 #                           | Kylie McClain (somasis)
+#                           | Pival81
 #                           | Siôn Le Roux (sinisterstuf)
 #                           | Vojtech Letal (letalvoj)
 #
@@ -37,7 +38,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.3.8'
+export PACAPT_VERSION='2.3.9'
 
 _help() {
   cat <<'EOF'
@@ -207,6 +208,7 @@ _PACMAN_detect() {
   [[ -x "/usr/sbin/pkg_add" ]] && _PACMAN="pkg_tools" && return
   [[ -x "/usr/sbin/pkgadd" ]] && _PACMAN="sun_tools" && return
   [[ -x "/sbin/apk" ]] && _PACMAN="apk" && return
+  [[ -x "/usr/bin/tazpkg" ]] && _PACMAN="tazpkg" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
@@ -233,6 +235,10 @@ _translate_w() {
       _ret=1
     fi
     ;;
+  "tazpkg")
+    _error "$_PACMAN: Use '$_PACMAN get' to download and save packages to current directory."
+    _ret=1
+    ;;
   "apk")      _opt="fetch";;
   *)
     _opt=""
@@ -248,6 +254,13 @@ _translate_w() {
 
 _translate_debug() {
   echo "$_EOPT" | $GREP -q ":v:" || return 0
+
+  case "$_PACMAN" in
+  "tazpkg")
+    _error "$_PACMAN: Option '-v' (debug) is not supported/implemented by tazpkg"
+    return 1
+    ;;
+  esac
 
   echo "-v"
 }
@@ -269,6 +282,7 @@ _translate_noconfirm() {
   # FIXME: zypper has better mode. Similar to dpkg (Debian).
   "zypper") _opt="--non-interactive";;
   "pkgng")  _opt="-y";;
+  "tazpkg") _opt="--auto";;
   *)
     _opt=""
     _ret=1
@@ -762,6 +776,7 @@ dpkg_Suy() {
 dpkg_Su() {
   apt-get upgrade "$@"
 }
+
 
 dpkg_Sy() {
   apt-get update "$@"
@@ -1372,6 +1387,113 @@ sun_tools_U() {
 }
 
 
+_tazpkg_init() {
+  :
+}
+
+tazpkg_Q() {
+  if [[ "$_TOPT" == "q" ]]; then
+    tazpkg list "$@" \
+    | awk '{ if (NF == 2 || NF == 3) { print $1; }}'
+  elif [[ "$_TOPT" == "" ]]; then
+    tazpkg list "$@"
+  else
+    _not_implemented
+  fi
+}
+
+tazpkg_Qi() {
+  tazpkg info "$@"
+}
+
+tazpkg_Ql() {
+  if [[ -z "$@" ]]; then
+    _not_implemented
+    return
+  fi
+
+  if [[ "$_TOPT" == "q" ]]; then
+    {
+      tazpkg list-files "$@"
+      tazpkg list-config "$@"
+    } \
+    | grep ^/
+  else
+    tazpkg list-files "$@"
+    tazpkg list-config "$@"
+  fi
+}
+
+tazpkg_Sy() {
+  tazpkg recharge
+}
+
+tazpkg_Su() {
+  tazpkg up
+}
+
+tazpkg_Suy() {
+  tazpkg_Sy \
+  && tazpkg_Su
+}
+
+tazpkg_S() {
+  local _forced=""
+
+  grep -q -- "--forced" <<<"*"
+  if [[ $? -eq 0 ]]; then
+    _forced="--forced"
+  fi
+
+  while (( $# )); do
+    if [[ "$1" == "--forced" ]]; then
+      _forced="--forced"
+      shift
+      continue
+    fi
+
+    tazpkg get-install "$1" $_forced
+    shift
+  done
+}
+
+tazpkg_R() {
+  local _auto=""
+
+  grep -q -- "--auto" <<<"*"
+  if [[ $? -eq 0 ]]; then
+    _auto="--auto"
+  fi
+
+  while (( $# )); do
+    if [[ "$1" == "--auto" ]]; then
+      _auto="--auto"
+      shift
+      continue
+    fi
+
+    tazpkg remove "$1" $_auto
+    shift
+  done
+}
+
+tazpkg_Sc() {
+  tazpkg clean-cache
+}
+
+tazpkg_Ss() {
+  tazpkg search "$@"
+}
+
+tazpkg_Qo() {
+  tazpkg search-pkgname "$@"
+}
+
+tazpkg_U() {
+  tazpkg install "$@"
+}
+
+
 
 _yum_init() {
   :
@@ -1813,6 +1935,18 @@ _validate_operation() {
   "sun_tools_Q") ;;
   "sun_tools_R") ;;
   "sun_tools_U") ;;
+  "tazpkg_Q") ;;
+  "tazpkg_Qi") ;;
+  "tazpkg_Ql") ;;
+  "tazpkg_Sy") ;;
+  "tazpkg_Su") ;;
+  "tazpkg_Suy") ;;
+  "tazpkg_S") ;;
+  "tazpkg_R") ;;
+  "tazpkg_Sc") ;;
+  "tazpkg_Ss") ;;
+  "tazpkg_Qo") ;;
+  "tazpkg_U") ;;
   "yum_Q") ;;
   "yum_Qi") ;;
   "yum_Qs") ;;
