@@ -186,7 +186,7 @@ _translate_noconfirm() {
   # FIXME: zypper has better mode. Similar to dpkg (Debian).
   "zypper") _opt="--non-interactive";;
   "pkgng")  _opt="-y";;
-  "tazpkg") _opt="--forced";;
+  "tazpkg") _opt="--auto";;
   *)
     _opt=""
     _ret=1

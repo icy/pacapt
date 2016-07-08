@@ -58,6 +58,11 @@ tazpkg_Suy() {
 tazpkg_S() {
   local _forced=""
 
+  grep -q "--forced" <<<"*"
+  if [[ $? -eq 0 ]]; then
+    _forced="--forced"
+  fi
+
   while (( $# )); do
     if [[ "$1" == "--forced" ]]; then
       _forced="--forced"
@@ -71,7 +76,23 @@ tazpkg_S() {
 }
 
 tazpkg_R() {
-  tazpkg remove "$@"
+  local _auto=""
+
+  grep -q "--auto" <<<"*"
+  if [[ $? -eq 0 ]]; then
+    _auto="--auto"
+  fi
+
+  while (( $# )); do
+    if [[ "$1" == "--auto" ]]; then
+      _auto="--auto"
+      shift
+      continue
+    fi
+
+    tazpkg remove "$1" $_auto
+    shift
+  done
 }
 
 tazpkg_Sc() {
@@ -87,4 +108,8 @@ tazpkg_Ss() {
 
 tazpkg_Qo() {
   tazpkg search-pkgname "$@"
+}
+
+tazpkg_U() {
+  tazpkg install "$@"
 }
