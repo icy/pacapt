@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.3.9
+# Version: 2.3.10
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2016 \
@@ -38,7 +38,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.3.9'
+export PACAPT_VERSION='2.3.10'
 
 _help() {
   cat <<'EOF'
@@ -1481,6 +1481,18 @@ tazpkg_Sc() {
   tazpkg clean-cache
 }
 
+tazpkg_Scc() {
+  tazpkg clean-cache
+  cd /var/lib/tazpkg/ \
+  && {
+    rm -fv \
+      *.bak \
+      ID \
+      packages.* \
+      files.list.*
+  }
+}
+
 tazpkg_Ss() {
   tazpkg search "$@"
 }
@@ -1944,6 +1956,7 @@ _validate_operation() {
   "tazpkg_S") ;;
   "tazpkg_R") ;;
   "tazpkg_Sc") ;;
+  "tazpkg_Scc") ;;
   "tazpkg_Ss") ;;
   "tazpkg_Qo") ;;
   "tazpkg_U") ;;

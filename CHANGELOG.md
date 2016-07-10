@@ -1,3 +1,7 @@
+## v2.3.10
+
+* `lib/tazpkg`: Support `-Scc`
+
 ## v2.3.9
 
 * `lib/tazpkg`: Support `SliTaz` distribution;

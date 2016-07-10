@@ -21,8 +21,8 @@ $ rpmdev-setuptree
 Ok, now we're set up for compiling, now just download the latest release of pacapt (you can find it on the github page, go on Releases), download it in .tar.gz format:
 ````
 $ cd $HOME/rpmbuild/SOURCES
-$ wget https://github.com/icy/pacapt/archive/v2.3.9.tar.gz
-$ mv v2.3.9.tar.gz pacapt-2.3.9.tar.gz
+$ wget https://github.com/icy/pacapt/archive/v2.3.10.tar.gz
+$ mv v2.3.10.tar.gz pacapt-2.3.10.tar.gz
 ````
 And now download the spec file in this contrib directory and place it in ````$HOME/rpmbuild/SPECS````
 

@@ -1,6 +1,6 @@
 %global debug_package %{nil}
 Name:           pacapt
-Version:        2.3.9
+Version:        2.3.10
 Release:        1%{?dist}
 Summary:        An Arch's pacman-like package manager for some Unices.
 License:        custom
@@ -51,6 +51,8 @@ rm -rf %_buildrootdir
 /usr/local/bin/pacman
 
 %changelog
+* Fri Jul 11 2016 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1
+- Updated version (2.3.9 -> 2.3.10)
 * Fri Jul 8 2016 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1
 - Updated version (2.3.8 -> 2.3.9)
 * Fri Jul 8 2016 Valerio Pizzi(Pival81) <pival81@yahoo.com> - 1
