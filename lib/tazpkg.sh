@@ -99,6 +99,18 @@ tazpkg_Sc() {
   tazpkg clean-cache
 }
 
+tazpkg_Scc() {
+  tazpkg clean-cache
+  cd /var/lib/tazpkg/ \
+  && {
+    rm -fv \
+      *.bak \
+      ID \
+      packages.* \
+      files.list.*
+  }
+}
+
 # Option: tazpkg search ... [option]
 # -i: installed packages
 # -l: available packages
