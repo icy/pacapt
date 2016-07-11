@@ -1,5 +1,9 @@
 ## v2.3.10
 
+* `lib/tazpkg`: Improve `-U`
+
+## v2.3.10
+
 * `lib/tazpkg`: Support `-Scc`
 
 ## v2.3.9

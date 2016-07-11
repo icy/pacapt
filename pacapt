@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.3.10
+# Version: 2.3.11
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2016 \
@@ -38,7 +38,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.3.10'
+export PACAPT_VERSION='2.3.11'
 
 _help() {
   cat <<'EOF'
@@ -1502,7 +1502,23 @@ tazpkg_Qo() {
 }
 
 tazpkg_U() {
-  tazpkg install "$@"
+  local _forced=""
+
+  grep -q -- "--forced" <<<"*"
+  if [[ $? -eq 0 ]]; then
+    _forced="--forced"
+  fi
+
+  while (( $# )); do
+    if [[ "$1" == "--forced" ]]; then
+      _forced="--forced"
+      shift
+      continue
+    fi
+
+    tazpkg install "$1" $_forced
+    shift
+  done
 }
 
 
