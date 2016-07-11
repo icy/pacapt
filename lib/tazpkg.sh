@@ -123,5 +123,21 @@ tazpkg_Qo() {
 }
 
 tazpkg_U() {
-  tazpkg install "$@"
+  local _forced=""
+
+  grep -q -- "--forced" <<<"*"
+  if [[ $? -eq 0 ]]; then
+    _forced="--forced"
+  fi
+
+  while (( $# )); do
+    if [[ "$1" == "--forced" ]]; then
+      _forced="--forced"
+      shift
+      continue
+    fi
+
+    tazpkg install "$1" $_forced
+    shift
+  done
 }
