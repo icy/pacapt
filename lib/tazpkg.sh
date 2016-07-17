@@ -104,7 +104,7 @@ tazpkg_Scc() {
   cd /var/lib/tazpkg/ \
   && {
     rm -fv \
-      *.bak \
+      ./*.bak \
       ID \
       packages.* \
       files.list.*
