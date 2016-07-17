@@ -78,7 +78,9 @@ dpkg_Qu() {
 }
 
 dpkg_Qs() {
-  dpkg-query -W "*${*}*" | cut -f1
+  dpkg-query -l "${@}" \
+  | grep ^ii \
+  | sed -r -e 's#^ii[[:space:]]*##g'
 }
 
 dpkg_Rs() {
