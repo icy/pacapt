@@ -78,9 +78,10 @@ dpkg_Qu() {
 }
 
 dpkg_Qs() {
-  dpkg-query -l "${@}" \
-  | grep ^ii \
-  | sed -r -e 's#^ii[[:space:]]*##g'
+  dpkg-query -W -f='${db:Status-Abbrev} ${binary:Package}\t${Version}\t${binary:Summary}\n' \
+  | grep -E '^[hi]i' \
+  | sed -r -e 's#^[hi]i +##' \
+  | grep "$@"
 }
 
 dpkg_Rs() {
