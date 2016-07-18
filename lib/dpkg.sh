@@ -108,7 +108,7 @@ dpkg_Rns() {
   apt-get --purge autoremove "$@"
 }
 
-# test.in -S htop
+# test.in -S htop <<< Y
 # test.in -R htop
 # test.in -Qi htop
 # test.ou ^Status: deinstall
@@ -153,17 +153,6 @@ dpkg_Scc() {
   apt-get autoclean "$@"
 }
 
-# test.in -Sccc
-# test.in clear
-# test.in -sS mariadb
-# test.ou empty
-dpkg_Sccc() {
-  rm -fv /var/cache/apt/*.bin
-  rm -fv /var/cache/apt/archives/*.*
-  rm -fv /var/lib/apt/lists/*.*
-  apt-get autoclean
-}
-
 dpkg_S() {
   apt-get install $_TOPT "$@"
 }
@@ -174,4 +163,15 @@ dpkg_U() {
 
 dpkg_Sii() {
   apt-cache rdepends "$@"
+}
+
+# test.in -Sccc
+# test.in clear
+# test.in -sS mariadb
+# test.ou empty
+dpkg_Sccc() {
+  rm -fv /var/cache/apt/*.bin
+  rm -fv /var/cache/apt/archives/*.*
+  rm -fv /var/lib/apt/lists/*.*
+  apt-get autoclean
 }
