@@ -1,14 +1,24 @@
+## v2.3.12
+
+* `lib/dpkg`: Fix #84 (incorrect implementation of `-Qs`.)
+
+For developers:
+
+* `bin/gen_tests.rb`: Add;
+* `lib/dpkg`: Add and update test cases;
+* `CONTRIBUTING`: Add new section `Writting test cases`.
+
+## v2.3.11
+
+* `lib/tazpkg`: Improve `-U`.
+
 ## v2.3.10
 
-* `lib/tazpkg`: Improve `-U`
-
-## v2.3.10
-
-* `lib/tazpkg`: Support `-Scc`
+* `lib/tazpkg`: Support `-Scc`.
 
 ## v2.3.9
 
-* `lib/tazpkg`: Support `SliTaz` distribution;
+* `lib/tazpkg`: Support `SliTaz` distribution.
 
 For developers:
 
