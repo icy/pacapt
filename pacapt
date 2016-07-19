@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.3.11
+# Version: 2.3.12
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2016 \
@@ -38,7 +38,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.3.11'
+export PACAPT_VERSION='2.3.12'
 
 _help() {
   cat <<'EOF'
@@ -741,7 +741,10 @@ dpkg_Qu() {
 }
 
 dpkg_Qs() {
-  dpkg-query -W "*${*}*" | cut -f1
+  dpkg-query -W -f='${db:Status-Abbrev} ${binary:Package}\t${Version}\t${binary:Summary}\n' \
+  | grep -E '^[hi]i' \
+  | sed -r -e 's#^[hi]i +##' \
+  | grep "${@:-.}"
 }
 
 dpkg_Rs() {
@@ -794,13 +797,6 @@ dpkg_Scc() {
   apt-get autoclean "$@"
 }
 
-dpkg_Sccc() {
-  rm -fv /var/cache/apt/*.bin
-  rm -fv /var/cache/apt/archives/*.*
-  rm -fv /var/lib/apt/lists/*.*
-  apt-get autoclean
-}
-
 dpkg_S() {
   apt-get install $_TOPT "$@"
 }
@@ -811,6 +807,13 @@ dpkg_U() {
 
 dpkg_Sii() {
   apt-cache rdepends "$@"
+}
+
+dpkg_Sccc() {
+  rm -fv /var/cache/apt/*.bin
+  rm -fv /var/cache/apt/archives/*.*
+  rm -fv /var/lib/apt/lists/*.*
+  apt-get autoclean
 }
 
 
@@ -1486,7 +1489,7 @@ tazpkg_Scc() {
   cd /var/lib/tazpkg/ \
   && {
     rm -fv \
-      *.bak \
+      ./*.bak \
       ID \
       packages.* \
       files.list.*
@@ -1868,10 +1871,10 @@ _validate_operation() {
   "dpkg_Ss") ;;
   "dpkg_Sc") ;;
   "dpkg_Scc") ;;
-  "dpkg_Sccc") ;;
   "dpkg_S") ;;
   "dpkg_U") ;;
   "dpkg_Sii") ;;
+  "dpkg_Sccc") ;;
   "homebrew_Qi") ;;
   "homebrew_Ql") ;;
   "homebrew_Qo") ;;
