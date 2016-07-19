@@ -108,8 +108,8 @@ dpkg_Rns() {
   apt-get --purge autoremove "$@"
 }
 
-# test.in -S htop <<< Y
-# test.in -R htop
+# test.in ! echo Y | pacman -S htop
+# test.in ! echo Y | pacman -R htop
 # test.in -Qi htop
 # test.ou ^Status: deinstall
 dpkg_R() {
