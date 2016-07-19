@@ -5,6 +5,7 @@
 1. [Generating pacapt script](#generating-pacapt-script)
 1. [Branches](#branches)
 1. [Closed branches](#closed-branches)
+1. [Writting test cases](#writting-test-cases)
 
 ## Coding style
 
@@ -15,6 +16,8 @@
     https://github.com/icy/bash-coding-style.
 
 ## Testing. Docker
+
+See also [Writting test cases](#writting-test-cases).
 
 1. Use `make shellcheck` if you have a network connection,
    and enough `Perl` packages (`JSON`, `URI::Escape`) on your system;
@@ -40,6 +43,7 @@ $ docker run --rm -ti \
    and/or modify it manually;
 1. For your development, use `make pacapt.dev`;
    To generate the table of implemented options, use `PACAPT_STATS=1`.
+   This table is manually replaced the one in `README` file.
 
 ## Branches
 
@@ -62,3 +66,53 @@ $ docker run --rm -ti \
 1. `master`:
     The old stable code of the `pacapt`.
     This branch is closed on May 4th, 2014.
+
+## Writting test cases
+
+See examples in `lib/dpkg.sh`. Each test case combines of input command
+and output regular expressions used by `grep -E`. Input command is started
+by `# tets.in `, output regexp is started by `# test.ou `. For example,
+
+    # test.in -Sy
+    # test.in -Qs htop
+    # test.ou ^htop
+
+the test is passed if the following group of commands returns successfully
+
+    pacman -Sy
+    pacman -Qs htop | grep -qE '^htop'
+
+If we want to execute some command other than `pacman` script, use `!`
+to write our original command. For example,
+
+    # test.in ! echo Y | pacman -S htop
+    # test.in ! echo Y | pacman -R htop
+    # test.in -Qi htop
+    # test.ou ^Status: deinstall
+
+On `Debian`/`Ubuntu` system, this test case is to ensure that the script
+can install `htop` package, then remove it. An alternative test is
+
+    echo Y | pacman -S htop
+    echo Y | pacman -R htop
+    pacman -Qi htop | grep -E '^Status: deinstall'
+
+Notes:
+
+1. Each test case has its own temporary file to store all output;
+1. Multiple uses of `test.in` is possible, and all results are appended
+   to test's temporary file. If we want to clear the contents of this output
+   please use `# test.in clear`;
+1. Multiple uses of `test.ou` is possible; any fail check will increase
+   the total number of failed tests;
+1. To make sure that test's temporary file is empty, use `# test.ou empty`;
+1. Tests are executed by orders provided in the source file. It's better
+   to execute `pacman -Sy` to update package manager's database before
+   any other tests, and it's also better to test `clean up` features
+   (`pacman -Sc`, `pacman -Scc`, ...) at the very end of the source file.
+   See `lib/dpkg.sh` for an example;
+1. All tests are executed by `#bourne` shell. Forget `#bash`:)
+1. In any input command, `$LOG` (if any) is replaced by the path to
+   test's temporary file;
+1. It's very easy to trick the test mechanism; it's our duty to make
+   the tests as simple as possible.
