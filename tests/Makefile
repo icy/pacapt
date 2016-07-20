@@ -14,3 +14,4 @@ all: tmp/pacapt.dev
 # clean: (but still keep all log files.)
 clean:
 	@rm -fv tmp/*.sh tmp/pacapt.dev
+	@echo Please remove tmp/*.log manually.
