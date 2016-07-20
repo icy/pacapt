@@ -69,13 +69,13 @@ $ docker run --rm -ti \
 
 ## Writting test cases
 
-See examples in `lib/dpkg.sh`. Each test case combines of input command
+See examples in `tests/dpkg.txt`. Each test case combines of input command
 and output regular expressions used by `grep -E`. Input command is started
-by `# tets.in `, output regexp is started by `# test.ou `. For example,
+by `in `, output regexp is started by `ou `. For example,
 
-    # test.in -Sy
-    # test.in -Qs htop
-    # test.ou ^htop
+    in -Sy
+    in -Qs htop
+    ou ^htop
 
 the test is passed if the following group of commands returns successfully
 
@@ -85,10 +85,10 @@ the test is passed if the following group of commands returns successfully
 If we want to execute some command other than `pacman` script, use `!`
 to write our original command. For example,
 
-    # test.in ! echo Y | pacman -S htop
-    # test.in ! echo Y | pacman -R htop
-    # test.in -Qi htop
-    # test.ou ^Status: deinstall
+    in ! echo Y | pacman -S htop
+    in ! echo Y | pacman -R htop
+    in -Qi htop
+    ou ^Status: deinstall
 
 On `Debian`/`Ubuntu` system, this test case is to ensure that the script
 can install `htop` package, then remove it. An alternative test is
@@ -102,10 +102,10 @@ Notes:
 1. Each test case has its own temporary file to store all output;
 1. Multiple uses of `test.in` is possible, and all results are appended
    to test's temporary file. If we want to clear the contents of this output
-   please use `# test.in clear`;
+   please use `in clear`;
 1. Multiple uses of `test.ou` is possible; any fail check will increase
    the total number of failed tests;
-1. To make sure that test's temporary file is empty, use `# test.ou empty`;
+1. To make sure that test's temporary file is empty, use `ou empty`;
 1. Tests are executed by orders provided in the source file. It's better
    to execute `pacman -Sy` to update package manager's database before
    any other tests, and it's also better to test `clean up` features

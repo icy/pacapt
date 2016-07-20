@@ -13,16 +13,10 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
-# test.in -Sy
-# test.ou .+
 _dpkg_init() {
   :
 }
 
-# test.in -Qq
-# test.ou ^apt$
-# test.in -Q
-# test.ou ^ii +apt +.+ubuntu
 dpkg_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     dpkg -l \
@@ -36,20 +30,10 @@ dpkg_Q() {
   fi
 }
 
-# test.in -Qi apt
-# test.ou ^Package: apt$
-# test.ou ^Status: install ok installed$
-# test.ou ^Priority: important$
 dpkg_Qi() {
   dpkg-query -s "$@"
 }
 
-# test.in -Ql apt
-# test.ou ^/usr/bin/apt
-# test.in -Ql
-# test.ou ^apt /usr/bin/apt$
-# test.in -Qql
-# test.ou ^/usr/bin/apt$
 dpkg_Ql() {
   if [[ -n "$@" ]]; then
     dpkg-query -L "$@"
@@ -71,8 +55,6 @@ dpkg_Ql() {
     done
 }
 
-# test.in -Qo /bin/bash
-# test.ou ^bash: /bin/bash$
 dpkg_Qo() {
   dpkg-query -S "$@"
 }
@@ -108,10 +90,6 @@ dpkg_Rns() {
   apt-get --purge autoremove "$@"
 }
 
-# test.in ! echo Y | pacman -S htop
-# test.in ! echo Y | pacman -R htop
-# test.in -Qi htop
-# test.ou ^Status: deinstall
 dpkg_R() {
   apt-get remove "$@"
 }
@@ -165,10 +143,6 @@ dpkg_Sii() {
   apt-cache rdepends "$@"
 }
 
-# test.in -Sccc
-# test.in clear
-# test.in -sS mariadb
-# test.ou empty
 dpkg_Sccc() {
   rm -fv /var/cache/apt/*.bin
   rm -fv /var/cache/apt/archives/*.*

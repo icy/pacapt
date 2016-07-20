@@ -1,0 +1,35 @@
+in -Sy
+ou .+
+
+in -Qq
+ou ^apt$
+
+in -Q
+ou ^ii +apt +.+ubuntu
+
+in -Qi apt
+ou ^Package: apt$
+ou ^Status: install ok installed$
+ou ^Priority: important$
+
+in -Ql apt
+ou ^/usr/bin/apt
+
+in -Ql
+ou ^apt /usr/bin/apt$
+
+in -Qql
+ou ^/usr/bin/apt$
+
+in -Qo /bin/bash
+ou ^bash: /bin/bash$
+
+in ! echo Y | pacman -S htop
+in ! echo Y | pacman -R htop
+in -Qi htop
+ou ^Status: deinstall
+
+in -Sccc
+in clear
+in -sS mariadb
+ou empty

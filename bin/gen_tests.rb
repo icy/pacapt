@@ -29,7 +29,7 @@ BEGIN {
   puts "_warn() { _log \"Warn $*\"; echo -e \"\\e[0;33mWarn:\\e[0m $*\"; }" # yellow
 }
 
-if gs = $_.match(/^# test\.in(.*)/)
+if gs = $_.match(/^in(.*)/)
   if new_test
     puts ""
     outputs = []
@@ -61,7 +61,7 @@ if gs = $_.match(/^# test\.in(.*)/)
   puts "  { #{cmd} ; } 2>&1 | tee -a $F_TMP 1>&2"
   puts "fi"
 
-elsif gs = $_.match(/^# test\.ou(.*)/)
+elsif gs = $_.match(/^ou(.*)/)
   new_test = true
   expected = gs[1].strip
 
