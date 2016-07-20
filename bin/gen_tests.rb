@@ -21,12 +21,12 @@ BEGIN {
   puts "N_FAIL=0"
   puts ""
   puts "_log()  { echo 1>&2; echo \":: $*\" 1>&2 ; }"
-  puts "_fail() { _log \"Fail $*\"; echo -e \"\\e[0;31mFail:\\e[0m $*\"; }" # red
-  puts "_erro() { _log \"Erro $*\"; echo -e \"\\e[0;31mErro:\\e[0m $*\"; }" # red
-  puts "_info() { _log \"Info $*\"; echo -e \"\\e[0;36mInfo:\\e[0m $*\"; }" # cyan
-  puts "_pass() { _log \"Pass $*\"; echo -e \"\\e[0;36mPass:\\e[0m $*\"; }" # cyan
-  puts "_exec() { _log \"Exec $*\"; echo -e \"\\e[0;33mExec:\\e[0m $*\"; }" # yellow
-  puts "_warn() { _log \"Warn $*\"; echo -e \"\\e[0;33mWarn:\\e[0m $*\"; }" # yellow
+  puts "_fail() { _log \"Fail $*\"; echo \"Fail: $*\"; }" # red
+  puts "_erro() { _log \"Erro $*\"; echo \"Erro: $*\"; }" # red
+  puts "_info() { _log \"Info $*\"; echo \"Info: $*\"; }" # cyan
+  puts "_pass() { _log \"Pass $*\"; echo \"Pass: $*\"; }" # cyan
+  puts "_exec() { _log \"Exec $*\"; echo \"Exec: $*\"; }" # yellow
+  puts "_warn() { _log \"Warn $*\"; echo \"Warn: $*\"; }" # yellow
 }
 
 if gs = $_.match(/^in(.*)/)
