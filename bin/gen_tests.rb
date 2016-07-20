@@ -35,11 +35,11 @@ if gs = $_.match(/^in(.*)/)
     outputs = []
     new_test = false
 
-    puts "if [[ -n \"${F_TMP:-}\" ]]; then"
+    puts "if [ -n \"${F_TMP:-}\" ]; then"
     puts "  rm -f \"${F_TMP}\""
     puts "fi"
     puts "export F_TMP=\"$(mktemp)\""
-    puts "if [[ -z ${F_TMP:-} ]]; then"
+    puts "if [ -z ${F_TMP:-} ]; then"
     puts "  _fail 'Unable to create temporary file.'"
     puts "fi"
   end
@@ -56,7 +56,7 @@ if gs = $_.match(/^in(.*)/)
     "pacman #{cmd}"
   end
 
-  puts "if [[ -n \"${F_TMP:-}\" ]]; then"
+  puts "if [ -n \"${F_TMP:-}\" ]; then"
   puts "  _exec \"#{cmd} (log: $F_TMP)\""
   puts "  { #{cmd} ; } 2>&1 | tee -a $F_TMP 1>&2"
   puts "fi"
@@ -66,13 +66,13 @@ elsif gs = $_.match(/^ou(.*)/)
   expected = gs[1].strip
 
   puts "N_TEST=$(( N_TEST + 1 ))"
-  puts "if [[ -n \"${F_TMP:-}\" ]]; then"
+  puts "if [ -n \"${F_TMP:-}\" ]; then"
   if expected.empty? or expected == "empty"
     puts "  ret=\"`grep -Ec '.+' $F_TMP`\""
-    puts "  if [[ $ret -ge 1 ]]; then"
+    puts "  if [ $ret -ge 1 ]; then"
   else
     puts "  ret=\"`grep -Ec \"#{expected}\" $F_TMP`\""
-    puts "  if [[ $ret -eq 0 ]]; then"
+    puts "  if [ $ret -eq 0 ]; then"
   end
   puts "    _fail 'Expected \"#{expected}\"'"
   puts "    N_FAIL=$(( N_FAIL + 1 ))"
@@ -85,7 +85,7 @@ elsif gs = $_.match(/^ou(.*)/)
 end
 
 END {
-  puts "if [[ $N_FAIL -ge 1 ]]; then"
+  puts "if [ $N_FAIL -ge 1 ]; then"
   puts "  _fail \"$N_FAIL/$N_TEST test(s) failed.\""
   puts "  exit 1"
   puts "else"
