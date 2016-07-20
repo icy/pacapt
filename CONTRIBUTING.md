@@ -99,6 +99,7 @@ can install `htop` package, then remove it. An alternative test is
 
 Notes:
 
+1. To specify a list of container images, use `im image [image]...`;
 1. Each test case has its own temporary file to store all output;
 1. Multiple uses of `test.in` is possible, and all results are appended
    to test's temporary file. If we want to clear the contents of this output
