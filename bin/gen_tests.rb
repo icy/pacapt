@@ -11,7 +11,7 @@
 #       -v $PWD/test.sh:/tmp/test.sh \
 #       -v $PWD/pacapt.dev:/usr/bin/pacman \
 #       ubuntu:14.04 \
-#       /bin/bash /tmp/test.sh 2>test.log
+#       /bin/sh /tmp/test.sh 2>test.log
 #
 
 BEGIN {
