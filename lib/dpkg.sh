@@ -67,10 +67,13 @@ dpkg_Qu() {
   apt-get upgrade --trivial-only "$@"
 }
 
+# NOTE: Some field is available for dpkg >= 1.16.2
+# NOTE: Debian:Squeeze has dpkg < 1.16.2
 dpkg_Qs() {
-  dpkg-query -W -f='${db:Status-Abbrev} ${binary:Package}\t${Version}\t${binary:Summary}\n' \
-  | grep -E '^[hi]i' \
-  | sed -r -e 's#^[hi]i +##' \
+  # dpkg >= 1.16.2 dpkg-query -W -f='${db:Status-Abbrev} ${binary:Package}\t${Version}\t${binary:Summary}\n'
+  dpkg-query -W -f='${Status} ${Package}\t${Version}\t${Description}\n' \
+  | grep -E '^((hold)|(install)|(deinstall))' \
+  | sed -r -e 's#^(\w+ ){3}##g' \
   | grep "${@:-.}"
 }
 
