@@ -34,10 +34,14 @@ _test() {
         $_img \
         /tmp/test.sh 2>"$_basename.$_img.log"
     )
+    if [[ $? -ge 1 ]]; then
+      echo >&2 "FAIL: $_basename/$_img"
+      return 1
+    fi
   done
 }
 
 while (( $# )); do
-  _test $1
+  _test $1 || exit 1
   shift
 done
