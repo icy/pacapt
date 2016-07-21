@@ -27,6 +27,10 @@ _test() {
     return 1
   fi
 
+  if [[ "${TESTS_DO_NOT_RUN:-}" == 1 ]]; then
+    return 0
+  fi
+
   _images="$(grep -m1 -E '^im ' "$_file")"
   _count=0
   for _img in $_images; do
