@@ -25,6 +25,9 @@ ou ^htop((-)|( +))[[:digit:]]+
 in -Qs htop
 ou not implemented
 
+in -Qo /bin/busybox
+ou ^busybox
+
 in ! echo Y | pacman -S htop
 ou htop.+ is installed.
 
@@ -46,6 +49,10 @@ ou Uninstallation of htop cancelled
 
 in ! echo y | pacman -R htop
 ou Removing all files installed
+
+in ! export TAZPKG_FILE=`find /var/cache/tazpkg/htop*.tazpkg`
+in -U $TAZPKG_FILE
+ou htop.+ is installed.
 
 in -Sccc
 ou not implemented
