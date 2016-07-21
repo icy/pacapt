@@ -1,3 +1,5 @@
+TESTS = *.txt
+
 default:
 	@grep -E "^# [a-z].+: .+" Makefile
 
@@ -7,8 +9,11 @@ tmp/pacapt.dev::
 	@cp -u ../pacapt.dev tmp/
 	@chmod 755 $(@)
 
+# all: Execute all test scripts
+# all: To execute a subset of tests, list them with TESTS=...
+# all: for example, `make all TESTS="foo.txt bar.txt"
 all: tmp/pacapt.dev
-	@./test.sh *.txt
+	@./test.sh $(TESTS)
 
 # clean: Remove all temporary files under /tmp/
 # clean: (but still keep all log files.)
