@@ -4,7 +4,7 @@ language:
 services:
 - docker
 script:
-# libjson-perl is required for `make shellcheck`
-- sudo apt-get install libjson-perl
+# lib{json,uri}-perl is required for `make shellcheck`
+- sudo apt-get install libjson-perl liburi-perl
 - make shellcheck
 - make tests
