@@ -19,6 +19,8 @@ BEGIN {
   puts "#!/bin/sh"
   puts "N_TEST=0"
   puts "N_FAIL=0"
+  puts "F_TMP="
+  puts "set -u"
   puts ""
   puts "_log()  { echo 1>&2; echo \":: $*\" 1>&2 ; }"
   puts "_fail() { _log \"Fail $*\"; echo \"Fail: $*\"; }" # red
@@ -36,7 +38,7 @@ if gs = $_.match(/^in(.*)/)
     new_test = false
 
     puts "if [ -n \"${F_TMP:-}\" ]; then"
-    puts "  cat $_F_TMP 1>&2"
+    puts "  cat $F_TMP 1>&2"
     puts "  rm -f \"${F_TMP}\""
     puts "fi"
     puts "export F_TMP=\"$(mktemp)\""
