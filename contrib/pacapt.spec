@@ -36,7 +36,7 @@ The tool supports the following package managers:
 %setup -q
 
 %build
-rm -rf bin,lib,.gitignore,CHANGELOG.md,CONTRIBUTING.md,COPYING,Makefile,README.md,TODO
+rm -rf bin,contrib,tests,lib,.gitignore,CHANGELOG.md,CONTRIBUTING.md,COPYING,Makefile,README.md,TODO
 
 %install
 mkdir -p %buildroot/usr/local/bin
