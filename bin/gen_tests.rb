@@ -57,7 +57,7 @@ if gs = $_.match(/^in(.*)/)
   end
 
   puts "if [ -n \"${F_TMP:-}\" ]; then"
-  puts "  _exec \"#{cmd} (log: $F_TMP)\""
+  puts "  _exec \"#{cmd}\""
   puts "  { #{cmd} ; } 2>&1 | tee -a $F_TMP 1>&2"
   puts "fi"
 
