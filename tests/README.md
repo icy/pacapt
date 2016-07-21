@@ -1,7 +1,7 @@
 ## Table of contents
 
 1. [Preparing test environment](#preparing-test-environment)
-1. [Invoking test scripts](#invoking-test-script)
+1. [Invoking test scripts](#invoking-test-scripts)
 1. [Writting test cases](#writting-test-cases)
 1. [Notes](#notes-on-writting-test-cases)
 
