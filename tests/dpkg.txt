@@ -47,7 +47,7 @@ ou ^bash: /bin/bash$
 # Download without installation
 in ! echo Y | pacman -Sw screen
 in ! screen --help
-ou ^command not found
+ou command not found
 
 # Now installation
 in ! echo Y | pacman -S screen
