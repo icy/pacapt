@@ -26,13 +26,21 @@ BEGIN {
   puts ""
   puts "set -u"
   puts ""
-  puts "_log()  { echo 1>&2; echo \":: $*\" 1>&2 ; }"
+  puts "_log()  { echo \":: $*\" 1>&2 ; }"
   puts "_fail() { _log \"Fail $*\"; echo \"Fail: $*\"; }" # red
   puts "_erro() { _log \"Erro $*\"; echo \"Erro: $*\"; }" # red
   puts "_info() { _log \"Info $*\"; echo \"Info: $*\"; }" # cyan
   puts "_pass() { _log \"Pass $*\"; echo \"Pass: $*\"; }" # cyan
   puts "_exec() { _log \"Exec $*\"; echo \"Exec: $*\"; }" # yellow
   puts "_warn() { _log \"Warn $*\"; echo \"Warn: $*\"; }" # yellow
+  puts "_slog() {"
+  puts "  if [ -n \"${F_TMP:-}\" ]; then"
+  puts "    echo 1>&2 ':: Exec output'"
+  puts "    cat 1>&2 $F_TMP"
+  puts "    rm -f \"${F_TMP}\""
+  puts "    echo 1>&2"
+  puts "  fi"
+  puts "}"
 }
 
 if gs = $_.match(/^in(.*)/)
@@ -41,10 +49,7 @@ if gs = $_.match(/^in(.*)/)
     outputs = []
     new_test = false
 
-    puts "if [ -n \"${F_TMP:-}\" ]; then"
-    puts "  cat $F_TMP 1>&2"
-    puts "  rm -f \"${F_TMP}\""
-    puts "fi"
+    puts "_slog"
     puts "export F_TMP=\"$(mktemp)\""
     puts "if [ -z ${F_TMP:-} ]; then"
     puts "  _fail 'Unable to create temporary file.'"
@@ -94,6 +99,7 @@ elsif gs = $_.match(/^ou(.*)/)
 end
 
 END {
+  puts "_slog"
   puts "if [ $N_FAIL -ge 1 ]; then"
   puts "  _fail \"$N_FAIL/$N_TEST test(s) failed.\""
   puts "  exit 1"
