@@ -2,9 +2,9 @@
 Name:           pacapt
 Version:        2.3.13
 Release:        1%{?dist}
-Summary:        An Arch's pacman-like package manager for some Unices.
-License:        custom
-URL:            github.com/icy/pacapt
+Summary:        An Arch's pacman-like package manager for some Unices
+License:        Fair
+URL:            https://github.com/icy/pacapt
 Source0:        %{name}-%{version}.tar.gz
 BuildArch:	     noarch
 
@@ -51,13 +51,13 @@ rm -rf %_buildrootdir
 /usr/local/bin/pacman
 
 %changelog
-* Fri Jul 21 2016 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1
+* Thu Jul 21 2016 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1
 - Updated version (2.3.12 -> 2.3.13)
-* Fri Jul 20 2016 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1
+* Wed Jul 20 2016 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1
 - Updated version (2.3.11 -> 2.3.12)
-* Fri Jul 11 2016 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1
+* Mon Jul 11 2016 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1
 - Updated version (2.3.10 -> 2.3.11)
-* Fri Jul 11 2016 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1
+* Mon Jul 11 2016 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1
 - Updated version (2.3.9 -> 2.3.10)
 * Fri Jul 8 2016 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1
 - Updated version (2.3.8 -> 2.3.9)
