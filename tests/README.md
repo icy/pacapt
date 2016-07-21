@@ -25,7 +25,7 @@ Basically we execute the following command
         < tests/dpkg.txt \
         > tests/tmp/test.sh
 
-    $ tests/tmp/
+    $ cd tests/tmp/
     $ docker run --rm \
         -v $PWD/test.sh:/tmp/test.sh \
         -v $PWD/pacapt.dev:/usr/bin/pacman \
