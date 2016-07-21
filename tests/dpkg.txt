@@ -43,7 +43,18 @@ in -Qo /bin/bash
 ou ^bash: /bin/bash$
 
 # Install and Deinstall a package
+
+# Download without installation
+in ! echo Y | pacman -Sw screen
+in ! which screen
+ou ^which: no screen in
+
+# Now installation
 in ! echo Y | pacman -S screen
+in ! which screen
+ou ^/usr/bin/screen
+
+# Now remove the package
 in ! echo Y | pacman -R screen
 in -Qi screen
 ou ^Status: deinstall
