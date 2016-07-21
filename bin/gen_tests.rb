@@ -17,9 +17,13 @@
 BEGIN {
   new_test = true
   puts "#!/bin/sh"
+  puts ""
+  puts "export PATH=/usr/bin:$PATH"
+  puts ""
   puts "N_TEST=0"
   puts "N_FAIL=0"
   puts "F_TMP="
+  puts ""
   puts "set -u"
   puts ""
   puts "_log()  { echo 1>&2; echo \":: $*\" 1>&2 ; }"
