@@ -50,7 +50,7 @@ ou Uninstallation of htop cancelled
 in ! echo y | pacman -R htop
 ou Removing all files installed
 
-in ! export TAZPKG_FILE=`find /var/cache/tazpkg/htop*.tazpkg`
+in ! export TAZPKG_FILE=`find /var/cache/tazpkg/ -type f -iname "htop*.tazpkg"`
 in -U $TAZPKG_FILE
 ou htop.+ is installed.
 
