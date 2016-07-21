@@ -1,5 +1,7 @@
 ## Table of contents
 
+See also https://travis-ci.org/icy/pacapt.
+
 1. [Preparing test environment](#preparing-test-environment)
 1. [Invoking test scripts](#invoking-test-scripts)
 1. [Writting test cases](#writting-test-cases)

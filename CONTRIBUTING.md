@@ -16,7 +16,7 @@
 
 ## Testing. Writting test cases
 
-See also `tests/README.md`.
+See also `tests/README.md` and https://travis-ci.org/icy/pacapt.
 
 1. Use `make shellcheck` if you have a network connection,
    and enough `Perl` packages (`JSON`, `URI::Escape`) on your system;
