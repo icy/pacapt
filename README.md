@@ -3,6 +3,7 @@
 * [Name](#name)
 * [Description](#description)
 * [Installation](#installation)
+* [Installation notes for distribution maintainer](#installation-notes-for-distribution-maintainer)
 * [Usage](#usage)
 * [Implemented Operations](#implemented-operations)
 * [Support](#support)
@@ -73,6 +74,17 @@ This stable script is generated from the latest stable branch,
 which is `v2.0` at the moment. If you want to compile a script
 from its components, please make sure you use a correct branch.
 See `CONTRIBUTING.md` for details.
+
+## Installation notes for distribution maintainer
+
+@Pival81 creates specification to build packages on various Linux
+distributions (CentOS, Debian, Fedora, OpenSUSE, RHEL, Ubuntu).
+The specification can be found under the `contrib/` directory.
+
+@Pival81 also builds packages which are ready to use on your machine.
+See the following link for details.
+
+  http://software.opensuse.org/download.html?project=home:Pival81&package=pacapt
 
 ## Usage
 
