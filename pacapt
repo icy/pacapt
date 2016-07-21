@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.3.12
+# Version: 2.3.13
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2016 \
@@ -38,7 +38,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.3.12'
+export PACAPT_VERSION='2.3.13'
 
 _help() {
   cat <<'EOF'
@@ -741,9 +741,10 @@ dpkg_Qu() {
 }
 
 dpkg_Qs() {
-  dpkg-query -W -f='${db:Status-Abbrev} ${binary:Package}\t${Version}\t${binary:Summary}\n' \
-  | grep -E '^[hi]i' \
-  | sed -r -e 's#^[hi]i +##' \
+  # dpkg >= 1.16.2 dpkg-query -W -f='${db:Status-Abbrev} ${binary:Package}\t${Version}\t${binary:Summary}\n'
+  dpkg-query -W -f='${Status} ${Package}\t${Version}\t${Description}\n' \
+  | grep -E '^((hold)|(install)|(deinstall))' \
+  | sed -r -e 's#^(\w+ ){3}##g' \
   | grep "${@:-.}"
 }
 
