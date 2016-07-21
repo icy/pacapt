@@ -1,3 +1,13 @@
+## v2.3.13
+
+* `lib/dpkg`: Fix `-Qs` for old `dpkg`.
+
+For developers:
+
+* Test scripts can now be automated thanks to `tests/*`;
+* `tests/slitz40`: Add;
+* `tests/dpkg`: Update.
+
 ## v2.3.12
 
 * `lib/dpkg`: Fix #84 (incorrect implementation of `-Qs`.)
