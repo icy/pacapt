@@ -95,7 +95,7 @@ _check_files() {
     echo >&2 ":: WARN: Scripts will be checked by remote web server."
   }
   while (( $# )); do
-    _check_file "$1"
+    _check_file "$1" || return 1
     shift
   done
 }
