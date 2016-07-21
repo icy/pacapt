@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/icy/pacapt.svg?branch=ng)](https://travis-ci.org/icy/pacapt)
+
 ## Table of contents
 
 * [Name](#name)
