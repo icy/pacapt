@@ -7,7 +7,7 @@
 # Example:
 #
 #   $ ruby -n ./bin/gen_tests.rb < lib/dpkg.txt > ./test.sh
-#   $ docker run \
+#   $ docker run --rm \
 #       -v $PWD/test.sh:/tmp/test.sh \
 #       -v $PWD/pacapt.dev:/usr/bin/pacman \
 #       ubuntu:14.04 \
