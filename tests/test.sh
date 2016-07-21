@@ -43,7 +43,7 @@ _test() {
         -v $PWD/pacapt.dev:/usr/bin/pacman \
         -v "$PWD/$_basename.sh:/tmp/test.sh" \
         $_img \
-        /tmp/test.sh 2>"$_basename.$_img.log"
+        /tmp/test.sh 2>"$_basename.${_img//\//-}.log"
     )
     if [[ $? -ge 1 ]]; then
       echo >&2 "FAIL: $_basename/$_img"
