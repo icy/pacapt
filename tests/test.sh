@@ -8,6 +8,11 @@ _test() {
   local _basename="$(basename "$_file" .txt)"
   local _images=
 
+  # See if input is provided with .txt extension
+  if [[ "$(basename "$_file")" == "$_basename" ]]; then
+    _file="$_file.txt"
+  fi
+
   if [[ ! -f "$_file" ]]; then
     echo >&2 ":: File not found '$_file'. Return(1)."
     return 1
@@ -23,8 +28,10 @@ _test() {
   fi
 
   _images="$(grep -m1 -E '^im ' "$_file")"
+  _count=0
   for _img in $_images; do
     [[ $_img == "im" ]] && continue
+    (( _count ++ ))
     echo >&2 ":: Testing $_basename with $_img"
     (
       cd tmp/ || return 1
@@ -39,6 +46,10 @@ _test() {
       return 1
     fi
   done
+
+  if [[ $_count == 0 ]]; then
+    echo >&2 "WARN: $_basename: Forget to specify 'im ' instruction?"
+  fi
 }
 
 while (( $# )); do
