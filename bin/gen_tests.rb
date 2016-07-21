@@ -36,6 +36,7 @@ if gs = $_.match(/^in(.*)/)
     new_test = false
 
     puts "if [ -n \"${F_TMP:-}\" ]; then"
+    puts "  cat $_F_TMP 1>&2"
     puts "  rm -f \"${F_TMP}\""
     puts "fi"
     puts "export F_TMP=\"$(mktemp)\""
@@ -56,9 +57,11 @@ if gs = $_.match(/^in(.*)/)
     "pacman #{cmd}"
   end
 
+  # FIXME: We wanted to use `tee` here, but that will create new pipes,
+  # FIXME: and hence some feature didn't work (e.g., export FOO=).
   puts "if [ -n \"${F_TMP:-}\" ]; then"
   puts "  _exec \"#{cmd}\""
-  puts "  { #{cmd} ; } 2>&1 | tee -a $F_TMP 1>&2"
+  puts "  { #{cmd} ; } 1>>$F_TMP 2>&1"
   puts "fi"
 
 elsif gs = $_.match(/^ou(.*)/)
