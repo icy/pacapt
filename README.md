@@ -3,7 +3,7 @@
 * [Name](#name)
 * [Description](#description)
 * [Installation](#installation)
-* [Installation notes for distribution maintainer](#installation-notes-for-distribution-maintainer)
+* [Installation from Pival81 repository](#installation-from-pival81-repository)
 * [Usage](#usage)
 * [Implemented Operations](#implemented-operations)
 * [Support](#support)
@@ -75,7 +75,7 @@ which is `v2.0` at the moment. If you want to compile a script
 from its components, please make sure you use a correct branch.
 See `CONTRIBUTING.md` for details.
 
-## Installation notes for distribution maintainer
+## Installation from Pival81 repository
 
 @Pival81 creates specification to build packages on various Linux
 distributions (CentOS, Debian, Fedora, OpenSUSE, RHEL, Ubuntu).
