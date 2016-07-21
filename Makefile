@@ -22,7 +22,7 @@ default:
 # Build and install development script
 
 pacapt.dev: ./lib/*.sh ./lib/*.txt bin/compile.sh
-	@./bin/compile.sh > $(@)
+	@./bin/compile.sh > $(@) || { rm -fv $(@); exit 1; }
 	@bash -n $(@)
 	@chmod 755 $(@)
 	@echo 1>&2 "The output file is '$(@)' (unstable version)"
@@ -38,8 +38,14 @@ install.dev: pacapt.dev
 
 # Build and install stable script
 
-pacapt: ./lib/*.sh ./lib/*.txt bin/compile.sh
-	@./bin/compile.sh > $(@)
+.PHONY: pacapt.check
+
+pacapt.check:
+	@test -n "${VERSION}" || { echo ":: Please specify VERSION, i.e., make pacapt VERSION=1.2.3"; exit 1; }
+
+pacapt: pacapt.check ./lib/*.sh ./lib/*.txt bin/compile.sh
+	@./bin/compile.sh > $(@).tmp || { rm -fv $(@).tmp; exit 1; }
+	@mv -fv $(@).tmp $(@)
 	@bash -n $(@)
 	@chmod 755 $(@)
 	@echo 1>&2 "The output file is '$(@)' (stable version)"
