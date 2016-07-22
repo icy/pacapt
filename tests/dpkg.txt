@@ -49,6 +49,13 @@ in ! echo Y | pacman -Sw screen
 in ! which screen || echo 'command not found'
 ou command not found
 
+# Display remote package information
+in -Si screen
+ou ^Package: screen
+
+in -Sii screen
+ou ^Reverse Depends:
+
 # Now installation
 in ! echo Y | pacman -S screen
 in ! which screen
