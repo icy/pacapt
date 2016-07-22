@@ -42,6 +42,19 @@ ou ^/usr/bin/apt-key$
 in -Qo /bin/bash
 ou ^bash: /bin/bash$
 
+# Search for pattern in installed package (names + descriptions)
+in -Qs bash
+ou ^bash.+Bourne
+
+in -Qs bourne
+ou ^bash.+Bourne
+
+in -Qs screen
+ou empty
+
+in -Qs "Bourne Again"
+ou ^bash.+Bourne
+
 # Install and Deinstall a package
 
 # Download without installation
