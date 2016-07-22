@@ -52,7 +52,7 @@ ou ^bash.+Bourne
 in -Qs screen
 ou empty
 
-in -Qs "Bourne Again"
+in -Qs 'Bourne Again'
 ou ^bash.+Bourne
 
 # Install and Deinstall a package
