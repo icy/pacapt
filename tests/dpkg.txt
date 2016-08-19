@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # FIXME: debian:squeeze It's unable to run `pacman -Sy`
-im ubuntu:14.04 debian:wheezy
+im ubuntu:16.04 ubuntu:14.04 debian:wheezy
 
 # Remove `docker-clean` because we need *.deb files under /var/cache
 in ! rm -fv /etc/apt/apt.conf.d/docker-clean
