@@ -109,9 +109,9 @@ end
 END {
   puts "_slog"
   puts "if [ $N_FAIL -ge 1 ]; then"
-  puts "  _fail $N_FAIL/$N_TEST test(s) failed."
+  puts "  _fail \"$N_FAIL/$N_TEST test(s) failed.\""
   puts "  exit 1"
   puts "else"
-  puts "  _pass All $N_TEST tests(s) passed."
+  puts "  _pass \"All $N_TEST tests(s) passed.\""
   puts "fi"
 }

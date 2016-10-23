@@ -100,7 +100,7 @@ can install `htop` package, then remove it. An alternative test is
    any other tests, and it's also better to test `clean up` features
    (`pacman -Sc`, `pacman -Scc`, ...) at the very end of the source file.
    See `lib/dpkg.sh` for an example;
-1. All tests are executed by `#bourne` shell. Forget `#bash`:)
+1. All tests are executed by `#bash` shell.
 1. In any input command, `$LOG` (if any) is replaced by the path to
    test's temporary file;
 1. It's very easy to trick the test mechanism; it's our duty to make

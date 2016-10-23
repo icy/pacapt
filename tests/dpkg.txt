@@ -52,14 +52,14 @@ ou ^bash.+Bourne
 in -Qs screen
 ou empty
 
-in -Qs 'Bourne Again'
+in -Qs "Bourne Again"
 ou ^bash.+Bourne
 
 # Install and Deinstall a package
 
 # Download without installation
 in ! echo Y | pacman -Sw screen
-in ! which screen || echo 'command not found'
+in ! which screen || echo "command not found"
 ou command not found
 
 # Display remote package information
