@@ -29,7 +29,7 @@ gen: tmp/pacapt.dev
 # clean:
 # clean: Remove all temporary files under /tmp/
 # clean: (but still keep all log files.)
-.PHONY: clen
+.PHONY: clean
 clean:
 	@rm -fv tmp/*.sh tmp/pacapt.dev
 	@echo Please remove tmp/*.log manually.
