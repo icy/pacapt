@@ -16,7 +16,7 @@
 
 BEGIN {
   new_test = true
-  puts "#!/bin/sh"
+  puts "#!/bin/bash"
   puts ""
   puts "export PATH=/usr/bin:$PATH"
   puts ""
@@ -89,10 +89,10 @@ elsif gs = $_.match(/^ou(.*)/)
   puts "N_TEST=$(( N_TEST + 1 ))"
   puts "if [ -n \"${F_TMP:-}\" ]; then"
   if expected.empty? or expected == "empty"
-    puts "  ret=\"`grep -Ec '.+' $F_TMP`\""
+    puts "  ret=\"$(grep -Ec '.+' $F_TMP)\""
     puts "  if [ $ret -ge 1 ]; then"
   else
-    puts "  ret=\"`grep -Ec \"#{expected}\" $F_TMP`\""
+    puts "  ret=\"$(grep -Ec \"#{expected}\" $F_TMP)\""
     puts "  if [ $ret -eq 0 ]; then"
   end
   puts "    _fail 'Expected \"#{expected}\"'"

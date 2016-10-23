@@ -11,7 +11,7 @@ See also https://travis-ci.org/icy/pacapt.
 
 ## Preparing test environment
 
-We run `#bourne` test scripts inside `Docker` container. We will need
+We run `#bash` test scripts inside `Docker` container. We will need
 the following things
 
 1. A fast network to download base images from http://hub.docker.com/,
