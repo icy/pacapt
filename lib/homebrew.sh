@@ -88,11 +88,11 @@ homebrew_Si() {
 
 homebrew_Suy() {
   brew update \
-  && brew upgrade --all "$@"
+  && brew upgrade "$@"
 }
 
 homebrew_Su() {
-  brew upgrade --all "$@"
+  brew upgrade "$@"
 }
 
 homebrew_Sy() {
