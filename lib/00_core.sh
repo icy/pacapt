@@ -147,7 +147,7 @@ _translate_noconfirm() {
   "yum")    _opt="--assumeyes";;
   # FIXME: pacman has 'assume-yes' and 'assume-no'
   # FIXME: zypper has better mode. Similar to dpkg (Debian).
-  "zypper") _opt="--non-interactive";;
+  "zypper") _opt="--no-confirm";;
   "pkgng")  _opt="-y";;
   *)
     _opt=""
