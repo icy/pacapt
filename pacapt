@@ -3,25 +3,33 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.1.6
+# Version: 2.3.13
 # Authors: Anh K. Huynh et al.
 
-# Copyright (C) 2010 - 2015 \
-#                           | 10sr
-#                           | Alexander Dupuy
-#                           | Anh K. Huynh
-#                           | Arcterus
-#                           | Cuong Manh Le
-#                           | Daniel YC Lin
-#                           | Danny George
-#                           | Darshit Shah
-#                           | Hà-Dương Nguyễn
-#                           | Huy Ngô
-#                           | James Pearson
+# Copyright (C) 2010 - 2016 \
+#                           | 10sr (10sr)
+#                           | Alexander Dupuy (dupuy)
+#                           | Anh K. Huynh (icy)
+#                           | Alex Lyon (Arcterus)
+#                           | Carl X. Su (bcbcarl)
+#                           | Cuong Manh Le (Gnouc)
+#                           | Daniel YC Lin (dlintw)
+#                           | Danny George (dangets)
+#                           | Darshit Shah (darnir)
+#                           | Eric Crosson (EricCrosson)
+#                           | GijsTimmers (GijsTimmers)
+#                           | Hà-Dương Nguyễn (cmpitg)
+#                           | Huy Ngô (NgoHuy)
+#                           | James Pearson (xiongchiamiov)
+#                           | Janne Heß (dasJ)
+#                           | Jiawei Zhou (4679)
 #                           | Karol Blazewicz
-#                           | Konrad Borowski
-#                           | Somasis
-#                           | Vojtech Letal
+#                           | Kevin Brubeck (unhammer)
+#                           | Konrad Borowski (xfix)
+#                           | Kylie McClain (somasis)
+#                           | Pival81
+#                           | Siôn Le Roux (sinisterstuf)
+#                           | Vojtech Letal (letalvoj)
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
@@ -30,7 +38,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.1.6'
+export PACAPT_VERSION='2.3.13'
 
 _help() {
   cat <<'EOF'
@@ -77,6 +85,7 @@ OPERATIONS
 OPTIONS
 
     -w              download packages but don't install them
+    --noconfirm     don't wait for user's confirmation
 
 EXAMPLES
 
@@ -106,8 +115,9 @@ EOF
 
 
 
+
 _error() {
-  echo >&2 "Error: $@"
+  echo >&2 "Error: $*"
   return 1
 }
 
@@ -156,10 +166,25 @@ _PACMAN_detect() {
   _issue2pacman cave "Exherbo Linux" && return
   _issue2pacman yum "CentOS" && return
   _issue2pacman yum "Red Hat" && return
-  _issue2pacman yum "Fedora" && return
+  #
+  # FIXME: The multiple package issue.
+  #
+  # On #63, Huy commented out this line. This is because new generation
+  # of Fedora uses `dnf`, and `yum` becomes a legacy tool. On old Fedora
+  # system, `yum` is still detectable by looking up `yum` binary.
+  #
+  # I'm not sure how to support this case easily. Let's wait, e.g, 5 years
+  # from now to make `dnf` becomes a default? Oh no!
+  #
+  # And here why `pacman` is still smart. Debian has a set of tools.
+  # Fedora has `yum` (and a set of add-ons). Now Fedora moves to `dnf`.
+  # This means that a package manager is not a heart of a system ;)
+  #
+  # _issue2pacman yum "Fedora" && return
   _issue2pacman zypper "SUSE" && return
   _issue2pacman pkg_tools "OpenBSD" && return
   _issue2pacman pkg_tools "Bitrig" && return
+  _issue2pacman apk "Alpine Linux" && return
 
   [[ -z "$_PACMAN" ]] || return
 
@@ -171,7 +196,9 @@ _PACMAN_detect() {
   fi
 
   [[ -x "/usr/bin/apt-get" ]] && _PACMAN="dpkg" && return
+  [[ -x "/data/data/com.termux/files/usr/bin/apt-get" ]] && _PACMAN="dpkg" && return
   [[ -x "/usr/bin/cave" ]] && _PACMAN="cave" && return
+  [[ -x "/usr/bin/dnf" ]] && _PACMAN="dnf" && return
   [[ -x "/usr/bin/yum" ]] && _PACMAN="yum" && return
   [[ -x "/opt/local/bin/port" ]] && _PACMAN="macports" && return
   [[ -x "/usr/bin/emerge" ]] && _PACMAN="portage" && return
@@ -180,50 +207,103 @@ _PACMAN_detect() {
   # make sure pkg_add is after pkgng, FreeBSD base comes with it until converted
   [[ -x "/usr/sbin/pkg_add" ]] && _PACMAN="pkg_tools" && return
   [[ -x "/usr/sbin/pkgadd" ]] && _PACMAN="sun_tools" && return
+  [[ -x "/sbin/apk" ]] && _PACMAN="apk" && return
+  [[ -x "/usr/bin/tazpkg" ]] && _PACMAN="tazpkg" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
   return 1
 }
 
-_tranlate_w() {
-  case "$_PACMAN" in
-  "dpkg")
-    _TOPT="-d"
-    ;;
-  "cave")
-    _TOPT="-f"
-    ;;
+_translate_w() {
 
-  "yum")
-    _TOPT="--downloadonly"
+  echo "$_EOPT" | $GREP -q ":w:" || return 0
+
+  local _opt=
+  local _ret=0
+
+  case "$_PACMAN" in
+  "dpkg")     _opt="-d";;
+  "cave")     _opt="-f";;
+  "macports") _opt="fetch";;
+  "portage")  _opt="--fetchonly";;
+  "zypper")   _opt="--download-only";;
+  "pkgng")    _opt="fetch";;
+  "yum")      _opt="--downloadonly";
     if ! rpm -q 'yum-downloadonly' >/dev/null 2>&1; then
       _error "'yum-downloadonly' package is required when '-w' is used."
-      exit 1
+      _ret=1
     fi
     ;;
-
-  "macports")
-    _TOPT="fetch"
+  "tazpkg")
+    _error "$_PACMAN: Use '$_PACMAN get' to download and save packages to current directory."
+    _ret=1
     ;;
-
-  "portage")
-    _TOPT="--fetchonly"
-    ;;
-
-  "zypper")
-    _TOPT="--download-only"
-    ;;
-
-  "pkgng")
-    _TOPT="fetch"
-    ;;
-
+  "apk")      _opt="fetch";;
   *)
-    _TOPT=""
+    _opt=""
+    _ret=1
+
+    _error "$_PACMAN: Option '-w' is not supported/implemented."
+    ;;
+  esac
+
+  echo $_opt
+  return "$_ret"
+}
+
+_translate_debug() {
+  echo "$_EOPT" | $GREP -q ":v:" || return 0
+
+  case "$_PACMAN" in
+  "tazpkg")
+    _error "$_PACMAN: Option '-v' (debug) is not supported/implemented by tazpkg"
     return 1
     ;;
   esac
+
+  echo "-v"
+}
+
+_translate_noconfirm() {
+
+  echo "$_EOPT" | $GREP -q ":noconfirm:" || return 0
+
+  local _opt=
+  local _ret=0
+
+  case "$_PACMAN" in
+  # FIXME: Update environment DEBIAN_FRONTEND=noninteractive
+  # FIXME: There is also --force-yes for a stronger case
+  "dpkg")   _opt="--yes";;
+  "dnf")    _opt="--assumeyes";;
+  "yum")    _opt="--assumeyes";;
+  # FIXME: pacman has 'assume-yes' and 'assume-no'
+  # FIXME: zypper has better mode. Similar to dpkg (Debian).
+  "zypper") _opt="--non-interactive";;
+  "pkgng")  _opt="-y";;
+  "tazpkg") _opt="--auto";;
+  *)
+    _opt=""
+    _ret=1
+    _error "$_PACMAN: Option '--noconfirm' is not supported/implemented."
+    ;;
+  esac
+
+  echo $_opt
+  return $_ret
+}
+
+_translate_all() {
+  local _args=""
+  local _debug="$(_translate_debug)"
+  local _noconfirm="$(_translate_noconfirm)"
+
+  _args="$(_translate_w)" || return 1
+  _args="${_args}${_noconfirm:+ }${_noconfirm}" || return 1
+  _args="${_args}${_debug:+ }${_debug}" || return 1
+
+  export _EOPT="${_args# }"
 }
 
 _print_supported_operations() {
@@ -251,6 +331,118 @@ entity that uses the works is notified of this instrument.
 DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 EOF
 }
+
+
+
+_apk_init() {
+  :
+}
+
+apk_Q() {
+  if [[ -z "$_TOPT" ]]; then
+    apk info
+  else
+    _not_implemented
+  fi
+}
+
+apk_Qi() {
+  apk info -a -- "$@"
+}
+
+apk_Ql() {
+  apk info -L -- "$@"
+}
+
+apk_Qo() {
+  apk info --who-owns -- "$@"
+}
+
+apk_Qs() {
+  apk info -- "*$@*"
+}
+
+apk_Qu() {
+  apk version -l '<'
+}
+
+apk_R() {
+  apk del -- "$@"
+}
+
+apk_Rn() {
+  apk del --purge -- "$@"
+}
+
+apk_Rns() {
+  apk del --purge -r -- "$@"
+}
+
+apk_Rs() {
+  apk del -r -- "$@"
+}
+
+apk_S() {
+  case ${_EOPT} in
+    # Download only
+    ("fetch") shift
+              apk fetch        -- "$@" ;;
+          (*) apk add   $_TOPT -- "$@" ;;
+  esac
+}
+
+apk_Sc() {
+  apk cache -v clean
+}
+
+apk_Scc() {
+  rm -rf /var/cache/apk/*
+}
+
+apk_Sccc() {
+  apk_Scc
+}
+
+apk_Si() {
+  apk_Qi "$@"
+}
+
+apk_Sii() {
+  apk info -r -- "$@"
+}
+
+apk_Sl() {
+  apk search -v -- "$@"
+}
+
+apk_Ss() {
+  apk_Sl "$@"
+}
+
+apk_Su() {
+  apk upgrade
+}
+
+apk_Suy() {
+  if [ "$#" -gt 0 ]; then
+    apk add -U -u -- "$@"
+  else
+    apk upgrade -U -a
+  fi
+}
+
+apk_Sy() {
+  apk update
+}
+
+apk_Sw() {
+  apk fetch -- "$@"
+}
+
+apk_U() {
+  apk add --allow-untrusted -- "$@"
+}
+
 
 
 _cave_init() {
@@ -339,7 +531,7 @@ cave_R() {
   cave uninstall "$@" \
   && echo "Control-C to stop uninstalling..." \
   && sleep 2s \
-  cave uninstall -x "$@"
+  && cave uninstall -x "$@"
 }
 
 cave_Si() {
@@ -392,9 +584,106 @@ cave_U() {
   _not_implemented
 }
 
+
+
+_dnf_init() {
+  :
+}
+
 dnf_S() {
   dnf install $_TOPT "$@"
 }
+
+dnf_Suy() {
+  dnf upgrade "$@"
+}
+
+dnf_Sw() {
+  dnf download "$@"
+}
+
+dnf_Si() {
+  dnf info "$@"
+}
+
+dnf_Sl() {
+  dnf list available "$@"
+}
+
+dnf_Ss() {
+  dnf search "$@"
+}
+
+dnf_Sc() {
+  dnf clean expire-cache "$@"
+}
+
+dnf_Scc() {
+   dnf clean packages "$@"
+}
+
+dnf_Sccc() {
+    dnf clean all "$@"
+}
+
+dnf_Su() {
+  dnf upgrade "$@"
+}
+
+dnf_Sy() {
+  dnf clean expire-cache && dnf check-update
+}
+
+dnf_Q() {
+  if [[ "$_TOPT" == "q" ]]; then
+    rpm -qa --qf "%{NAME}\n"
+  elif [[ "$_TOPT" == "" ]]; then
+    rpm -qa --qf "%{NAME} %{VERSION}\n"
+  else
+    _not_implemented
+  fi
+}
+
+dnf_Qi() {
+  dnf info "$@"
+}
+
+dnf_Qu() {
+  dnf list updates "$@"
+}
+
+dnf_Qs() {
+  rpm -qa "*$@*"
+}
+
+dnf_Ql() {
+  rpm -ql "$@"
+}
+
+dnf_Qo() {
+  rpm -qf "$@"
+}
+
+dnf_Qp() {
+  rpm -qp "$@"
+}
+
+dnf_Qc() {
+  rpm -q --changelog "$@"
+}
+
+dnf_Qm() {
+  dnf list extras
+}
+
+dnf_R() {
+  dnf remove "$@"
+}
+
+dnf_U() {
+  dnf install "$@"
+}
+
 
 
 _dpkg_init() {
@@ -452,7 +741,11 @@ dpkg_Qu() {
 }
 
 dpkg_Qs() {
-  dpkg-query -W "*$@*" | cut -f1
+  # dpkg >= 1.16.2 dpkg-query -W -f='${db:Status-Abbrev} ${binary:Package}\t${Version}\t${binary:Summary}\n'
+  dpkg-query -W -f='${Status} ${Package}\t${Version}\t${Description}\n' \
+  | grep -E '^((hold)|(install)|(deinstall))' \
+  | sed -r -e 's#^(\w+ ){3}##g' \
+  | grep "${@:-.}"
 }
 
 dpkg_Rs() {
@@ -488,6 +781,7 @@ dpkg_Su() {
   apt-get upgrade "$@"
 }
 
+
 dpkg_Sy() {
   apt-get update "$@"
 }
@@ -504,13 +798,6 @@ dpkg_Scc() {
   apt-get autoclean "$@"
 }
 
-dpkg_Sccc() {
-  rm -fv /var/cache/apt/*.bin
-  rm -fv /var/cache/apt/archives/*.*
-  rm -fv /var/lib/apt/lists/*.*
-  apt-get autoclean
-}
-
 dpkg_S() {
   apt-get install $_TOPT "$@"
 }
@@ -522,6 +809,14 @@ dpkg_U() {
 dpkg_Sii() {
   apt-cache rdepends "$@"
 }
+
+dpkg_Sccc() {
+  rm -fv /var/cache/apt/*.bin
+  rm -fv /var/cache/apt/archives/*.*
+  rm -fv /var/lib/apt/lists/*.*
+  apt-get autoclean
+}
+
 
 
 _homebrew_init() {
@@ -539,7 +834,8 @@ homebrew_Ql() {
 homebrew_Qo() {
   local pkg prefix cellar
 
-  cd "$(dirname -- $(which "$@"))"
+  # FIXME: What happens if the file is not exectutable?
+  cd "$(dirname -- "$(which "$@")")"
   pkg="$(pwd -P)/$(basename -- "$@")"
   prefix="$(brew --prefix)"
   cellar="$(brew --cellar)"
@@ -622,12 +918,28 @@ homebrew_Scc() {
 homebrew_Sccc() {
   # See more discussion in
   #   https://github.com/icy/pacapt/issues/47
-  rm -rf "$(brew --cache)/"
+
+  local _dcache
+
+  _dcache="$(brew --cache)"
+  case "$_dcache" in
+  ""|"/"|" ")
+    _error "$FUNCNAME: Unable to delete '$_dcache'."
+    ;;
+
+  *)
+    # FIXME: This is quite stupid!!! But it's an easy way
+    # FIXME: to avoid some warning from #shellcheck.
+    # FIXME: Please note that, $_dcache is not empty now.
+    rm -rf "${_dcache:-/x/x/x/x/x/x/x/x/x/x/x//x/x/x/x/x/}/"
+    ;;
+  esac
 }
 
 homebrew_S() {
   brew install $_TOPT "$@"
 }
+
 
 
 _macports_init() {
@@ -698,6 +1010,7 @@ macports_S() {
     port install "$@"
   fi
 }
+
 
 
 _pkgng_init() {
@@ -784,12 +1097,14 @@ pkgng_S() {
 }
 
 
+
 _pkg_tools_init() {
   :
 }
 
 pkg_tools_Qi() {
-  export PKG_PATH= # disable searching mirrors for packages
+  # disable searching mirrors for packages
+  export PKG_PATH=
   pkg_info "$@"
 }
 
@@ -817,11 +1132,11 @@ pkg_tools_Q() {
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
   if [[ "$_TOPT" == "q" && ! -z "$@" ]]; then
-    pkg_info -q | grep "^$@-"
+    pkg_info -q | grep "^${*}-"
   elif [[ "$_TOPT" == "q" && -z "$@" ]];then
     pkg_info -q
   elif [[ "$_TOPT" == "" && ! -z "$@" ]]; then
-    pkg_info | grep "^$@-"
+    pkg_info | grep "^${*}-"
   elif [[ "$_TOPT" == "" && -z "$@" ]];then
     pkg_info
   else
@@ -904,6 +1219,7 @@ pkg_tools_Scc() {
 pkg_tools_S() {
   pkg_add "$@"
 }
+
 
 
 _portage_init() {
@@ -1028,6 +1344,7 @@ portage_S() {
 }
 
 
+
 _sun_tools_init() {
   # The purpose of `if` is to make sure this function
   # can be invoked on other system (Linux, BSD).
@@ -1074,6 +1391,142 @@ sun_tools_U() {
 }
 
 
+_tazpkg_init() {
+  :
+}
+
+tazpkg_Q() {
+  if [[ "$_TOPT" == "q" ]]; then
+    tazpkg list "$@" \
+    | awk '{ if (NF == 2 || NF == 3) { print $1; }}'
+  elif [[ "$_TOPT" == "" ]]; then
+    tazpkg list "$@"
+  else
+    _not_implemented
+  fi
+}
+
+tazpkg_Qi() {
+  tazpkg info "$@"
+}
+
+tazpkg_Ql() {
+  if [[ -z "$@" ]]; then
+    _not_implemented
+    return
+  fi
+
+  if [[ "$_TOPT" == "q" ]]; then
+    {
+      tazpkg list-files "$@"
+      tazpkg list-config "$@"
+    } \
+    | grep ^/
+  else
+    tazpkg list-files "$@"
+    tazpkg list-config "$@"
+  fi
+}
+
+tazpkg_Sy() {
+  tazpkg recharge
+}
+
+tazpkg_Su() {
+  tazpkg up
+}
+
+tazpkg_Suy() {
+  tazpkg_Sy \
+  && tazpkg_Su
+}
+
+tazpkg_S() {
+  local _forced=""
+
+  grep -q -- "--forced" <<<"*"
+  if [[ $? -eq 0 ]]; then
+    _forced="--forced"
+  fi
+
+  while (( $# )); do
+    if [[ "$1" == "--forced" ]]; then
+      _forced="--forced"
+      shift
+      continue
+    fi
+
+    tazpkg get-install "$1" $_forced
+    shift
+  done
+}
+
+tazpkg_R() {
+  local _auto=""
+
+  grep -q -- "--auto" <<<"*"
+  if [[ $? -eq 0 ]]; then
+    _auto="--auto"
+  fi
+
+  while (( $# )); do
+    if [[ "$1" == "--auto" ]]; then
+      _auto="--auto"
+      shift
+      continue
+    fi
+
+    tazpkg remove "$1" $_auto
+    shift
+  done
+}
+
+tazpkg_Sc() {
+  tazpkg clean-cache
+}
+
+tazpkg_Scc() {
+  tazpkg clean-cache
+  cd /var/lib/tazpkg/ \
+  && {
+    rm -fv \
+      ./*.bak \
+      ID \
+      packages.* \
+      files.list.*
+  }
+}
+
+tazpkg_Ss() {
+  tazpkg search "$@"
+}
+
+tazpkg_Qo() {
+  tazpkg search-pkgname "$@"
+}
+
+tazpkg_U() {
+  local _forced=""
+
+  grep -q -- "--forced" <<<"*"
+  if [[ $? -eq 0 ]]; then
+    _forced="--forced"
+  fi
+
+  while (( $# )); do
+    if [[ "$1" == "--forced" ]]; then
+      _forced="--forced"
+      shift
+      continue
+    fi
+
+    tazpkg install "$1" $_forced
+    shift
+  done
+}
+
+
+
 _yum_init() {
   :
 }
@@ -1090,6 +1543,10 @@ yum_Q() {
 
 yum_Qi() {
   yum info "$@"
+}
+
+yum_Qs() {
+  rpm -qa "*$@*"
 }
 
 yum_Ql() {
@@ -1173,12 +1630,21 @@ yum_Sii() {
 }
 
 
+
 _zypper_init() {
   :
 }
 
+zypper_Qc() {
+  rpm -q --changelog "$@"
+}
+
 zypper_Qi() {
   zypper info "$@"
+}
+
+zypper_Ql() {
+  rpm -ql "$@"
 }
 
 zypper_Qu() {
@@ -1188,6 +1654,18 @@ zypper_Qu() {
 zypper_Qm() {
   zypper search -si "$@" \
   | grep 'System Packages'
+}
+
+zypper_Qo() {
+  rpm -qf "$@"
+}
+
+zypper_Qp() {
+  rpm -qip "$@"
+}
+
+zypper_Qs() {
+  zypper search --installed-only "$@"
 }
 
 zypper_Q() {
@@ -1214,12 +1692,35 @@ zypper_R() {
   zypper remove "$@"
 }
 
+zypper_Rn() {
+  # Remove configuration files
+  while read file; do
+    if [[ -f "$file" ]]; then
+      rm -fv "$file"
+    fi
+  done < <(rpm -ql "$@")
+
+  # Now remove the package per-se
+  zypper remove "$@"
+}
+
 zypper_Rs() {
   if [[ "$_TOPT" == "s" ]]; then
     zypper remove "$@" --clean-deps
   else
     _not_implemented
   fi
+}
+
+zypper_Rns() {
+  # Remove configuration files
+  while read file; do
+    if [[ -f "$file" ]]; then
+      rm -fv "$file"
+    fi
+  done < <(rpm -ql "$@")
+
+  zypper remove "$@" --clean-deps
 }
 
 zypper_Suy() {
@@ -1230,8 +1731,20 @@ zypper_Sy() {
   zypper refresh "$@"
 }
 
+zypper_Sl() {
+  if [[ $# -eq 0 ]]; then
+    zypper pa -R
+  else
+    zypper pa -r "$@"
+  fi
+}
+
 zypper_Ss() {
   zypper search "$@"
+}
+
+zypper_Su() {
+  zypper --no-refresh dup "$@"
 }
 
 zypper_Sc() {
@@ -1242,8 +1755,32 @@ zypper_Scc() {
   zypper clean "$@"
 }
 
+zypper_Sccc() {
+  # Not way to do this in zypper
+  _not_implemented
+}
+
+zypper_Si() {
+  zypper info --requires "$@"
+}
+
+zypper_Sii() {
+  # Ugly and slow, but does the trick
+  local packages=
+
+  packages="$(zypper pa -R | cut -d \| -f 3 | tr -s '\n' ' ')"
+  for package in $packages; do
+    zypper info --requires "$package" \
+    | grep -q "$@" && echo $package
+  done
+}
+
 zypper_S() {
   zypper install $_TOPT "$@"
+}
+
+zypper_Sw() {
+  zypper install --download-only "$@"
 }
 
 zypper_U() {
@@ -1251,6 +1788,29 @@ zypper_U() {
 }
 _validate_operation() {
   case "$1" in
+  "apk_Q") ;;
+  "apk_Qi") ;;
+  "apk_Ql") ;;
+  "apk_Qo") ;;
+  "apk_Qs") ;;
+  "apk_Qu") ;;
+  "apk_R") ;;
+  "apk_Rn") ;;
+  "apk_Rns") ;;
+  "apk_Rs") ;;
+  "apk_S") ;;
+  "apk_Sc") ;;
+  "apk_Scc") ;;
+  "apk_Sccc") ;;
+  "apk_Si") ;;
+  "apk_Sii") ;;
+  "apk_Sl") ;;
+  "apk_Ss") ;;
+  "apk_Su") ;;
+  "apk_Suy") ;;
+  "apk_Sy") ;;
+  "apk_Sw") ;;
+  "apk_U") ;;
   "cave_Q") ;;
   "cave_Qi") ;;
   "cave_Ql") ;;
@@ -1273,6 +1833,27 @@ _validate_operation() {
   "cave_S") ;;
   "cave_U") ;;
   "dnf_S") ;;
+  "dnf_Suy") ;;
+  "dnf_Sw") ;;
+  "dnf_Si") ;;
+  "dnf_Sl") ;;
+  "dnf_Ss") ;;
+  "dnf_Sc") ;;
+  "dnf_Scc") ;;
+  "dnf_Sccc") ;;
+  "dnf_Su") ;;
+  "dnf_Sy") ;;
+  "dnf_Q") ;;
+  "dnf_Qi") ;;
+  "dnf_Qu") ;;
+  "dnf_Qs") ;;
+  "dnf_Ql") ;;
+  "dnf_Qo") ;;
+  "dnf_Qp") ;;
+  "dnf_Qc") ;;
+  "dnf_Qm") ;;
+  "dnf_R") ;;
+  "dnf_U") ;;
   "dpkg_Q") ;;
   "dpkg_Qi") ;;
   "dpkg_Ql") ;;
@@ -1291,10 +1872,10 @@ _validate_operation() {
   "dpkg_Ss") ;;
   "dpkg_Sc") ;;
   "dpkg_Scc") ;;
-  "dpkg_Sccc") ;;
   "dpkg_S") ;;
   "dpkg_U") ;;
   "dpkg_Sii") ;;
+  "dpkg_Sccc") ;;
   "homebrew_Qi") ;;
   "homebrew_Ql") ;;
   "homebrew_Qo") ;;
@@ -1386,8 +1967,22 @@ _validate_operation() {
   "sun_tools_Q") ;;
   "sun_tools_R") ;;
   "sun_tools_U") ;;
+  "tazpkg_Q") ;;
+  "tazpkg_Qi") ;;
+  "tazpkg_Ql") ;;
+  "tazpkg_Sy") ;;
+  "tazpkg_Su") ;;
+  "tazpkg_Suy") ;;
+  "tazpkg_S") ;;
+  "tazpkg_R") ;;
+  "tazpkg_Sc") ;;
+  "tazpkg_Scc") ;;
+  "tazpkg_Ss") ;;
+  "tazpkg_Qo") ;;
+  "tazpkg_U") ;;
   "yum_Q") ;;
   "yum_Qi") ;;
+  "yum_Qs") ;;
   "yum_Ql") ;;
   "yum_Qo") ;;
   "yum_Qp") ;;
@@ -1407,23 +2002,37 @@ _validate_operation() {
   "yum_S") ;;
   "yum_U") ;;
   "yum_Sii") ;;
+  "zypper_Qc") ;;
   "zypper_Qi") ;;
+  "zypper_Ql") ;;
   "zypper_Qu") ;;
   "zypper_Qm") ;;
+  "zypper_Qo") ;;
+  "zypper_Qp") ;;
+  "zypper_Qs") ;;
   "zypper_Q") ;;
   "zypper_Rs") ;;
   "zypper_R") ;;
+  "zypper_Rn") ;;
   "zypper_Rs") ;;
+  "zypper_Rns") ;;
   "zypper_Suy") ;;
   "zypper_Sy") ;;
+  "zypper_Sl") ;;
   "zypper_Ss") ;;
+  "zypper_Su") ;;
   "zypper_Sc") ;;
   "zypper_Scc") ;;
+  "zypper_Sccc") ;;
+  "zypper_Si") ;;
+  "zypper_Sii") ;;
   "zypper_S") ;;
+  "zypper_Sw") ;;
   "zypper_U") ;;
   *) return 1 ;;
   esac
 }
+
 
 
 set -u
@@ -1441,6 +2050,7 @@ _POPT="" # primary operation
 _SOPT="" # secondary operation
 _TOPT="" # options for operations
 _EOPT="" # extra options (directly given to package manager)
+         # these options will be translated by (_translate_all) method.
 _PACMAN="" # name of the package manager
 
 _PACMAN_detect \
@@ -1463,6 +2073,13 @@ while :; do
     _help
     exit 0
     ;;
+
+  "--noconfirm")
+    shift
+    _EOPT="$_EOPT:noconfirm:"
+    continue
+    ;;
+
   "-"|"--")
     shift
     break
@@ -1575,15 +2192,14 @@ while :; do
       fi
       ;;
 
-    w)
-      _tranlate_w
-      ;;
-
-    v)
-      _EOPT="-v"
+    w|v)
+      _EOPT="$_EOPT:$_opt:"
       ;;
 
     *)
+      # FIXME: If option is unknown, we will break the loop
+      # FIXME: and this option will be used by the native program.
+      # FIXME: break 2
       _die "pacapt: Unknown option '$_opt'."
       ;;
     esac
@@ -1591,14 +2207,19 @@ while :; do
 
   shift
 
+  # If the primary option and the secondary are known
+  # we would break the argument detection, but for sure we will look
+  # forward to see there is anything interesting...
   if [[ -n "$_POPT" && -n "$_SOPT" ]]; then
-    if [[ -z "$_TOPT" && "${1-}" == "-w" ]]; then
-      shift
-      _tranlate_w
-    fi
-    break
-  # Don't have anything from the first argument. Something wrong.
-  elif [[ -z "${_POPT}${_SOPT}${_TOPT}${_EOPT}" ]]; then
+    case "${1:-}" in
+    "-w"|"--noconfirm") ;;
+    *) break;;
+    esac
+
+  # Don't have anything from the **first** argument. Something wrong.
+  # FIXME: This means that user must enter at least primary action
+  # FIXME: or secondary action in the very first part...
+  elif [[ -z "${_POPT}${_SOPT}${_TOPT}" ]]; then
     break
   fi
 done
@@ -1612,6 +2233,8 @@ _validate_operation "${_PACMAN}_${_POPT}${_SOPT}" \
   exit 1
 }
 
+_translate_all || exit
+
 if [[ -n "$@" ]]; then
   case "${_POPT}${_SOPT}" in
   "Su"|"Sy"|"Suy")
@@ -1619,14 +2242,14 @@ if [[ -n "$@" ]]; then
     echo 1>&2 "  The -Sy/u options refresh and/or upgrade all packages."
     echo 1>&2 "  To install packages as well, use separate commands:"
     echo 1>&2
-    echo 1>&2 "    $0 -S$_SOPT; $0 -S $@"
+    echo 1>&2 "    $0 -S$_SOPT; $0 -S ${*}"
     echo 1>&2 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
   esac
 fi
 
 if [[ -n "$PACAPT_DEBUG" ]]; then
   echo "pacapt: $_PACMAN, p=$_POPT, s=$_SOPT, t=$_TOPT, e=$_EOPT"
-  echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT $@'"
+  echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT ${*}'"
   declare -f "${_PACMAN}_${_POPT}${_SOPT}"
 else
   "_${_PACMAN}_init"

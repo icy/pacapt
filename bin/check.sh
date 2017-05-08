@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Purpose: Check script for error
 # Author : Anh K. Huynh
@@ -63,13 +63,15 @@ _shellcheck_output_format() {
   '
 }
 
+# See discussion in https://github.com/icy/pacapt/pull/59
 _has_shellcheck() {
-  shellcheck -V 2>/dev/null \
-  | grep -q http://www.shellcheck.net
+  command -v shellcheck >/dev/null 2>&1
 }
 
 _check_file() {
   local _file="${1:-/x/x/x/x/x/x/x/}"
+
+  echo >&2 ":: $FUNCNAME: $1"
 
   [[ -f "$_file" ]] \
   || {
@@ -87,9 +89,13 @@ _check_file() {
 }
 
 _check_files() {
+  _has_shellcheck \
+  || {
+    echo >&2 ":: WARN: shellcheck not found."
+    echo >&2 ":: WARN: Scripts will be checked by remote web server."
+  }
   while (( $# )); do
-    echo >&2 ":: $FUNCNAME: $1"
-    _check_file "$1"
+    _check_file "$1" || return 1
     shift
   done
 }

@@ -1,7 +1,7 @@
 ## Table of contents
 
 1. [Coding style](#coding-style)
-1. [Testing. Docker](#testing-docker)
+1. [Testing. Writting test cases](#testing-writting-test-cases)
 1. [Generating pacapt script](#generating-pacapt-script)
 1. [Branches](#branches)
 1. [Closed branches](#closed-branches)
@@ -14,7 +14,9 @@
 1. We try to follow the convention from:
     https://github.com/icy/bash-coding-style.
 
-## Testing. Docker
+## Testing. Writting test cases
+
+See also `tests/README.md` and https://travis-ci.org/icy/pacapt.
 
 1. Use `make shellcheck` if you have a network connection,
    and enough `Perl` packages (`JSON`, `URI::Escape`) on your system;
@@ -39,7 +41,8 @@ $ docker run --rm -ti \
 1. Please **do not** use `make pacapt` to update `pacapt`,
    and/or modify it manually;
 1. For your development, use `make pacapt.dev`;
-   To generate the table of implemented options, use `PACAPT_STAS=1`.
+   To generate the table of implemented options, use `PACAPT_STATS=1`.
+   This table is manually replaced the one in `README` file.
 
 ## Branches
 

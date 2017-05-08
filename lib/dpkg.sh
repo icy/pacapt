@@ -67,8 +67,14 @@ dpkg_Qu() {
   apt-get upgrade --trivial-only "$@"
 }
 
+# NOTE: Some field is available for dpkg >= 1.16.2
+# NOTE: Debian:Squeeze has dpkg < 1.16.2
 dpkg_Qs() {
-  dpkg-query -W "*${*}*" | cut -f1
+  # dpkg >= 1.16.2 dpkg-query -W -f='${db:Status-Abbrev} ${binary:Package}\t${Version}\t${binary:Summary}\n'
+  dpkg-query -W -f='${Status} ${Package}\t${Version}\t${Description}\n' \
+  | grep -E '^((hold)|(install)|(deinstall))' \
+  | sed -r -e 's#^(\w+ ){3}##g' \
+  | grep -Ei "${@:-.}"
 }
 
 dpkg_Rs() {
@@ -104,6 +110,13 @@ dpkg_Su() {
   apt-get upgrade "$@"
 }
 
+# See also https://github.com/icy/pacapt/pull/78
+# This `-w` option is implemented in `00_core/_translate_w`
+#
+# dpkg_Sw() {
+#   apt-get --download-only install "$@"
+# }
+
 # FIXME: Should we remove "$@"?
 dpkg_Sy() {
   apt-get update "$@"
@@ -121,13 +134,6 @@ dpkg_Scc() {
   apt-get autoclean "$@"
 }
 
-dpkg_Sccc() {
-  rm -fv /var/cache/apt/*.bin
-  rm -fv /var/cache/apt/archives/*.*
-  rm -fv /var/lib/apt/lists/*.*
-  apt-get autoclean
-}
-
 dpkg_S() {
   apt-get install $_TOPT "$@"
 }
@@ -138,4 +144,11 @@ dpkg_U() {
 
 dpkg_Sii() {
   apt-cache rdepends "$@"
+}
+
+dpkg_Sccc() {
+  rm -fv /var/cache/apt/*.bin
+  rm -fv /var/cache/apt/archives/*.*
+  rm -fv /var/lib/apt/lists/*.*
+  apt-get autoclean
 }

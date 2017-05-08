@@ -66,10 +66,25 @@ _PACMAN_detect() {
   _issue2pacman cave "Exherbo Linux" && return
   _issue2pacman yum "CentOS" && return
   _issue2pacman yum "Red Hat" && return
-  _issue2pacman yum "Fedora" && return
+  #
+  # FIXME: The multiple package issue.
+  #
+  # On #63, Huy commented out this line. This is because new generation
+  # of Fedora uses `dnf`, and `yum` becomes a legacy tool. On old Fedora
+  # system, `yum` is still detectable by looking up `yum` binary.
+  #
+  # I'm not sure how to support this case easily. Let's wait, e.g, 5 years
+  # from now to make `dnf` becomes a default? Oh no!
+  #
+  # And here why `pacman` is still smart. Debian has a set of tools.
+  # Fedora has `yum` (and a set of add-ons). Now Fedora moves to `dnf`.
+  # This means that a package manager is not a heart of a system ;)
+  #
+  # _issue2pacman yum "Fedora" && return
   _issue2pacman zypper "SUSE" && return
   _issue2pacman pkg_tools "OpenBSD" && return
   _issue2pacman pkg_tools "Bitrig" && return
+  _issue2pacman apk "Alpine Linux" && return
 
   [[ -z "$_PACMAN" ]] || return
 
@@ -81,7 +96,9 @@ _PACMAN_detect() {
   fi
 
   [[ -x "/usr/bin/apt-get" ]] && _PACMAN="dpkg" && return
+  [[ -x "/data/data/com.termux/files/usr/bin/apt-get" ]] && _PACMAN="dpkg" && return
   [[ -x "/usr/bin/cave" ]] && _PACMAN="cave" && return
+  [[ -x "/usr/bin/dnf" ]] && _PACMAN="dnf" && return
   [[ -x "/usr/bin/yum" ]] && _PACMAN="yum" && return
   [[ -x "/opt/local/bin/port" ]] && _PACMAN="macports" && return
   [[ -x "/usr/bin/emerge" ]] && _PACMAN="portage" && return
@@ -90,6 +107,8 @@ _PACMAN_detect() {
   # make sure pkg_add is after pkgng, FreeBSD base comes with it until converted
   [[ -x "/usr/sbin/pkg_add" ]] && _PACMAN="pkg_tools" && return
   [[ -x "/usr/sbin/pkgadd" ]] && _PACMAN="sun_tools" && return
+  [[ -x "/sbin/apk" ]] && _PACMAN="apk" && return
+  [[ -x "/usr/bin/tazpkg" ]] && _PACMAN="tazpkg" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
@@ -112,13 +131,17 @@ _translate_w() {
   "portage")  _opt="--fetchonly";;
   "zypper")   _opt="--download-only";;
   "pkgng")    _opt="fetch";;
-  "yum")     _opt="--downloadonly";
+  "yum")      _opt="--downloadonly";
     if ! rpm -q 'yum-downloadonly' >/dev/null 2>&1; then
       _error "'yum-downloadonly' package is required when '-w' is used."
       _ret=1
     fi
     ;;
-
+  "tazpkg")
+    _error "$_PACMAN: Use '$_PACMAN get' to download and save packages to current directory."
+    _ret=1
+    ;;
+  "apk")      _opt="fetch";;
   *)
     _opt=""
     _ret=1
@@ -129,6 +152,19 @@ _translate_w() {
 
   echo $_opt
   return "$_ret"
+}
+
+_translate_debug() {
+  echo "$_EOPT" | $GREP -q ":v:" || return 0
+
+  case "$_PACMAN" in
+  "tazpkg")
+    _error "$_PACMAN: Option '-v' (debug) is not supported/implemented by tazpkg"
+    return 1
+    ;;
+  esac
+
+  echo "-v"
 }
 
 # Translate the --noconfirm option.
@@ -144,11 +180,13 @@ _translate_noconfirm() {
   # FIXME: Update environment DEBIAN_FRONTEND=noninteractive
   # FIXME: There is also --force-yes for a stronger case
   "dpkg")   _opt="--yes";;
+  "dnf")    _opt="--assumeyes";;
   "yum")    _opt="--assumeyes";;
   # FIXME: pacman has 'assume-yes' and 'assume-no'
   # FIXME: zypper has better mode. Similar to dpkg (Debian).
   "zypper") _opt="--no-confirm";;
   "pkgng")  _opt="-y";;
+  "tazpkg") _opt="--auto";;
   *)
     _opt=""
     _ret=1
@@ -162,11 +200,14 @@ _translate_noconfirm() {
 
 _translate_all() {
   local _args=""
+  local _debug="$(_translate_debug)"
+  local _noconfirm="$(_translate_noconfirm)"
 
   _args="$(_translate_w)" || return 1
-  _args="$_args $(_translate_noconfirm)" || return 1
+  _args="${_args}${_noconfirm:+ }${_noconfirm}" || return 1
+  _args="${_args}${_debug:+ }${_debug}" || return 1
 
-  export _EOPT="$_args"
+  export _EOPT="${_args# }"
 }
 
 _print_supported_operations() {
