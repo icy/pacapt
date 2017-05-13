@@ -49,7 +49,7 @@ machine. It is expected to work in similar environment with `GNU Make`,
     $ make                # List all sections
     $ make all            # Execute all test scripts
                           # or a subset of tests, as below
-    $ make TESTS="foo.txt bar.txt"
+    $ make TESTS="foo bar"
 
 This script will create a temporary directory `tests/tmp/` to store
 all logs and details. If there is any test script fails, the process
