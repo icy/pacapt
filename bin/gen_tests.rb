@@ -28,11 +28,11 @@ BEGIN {
   puts "set -u"
   puts ""
   puts "_log()  { echo \":: $*\" 1>&2 ; }"
-  puts "_fail() { _log \"Fail $*\"; echo \"Fail: $*\"; }" # red
+  puts "_fail() { _log \"Fail $*\"; printf \"\\e[31mFail\\e[0m: %s\\n\" \"$*\"; }" # red
   puts "_erro() { _log \"Erro $*\"; echo \"Erro: $*\"; }" # red
   puts "_info() { _log \"Info $*\"; echo \"Info: $*\"; }" # cyan
   puts "_pass() { _log \"Pass $*\"; echo \"Pass: $*\"; }" # cyan
-  puts "_exec() { _log \"Exec $*\"; echo \"Exec: $*\"; }" # yellow
+  puts "_exec() { _log \"Exec $*\"; printf \"\\e[32mExec\\e[0m: %s\\n\" \"$*\"; }" # yellow
   puts "_warn() { _log \"Warn $*\"; echo \"Warn: $*\"; }" # yellow
   puts "_slog() {"
   puts "  if [ -n \"${F_TMP:-}\" ]; then"
