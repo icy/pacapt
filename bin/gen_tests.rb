@@ -82,24 +82,34 @@ if gs = $_.match(/^in(.*)/)
   puts "  { #{cmd} ; } 1>>$F_TMP 2>&1"
   puts "fi"
 
-elsif gs = $_.match(/^ou(.*)/)
+elsif gs = $_.match(/^!?ou(.*)/)
   new_test = true
   expected = gs[1].strip
+  negative = ($_.slice(0,1) == '!')
+  negative_st = (negative ? "!" : "")
 
   puts "N_TEST=$(( N_TEST + 1 ))"
   puts "if [ -n \"${F_TMP:-}\" ]; then"
   if expected.empty? or expected == "empty"
     puts "  ret=\"$(grep -Ec '.+' $F_TMP)\""
-    puts "  if [ $ret -ge 1 ]; then"
+    if not negative
+      puts "  if [ $ret -ge 1 ]; then"
+    else
+      puts "  if [ $ret -eq 0 ]; then"
+    end
   else
     puts "  ret=\"$(grep -Ec \"#{expected}\" $F_TMP)\""
-    puts "  if [ $ret -eq 0 ]; then"
+    if not negative
+      puts "  if [ $ret -eq 0 ]; then"
+    else
+      puts "  if [ $ret -ge 1 ]; then"
+    end
   end
-  puts "    _fail Expected \"#{expected}\""
+  puts "    _fail #{negative_st}Expected \"#{expected}\""
   puts "    N_FAIL=$(( N_FAIL + 1 ))"
   puts "    T_FAIL=$(( T_FAIL + 1 ))"
   puts "  else"
-  puts "    _pass Matched \"#{expected}\""
+  puts "    _pass #{negative_st}Matched \"#{expected}\""
   puts "  fi"
   puts "else"
   puts "  N_FAIL=$(( N_FAIL + 1 ))"

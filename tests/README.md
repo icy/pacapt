@@ -67,8 +67,8 @@ by `in `, output regexp is started by `ou `. For example,
 
 the test is passed if the following group of commands returns successfully
 
-    pacman -Sy
-    pacman -Qs htop | grep -qE '^htop'
+    $ pacman -Sy
+    $ pacman -Qs htop | grep -qE '^htop'
 
 If we want to execute some command other than `pacman` script, use `!`
 to write our original command. For example,
@@ -81,9 +81,16 @@ to write our original command. For example,
 On `Debian`/`Ubuntu` system, this test case is to ensure that the script
 can install `htop` package, then remove it. An alternative test is
 
-    echo Y | pacman -S htop
-    echo Y | pacman -R htop
-    pacman -Qi htop | grep -E '^Status: deinstall'
+    $ echo Y | pacman -S htop
+    $ echo Y | pacman -R htop
+    $ pacman -Qi htop | grep -E '^Status: deinstall'
+
+To test if some output doesn't match a pattern, use `!ou`
+
+    in -Sy
+    !ou foobar
+
+So far there isn't any way to give some extra options to `grep`.
 
 ## Notes on writting test cases
 
