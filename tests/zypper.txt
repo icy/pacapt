@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# Purpose : Test cases for OpenSUSE zypper
+# Author  : Ky-Anh Huynh
+# Date    : 2017 May 13th
+# Note    : To run this tests, execute `make tests TESTS=zypper`
+#           from the top directory. `docker` is required.
+
+im opensuse:latest
+
+# Update package databses
+in -Sy
+ou All repositories have been refreshed
+
+# Simple query that lists all packages
+in -Qq
+ou ^openSUSE-release$
+
+# Listing with version and packge name
+in -Q
+ou ^i | openSUSE-release +
+
+in -Qi zypper
+ou ^Loading repository data
+ou ^Reading installed packages
+ou ^Installed.*Yes
+ou ^Repository.*OSS Update
+ou ^Vendor.*openSUSE
+
+in -Ql zypper
+ou ^/usr/bin/zypper
+
+in -Qo /usr/bin/bash
+ou No such file or directory
+
+in -Qo /usr/bin/sh
+ou ^bash
+
+in -Qo /bin/bash
+ou ^bash
+
+# bash-4.3# pacman -Qs bash
+# Loading repository data...
+# Reading installed packages...
+#
+# S | Name | Summary                    | Type
+# --+------+----------------------------+--------
+# i | bash | The GNU Bourne-Again Shell | package
+in -Qs bash
+ou The GNU Bourne-Again Shell
+
+# bash-4.3# pacman -Qw screen
+# Unknown option '--download-only'
+in -Qw screen
+!ou Unknown option
