@@ -51,5 +51,5 @@ ou The GNU Bourne-Again Shell
 
 # bash-4.3# pacman -Qw screen
 # Unknown option '--download-only'
-in -Qw screen
+in -Sw screen
 !ou Unknown option
