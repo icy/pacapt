@@ -52,6 +52,7 @@ The tool supports the following package managers:
 * `sun_tools`     by `Solaris(SunOS)`
 * `apk`           by `Alpine Linux`
 * `tazpkg`        by `SliTaz Linux`
+* `swupd`         by `Clear Linux`
 
 ## Installation
 
@@ -111,20 +112,21 @@ Some features may be missing in the stable script. Please don't change
 this table manually when you create new pull request.)_
 
 ```
-           Q Qc Qi Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Si Sii Sl Ss Su Suy Sw Sy U
-      apk  y  .  y  y  .  y  .  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y  y y
-     cave  y  .  y  y  .  y  y  y  y y  y   y  y y  y   y    y  y   .  .  y  y   y  .  y y
-      dnf  y  y  y  y  y  y  y  y  y y  .   .  . y  y   y    y  y   .  y  y  y   y  y  y y
-     dpkg  y  .  y  y  .  y  y  y  y y  y   y  y y  y   y    y  y   y  .  y  y   y  .  y y
- homebrew  y  y  y  y  .  y  .  y  y y  .   .  y y  y   y    y  y   .  .  y  y   y  .  y .
- macports  .  y  .  y  .  y  .  .  y y  .   .  y y  y   y    .  y   .  .  y  y   y  .  y .
-    pkgng  y  .  y  y  .  y  y  .  y y  .   .  y y  y   y    .  y   .  .  y  y   y  .  y .
-pkg_tools  y  .  y  y  .  y  y  .  y y  y   y  y y  y   y    .  y   .  y  y  y   y  .  y .
-  portage  y  y  y  y  .  y  .  .  y y  .   .  y y  y   y    y  y   .  .  y  y   y  .  y .
-sun_tools  y  .  y  y  .  y  .  y  . y  .   .  . .  .   .    .  .   .  .  .  .   .  .  . y
-   tazpkg  y  .  y  y  .  y  .  .  . y  .   .  . y  y   y    .  .   .  .  y  y   y  .  y y
-      yum  y  y  y  y  y  y  y  y  y y  .   .  y y  y   y    y  y   y  .  y  y   y  .  y y
-   zypper  y  y  y  y  y  y  y  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y  y y
+            Q Qc Qi Qk Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Si Sii Sl Ss Su Suy Sw Sy U
+       apk  y  .  y  .  y  .  y  .  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y  y y
+      cave  y  .  y  .  y  .  y  y  y  y y  y   y  y y  y   y    y  y   .  .  y  y   y  .  y y
+       dnf  y  y  y  .  y  y  y  y  y  y y  .   .  . y  y   y    y  y   .  y  y  y   y  y  y y
+      dpkg  y  .  y  .  y  .  y  y  y  y y  y   y  y y  y   y    y  y   y  .  y  y   y  .  y y
+  homebrew  y  y  y  .  y  .  y  .  y  y y  .   .  y y  y   y    y  y   .  .  y  y   y  .  y .
+  macports  .  y  .  .  y  .  y  .  .  y y  .   .  y y  y   y    .  y   .  .  y  y   y  .  y .
+     pkgng  y  .  y  .  y  .  y  y  .  y y  .   .  y y  y   y    .  y   .  .  y  y   y  .  y .
+ pkg_tools  y  .  y  .  y  .  y  y  .  y y  y   y  y y  y   y    .  y   .  y  y  y   y  .  y .
+   portage  y  y  y  .  y  .  y  .  .  y y  .   .  y y  y   y    y  y   .  .  y  y   y  .  y .
+ sun_tools  y  .  y  .  y  .  y  .  y  . y  .   .  . .  .   .    .  .   .  .  .  .   .  .  . y
+     swupd  .  .  .  y  .  .  y  .  y  . y  .   .  . y  .   .    .  .   .  .  y  y   y  .  y .
+    tazpkg  y  .  y  .  y  .  y  .  .  . y  .   .  . y  y   y    .  .   .  .  y  y   y  .  y y
+       yum  y  y  y  .  y  y  y  y  y  y y  .   .  y y  y   y    y  y   y  .  y  y   y  .  y y
+    zypper  y  y  y  .  y  y  y  y  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y  y y
 ```
 
 ## Support
