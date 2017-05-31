@@ -2,6 +2,8 @@
 
 ## Table of contents
 
+[![Join the chat at https://gitter.im/icy/pacapt](https://badges.gitter.im/icy/pacapt.svg)](https://gitter.im/icy/pacapt?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 * [Name](#name)
 * [Description](#description)
 * [Installation](#installation)
