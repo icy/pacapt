@@ -109,6 +109,7 @@ _PACMAN_detect() {
   [[ -x "/usr/sbin/pkgadd" ]] && _PACMAN="sun_tools" && return
   [[ -x "/sbin/apk" ]] && _PACMAN="apk" && return
   [[ -x "/usr/bin/tazpkg" ]] && _PACMAN="tazpkg" && return
+  [[ -x "/usr/bin/swupd" ]] && _PACMAN="swupd" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
