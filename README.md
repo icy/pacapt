@@ -177,6 +177,7 @@ authors and contributors.
 * Daniel YC Lin (dlintw)
 * Danny George (dangets)
 * Darshit Shah (darnir)
+* Dmitry Kudriavtsev (dkudriavtsev)
 * Eric Crosson (EricCrosson)
 * GijsTimmers (GijsTimmers)
 * Hà-Dương Nguyễn (cmpitg)
