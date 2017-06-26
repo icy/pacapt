@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Purpose: Support next-generation Yum package manager 
+# Purpose: Support next-generation Yum package manager
 # Author : Severus <severus@theslinux.org>
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
@@ -46,11 +46,11 @@ dnf_Sc() {
 }
 
 dnf_Scc() {
-   dnf clean packages "$@"
+  dnf clean packages "$@"
 }
 
 dnf_Sccc() {
-    dnf clean all "$@"
+  dnf clean all "$@"
 }
 
 dnf_Su() {
