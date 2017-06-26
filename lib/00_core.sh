@@ -110,6 +110,7 @@ _PACMAN_detect() {
   [[ -x "/sbin/apk" ]] && _PACMAN="apk" && return
   [[ -x "/usr/bin/tazpkg" ]] && _PACMAN="tazpkg" && return
   [[ -x "/usr/bin/swupd" ]] && _PACMAN="swupd" && return
+  [[ -x "/usr/bin/xbps-install" ]] && _PACMAN="xbps" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
