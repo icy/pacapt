@@ -94,7 +94,7 @@ See the following link for details.
 Some basic command line options
 
 * `-h` (`--help`): Print help message;
-* `-P`: Print list of suppoted operations;
+* `-P`: Print list of supported operations;
 * `-V`: Print script version
 
 Some popular options of the original `ArchLinux`'s `pacman` program
