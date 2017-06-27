@@ -18,10 +18,20 @@ _xbps_init() {
  }
 
 _xbps_pkgs_only() {
-  echo ="$(xbps-query --list-pkgs \
+  echo "$(xbps-query --list-pkgs \
   | awk '{ print $2 }' \
   | xargs -n1 xbps-uhelper getpkgname \
   | fmt)"
+}
+
+_xbps_inputs_only() {
+    RESULT=""
+    for PKG in $@
+    do
+        RESULT="$RESULT|$PKG"
+    done
+    RESULT="$(echo $RESULT | sed -e 's/^|//')"
+    echo "$RESULT"
 }
 
 xbps_D_asexplicit() {
@@ -30,70 +40,65 @@ xbps_D_asexplicit() {
 }
 
 xbps_Q() {
-  PKGS="$@"
-  if [ -z "$PKGS" ]
+  if [ $# -eq 0 ]
   then
     xbps-query --list-pkgs
   else
-    for PKG in $PKGS
-    do
-      xbps-query --list-pkgs | grep -i "$PKG"
-    done
+    RESULT="$(_xbps_inputs_only $@)"
+    xbps-query --list-pkgs | grep -iE "$RESULT"
   fi
 }
 
 # untested + blocked: function not supported?
 xbps_Qet() {
   PKGS="$@"
-  if [ -z "$PKGS" ]
+  if [ $# -eq 0 ]
   then
     xbps-query -m
   else
-    for PKG in $PKGS
-    do
-      xbps-query -m | grep -i "$PKG"
-    done
+    RESULT="$(_xbps_inputs_only $@)"
+    xbps-query -m | grep -iE "$RESULT"
   fi
 }
 
 xbps_Qi() {
   PKGS="$@"
-  RED="$(tput setaf 9)"
-  RESET="$(tput sgr0)"
-  if [ -z "$PKGS" ]
+  COLOR_CYAN="$(tput setaf 14)"
+  COLOR_RESET="$(tput sgr0)"
+  if [ $# -eq 0 ]
   then
     PKGS="$(_xbps_pkgs_only)"
   fi
   for PKG in $PKGS
   do
-    xbps-query --show "$PKG"
+    RESULT="$(xbps-query "$PKG")"
 	if [ "$?" -eq 0 ]
 	then
+      echo "${COLOR_CYAN}name: ${COLOR_RESET}$PKG"
+      xbps-query "$PKG"
 	  echo
 	else
-	  echo "${RED}error: ${RESET}package '$PKG' was not found"
+	  _error "package '$PKG' was not found"
 	fi
   done
 }
 
 xbps_Ql() {
   PKGS="$@"
-  CYAN="$(tput setaf 14)"
-  RESET="$(tput sgr0)"
+  COLOR_CYAN="$(tput setaf 14)"
+  COLOR_RESET="$(tput sgr0)"
   if [ -z "$PKGS" ]
   then
     PKGS="$(_xbps_pkgs_only)"
   fi
   for PKG in $PKGS
   do
-    xbps-query --files "$PKG" | sed -e "s/^/${CYAN}${PKG} ${RESET}/g"
+    xbps-query --files "$PKG" | sed -e 's/^/${COLOR_CYAN}${PKG} ${COLOR_RESET}/g'
   done
 }
 
 xbps_Qo() {
   PKGS="$@"
-  RED="$(tput setaf 9)"
-  RESET="$(tput sgr0)"
   for PKG in $PKGS
   do
     if [ -f "$PKG" ]
@@ -103,7 +108,7 @@ xbps_Qo() {
     then
       xbps-query --ownedby "$(which $PKG)"
     else
-      echo "${RED}error: ${RESET}failed to find '$PKG' in PATH: No such file or directory"
+      _error "failed to find '$PKG' in PATH: No such file or directory"
     fi
   done
 }
@@ -113,11 +118,19 @@ xbps_Qp() {
 }
 
 xbps_Qs() {
-  if [ ! -z "$@" ]
+  if [ $# -eq 0 ]
+  then
+    xbps-query --search ''''
+  elif [ $# -eq 1 ]
   then
     xbps-query --search "$@"
   else
-    xbps-query --search ''''
+    RESULT=""
+    for PKG in $@
+    do
+        RESULT="$(xbps-query --search '''' | grep -i "$PKG")"
+    done
+    echo "$RESULT"
   fi
 }
 
@@ -142,7 +155,7 @@ xbps_Rns() {
 }
 
 xbps_S() {
-  xbps-install --force $_TOPT "$@"
+  xbps-install $_TOPT "$@"
 }
 
 xbps_S_asdeps() {
@@ -164,23 +177,61 @@ xbps_Sccc() {
 
 xbps_Si() {
   PKGS="$@"
-  if [ -z "$PKGS" ]
+  COLOR_CYAN="$(tput setaf 14)"
+  COLOR_RESET="$(tput sgr0)"
+  if [ $# -eq 1 ]
   then
-    PKGS="$(_xbps_pkgs_only)"
+    RESULT="$(xbps-query --repository "$PKG")"
+	if [ "$?" -eq 0 ]
+    then
+        echo "${COLOR_CYAN}name: ${COLOR_RESET}$PKG"
+        xbps-query --repository "$PKG"
+    fi
+  else
+    if [ $# -eq 0 ]
+    then
+      PKGS="$(_xbps_pkgs_only)"
+    fi
+    for PKG in $PKGS
+    do
+      RESULT="$(xbps-query --repository "$PKG")"
+	  if [ "$?" -eq 0 ]
+      then
+          echo "${COLOR_CYAN}name: ${COLOR_RESET}$PKG"
+          xbps-query --repository "$PKG"
+          echo
+      fi
+    done
   fi
-  for PKG in $PKGS
-  do
-	xbps-query --repository --deps "$PKG"
-	echo
-  done
 }
 
 xbps_Sii() {
-  xbps-query --repository --revdeps "$@"
+  COLOR_CYAN="$(tput setaf 14)"
+  COLOR_RESET="$(tput sgr0)"
+  PKGS="$@"
+  for PKG in $PKGS
+  do
+      RESULT="$(xbps-query --repository --revdeps "$PKG")"
+	  if [ "$?" -eq 0 ]
+	  then
+        echo "$RESULT" \
+        | xargs -n1 xbps-uhelper getpkgname \
+        | xargs \
+        | sed -e "s/ /  /g" -e "s/^/${COLOR_CYAN}${PKG} ${COLOR_RESET}/g"
+	  else
+	    _error "package '$PKG' was not found or has no dependenices"
+	  fi
+  done
 }
 
 xbps_Ss() {
-  xbps-query --repository --search "$@"
+  if [ $# -eq 1 ]
+  then
+    xbps-query --repository --search "$@"
+  else
+    RESULT="$(_xbps_inputs_only $@)"
+    xbps-query --repository --search '''' | grep -iE "$RESULT"
+  fi
 }
 
 xbps_Su() {
