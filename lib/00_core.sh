@@ -189,6 +189,7 @@ _translate_noconfirm() {
   "zypper") _opt="--no-confirm";;
   "pkgng")  _opt="-y";;
   "tazpkg") _opt="--auto";;
+  "xbps") _opt="--yes";;
   *)
     _opt=""
     _ret=1

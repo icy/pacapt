@@ -34,30 +34,38 @@ _xbps_inputs_only() {
     echo "$RESULT"
 }
 
-xbps_D_asexplicit() {
-  # how do we use this? # pacman -D --asexplicit
-  xbps-pkgdb -m manual "$@"
-}
+# PACAPT DOES NOT SUPPORT D ? // CANNOT TEST
+# xbps_D() {
+#   if [ "$_TOPT" == "asexplicit" ]
+#   then
+#     # how do we use this? # pacman -D --asexplicit
+#     xbps-pkgdb -m manual "$@"
+#   else
+#     _not_implemented
+#   fi
+# }
 
 xbps_Q() {
-  if [ $# -eq 0 ]
+  # PACAPT DOES NOT SUPPORT Qe ? // CANNOT TEST
+  if [[ "$_TOPT" == "e" ]]
   then
-    xbps-query --list-pkgs
+    if [ $# -eq 0 ]
+    then
+      xbps-query --list-manual-pkgs
+    else
+      RESULT="$(_xbps_inputs_only $@)"
+      xbps-query --list-manual-pkgs | grep -iE "$RESULT"
+    fi
+  elif [[ "$_TOPT" == "" ]]; then
+    if [ $# -eq 0 ]
+    then
+      xbps-query --list-pkgs
+    else
+      RESULT="$(_xbps_inputs_only $@)"
+      xbps-query --list-pkgs | grep -iE "$RESULT"
+    fi
   else
-    RESULT="$(_xbps_inputs_only $@)"
-    xbps-query --list-pkgs | grep -iE "$RESULT"
-  fi
-}
-
-# untested + blocked: function not supported?
-xbps_Qet() {
-  PKGS="$@"
-  if [ $# -eq 0 ]
-  then
-    xbps-query -m
-  else
-    RESULT="$(_xbps_inputs_only $@)"
-    xbps-query -m | grep -iE "$RESULT"
+    _not_implemented
   fi
 }
 
@@ -93,11 +101,15 @@ xbps_Ql() {
   fi
   for PKG in $PKGS
   do
-    xbps-query --files "$PKG" | sed -e 's/^/${COLOR_CYAN}${PKG} ${COLOR_RESET}/g'
+    xbps-query --files "$PKG" | sed -e "s/^/${COLOR_CYAN}${PKG} ${COLOR_RESET}/g"
   done
 }
 
 xbps_Qo() {
+  if [ $# -eq 0 ]
+  then
+    _error "no targets specified"
+  fi
   PKGS="$@"
   for PKG in $PKGS
   do
@@ -158,10 +170,11 @@ xbps_S() {
   xbps-install $_TOPT "$@"
 }
 
-xbps_S_asdeps() {
-  # how do we use this? pacman -S --asdeps
-  xbps-pkgdb -m auto "$@"
-}
+# THIS BELONGS IN 00_core.sh? // CANNOT TEST
+# xbps_S_asdeps() {
+#   # how do we use this? pacman -S --asdeps
+#   xbps-pkgdb -m auto "$@"
+# }
 
 xbps_Sc() {
   xbps-remove --clean-cache "$@"
@@ -181,11 +194,11 @@ xbps_Si() {
   COLOR_RESET="$(tput sgr0)"
   if [ $# -eq 1 ]
   then
-    RESULT="$(xbps-query --repository "$PKG")"
+    RESULT="$(xbps-query --repository "$PKGS")"
 	if [ "$?" -eq 0 ]
     then
-        echo "${COLOR_CYAN}name: ${COLOR_RESET}$PKG"
-        xbps-query --repository "$PKG"
+        echo "${COLOR_CYAN}name: ${COLOR_RESET}$PKGS"
+        xbps-query --repository "$PKGS"
     fi
   else
     if [ $# -eq 0 ]
