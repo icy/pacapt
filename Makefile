@@ -12,6 +12,7 @@ default:
 	@echo "  shellcheck  : Syntax and style checking. Use http://shellcheck.net/."
 	@echo "  docker.i    : Launch interactive Docker container which mounts."
 	@echo '                your local 'pacapt.dev' script to $$BINDIR/pacman.'
+	@echo "  tests       : Run all tests. Please read tests/README.md first."
 	@echo ""
 	@echo "Environments"
 	@echo ""
