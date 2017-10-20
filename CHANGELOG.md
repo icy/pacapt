@@ -1,3 +1,14 @@
+## v2.3.14
+
+* `lib/homebrew`: `brew upgrade` is equivalant to `brew upgrade --all`.
+  See #90 and #101.
+* Support `Clea Linux`. See #94.
+
+For developers:
+
+* Add Travis support
+* Add and update test cases for Ubuntu 16.04, Ubuntu 14.04
+
 ## v2.3.13
 
 * `lib/dpkg`: Fix `-Qs` for old `dpkg`.
