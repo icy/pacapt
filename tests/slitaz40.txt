@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Purpose : Testing script for Slitaz support
+# Author  : Ky-Anh Huynh
+# License : MIT
+
 im icymatter/slitaz40-minimal
 
 in -Sy
