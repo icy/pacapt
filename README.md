@@ -180,6 +180,7 @@ authors and contributors.
 * Darshit Shah (darnir)
 * Dmitry Kudriavtsev (dkudriavtsev)
 * Eric Crosson (EricCrosson)
+* Evan Relf (evanrelf)
 * GijsTimmers (GijsTimmers)
 * Hà-Dương Nguyễn (cmpitg)
 * Huy Ngô (NgoHuy)
@@ -190,6 +191,7 @@ authors and contributors.
 * Kevin Brubeck (unhammer)
 * Konrad Borowski (xfix)
 * Kylie McClain (somasis)
-* Pival81
+* Valerio Pizzi (Pival81)
 * Siôn Le Roux (sinisterstuf)
+* Thiago Perrotta (thiagowfx)
 * Vojtech Letal (letalvoj)
