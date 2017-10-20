@@ -21,6 +21,7 @@ default:
 	@echo "  VERSION     : Version information. Default: git commit hash."
 	@echo "  BINDIR      : Destination directory. Default: /usr/local/bin."
 	@echo "  DISTRO      : Container image. Default: debian:stable."
+	@echo "  PACAPT_STATS: Generate table of supported options."
 
 # Build and install development script
 
