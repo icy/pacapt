@@ -3,10 +3,10 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.3.13
+# Version: 2.3.14
 # Authors: Anh K. Huynh et al.
 
-# Copyright (C) 2010 - 2016 \
+# Copyright (C) 2010 - 2017 \
 #                           | 10sr (10sr)
 #                           | Alexander Dupuy (dupuy)
 #                           | Anh K. Huynh (icy)
@@ -16,6 +16,7 @@
 #                           | Daniel YC Lin (dlintw)
 #                           | Danny George (dangets)
 #                           | Darshit Shah (darnir)
+#                           | Dmitry Kudriavtsev (dkudriavtsev)
 #                           | Eric Crosson (EricCrosson)
 #                           | GijsTimmers (GijsTimmers)
 #                           | Hà-Dương Nguyễn (cmpitg)
@@ -38,7 +39,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.3.13'
+export PACAPT_VERSION='2.3.14'
 
 _help() {
   cat <<'EOF'
@@ -209,6 +210,7 @@ _PACMAN_detect() {
   [[ -x "/usr/sbin/pkgadd" ]] && _PACMAN="sun_tools" && return
   [[ -x "/sbin/apk" ]] && _PACMAN="apk" && return
   [[ -x "/usr/bin/tazpkg" ]] && _PACMAN="tazpkg" && return
+  [[ -x "/usr/bin/swupd" ]] && _PACMAN="swupd" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
@@ -280,7 +282,7 @@ _translate_noconfirm() {
   "yum")    _opt="--assumeyes";;
   # FIXME: pacman has 'assume-yes' and 'assume-no'
   # FIXME: zypper has better mode. Similar to dpkg (Debian).
-  "zypper") _opt="--non-interactive";;
+  "zypper") _opt="--no-confirm";;
   "pkgng")  _opt="-y";;
   "tazpkg") _opt="--auto";;
   *)
@@ -619,11 +621,11 @@ dnf_Sc() {
 }
 
 dnf_Scc() {
-   dnf clean packages "$@"
+  dnf clean packages "$@"
 }
 
 dnf_Sccc() {
-    dnf clean all "$@"
+  dnf clean all "$@"
 }
 
 dnf_Su() {
@@ -745,7 +747,7 @@ dpkg_Qs() {
   dpkg-query -W -f='${Status} ${Package}\t${Version}\t${Description}\n' \
   | grep -E '^((hold)|(install)|(deinstall))' \
   | sed -r -e 's#^(\w+ ){3}##g' \
-  | grep "${@:-.}"
+  | grep -Ei "${@:-.}"
 }
 
 dpkg_Rs() {
@@ -892,11 +894,11 @@ homebrew_Si() {
 
 homebrew_Suy() {
   brew update \
-  && brew upgrade --all "$@"
+  && brew upgrade "$@"
 }
 
 homebrew_Su() {
-  brew upgrade --all "$@"
+  brew upgrade "$@"
 }
 
 homebrew_Sy() {
@@ -1391,6 +1393,49 @@ sun_tools_U() {
 }
 
 
+
+_swupd_init() {
+  :
+}
+
+swupd_Qk() {
+  swupd verify "$@"
+}
+
+swupd_Qo() {
+  swupd search "$@"
+}
+
+swupd_Qs() {
+  swupd search "$@"
+}
+
+swupd_R() {
+  swupd bundle-remove "$@"
+}
+
+swupd_Suy() {
+  swupd update
+}
+
+swupd_Su() {
+  swupd update
+}
+
+swupd_Sy() {
+  swupd search -i
+  swupd update
+}
+
+swupd_Ss() {
+  swupd search "$@"
+}
+
+swupd_S() {
+  swupd bundle-add "$@"
+}
+
+
 _tazpkg_init() {
   :
 }
@@ -1523,6 +1568,245 @@ tazpkg_U() {
     tazpkg install "$1" $_forced
     shift
   done
+}
+
+
+
+_xbps_init() {
+  :
+ }
+
+_xbps_pkgs_only() {
+  xbps-query --list-pkgs \
+  | awk '{ print $2 }' \
+  | xargs -n1 xbps-uhelper getpkgname
+}
+
+_xbps_inputs_only() {
+    RESULT=""
+    for PKG in $@
+    do
+        RESULT="$RESULT|$PKG"
+    done
+    RESULT="$(echo $RESULT | sed -e 's/^|//')"
+    echo "$RESULT"
+}
+
+
+xbps_Q() {
+  # PACAPT DOES NOT SUPPORT Qe ? // CANNOT TEST
+  if [[ "$_TOPT" == "e" ]]
+  then
+    if [ $# -eq 0 ]
+    then
+      xbps-query --list-manual-pkgs
+    else
+      RESULT="$(_xbps_inputs_only $@)"
+      xbps-query --list-manual-pkgs | grep -iE "$RESULT"
+    fi
+  elif [[ "$_TOPT" == "" ]]; then
+    if [ $# -eq 0 ]
+    then
+      xbps-query --list-pkgs
+    else
+      RESULT="$(_xbps_inputs_only $@)"
+      xbps-query --list-pkgs | grep -iE "$RESULT"
+    fi
+  else
+    _not_implemented
+  fi
+}
+
+xbps_Qi() {
+  PKGS="$@"
+  COLOR_CYAN="$(tput setaf 14)"
+  COLOR_RESET="$(tput sgr0)"
+  if [ $# -eq 0 ]
+  then
+    PKGS="$(_xbps_pkgs_only)"
+  fi
+  for PKG in $PKGS
+  do
+    RESULT="$(xbps-query "$PKG")"
+	if [ "$?" -eq 0 ]
+	then
+      echo "${COLOR_CYAN}name: ${COLOR_RESET}$PKG"
+      xbps-query "$PKG"
+	  echo
+	else
+	  _error "package '$PKG' was not found"
+	fi
+  done
+}
+
+xbps_Ql() {
+  PKGS="$@"
+  COLOR_CYAN="$(tput setaf 14)"
+  COLOR_RESET="$(tput sgr0)"
+  if [ -z "$PKGS" ]
+  then
+    PKGS="$(_xbps_pkgs_only)"
+  fi
+  for PKG in $PKGS
+  do
+    xbps-query --files "$PKG" | sed -e "s/^/${COLOR_CYAN}${PKG} ${COLOR_RESET}/g"
+  done
+}
+
+xbps_Qo() {
+  if [ $# -eq 0 ]
+  then
+    _error "no targets specified"
+  fi
+  PKGS="$@"
+  for PKG in $PKGS
+  do
+    if [ -f "$PKG" ]
+    then
+      xbps-query --ownedby "$PKG"
+    elif which $PKG &>/dev/null
+    then
+      xbps-query --ownedby "$(which $PKG)"
+    else
+      _error "failed to find '$PKG' in PATH: No such file or directory"
+    fi
+  done
+}
+
+xbps_Qp() {
+  _not_implemented
+}
+
+xbps_Qs() {
+  if [ $# -eq 0 ]
+  then
+    xbps-query --search ''''
+  elif [ $# -eq 1 ]
+  then
+    xbps-query --search "$@"
+  else
+    RESULT=""
+    for PKG in $@
+    do
+        RESULT="$(xbps-query --search '''' | grep -i "$PKG")"
+    done
+    echo "$RESULT"
+  fi
+}
+
+xbps_Qu() {
+  xbps-install --sync --update --dry-run "$@"
+}
+
+xbps_R() {
+  xbps-remove "$@"
+}
+
+xbps_Rn() {
+  xbps-remove --recursive "$@"
+}
+
+xbps_Rs() {
+  xbps-remove --recursive "$@"
+}
+
+xbps_Rns() {
+  xbps-remove --recursive "$@"
+}
+
+xbps_S() {
+  xbps-install $_TOPT "$@"
+}
+
+
+xbps_Sc() {
+  xbps-remove --clean-cache "$@"
+}
+
+xbps_Scc() {
+  xbps-remove --remove-orphans "$@"
+}
+
+xbps_Sccc() {
+  xbps-remove --clean-cache --remove-orphans "$@"
+}
+
+xbps_Si() {
+  PKGS="$@"
+  COLOR_CYAN="$(tput setaf 14)"
+  COLOR_RESET="$(tput sgr0)"
+  if [ $# -eq 1 ]
+  then
+    RESULT="$(xbps-query --repository "$PKGS")"
+	if [ "$?" -eq 0 ]
+    then
+        echo "${COLOR_CYAN}name: ${COLOR_RESET}$PKGS"
+        xbps-query --repository "$PKGS"
+    fi
+  else
+    if [ $# -eq 0 ]
+    then
+      PKGS="$(_xbps_pkgs_only)"
+    fi
+    for PKG in $PKGS
+    do
+      RESULT="$(xbps-query --repository "$PKG")"
+	  if [ "$?" -eq 0 ]
+      then
+          echo "${COLOR_CYAN}name: ${COLOR_RESET}$PKG"
+          xbps-query --repository "$PKG"
+          echo
+      fi
+    done
+  fi
+}
+
+xbps_Sii() {
+  COLOR_CYAN="$(tput setaf 14)"
+  COLOR_RESET="$(tput sgr0)"
+  PKGS="$@"
+  for PKG in $PKGS
+  do
+      RESULT="$(xbps-query --repository --revdeps "$PKG")"
+	  if [ "$?" -eq 0 ]
+	  then
+        echo "$RESULT" \
+        | xargs -n1 xbps-uhelper getpkgname \
+        | xargs \
+        | sed -e "s/ /  /g" -e "s/^/${COLOR_CYAN}${PKG} ${COLOR_RESET}/g"
+	  else
+	    _error "package '$PKG' was not found or has no dependenices"
+	  fi
+  done
+}
+
+xbps_Ss() {
+  if (( $# )); then
+    xbps-query --repository --search "$@"
+  else
+    RESULT="$(_xbps_inputs_only $@)"
+    xbps-query --repository --search '''' | grep -iE "$RESULT"
+  fi
+}
+
+xbps_Su() {
+  xbps-install --update "$@"
+}
+
+xbps_Suy() {
+  xbps-install --sync --update $_TOPT "$@"
+}
+
+xbps_Sw() {
+  _not_implemented
+}
+
+xbps_Sy() {
+  xbps-install --sync "$@"
+}
+
+xbps_U() {
+  _not_implemented
 }
 
 
@@ -1967,6 +2251,15 @@ _validate_operation() {
   "sun_tools_Q") ;;
   "sun_tools_R") ;;
   "sun_tools_U") ;;
+  "swupd_Qk") ;;
+  "swupd_Qo") ;;
+  "swupd_Qs") ;;
+  "swupd_R") ;;
+  "swupd_Suy") ;;
+  "swupd_Su") ;;
+  "swupd_Sy") ;;
+  "swupd_Ss") ;;
+  "swupd_S") ;;
   "tazpkg_Q") ;;
   "tazpkg_Qi") ;;
   "tazpkg_Ql") ;;
@@ -1980,6 +2273,29 @@ _validate_operation() {
   "tazpkg_Ss") ;;
   "tazpkg_Qo") ;;
   "tazpkg_U") ;;
+  "xbps_Q") ;;
+  "xbps_Qi") ;;
+  "xbps_Ql") ;;
+  "xbps_Qo") ;;
+  "xbps_Qp") ;;
+  "xbps_Qs") ;;
+  "xbps_Qu") ;;
+  "xbps_R") ;;
+  "xbps_Rn") ;;
+  "xbps_Rs") ;;
+  "xbps_Rns") ;;
+  "xbps_S") ;;
+  "xbps_Sc") ;;
+  "xbps_Scc") ;;
+  "xbps_Sccc") ;;
+  "xbps_Si") ;;
+  "xbps_Sii") ;;
+  "xbps_Ss") ;;
+  "xbps_Su") ;;
+  "xbps_Suy") ;;
+  "xbps_Sw") ;;
+  "xbps_Sy") ;;
+  "xbps_U") ;;
   "yum_Q") ;;
   "yum_Qi") ;;
   "yum_Qs") ;;
