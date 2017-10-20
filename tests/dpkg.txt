@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Purpose : Testing script for dpkg support
+# Author  : Ky-Anh Huynh
+# License : MIT
+
 # FIXME: debian:squeeze It's unable to run `pacman -Sy`
 im ubuntu:16.04 ubuntu:14.04 debian:wheezy
 
