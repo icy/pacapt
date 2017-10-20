@@ -125,6 +125,7 @@ this table manually when you create new pull request.)_
  sun_tools  y  .  y  .  y  .  y  .  y  . y  .   .  . .  .   .    .  .   .  .  .  .   .  .  . y
      swupd  .  .  .  y  .  .  y  .  y  . y  .   .  . y  .   .    .  .   .  .  y  y   y  .  y .
     tazpkg  y  .  y  .  y  .  y  .  .  . y  .   .  . y  y   y    .  .   .  .  y  y   y  .  y y
+      xbps  y  .  y  .  y  .  y  y  y  y y  y   y  y y  y   y    y  y   y  .  y  y   y  y  y y
        yum  y  y  y  .  y  y  y  y  y  y y  .   .  y y  y   y    y  y   y  .  y  y   y  .  y y
     zypper  y  y  y  .  y  y  y  y  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y  y y
 ```
