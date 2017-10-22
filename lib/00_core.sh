@@ -222,17 +222,3 @@ _print_supported_operations() {
     done
   echo
 }
-
-_print_pacapt_version() {
-  cat <<EOF
-pacapt version '${1:-unknown}'
-
-Copyright (C) 2010 - $(date +%Y) Anh K. Huynh et al.
-
-Usage of the works is permitted provided that this
-instrument is retained with the works, so that any
-entity that uses the works is notified of this instrument.
-
-DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
-EOF
-}

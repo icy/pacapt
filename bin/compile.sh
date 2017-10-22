@@ -65,6 +65,25 @@ $( \
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
+_print_pacapt_version() {
+  cat <<_EOF_
+pacapt version '$VERSION'
+
+Copyright (C) 2010 - $(date +%Y) \\\\
+$( \
+  < README.md \
+  sed -e '1,/AUTHORS/d' \
+  | $GREP '*' \
+  | sed -e 's,*,                          |,g')
+
+Usage of the works is permitted provided that this
+instrument is retained with the works, so that any
+entity that uses the works is notified of this instrument.
+
+DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
+_EOF_
+}
+
 export PACAPT_VERSION='$VERSION'
 EOF
 

@@ -75,7 +75,7 @@ while :; do
       exit 0
       ;;
     V)
-      _print_pacapt_version $PACAPT_VERSION;
+      _print_pacapt_version;
       exit 0
       ;;
     P)
