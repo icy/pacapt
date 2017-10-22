@@ -2,7 +2,7 @@
 
 * `lib/homebrew`: `brew upgrade` is equivalant to `brew upgrade --all`.
   See #90 and #101.
-* Support `Clea Linux`. See #94.
+* Support `Clear Linux`. See #94.
 
 For developers:
 
