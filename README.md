@@ -131,9 +131,9 @@ sun_tools  y  .  y  .  y  .  y  .  y  . y  .   .  . .  .   .    .  .   .  .  .  
 
 **Notes:**
 
-* *y*: Implemented;
-* *~*: Implemented. Some options may not supported/implemented;
-* *x*: Operation is not supported by Operating system;
+* `y`: Implemented;
+* `~`: Implemented. Some options may not supported/implemented;
+* `x`: Operation is not supported by Operating system;
 * The table below is generated from source. Please don't update it manually.
 
 ## Related projects
