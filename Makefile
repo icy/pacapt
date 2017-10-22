@@ -14,14 +14,14 @@ default:
 	@echo '                your local 'pacapt.dev' script to $$BINDIR/pacman.'
 	@echo '                Please use DISTRO= to specify Docker image'
 	@echo "  tests       : Run all tests. Please read tests/README.md first."
-	@echo "                Use TESTS= to specify a package."
+	@echo "                Use TESTS= to specify a package. Docker is required."
 	@echo ""
-	@echo "Environments"
+	@echo "Environments:"
 	@echo ""
 	@echo "  VERSION     : Version information. Default: git commit hash."
 	@echo "  BINDIR      : Destination directory. Default: /usr/local/bin."
 	@echo "  DISTRO      : Container image. Default: debian:stable."
-	@echo "  PACAPT_STATS: Generate table of supported options."
+	@echo "  PACAPT_STATS: Generate table of supported options. Default: yes"
 
 # Build and install development script
 
