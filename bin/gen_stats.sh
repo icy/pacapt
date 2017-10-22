@@ -140,8 +140,8 @@ done
 
 printf "\`\`\`\n"
 printf "\n**Notes:**\n\n"
-printf "* *y*: Implemented;\n"
-printf "* *~*: Implemented. Some options may not supported/implemented;\n"
-printf "* *x*: Operation is not supported by Operating system;\n"
+printf "* \`y\`: Implemented;\n"
+printf "* \`~\`: Implemented. Some options may not supported/implemented;\n"
+printf "* \`x\`: Operation is not supported by Operating system;\n"
 printf "* The table below is generated from source. Please don't update it manually.\n"
 printf "\n"
