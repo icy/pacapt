@@ -61,6 +61,7 @@ dnf_Sy() {
   dnf clean expire-cache && dnf check-update
 }
 
+# dnf_Q may _not_implemented
 dnf_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     rpm -qa --qf "%{NAME}\n"

@@ -42,6 +42,7 @@ pkg_tools_Qu() {
   pkg_add -u "$@"
 }
 
+# pkg_tools_Q may _not_implemented
 pkg_tools_Q() {
   export PKG_PATH=
   # the dash after the pkg name is so we don't catch partial matches
@@ -59,6 +60,7 @@ pkg_tools_Q() {
   fi
 }
 
+# pkg_tools_Rs may _not_implemented
 pkg_tools_Rs() {
   if [[ "$_TOPT" == "" ]]; then
     pkg_delete -D dependencies "$@"
@@ -67,6 +69,7 @@ pkg_tools_Rs() {
   fi
 }
 
+# pkg_tools_rn may _not_implemented
 pkg_tools_Rn() {
   if [[ "$_TOPT" == "" ]];then
     pkg_delete -c "$@"
@@ -75,6 +78,7 @@ pkg_tools_Rn() {
   fi
 }
 
+# pkg_tools_rns _not_implemented
 pkg_tools_Rns() {
   _not_implemented
 }
@@ -104,10 +108,12 @@ pkg_tools_Su() {
   pkg_add -u "$@"
 }
 
+# pkg_tools_Sy _not_implemented
 pkg_tools_Sy() {
   _not_implemented
 }
 
+# pkg_tools_Ss may _not_implemented
 pkg_tools_Ss() {
   if [[ -z "$@" ]];then
     _not_implemented
@@ -127,6 +133,7 @@ pkg_tools_Sc() {
   fi
 }
 
+# pkg_tools_Scc _not_implemented
 pkg_tools_Scc() {
   _not_implemented
 }

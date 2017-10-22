@@ -9,6 +9,7 @@ _tazpkg_init() {
   :
 }
 
+# tarpkg_Q may _not_implemented
 tazpkg_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     tazpkg list "$@" \
@@ -24,6 +25,7 @@ tazpkg_Qi() {
   tazpkg info "$@"
 }
 
+# tarpkg_Ql may _not_implemented
 tazpkg_Ql() {
   if [[ -z "$@" ]]; then
     _not_implemented

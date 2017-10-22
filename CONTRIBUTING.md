@@ -41,8 +41,6 @@ $ docker run --rm -ti \
 1. Please **do not** use `make pacapt` to update `pacapt`,
    and/or modify it manually;
 1. For your development, use `make pacapt.dev`;
-   To generate the table of implemented options, use `PACAPT_STATS=1`.
-   This table is manually replaced the one in `README` file.
 
 ## Branches
 

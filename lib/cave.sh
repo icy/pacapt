@@ -137,6 +137,7 @@ cave_Scc() {
   cave fix-cache "$@"
 }
 
+# cave_Sccc _not_implemented
 cave_Sccc() {
   #rm -fv /var/cache/paludis/*
   _not_implemented
@@ -149,6 +150,7 @@ cave_S() {
   && cave resolve -x $_TOPT "$@"
 }
 
+# cave_U _not_implemented
 cave_U() {
   _not_implemented
 }

@@ -124,8 +124,6 @@ done
 # Detect all supported operations.
 ########################################################################
 
-_operations=()
-
 echo "_validate_operation() {"
 echo "  case \"\$1\" in"
 
@@ -139,7 +137,6 @@ for L in ./lib/*.sh; do
 
   while read F; do
     echo "  \"$F\") ;;"
-    _operations+=( "$F" )
   done < \
     <(
       $GREP -hE "^${_PKGNAME}_[^ \t]+\(\)" "$L" \
@@ -159,108 +156,4 @@ echo "}"
 
 $GREP -v '^#' lib/zz_main.sh
 
-########################################################################
-# Stop here, or continue...
-########################################################################
-
-if [[ -z "${PACAPT_STATS:-}" ]]; then
-  echo >&2 "pacapt version '$VERSION' has been generated"
-  exit
-fi
-
-########################################################################
-# For developers only
-#
-#  PxO  Q Qi Qs ...
-# dpkg  x  o  o ...
-# yum   o  o  o ...
-#
-########################################################################
-
-_soperations="$(
-  echo "${_operations[@]}" \
-  | sed -e 's# #\n#g' \
-  | sed -e 's#^.*_\([A-Z][a-z]*\)#\1#g' \
-  | sort -u
-  )"
-
-# Print the headers
-_ret="$(printf " %9s " "")"
-for _sopt in $_soperations; do
-  _size="$(( ${#_sopt} + 1))"
-  _ret="$(printf "%s%${_size}s" "$_ret" "$_sopt")"
-done
-printf >&2 "%s\n" "$_ret"
-
-i=0   # index
-rs=0  # restart
-
-_operations+=( "xxx_yyy" )
-
-while :; do
-  _ret=""
-
-  [[ "$i" -lt "${#_operations[@]}" ]] \
-  || break
-
-  _cur_pkg="${_operations[$i]}"
-  _cur_pkg="${_cur_pkg%_*}"
-
-  for _sopt in $_soperations; do
-    # Detect flag for this secondary option
-    _flag="."
-
-    # Start from the #rs index,
-    # go to boundary of the next package name.
-    #     xx_Qi, xx_Qs,...  yy_Qi, yy_Qs,...
-    #
-    i=$rs
-    while [[ "$i" -lt "${#_operations[@]}" ]]; do
-      _opt="${_operations[$i]}"
-
-      _cur2_opt="${_opt##*_}"
-      _cur2_pkg="${_opt%_*}"
-
-      # echo >&2 "(cur_pkg = $_cur_pkg, look up $_sopt [from $rs], found $_cur2_opt)"
-
-      # Reach the boundary of the next package name
-      if [[ "$_cur2_pkg" != "$_cur_pkg" ]]; then
-        break
-      else
-        if [[ "$_cur2_opt" == "$_sopt" ]]; then
-          _flag="y"
-          break
-        else
-          (( i ++ )) ||:
-        fi
-      fi
-    done
-
-    _size="$(( ${#_sopt} + 1))"
-    _ret="$(printf "%s%${_size}s" "$_ret" "$_flag")"
-  done
-
-  # Detect the next #restart index
-  i=$rs
-  while [[ "$i" -lt "${#_operations[@]}" ]]; do
-    _opt="${_operations[$i]}"
-    _cur2_pkg="${_opt%_*}"
-
-    if [[ "$_cur2_pkg" != "$_cur_pkg" ]]; then
-      rs=$i
-      break
-    fi
-
-    (( i ++ )) ||:
-  done
-
-  if [[ "$_cur_pkg" != "xxx" ]]; then
-    printf >&2 " %9s %s\n" "$_cur_pkg" "$_ret"
-  fi
-done
-
-########################################################################
-# Print statistics and the fancy table
-########################################################################
-
-echo >&2 "pacapt version '$VERSION' has been generated"
+echo >&2 "pacapt version '$VERSION' has been generated."

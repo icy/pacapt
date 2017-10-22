@@ -55,6 +55,7 @@ homebrew_Qs() {
   brew list | grep "$@"
 }
 
+# homebrew_Q may _not_implemented
 homebrew_Q() {
   if [[ "$_TOPT" == "" ]]; then
     if [[ "$@" == "" ]]; then
@@ -69,6 +70,7 @@ homebrew_Q() {
 
 # FIXME: make sure "join" does exit
 # FIXME: Add quoting support, be cause "join" can fail
+# homebew_Rs may _not_implemented
 homebrew_Rs() {
   if [[ "$_TOPT" == "s" ]]; then
     brew rm "$@"

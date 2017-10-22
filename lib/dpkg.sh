@@ -17,6 +17,7 @@ _dpkg_init() {
   :
 }
 
+# dpkg_Q may _not_implemented
 dpkg_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     dpkg -l \
@@ -77,6 +78,7 @@ dpkg_Qs() {
   | grep -Ei "${@:-.}"
 }
 
+# dpkg_Rs may _not_implemented
 dpkg_Rs() {
   if [[ "$_TOPT" == "" ]]; then
     apt-get autoremove "$@"
