@@ -9,7 +9,7 @@
   * [Installation from Pival81 repository](#installation-from-pival81-repository)
 * [Usage](#usage)
 * [Implemented Operations](#implemented-operations)
-* [Support](#support)
+* [Related projects](#related-projects)
 * [Development](#development)
 * [License](#license)
 * [Authors](#authors-contributors)
@@ -134,9 +134,10 @@ Notes:
     zypper  y  y  y  .  y  y  y  y  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y  y y
 ```
 
-## Support
+## Related projects
 
-Please use the ticket system at https://github.com/icy/pacapt/issues .
+* [An Arch's pacman-like package manager for Windows](https://github.com/Grenadingue/batch-pacapt)
+* [A node.js wrapper of pacapt plus batch-pacapt](https://github.com/Grenadingue/node-pacapt)
 
 ## Development
 
