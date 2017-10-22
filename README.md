@@ -5,7 +5,8 @@
 * [Name](#name)
 * [Description](#description)
 * [Installation](#installation)
-* [Installation from Pival81 repository](#installation-from-pival81-repository)
+  * [Install stable from Github](#install-stable-script-from-github)
+  * [Installation from Pival81 repository](#installation-from-pival81-repository)
 * [Usage](#usage)
 * [Implemented Operations](#implemented-operations)
 * [Support](#support)
@@ -57,8 +58,11 @@ The tool supports the following package managers:
 ## Installation
 
 1. This script shouldn't be installed on an Arch-based system;
-2. On `FreeBSD` and `Alpine Linux`, please install `bash` package first;
-3. Download the stable script and make it executable
+2. On `FreeBSD` and `Alpine Linux`, please install `bash` package first.
+
+### Install stable script from Github
+
+You can download the stable script and make it executable
 
 ````
 $ sudo wget -O /usr/local/bin/pacapt \
@@ -78,7 +82,7 @@ which is `v2.0` at the moment. If you want to compile a script
 from its components, please make sure you use a correct branch.
 See `CONTRIBUTING.md` for details.
 
-## Installation from Pival81 repository
+### Installation from Pival81 repository
 
 @Pival81 creates specification to build packages on various Linux
 distributions (CentOS, Debian, Fedora, OpenSUSE, RHEL, Ubuntu).
@@ -106,10 +110,10 @@ A short description can be found at
 
 ## Implemented operations
 
-_(Note:
-This table is generated automatically from the latest development work.
-Some features may be missing in the stable script. Please don't change
-this table manually when you create new pull request.)_
+Notes:
+1. Though being marked as `supported`, some operation may only generate
+   `Unsupported` error and/or do nothing.
+1. The table below is generated from source. Please don't update it manually.
 
 ```
             Q Qc Qi Qk Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Si Sii Sl Ss Su Suy Sw Sy U
