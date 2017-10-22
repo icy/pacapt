@@ -26,7 +26,7 @@ if [[ "${VERSION}" == "unknown" ]]; then
   exit 1
 fi
 
-: "${PACAPT_STATS=}"  # List implemented operations to STDERR
+: "${PACAPT_STATS:=yes}"  # List implemented operations to STDERR
 : "${GREP:=grep}"     # Need to update on SunOS
 : "${AWK:=awk}"       # Need to update on SunOS
 
@@ -166,7 +166,7 @@ _soperations="$(
   )"
 
 # Print the headers
-_ret="$(printf "| %9s " "")"
+_ret="$(printf " %9s " "")"
 for _sopt in $_soperations; do
   _size="$(( ${#_sopt} + 1))"
   _ret="$(printf "%s%${_size}s" "$_ret" "$_sopt")"
@@ -236,7 +236,7 @@ while :; do
   done
 
   if [[ "$_cur_pkg" != "xxx" ]]; then
-    printf >&2 "| %9s %s\n" "$_cur_pkg" "$_ret"
+    printf >&2 " %9s %s\n" "$_cur_pkg" "$_ret"
   fi
 done
 
