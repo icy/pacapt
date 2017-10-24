@@ -112,26 +112,26 @@ A short description can be found at
 
 ```
            Q Qc Qi Qk Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Si Sii Sl Ss Su Suy Sw Sy U
-      apk  ~  .  y  .  y  .  y  .  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y  y y
-     cave  y  .  y  .  y  .  y  y  y  y y  y   y  y y  y   y    x  y   .  .  y  y   y  .  y x
-      dnf  ~  y  y  .  y  y  y  y  y  y y  .   .  . y  y   y    y  y   .  y  y  y   y  y  y y
-     dpkg  ~  .  y  .  y  .  y  y  y  y y  y   y  ~ y  y   y    y  y   y  .  y  y   y  .  y y
- homebrew  ~  y  y  .  y  .  y  .  y  y y  .   .  y y  y   y    y  y   .  .  y  y   y  .  y .
- macports  .  y  .  .  y  .  y  .  .  y y  .   .  ~ y  y   y    .  y   .  .  y  y   y  .  y .
-    pkgng  y  .  y  .  y  .  y  y  .  y y  .   .  y y  y   y    .  y   .  .  y  y   y  .  y .
-pkg_tools  ~  .  y  .  y  .  y  y  .  y y  y   y  ~ y  y   x    .  y   .  y  ~  y   y  .  x .
-  portage  y  y  y  .  y  .  y  .  .  y y  .   .  y y  y   y    y  y   .  .  y  y   y  .  y .
-sun_tools  y  .  y  .  y  .  y  .  y  . y  .   .  . .  .   .    .  .   .  .  .  .   .  .  . y
-    swupd  .  .  .  y  .  .  y  .  y  . y  .   .  . y  .   .    .  .   .  .  y  y   y  .  y .
-   tazpkg  y  .  y  .  y  .  y  .  .  . y  .   .  . y  y   y    .  .   .  .  y  y   y  .  y y
-     xbps  y  .  y  .  y  .  y  y  y  y y  y   y  y y  y   y    y  y   y  .  y  y   y  y  y y
-      yum  y  y  y  .  y  y  y  y  y  y y  .   .  y y  y   y    y  y   y  .  y  y   y  .  y y
-   zypper  y  y  y  .  y  y  y  y  y  y y  y   y  y y  y   y    y  y   y  y  y  y   y  y  y y
+      apk  ~     *     *     *     *  * *  *   *  * *  *   *    *  *   *  *  *  *   *  *  * *
+     cave  *     *     *     *  *  *  * *  *   *  * *  *   *    x  *         *  *   *     * x
+      dnf  ~  *  *     *  *  *  *  *  * *           *  *   *    *  *      *  *  *   *  *  * *
+     dpkg  ~     *     *     *  *  *  * *  *   *  ~ *  *   *    *  *   *     *  *   *     * *
+ homebrew  ~  *  *     *     *     *  * *         * *  *   *    *  *         *  *   *     *  
+ macports     *        *     *        * *         ~ *  *   *       *         *  *   *     *  
+    pkgng  *     *     *     *  *     * *         * *  *   *       *         *  *   *     *  
+pkg_tools  ~     *     *     *  *     * *  *   *  ~ *  *   x       *      *  ~  *   *     x  
+  portage  *  *  *     *     *        * *         * *  *   *    *  *         *  *   *     *  
+sun_tools  *     *     *     *     *    *                                                   *
+    swupd           *        *     *    *           *                        *  *   *     *  
+   tazpkg  *     *     *     *          *           *  *   *                 *  *   *     * *
+     xbps  *     *     *     *  *  *  * *  *   *  * *  *   *    *  *   *     *  *   *  *  * *
+      yum  *  *  *     *  *  *  *  *  * *         * *  *   *    *  *   *     *  *   *     * *
+   zypper  *  *  *     *  *  *  *  *  * *  *   *  * *  *   *    *  *   *  *  *  *   *  *  * *
 ```
 
 **Notes:**
 
-* `y`: Implemented;
+* `*`: Implemented;
 * `~`: Implemented. Some options may not supported/implemented;
 * `x`: Operation is not supported by Operating system;
 * The table is generated from source. Please don't update it manually.

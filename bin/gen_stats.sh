@@ -9,6 +9,10 @@
 : "${PACAPT_STATS:=yes}"  # List implemented operations to STDERR
 : "${GREP:=grep}"         # Need to update on SunOS
 : "${AWK:=awk}"           # Need to update on SunOS
+: "${SYM_PARTIALLY_SUPPORTED:=~}"
+: "${SYM_FULLY_SUPPORTED:=*}"
+: "${SYM_NOT_SUPPORTED:=x}"
+: "${SYM_UNKNOWN:= }"
 
 # At compile time, `_sun_tools_init` is not yet defined.
 if [[ -f "lib/sun_tools.sh" ]]; then
@@ -22,11 +26,11 @@ export GREP AWK VERSION PACAPT_STATS
 # $1:
 _implState() {
   if grep -qs "# ${1} _not_implemented" ./lib/*.sh; then
-    echo "x"
+    echo "${SYM_NOT_SUPPORTED}"
   elif grep -qs "# ${1} may _not_implemented" ./lib/*.sh; then
-    echo "~"
+    echo "${SYM_PARTIALLY_SUPPORTED}"
   else
-    echo "y"
+    echo "${SYM_FULLY_SUPPORTED}"
   fi
 }
 
@@ -86,7 +90,7 @@ while :; do
 
   for _sopt in $_SOPERATIONS; do
     # Detect flag for this secondary option
-    _flag="."
+    _flag="${SYM_UNKNOWN}"
 
     # Start from the #rs index,
     # go to boundary of the next package name.
@@ -140,8 +144,8 @@ done
 
 printf "\`\`\`\n"
 printf "\n**Notes:**\n\n"
-printf "* \`y\`: Implemented;\n"
-printf "* \`~\`: Implemented. Some options may not supported/implemented;\n"
-printf "* \`x\`: Operation is not supported by Operating system;\n"
+printf "* \`${SYM_FULLY_SUPPORTED}\`: Implemented;\n"
+printf "* \`${SYM_PARTIALLY_SUPPORTED}\`: Implemented. Some options may not supported/implemented;\n"
+printf "* \`${SYM_NOT_SUPPORTED}\`: Operation is not supported by Operating system;\n"
 printf "* The table is generated from source. Please don't update it manually.\n"
 printf "\n"
