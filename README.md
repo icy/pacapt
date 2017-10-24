@@ -138,7 +138,6 @@ sun_tools  *     *     *     *     *    *                                       
 
 ## Related projects
 
-* [A node.js wrapper of pacapt](https://github.com/Grenadingue/node-pacapt)
 * [An Arch's pacman-like package manager for Windows](https://github.com/Grenadingue/batch-pacapt)
 * [A node.js wrapper of pacapt plus batch-pacapt](https://github.com/Grenadingue/node-pacapt)
 
