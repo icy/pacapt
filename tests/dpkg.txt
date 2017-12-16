@@ -99,3 +99,9 @@ in -Sccc
 in clear
 in -sS tmux
 ou empty
+
+# Remove un-used packages for Ubuntu...
+in ! echo Y | pacman -C
+in clear
+in ! pacman -Qq | grep snapd
+ou empty

@@ -154,3 +154,11 @@ dpkg_Sccc() {
   rm -fv /var/lib/apt/lists/*.*
   apt-get autoclean
 }
+
+dpkg_C() {
+  pacman -Rs \
+    snapd \
+    lxcfs \
+
+  dpkg_Scc
+}

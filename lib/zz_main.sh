@@ -83,7 +83,7 @@ while :; do
       exit 0
       ;;
 
-    Q|S|R|U)
+    Q|S|R|U|C)
       if [[ -n "$_POPT" && "$_POPT" != "$_opt" ]]; then
         _error "Only one operation may be used at a time"
         exit 1
