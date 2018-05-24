@@ -55,6 +55,18 @@ EXAMPLES
   3. To download a package without installing it
       $ pacapt -Sw foobar
 
+
+ENVIRONMENT
+
+  PACAPT_DEBUG
+
+    This is useful for debugging purpose. The variable can be set to `auto`
+    or any valid packager. For example, on `Debian` system the two following
+    commands are the same and they will print out what the script would do:
+
+        PACAPT_DEBUG=auto pacman -Su
+        PACAPT_DEBUG=dpkg pacman -Su
+
 NOTES
 
   When being executed on Arch-based system, the tool simply invokes
