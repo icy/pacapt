@@ -38,7 +38,7 @@ OPERATIONS
     -Sccc           clean variant files.
                     (debian) See also http://dragula.viettug.org/blogs/646
 
-  System upgrade
+  Upgrade
     -U              upgrade or add package from local file path (or remote uri)
 
 OPTIONS
