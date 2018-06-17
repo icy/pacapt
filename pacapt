@@ -3,10 +3,10 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.3.14
+# Version: 2.3.15
 # Authors: Anh K. Huynh et al.
 
-# Copyright (C) 2010 - 2017 \
+# Copyright (C) 2010 - 2018 \
 #                           | 10sr (10sr)
 #                           | Alexander Dupuy (dupuy)
 #                           | Anh K. Huynh (icy)
@@ -41,7 +41,47 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 #
 
-export PACAPT_VERSION='2.3.14'
+_print_pacapt_version() {
+  cat <<_EOF_
+pacapt version '2.3.15'
+
+Copyright (C) 2010 - 2018 \\
+                          | 10sr (10sr)
+                          | Alexander Dupuy (dupuy)
+                          | Anh K. Huynh (icy)
+                          | Alex Lyon (Arcterus)
+                          | Carl X. Su (bcbcarl)
+                          | Cuong Manh Le (Gnouc)
+                          | Daniel YC Lin (dlintw)
+                          | Danny George (dangets)
+                          | Darshit Shah (darnir)
+                          | Dmitry Kudriavtsev (dkudriavtsev)
+                          | Eric Crosson (EricCrosson)
+                          | Evan Relf (evanrelf)
+                          | GijsTimmers (GijsTimmers)
+                          | Hà-Dương Nguyễn (cmpitg)
+                          | Huy Ngô (NgoHuy)
+                          | James Pearson (xiongchiamiov)
+                          | Janne Heß (dasJ)
+                          | Jiawei Zhou (4679)
+                          | Karol Blazewicz
+                          | Kevin Brubeck (unhammer)
+                          | Konrad Borowski (xfix)
+                          | Kylie McClain (somasis)
+                          | Valerio Pizzi (Pival81)
+                          | Siôn Le Roux (sinisterstuf)
+                          | Thiago Perrotta (thiagowfx)
+                          | Vojtech Letal (letalvoj)
+
+Usage of the works is permitted provided that this
+instrument is retained with the works, so that any
+entity that uses the works is notified of this instrument.
+
+DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
+_EOF_
+}
+
+export PACAPT_VERSION='2.3.15'
 
 _help() {
   cat <<'EOF'
@@ -85,6 +125,9 @@ OPERATIONS
     -Sccc           clean variant files.
                     (debian) See also http://dragula.viettug.org/blogs/646
 
+  Upgrade
+    -U              upgrade or add package from local file path (or remote uri)
+
 OPTIONS
 
     -w              download packages but don't install them
@@ -101,6 +144,18 @@ EXAMPLES
 
   3. To download a package without installing it
       $ pacapt -Sw foobar
+
+
+ENVIRONMENT
+
+  PACAPT_DEBUG
+
+    This is useful for debugging purpose. The variable can be set to `auto`
+    or any valid packager. For example, on `Debian` system the two following
+    commands are the same and they will print out what the script would do:
+
+        PACAPT_DEBUG=auto pacman -Su
+        PACAPT_DEBUG=dpkg pacman -Su
 
 NOTES
 
@@ -320,20 +375,6 @@ _print_supported_operations() {
       echo -n " $O"
     done
   echo
-}
-
-_print_pacapt_version() {
-  cat <<EOF
-pacapt version '${1:-unknown}'
-
-Copyright (C) 2010 - $(date +%Y) Anh K. Huynh et al.
-
-Usage of the works is permitted provided that this
-instrument is retained with the works, so that any
-entity that uses the works is notified of this instrument.
-
-DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
-EOF
 }
 
 
@@ -2415,7 +2456,7 @@ while :; do
       exit 0
       ;;
     V)
-      _print_pacapt_version $PACAPT_VERSION;
+      _print_pacapt_version;
       exit 0
       ;;
     P)
