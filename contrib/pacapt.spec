@@ -1,12 +1,12 @@
 %global debug_package %{nil}
 Name:           pacapt
-Version:        2.3.14
+Version:        2.3.15
 Release:        1%{?dist}
 Summary:        An Arch's pacman-like package manager for some Unices
 License:        Fair
 URL:            https://github.com/icy/pacapt
 Source0:        %{name}-%{version}.tar.gz
-BuildArch:	     noarch
+BuildArch:      noarch
 
 %description
 An Arch's pacman-like package manager for some Unices. Actually this Bash script provides a wrapper for system's package manager. For example, on CentOS machines, you can install htop with command
@@ -51,6 +51,8 @@ rm -rf %_buildrootdir
 /usr/local/bin/pacman
 
 %changelog
+* Sun Jun 17 2018 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1
+- Updated version (2.3.14 -> 2.3.15)
 * Thu Oct 20 2017 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1
 - Updated version (2.3.13 -> 2.3.14)
 * Thu Jul 21 2016 Ky-Anh Huynh(icy) <kyanh@theslinux.org> - 1

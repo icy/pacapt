@@ -1,3 +1,7 @@
+## v2.3.15
+
+* A warm up release with very minor updates.
+
 ## v2.3.14
 
 * `lib/homebrew`: `brew upgrade` is equivalant to `brew upgrade --all`.
