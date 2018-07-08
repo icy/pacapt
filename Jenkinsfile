@@ -6,6 +6,8 @@
 
 @Library("icy@master")
 
+def icyUtils = new org.icy.Utils()
+
 try {
   node {
     checkout("clean")
