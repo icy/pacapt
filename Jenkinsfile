@@ -10,7 +10,7 @@ def icyUtils = new org.icy.Utils()
 
 try {
   node {
-    checkout("clean")
+    checkOut("clean")
 
     stage("tests") {
       sh '''
