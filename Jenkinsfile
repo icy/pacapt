@@ -12,6 +12,8 @@ try {
   node {
     checkOut("clean")
 
+    buildInfo()
+
     stage("tests") {
       sh '''
         make tests
