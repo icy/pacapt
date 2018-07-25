@@ -24,6 +24,7 @@ _die() {
 }
 
 _not_implemented() {
+  # shellcheck disable=2153
   echo >&2 "${_PACMAN}: '${_POPT}:${_SOPT}:${_TOPT}' operation is invalid or not implemented."
   return 1
 }
@@ -90,7 +91,7 @@ _PACMAN_detect() {
 
   # Prevent a loop when this script is installed on non-standard system
   if [[ -x "/usr/bin/pacman" ]]; then
-    $GREP -q "$FUNCNAME" '/usr/bin/pacman' >/dev/null 2>&1
+    $GREP -q "${FUNCNAME[0]}" '/usr/bin/pacman' >/dev/null 2>&1
     [[ $? -ge 1 ]] && _PACMAN="pacman" \
     && return
   fi
@@ -201,9 +202,11 @@ _translate_noconfirm() {
 
 _translate_all() {
   local _args=""
-  local _debug="$(_translate_debug)"
-  local _noconfirm="$(_translate_noconfirm)"
+  local _debug=
+  local _noconfirm=
 
+  _debug="$(_translate_debug)"
+  _noconfirm="$(_translate_noconfirm)"
   _args="$(_translate_w)" || return 1
   _args="${_args}${_noconfirm:+ }${_noconfirm}" || return 1
   _args="${_args}${_debug:+ }${_debug}" || return 1
@@ -214,10 +217,11 @@ _translate_all() {
 _print_supported_operations() {
   local _pacman="$1"
   echo -n "pacapt: available operations:"
-  $GREP -E "^${_pacman}_[^ \t]+\(\)" "$0" \
+  # shellcheck disable=2016
+  $GREP -E "^${_pacman}_[^ \\t]+\\(\\)" "$0" \
   | $AWK -F '(' '{print $1}' \
   | sed -e "s/${_pacman}_//g" \
-  | while read O; do
+  | while read -r O; do
       echo -n " $O"
     done
   echo

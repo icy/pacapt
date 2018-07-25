@@ -122,7 +122,7 @@ homebrew_Sccc() {
   _dcache="$(brew --cache)"
   case "$_dcache" in
   ""|"/"|" ")
-    _error "$FUNCNAME: Unable to delete '$_dcache'."
+    _error "${FUNCNAME[0]}: Unable to delete '$_dcache'."
     ;;
 
   *)
