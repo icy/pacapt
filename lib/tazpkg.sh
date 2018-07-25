@@ -60,8 +60,7 @@ tazpkg_Suy() {
 tazpkg_S() {
   local _forced=""
 
-  grep -q -- "--forced" <<<"*"
-  if [[ $? -eq 0 ]]; then
+  if grep -q -- "--forced" <<<"$*"; then
     _forced="--forced"
   fi
 
