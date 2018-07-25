@@ -64,9 +64,9 @@ dnf_Sy() {
 # dnf_Q may _not_implemented
 dnf_Q() {
   if [[ "$_TOPT" == "q" ]]; then
-    rpm -qa --qf "%{NAME}\n"
+    rpm -qa --qf "%{NAME}\\n"
   elif [[ "$_TOPT" == "" ]]; then
-    rpm -qa --qf "%{NAME} %{VERSION}\n"
+    rpm -qa --qf "%{NAME} %{VERSION}\\n"
   else
     _not_implemented
   fi
