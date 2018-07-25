@@ -41,9 +41,9 @@ sun_tools_Qs() {
 sun_tools_Q() {
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
-  if [[ "$_TOPT" == "q" && ! -z "$@" ]]; then
+  if [[ "$_TOPT" == "q" && ! -z "$*" ]]; then
     pkginfo | $GREP "$@"
-  elif [[ "$_TOPT" == "q" && -z "$@" ]]; then
+  elif [[ "$_TOPT" == "q" && -z "$*" ]]; then
     pkginfo
   else
     pkginfo "$@"

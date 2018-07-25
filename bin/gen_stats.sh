@@ -16,6 +16,7 @@
 
 # At compile time, `_sun_tools_init` is not yet defined.
 if [[ -f "lib/sun_tools.sh" ]]; then
+  # shellcheck disable=1091
   source "lib/sun_tools.sh" :
   _sun_tools_init
 fi
@@ -34,7 +35,7 @@ _implState() {
   fi
 }
 
-printf >&2 ":: $0: Generating statistics (table of implemented operations)..."
+printf >&2 ":: %s: Generating statistics (table of implemented operations)..." "$0"
 
 # Operations (FQDN)
 _OPERATIONS=()
@@ -46,11 +47,12 @@ for L in ./lib/*.sh; do
   "zz_main"|"00_core") continue ;;
   esac
 
-  while read F; do
+  while read -r F; do
     _OPERATIONS+=( "$F" )
   done < \
     <(
-      $GREP -hE "^${_PKGNAME}_[^ \t]+\(\)" "$L" \
+      # shellcheck disable=2016
+      $GREP -hE "^${_PKGNAME}_[^ \\t]+\\(\\)" "$L" \
        | $AWK -F '(' '{print $1}'
     )
 done
@@ -63,8 +65,8 @@ _SOPERATIONS="$(
   | sort -u
   )"
 
-printf "\n"
-printf "\`\`\`\n"
+printf "\\n"
+printf "\`\`\`\\n"
 
 # Print the headers
 _ret="$(printf "%9s " "")"
@@ -72,7 +74,7 @@ for _sopt in $_SOPERATIONS; do
   _size="$(( ${#_sopt} + 1))"
   _ret="$(printf "%s%${_size}s" "$_ret" "$_sopt")"
 done
-printf "%s\n" "$_ret"
+printf "%s\\n" "$_ret"
 
 i=0   # index
 rs=0  # restart
@@ -138,14 +140,14 @@ while :; do
   done
 
   if [[ "$_cur_pkg" != "xxx" ]]; then
-    printf "%9s %s\n" "$_cur_pkg" "$_ret"
+    printf "%9s %s\\n" "$_cur_pkg" "$_ret"
   fi
 done
 
-printf "\`\`\`\n"
-printf "\n**Notes:**\n\n"
-printf "* \`${SYM_FULLY_SUPPORTED}\`: Implemented;\n"
-printf "* \`${SYM_PARTIALLY_SUPPORTED}\`: Implemented. Some options may not supported/implemented;\n"
-printf "* \`${SYM_NOT_SUPPORTED}\`: Operation is not supported by Operating system;\n"
-printf "* The table is generated from source. Please don't update it manually.\n"
-printf "\n"
+printf "\`\`\`\\n"
+printf "\\n**Notes:**\\n\\n"
+printf "* \`%s\`: Implemented;\\n" "${SYM_FULLY_SUPPORTED}"
+printf "* \`%s\`: Implemented. Some options may not supported/implemented;\\n" "${SYM_PARTIALLY_SUPPORTED}"
+printf "* \`%s\`: Operation is not supported by Operating system;\\n" "${SYM_NOT_SUPPORTED}"
+printf "* The table is generated from source. Please don't update it manually.\\n"
+printf "\\n"

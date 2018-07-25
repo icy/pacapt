@@ -36,7 +36,7 @@ dpkg_Qi() {
 }
 
 dpkg_Ql() {
-  if [[ -n "$@" ]]; then
+  if [[ -n "$*" ]]; then
     dpkg-query -L "$@"
     return
   fi

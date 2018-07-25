@@ -32,7 +32,7 @@ cave_Qi() {
 }
 
 cave_Ql() {
-  if [[ -n "$@" ]]; then
+  if [[ -n "$*" ]]; then
     cave contents "$@"
     return
   fi
@@ -57,7 +57,7 @@ cave_Qp() {
 }
 
 cave_Qu() {
-  if [[ -z "$@" ]];then
+  if [[ -z "$*" ]];then
     cave resolve -c world \
     | grep '^u.*' \
     | while read _pkg; do

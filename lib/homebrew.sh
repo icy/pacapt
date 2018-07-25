@@ -58,7 +58,7 @@ homebrew_Qs() {
 # homebrew_Q may _not_implemented
 homebrew_Q() {
   if [[ "$_TOPT" == "" ]]; then
-    if [[ "$@" == "" ]]; then
+    if [[ "$*" == "" ]]; then
       brew list
     else
       brew list | grep "$@"

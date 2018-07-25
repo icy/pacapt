@@ -32,6 +32,7 @@ fi
 
 # At compile time, `_sun_tools_init` is not yet defined.
 if [[ -f "lib/sun_tools.sh" ]]; then
+  # shellcheck disable=1091
   source "lib/sun_tools.sh" :
   _sun_tools_init
 fi
@@ -135,11 +136,12 @@ for L in ./lib/*.sh; do
   "zz_main"|"00_core") continue ;;
   esac
 
-  while read F; do
+  while read -r F; do
     echo "  \"$F\") ;;"
   done < \
     <(
-      $GREP -hE "^${_PKGNAME}_[^ \t]+\(\)" "$L" \
+      # shellcheck disable=2016
+      $GREP -hE "^${_PKGNAME}_[^ \\t]+\\(\\)" "$L" \
        | $AWK -F '(' '{print $1}'
     )
 done

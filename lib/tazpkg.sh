@@ -27,7 +27,7 @@ tazpkg_Qi() {
 
 # tarpkg_Ql may _not_implemented
 tazpkg_Ql() {
-  if [[ -z "$@" ]]; then
+  if [[ -z "$*" ]]; then
     _not_implemented
     return
   fi

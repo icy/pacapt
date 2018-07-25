@@ -221,7 +221,7 @@ _translate_all || exit
 # expect to just update/upgrade one package (and its dependencies)
 # and apt-get and pacman have no way to do this.
 #
-if [[ -n "$@" ]]; then
+if [[ -n "$*" ]]; then
   case "${_POPT}${_SOPT}" in
   "Su"|"Sy"|"Suy")
     echo 1>&2 "WARNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
