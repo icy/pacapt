@@ -39,7 +39,7 @@ cave_Ql() {
 
   cave show -f "${@:-world}" \
   | grep -v '^$' \
-  | while read _pkg; do
+  | while read -r _pkg; do
       if [[ "$_TOPT" == "q" ]]; then
         cave --color no contents "$_pkg"
       else
@@ -60,7 +60,7 @@ cave_Qu() {
   if [[ -z "$*" ]];then
     cave resolve -c world \
     | grep '^u.*' \
-    | while read _pkg; do
+    | while read -r _pkg; do
         echo "$_pkg" | cut -d'u' -f2-
       done
   else

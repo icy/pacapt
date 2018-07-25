@@ -76,7 +76,7 @@ zypper_R() {
 
 zypper_Rn() {
   # Remove configuration files
-  while read file; do
+  while read -r file; do
     if [[ -f "$file" ]]; then
       rm -fv "$file"
     fi
@@ -96,7 +96,7 @@ zypper_Rs() {
 
 zypper_Rns() {
   # Remove configuration files
-  while read file; do
+  while read -r file; do
     if [[ -f "$file" ]]; then
       rm -fv "$file"
     fi

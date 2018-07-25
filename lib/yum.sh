@@ -32,7 +32,7 @@ yum_Qi() {
 }
 
 yum_Qs() {
-  rpm -qa "*$@*"
+  rpm -qa "*${*}*"
 }
 
 yum_Ql() {

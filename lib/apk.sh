@@ -40,7 +40,7 @@ apk_Qo() {
 }
 
 apk_Qs() {
-  apk info -- "*$@*"
+  apk info -- "*${*}*"
 }
 
 apk_Qu() {

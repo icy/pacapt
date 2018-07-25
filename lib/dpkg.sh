@@ -44,12 +44,12 @@ dpkg_Ql() {
   dpkg -l \
   | grep -E '^[hi]i' \
   | awk '{print $2}' \
-  | while read _pkg; do
+  | while read -r _pkg; do
       if [[ "$_TOPT" == "q" ]]; then
         dpkg-query -L "$_pkg"
       else
         dpkg-query -L "$_pkg" \
-        | while read _line; do
+        | while read -r _line; do
             echo "$_pkg $_line"
           done
       fi

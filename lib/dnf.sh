@@ -81,7 +81,7 @@ dnf_Qu() {
 }
 
 dnf_Qs() {
-  rpm -qa "*$@*"
+  rpm -qa "*${*}*"
 }
 
 dnf_Ql() {
