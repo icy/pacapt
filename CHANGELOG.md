@@ -1,3 +1,12 @@
+## v2.4.x
+
+* Support non-system package manager (`npm`, `gem`, ...)
+* `lib/tlmgr`: Add TeXLive support (Antony Lee)
+
+For developers:
+
+* Reduce shellcheck warning/error reports
+
 ## v2.3.15
 
 * A warm up release with very minor updates.
