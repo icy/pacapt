@@ -24,16 +24,17 @@ _sun_tools_init       # Dirty tricky patch for SunOS
 
 export PACAPT_DEBUG GREP AWK
 
-_POPT="" # primary operation
-_SOPT="" # secondary operation
-_TOPT="" # options for operations
-_EOPT="" # extra options (directly given to package manager)
-         # these options will be translated by (_translate_all) method.
-_PACMAN="" # name of the package manager
+_POPT=""    # primary operation
+_SOPT=""    # secondary operation
+_TOPT=""    # options for operations
+_EOPT=""    # extra options (directly given to package manager)
+            # these options will be translated by (_translate_all) method.
+_PACMAN=""  # name of the package manager
 
 _PACMAN_detect \
 || _die "'pacapt' doesn't support your package manager."
 
+# FIXME: If `pacman-foo` is being used, `PACAPT_DEBUG` is still overwriting that.
 if [[ -z "$PACAPT_DEBUG" ]]; then
   [[ "$_PACMAN" != "pacman" ]] \
   || exec "/usr/bin/pacman" "$@"

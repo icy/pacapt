@@ -18,6 +18,11 @@ _error() {
   return 1
 }
 
+_warn() {
+  echo >&2 "Warning: $*"
+  return 0
+}
+
 _die() {
   echo >&2 "$@"
   exit 1
@@ -60,6 +65,8 @@ _issue2pacman() {
 
 # Detect package type
 _PACMAN_detect() {
+  _PACMAN_found_from_script_name && return
+
   _issue2pacman sun_tools "SunOS" && return
   _issue2pacman pacman "Arch Linux" && return
   _issue2pacman dpkg "Debian GNU/Linux" && return
@@ -216,7 +223,7 @@ _translate_all() {
 
 _print_supported_operations() {
   local _pacman="$1"
-  echo -n "pacapt: available operations:"
+  echo -n "pacapt($_pacman): available operations:"
   # shellcheck disable=2016
   $GREP -E "^${_pacman}_[^ \\t]+\\(\\)" "$0" \
   | $AWK -F '(' '{print $1}' \

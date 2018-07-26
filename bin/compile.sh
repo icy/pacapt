@@ -133,7 +133,7 @@ for L in ./lib/*.sh; do
   _PKGNAME="${_PKGNAME%.*}"
 
   case "$_PKGNAME" in
-  "zz_main"|"00_core") continue ;;
+  "zz_main"|"00_*") continue ;;
   esac
 
   while read -r F; do
