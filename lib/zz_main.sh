@@ -80,7 +80,7 @@ while :; do
       exit 0
       ;;
     P)
-      _print_supported_operations $_PACMAN
+      _print_supported_operations "$_PACMAN"
       exit 0
       ;;
 
