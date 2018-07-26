@@ -239,6 +239,6 @@ if [[ -n "$PACAPT_DEBUG" ]]; then
   echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT ${*}'"
   declare -f "${_PACMAN}_${_POPT}${_SOPT}"
 else
-  "_${_PACMAN}_init"
+  "_${_PACMAN}_init" || exit
   "${_PACMAN}_${_POPT}${_SOPT}" $_EOPT "$@"
 fi
