@@ -114,7 +114,6 @@ A short description can be found at
            Q Qc Qi Qk Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Si Sii Sl Ss Su Suy Sw Sy U
       apk  ~     *     *     *     *  * *  *   *  * *  *   *    *  *   *  *  *  *   *  *  * *
      cave  *     *     *     *  *  *  * *  *   *  * *  *   *    x  *         *  *   *     * x
-    conda  *                                                                 *               
       dnf  ~  *  *     *  *  *  *  *  * *           *  *   *    *  *      *  *  *   *  *  * *
      dpkg  ~     *     *     *  *  *  * *  *   *  ~ *  *   *    *  *   *     *  *   *     * *
  homebrew  ~  *  *     *     *     *  * *         * *  *   *    *  *         *  *   *     *  
@@ -125,6 +124,7 @@ pkg_tools  ~     *     *     *  *     * *  *   *  ~ *  *   x       *      *  ~  
 sun_tools  *     *     *     *     *    *                                                   *
     swupd           *        *     *    *           *                        *  *   *     *  
    tazpkg  *     *     *     *          *           *  *   *                 *  *   *     * *
+    tlmgr        *  *              *    *           *              *         *      *       *
       yum  *  *  *     *  *  *  *  *  * *         * *  *   *    *  *   *     *  *   *     * *
    zypper  *  *  *     *  *  *  *  *  * *  *   *  * *  *   *    *  *   *  *  *  *   *  *  * *
 ```
