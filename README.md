@@ -54,6 +54,7 @@ The tool supports the following package managers:
 * `apk`           by `Alpine Linux`
 * `tazpkg`        by `SliTaz Linux`
 * `swupd`         by `Clear Linux`
+* `tlmgr`         by `TeX Live`
 
 ## Installation
 
