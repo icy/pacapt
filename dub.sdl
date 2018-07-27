@@ -1,0 +1,14 @@
+name          "pacapt"
+description   "main pacapt program"
+authors     "Ky-Anh Huynh"
+copyright   "Copyright © 2017, Ky-Anh Huynh"
+license     "MIT"
+targetType  "none"
+
+subPackage {
+  name        "main"
+  targetType  "executable"
+  sourcePaths "dmain/"
+  targetName  "pacapt"
+  targetPath  "output/"
+}
