@@ -1,5 +1,5 @@
-name          "pacapt"
-description   "main pacapt program"
+name        "pacapt"
+description "main pacapt program"
 authors     "Ky-Anh Huynh"
 copyright   "Copyright © 2017, Ky-Anh Huynh"
 license     "MIT"
