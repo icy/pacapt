@@ -8,7 +8,7 @@
 module pacapt.internals;
 
 auto issue2pacman() {
-  import std.stdio;
+  debug import std.stdio;
   debug import std.format;
   import std.file;
   import std.string: indexOf;
