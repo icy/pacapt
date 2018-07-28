@@ -137,3 +137,40 @@ unittest {
   assert(a10 || a11, "chmod is executable and found from /usr/bin/ or /sbin");
   assert(! b10, "Non existent file should not be executable");
 }
+
+auto programName2pacman(in string path = "") {
+  import std.file: thisExePath;
+  import std.path: baseName, stripExtension;
+  import std.string: split, indexOf;
+
+  auto base_name = (path == "" ? thisExePath : path).baseName.stripExtension;
+  auto names = base_name.split("-");
+  auto pacman = "unknown";
+
+  if (names.length > 1) {
+    auto const supported_pacmans = ":conda:tlmgr:texlive:gem:npm:pip:";
+    auto last_name = names[$-1];
+    if (supported_pacmans.indexOf(":" ~ last_name ~ ":") > -1) {
+      pacman = last_name;
+    }
+  }
+
+  return pacman;
+}
+
+unittest {
+  auto p1 = programName2pacman("pacman-foobar");
+  auto p2 = programName2pacman("pacman-conda");
+  auto p3 = programName2pacman("pacman.conda");
+  assert(p1 == "unknown", "pacman-foobar should return unknown pacman");
+  assert(p2 == "conda", "pacman-conda should return conda pacman");
+  assert(p3 == "unknown", "pacman.conda with dot splitter is not supported");
+}
+
+auto guessPacman() {
+  auto pacman = programName2pacman;
+  if (pacman == "unknown") {
+    pacman = issue2pacman;
+  }
+  return pacman;
+}

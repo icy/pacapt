@@ -9,6 +9,6 @@ import std.stdio;
 public import pacapt.internals;
 
 void main() {
-  auto pacman = issue2pacman();
+  auto pacman = guessPacman;
   writefln("Your pacman is %s", pacman);
 }
