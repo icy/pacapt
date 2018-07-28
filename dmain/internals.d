@@ -160,9 +160,9 @@ auto programName2pacman(in string path = "") {
 }
 
 unittest {
-  auto p1 = programName2pacman("pacman-foobar");
-  auto p2 = programName2pacman("pacman-conda");
-  auto p3 = programName2pacman("pacman.conda");
+  auto p1 = programName2pacman("/usr/bin/pacman-foobar");
+  auto p2 = programName2pacman("/usr/bin/pacman-conda");
+  auto p3 = programName2pacman("/usr/bin/pacman.conda");
   assert(p1 == "unknown", "pacman-foobar should return unknown pacman");
   assert(p2 == "conda", "pacman-conda should return conda pacman");
   assert(p3 == "unknown", "pacman.conda with dot splitter is not supported");
