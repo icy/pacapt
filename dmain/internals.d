@@ -12,7 +12,7 @@ auto issue2pacman() {
   debug import std.format;
   import std.file;
   import std.string: indexOf;
-  import std.process: execute;
+  import std.process: execute, executeShell;
 
   auto pacman = "unknown";
 
@@ -106,9 +106,14 @@ auto issue2pacman() {
     return pacman;
   }
 
-  // FIXME: Is `brew` a command or shell method?
-  // command -v brew >/dev/null && _PACMAN="homebrew" && return
+  auto brew_status = "command -v brew >/dev/null".executeShell.status;
+  if (brew_status == 0) {
+    debug stderr.writefln("(debug) Found homebrew in search path");
+    pacman = "homebrew";
+    return pacman;
+  }
 
+  // We give up now.
   return pacman;
 }
 
