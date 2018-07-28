@@ -9,10 +9,10 @@ module pacapt.internals;
 
 auto issue2pacman() {
   import std.stdio;
-  import std.format;
+  debug import std.format;
   import std.file;
-  import std.string;
-  import std.process;
+  import std.string: indexOf;
+  import std.process: execute;
 
   auto pacman = "unknown";
 
@@ -57,6 +57,78 @@ auto issue2pacman() {
     }
   }
 
-  debug stderr.writefln("(debug) pkg found: %s", pacman);
+  if (pacman != "unknown") {
+    debug stderr.writefln("(debug) pkg found: %s", pacman);
+    return pacman;
+  }
+
+  // Loop detection
+  auto standard_pacman = "/usr/bin/pacman";
+  if (standard_pacman.isExecutable && (thisExePath != standard_pacman)) {
+    pacman = "pacman";
+    debug stderr.writefln("(debug) possibly found standard pacman: %s", standard_pacman);
+    return pacman;
+  }
+
+  auto executable_checks = [
+    "/data/data/com.termux/files/usr/bin/apt-get" : "dpkg",
+    "/usr/bin/apt-get"    : "dpkg",
+    "/usr/bin/cave"       : "cave",
+    "/usr/bin/dnf"        : "dnf",
+    "/usr/bin/yum"        : "yum",
+    "/opt/local/bin/port" : "macports",
+    "/usr/bin/emerge"     : "portage",
+    "/usr/bin/zypper"     : "zypper",
+    "/usr/sbin/pkg"       : "pkgng",
+    "/usr/sbin/pkgadd"    : "sun_tools",
+    "/sbin/apk"           : "apk",
+    "/usr/bin/tazpkg"     : "tazpkg",
+    "/usr/bin/swupd"      : "swupd",
+    ];
+
+
+  foreach (path, pkg; executable_checks) {
+    if (path.isExecutable) {
+      pacman = pkg;
+      break;
+    }
+  }
+
+  if (pacman != "unknown") {
+    debug stderr.writefln("(debug) pkg from executable file: %s", pacman);
+    return pacman;
+  }
+
+  // make sure pkg_add is after pkgng, FreeBSD base comes with it until converted
+  if ("/usr/sbin/pkg_add".isExecutable) {
+    debug stderr.writefln("(debug) FreeBSD pkg_add found");
+    pacman = "pkg_tools";
+    return pacman;
+  }
+
+  // FIXME: Is `brew` a command or shell method?
+  // command -v brew >/dev/null && _PACMAN="homebrew" && return
+
   return pacman;
+}
+
+auto isExecutable(in string path) {
+  import std.file: getAttributes, exists;
+  import std.conv: octal;
+  auto mode = path.exists ? path.getAttributes() : 0;
+  auto exec_mode = octal!100; /* 00100, S_IXUSR, S_IEXEC*/
+  if (mode & exec_mode) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+unittest {
+  auto a10 = "/usr/bin/chmod".isExecutable;
+  auto a11 = "/sbin/chmod".isExecutable;
+  auto b10 = "/usr/non/existent".isExecutable;
+  assert(a10 || a11, "chmod is executable and found from /usr/bin/ or /sbin");
+  assert(! b10, "Non existent file should not be executable");
 }
