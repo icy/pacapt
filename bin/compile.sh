@@ -29,6 +29,7 @@ fi
 : "${PACAPT_STATS:=yes}"  # List implemented operations to STDERR
 : "${GREP:=grep}"     # Need to update on SunOS
 : "${AWK:=awk}"       # Need to update on SunOS
+: "${PACAPT_LIBS_ONLY:=}" # Compile only main libraries
 
 # At compile time, `_sun_tools_init` is not yet defined.
 if [[ -f "lib/sun_tools.sh" ]]; then
@@ -113,10 +114,17 @@ EOS
 ########################################################################
 
 for L in ./lib/*.sh; do
-  bash -n "$L" || exit 1
   [[ "${L##*/}" != "zz_main.sh" ]] \
   || continue
 
+  if [[ -n "${PACAPT_LIBS_ONLY}" ]]; then
+    case "${L##*/}" in
+    zz_*) continue ;;
+    00_*) continue ;;
+    esac
+  fi
+
+  bash -n "$L" || exit 1
   $GREP -v '^#' "$L"
 done
 
@@ -133,7 +141,8 @@ for L in ./lib/*.sh; do
   _PKGNAME="${_PKGNAME%.*}"
 
   case "$_PKGNAME" in
-  "zz_main"|"00_*") continue ;;
+  zz_*) continue ;;
+  00_*) continue ;;
   esac
 
   while read -r F; do
@@ -156,6 +165,10 @@ echo "}"
 # It should be included in the last part of the script.
 ########################################################################
 
-$GREP -v '^#' lib/zz_main.sh
-
-echo >&2 "pacapt version '$VERSION' has been generated."
+if [[ -n "${PACAPT_LIBS_ONLY}" ]]; then
+  :
+  echo >&2 "pacapt-lib '$VERSION' has been generated."
+else
+  $GREP -v '^#' lib/zz_main.sh
+  echo >&2 "pacapt version '$VERSION' has been generated."
+fi
