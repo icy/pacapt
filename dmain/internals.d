@@ -12,11 +12,11 @@ auto issue2pacman() {
   debug import std.format;
   import std.file;
   import std.string: indexOf;
-  import std.process: execute, executeShell;
+  import std.process: execute;
 
   auto pacman = "unknown";
 
-  auto uname = execute("uname").output;
+  auto uname = "uname".execute.output;
   if (uname == "SunOS") {
     pacman = "sun_tools";
     debug stderr.writefln("(debug) quickly pkg found from uname: %s", pacman);
@@ -106,6 +106,7 @@ auto issue2pacman() {
     return pacman;
   }
 
+  import std.process: executeShell;
   auto brew_status = "command -v brew >/dev/null".executeShell.status;
   if (brew_status == 0) {
     debug stderr.writefln("(debug) Found homebrew in search path");
