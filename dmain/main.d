@@ -10,5 +10,8 @@ public import pacapt.internals;
 
 void main() {
   auto pacman = guessPacman;
+  if (pacman == "unknown") {
+    "Unable to detect pacman from program name and/or system issue information".error;
+  }
   writefln("Your pacman is %s", pacman);
 }
