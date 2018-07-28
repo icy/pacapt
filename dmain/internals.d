@@ -175,3 +175,21 @@ auto guessPacman() {
   }
   return pacman;
 }
+
+
+auto warning(in string text) {
+  import std.stdio;
+  stderr.writeln(":: Warning: " ~ text);
+}
+
+auto error(in string text) {
+  import std.stdio;
+  stderr.writeln(":: Error: " ~ text);
+  throw new Exception(":: Error: " ~ text);
+}
+
+unittest {
+  import std.exception: assertThrown, assertNotThrown;
+  assertNotThrown("This is a test warning.".warning);
+  assertThrown("This is an error message.".error);
+}
