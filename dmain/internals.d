@@ -84,7 +84,7 @@ auto issue2pacman() {
     "/sbin/apk"           : "apk",
     "/usr/bin/tazpkg"     : "tazpkg",
     "/usr/bin/swupd"      : "swupd",
-    ];
+  ];
 
 
   foreach (path, pkg; executable_checks) {
