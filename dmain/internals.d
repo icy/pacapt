@@ -346,3 +346,36 @@ unittest {
   auto p5 = argumentParser(["pacman", "-S", "-cc", "-c"]);
   assert(p5.result && (p5.clean >= 3), "-Sccc (%d) bundling is working fine".format(p5.clean));
 }
+
+auto translateWoption(in string pacman) {
+  auto const translations = [
+    "dpkg": "-d",
+    "dave": "-f",
+    "macports": "fetch",
+    "portage": "--fetchonly",
+    "zypper": "--download-only",
+    "pkgng": "fetch",
+    "yum": "--downloadonly", /* FIXME: require package 'yum-downloadonly' */
+    "apk": "fetch",
+  ];
+
+  if (pacman == "tazpkg") {
+    "Please use tazpkg get ... to download and save packages".warning;
+  }
+
+  string result = null;
+  foreach (k,v; translations) {
+    if (pacman == k) {
+      result = v;
+      break;
+    }
+  }
+
+  return result;
+}
+
+unittest {
+  assert(! translateWoption("tazpkg") );
+  assert( translateWoption("pkgng") == "fetch");
+  assert( translateWoption("foobar") == null);
+}
