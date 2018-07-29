@@ -274,6 +274,37 @@ auto argumentParser(string[] args, in string pacman = "unknown") {
 
   opts.remained = args;
 
+  if (getopt_results.helpWanted) {
+    defaultGetoptPrinter("List of options:", getopt_results.options);
+    opts.result = false;
+  }
+
+  // FIXME: We should passthrough option
+  if (opts.pQ + opts.pR + opts.pS + opts.pU != 1) {
+    "Primary option (Q R S U) must be specified at most once.".warning;
+    opts.result = false;
+  }
+
+  if (opts.verbose) {
+    auto tx_verbose = translateDebugOption(pacman);
+    opts.remained = (tx_verbose ~ opts.remained);
+    opts.result &= (tx_verbose.length > 0);
+  }
+
+  if (opts.no_confirm) {
+    auto tx_no_confirm = translateNoConfirmOption(pacman);
+    opts.remained = (tx_no_confirm ~ opts.remained);
+    opts.result &= (tx_no_confirm.length > 0);
+  }
+
+  // NOTE: Should be done at the last step to inject
+  // NOTE: non parameter action to the destination (e.g., macports)
+  if (opts.download_only) {
+    auto tx_download_only = translateWoption(pacman);
+    opts.remained = (tx_download_only ~ opts.remained);
+    opts.result &= (tx_download_only.length > 0);
+  }
+
   debug(2) {
     import std.stdio, std.format;
     stderr.writefln(
@@ -307,16 +338,6 @@ auto argumentParser(string[] args, in string pacman = "unknown") {
     );
   }
 
-  if (getopt_results.helpWanted) {
-    defaultGetoptPrinter("List of options:", getopt_results.options);
-    opts.result = false;
-  }
-
-  if (opts.pQ + opts.pR + opts.pS + opts.pU != 1) {
-    "Primary option (Q R S U) must be specified at most once.".warning;
-    opts.result = false;
-  }
-
   return opts;
 }
 
@@ -345,10 +366,18 @@ unittest {
 
   auto p5 = argumentParser(["pacman", "-S", "-cc", "-c"]);
   assert(p5.result && (p5.clean >= 3), "-Sccc (%d) bundling is working fine".format(p5.clean));
+
+  auto p6 = argumentParser(["tazpkg", "-Suw"], "tazpkg");
+  assert(p6.result == false, "tarzpkg does not support -w.");
+
+  auto p7 = argumentParser(["macports", "-Suwv"], "macports");
+  assert(p7.result, "macports supports -w.");
+  assert(p7.remained[0] == "fetch", "macports successfully injects custom options [%(%s, %)]".format(p7.remained));
 }
 
 auto translateWoption(in string pacman) {
   auto const translations = [
+    "pacman": "-w",
     "dpkg": "-d",
     "dave": "-f",
     "macports": "fetch",
@@ -363,10 +392,10 @@ auto translateWoption(in string pacman) {
     "Please use tazpkg get ... to download and save packages".warning;
   }
 
-  string result = null;
+  string[] result = [];
   foreach (k,v; translations) {
     if (pacman == k) {
-      result = v;
+      result ~= v;
       break;
     }
   }
@@ -375,15 +404,16 @@ auto translateWoption(in string pacman) {
 }
 
 unittest {
-  assert(! translateWoption("tazpkg") );
-  assert(translateWoption("pkgng") == "fetch");
-  assert(translateWoption("foobar") == null);
+  assert(translateWoption("tazpkg") == []);
+  assert(translateWoption("pkgng") == ["fetch"]);
+  assert(translateWoption("foobar") == []);
 }
 
 // FIXME: Update environment DEBIAN_FRONTEND=noninteractive
 // FIXME: There is also --force-yes for a stronger case
 auto translateNoConfirmOption(in string pacman) {
   auto const translations = [
+    "pacman": "--noconfirm",
     "dpkg": "--yes",
     "dnf": "--assumeyes",
     "yum": "--assumeyes",
@@ -392,10 +422,10 @@ auto translateNoConfirmOption(in string pacman) {
     "tazpkg": "--auto",
   ];
 
-  string result = null;
+  string[] result = [];
   foreach (k,v; translations) {
     if (pacman == k) {
-      result = v;
+      result ~= v;
       break;
     }
   }
@@ -404,19 +434,21 @@ auto translateNoConfirmOption(in string pacman) {
 }
 
 unittest {
-  assert(translateNoConfirmOption("foobar") == null);
+  assert(translateNoConfirmOption("foobar") == []);
 }
 
 auto translateDebugOption(in string pacman, in string opt = "-v") {
-  auto result = opt;
+  string[] result = [];
   if (pacman == "tazpkg") {
     "Debug option (-v) is not supported by tazpkg".warning;
-    return null;
+  }
+  else {
+    result ~= opt;
   }
   return result;
 }
 
 unittest {
-  assert(translateDebugOption("tazpkg") == null);
-  assert(translateDebugOption("pacman") != null);
+  assert(translateDebugOption("tazpkg") == []);
+  assert(translateDebugOption("pacman") != []);
 }
