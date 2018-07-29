@@ -376,8 +376,8 @@ auto translateWoption(in string pacman) {
 
 unittest {
   assert(! translateWoption("tazpkg") );
-  assert( translateWoption("pkgng") == "fetch");
-  assert( translateWoption("foobar") == null);
+  assert(translateWoption("pkgng") == "fetch");
+  assert(translateWoption("foobar") == null);
 }
 
 // FIXME: Update environment DEBIAN_FRONTEND=noninteractive
@@ -404,5 +404,19 @@ auto translateNoConfirmOption(in string pacman) {
 }
 
 unittest {
-  assert( translateNoConfirmOption("foobar") == null);
+  assert(translateNoConfirmOption("foobar") == null);
+}
+
+auto translateDebugOption(in string pacman, in string opt = "-v") {
+  auto result = opt;
+  if (pacman == "tazpkg") {
+    "Debug option (-v) is not supported by tazpkg".warning;
+    return null;
+  }
+  return result;
+}
+
+unittest {
+  assert(translateDebugOption("tazpkg") == null);
+  assert(translateDebugOption("pacman") != null);
 }
