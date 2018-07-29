@@ -102,6 +102,10 @@ clean:
 shellcheck:
 	@./bin/check.sh _check_files bin/*.sh lib/*.sh
 
+.PHONY: dtest
+dtest:
+	@dub test pacapt:main
+
 .PHONY: tests
 tests:
 	@cd tests/ && make all
