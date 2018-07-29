@@ -23,7 +23,7 @@ auto issue2pacman() {
     return pacman;
   }
 
-  auto matches = [
+  auto const matches = [
     "Arch Linux"      : "pacman",
     "Debian GNU/Linux": "dpkg",
     "Ubuntu"          : "dpkg",
@@ -37,8 +37,8 @@ auto issue2pacman() {
     "SunOS"           : "sun_tools",
   ];
 
-  auto fname_issue = "/etc/issue";
-  auto fname_os_release = "/etc/os-release";
+  auto const fname_issue = "/etc/issue";
+  auto const fname_os_release = "/etc/os-release";
 
   auto text = "";
 
@@ -63,14 +63,14 @@ auto issue2pacman() {
   }
 
   // Loop detection
-  auto standard_pacman = "/usr/bin/pacman";
+  auto const standard_pacman = "/usr/bin/pacman";
   if (standard_pacman.isExecutable && (thisExePath != standard_pacman)) {
     pacman = "pacman";
     debug stderr.writefln("(debug) possibly found standard pacman: %s", standard_pacman);
     return pacman;
   }
 
-  auto executable_checks = [
+  auto const executable_checks = [
     "/data/data/com.termux/files/usr/bin/apt-get" : "dpkg",
     "/usr/bin/apt-get"    : "dpkg",
     "/usr/bin/cave"       : "cave",
@@ -122,7 +122,7 @@ auto isExecutable(in string path) {
   import std.file: getAttributes, exists;
   import std.conv: octal;
   auto mode = path.exists ? path.getAttributes() : 0;
-  auto exec_mode = octal!100; /* 00100, S_IXUSR, S_IEXEC*/
+  auto const exec_mode = octal!100; /* 00100, S_IXUSR, S_IEXEC*/
   if (mode & exec_mode) {
     return true;
   }
