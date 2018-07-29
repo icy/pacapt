@@ -269,6 +269,7 @@ auto argumentParser(string[] args, in string pacman = "unknown") {
     "refresh|y", "Refresh local package database", &opts.refresh,
     "noconfirm", "Assume yes to all questions", &opts.no_confirm,
     "no-confirm", "Assume yes to all questions", &opts.no_confirm,
+    "clean|c+", "Clean packages.", &opts.clean,
   );
 
   opts.remained = args;
@@ -341,4 +342,7 @@ unittest {
 
   auto p4 = argumentParser(["pacman", "-R", "--", "-R"]);
   assert(p4.result, "Termination (--) is working fine.");
+
+  auto p5 = argumentParser(["pacman", "-S", "-cc", "-c"]);
+  assert(p5.result && (p5.clean >= 3), "-Sccc (%d) bundling is working fine".format(p5.clean));
 }
