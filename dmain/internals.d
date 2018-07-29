@@ -123,12 +123,7 @@ auto isExecutable(in string path) {
   import std.conv: octal;
   auto mode = path.exists ? path.getAttributes() : 0;
   auto const exec_mode = octal!100; /* 00100, S_IXUSR, S_IEXEC*/
-  if (mode & exec_mode) {
-    return true;
-  }
-  else {
-    return false;
-  }
+  return mode & exec_mode ? true : false;
 }
 
 unittest {
