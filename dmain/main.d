@@ -11,9 +11,13 @@ public import pacapt.internals;
 void main(string[] args) {
   auto pacman = guessPacman;
   if (pacman == "unknown") {
-    "Unable to detect pacman from program name and/or system issue information".error;
+    "Unable to detect pacman.".error;
   }
   writefln("Your pacman is %s", pacman);
 
-  auto result = argumentParser(args, pacman);
+  auto opts = argumentParser(args, pacman);
+  if (! opts.result) {
+    "Unable to parse input arguments.".error;
+  }
+
 }
