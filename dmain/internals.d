@@ -379,3 +379,30 @@ unittest {
   assert( translateWoption("pkgng") == "fetch");
   assert( translateWoption("foobar") == null);
 }
+
+// FIXME: Update environment DEBIAN_FRONTEND=noninteractive
+// FIXME: There is also --force-yes for a stronger case
+auto translateNoConfirmOption(in string pacman) {
+  auto const translations = [
+    "dpkg": "--yes",
+    "dnf": "--assumeyes",
+    "yum": "--assumeyes",
+    "zypper": "--no-confirm",
+    "pkgng": "-y",
+    "tazpkg": "--auto",
+  ];
+
+  string result = null;
+  foreach (k,v; translations) {
+    if (pacman == k) {
+      result = v;
+      break;
+    }
+  }
+
+  return result;
+}
+
+unittest {
+  assert( translateNoConfirmOption("foobar") == null);
+}
