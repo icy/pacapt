@@ -193,3 +193,154 @@ unittest {
   assertNotThrown("This is a test warning.".warning);
   assertThrown("This is an error message.".error);
 }
+
+struct pacmanOptions {
+  bool
+    verbose = false,
+    download_only = false,
+    no_confirm = false,
+    show_help = false,
+    show_version = false,
+    list_ops = false,
+    quiet_mode = false,
+    upgrades = false,
+    refresh = false,
+    result = true
+    ;
+
+  uint
+    pQ = 0,
+    pR = 0,
+    pS = 0,
+    pU = 0,
+    ss = 0,
+    sl = 0,
+    si = 0,
+    sp = 0,
+    so = 0,
+    sm = 0,
+    sn = 0,
+    clean = 0
+    ;
+
+  string[] remained;
+}
+/*
+  FIXME: This would be part of the help message.
+
+  An overview of options from the stable pacapt script
+
+    -h --help                 Help
+    --noconfirm --no-confirm  No confirmation [Need translation]
+    --                        Termination
+    -V                        pacapt version
+    -P                        List of supported operations
+    -Q R S U  (+)             Primary action
+    -s l i p o m n (+)        Secondary action
+    -q                        Third option
+    -u                        Converted to uy or u
+    -y                        Same as above
+    -c (+)                    Clean (c, cc, ccc)
+    -w                        Download only [Need translation]
+    -v                        Verbose [Need translation]
+*/
+auto argumentParser(string[] args, in string pacman = "unknown") {
+  import std.getopt;
+
+  pacmanOptions opts;
+
+  auto getopt_results = getopt(args,
+    std.getopt.config.caseSensitive,
+    std.getopt.config.bundling,
+    std.getopt.config.passThrough,
+    "query|Q+", "Query", &opts.pQ,
+    "remove|R+", "Remove", &opts.pR,
+    "sync|S+", "Sync", &opts.pS,
+    "upgrade|U+", "Upgrade", &opts.pU,
+    "search|s+", "Search", &opts.ss,
+    "recursive+", "Recursive option used with --remove. Short version: -s", &opts.ss,
+    "list|l+", "listing option", &opts.sl,
+    "info|i+", &opts.si,
+    "file|p+", &opts.sp,
+    "owns|o+", &opts.so,
+    "foreign|m+", &opts.sm,
+    "n|nosave|native+", &opts.sn,
+    "verbose|v", "Be verbose", &opts.verbose,
+    "download-only|w", "Download without installing", &opts.download_only,
+    "version|V", "Show pacapt version", &opts.show_version,
+    "P", "Print list of supported options", &opts.list_ops,
+    "quiet|q", "Be quiet in some operation", &opts.quiet_mode,
+    "upgrades|u", &opts.upgrades,
+    "refresh|y", "Refresh local package database", &opts.refresh,
+    "noconfirm", "Assume yes to all questions", &opts.no_confirm,
+    "no-confirm", "Assume yes to all questions", &opts.no_confirm,
+  );
+
+  opts.remained = args;
+
+  debug(2) {
+    import std.stdio, std.format;
+    stderr.writefln(
+"
+(debug)
+  Query         : %d
+  Remove        : %d
+  Sync          : %d
+  Upgrade       : %d
+  s             : %d
+  l             : %d
+  i             : %d
+  p             : %d
+  o             : %d
+  m             : %d
+  n             : %d
+  download only : %b
+  no confirm    : %b
+  show version  : %b
+  print ops     : %b
+  quiet mode    : %b
+  upgrades      : %b
+  refresh       : %b
+  remains       : %(%s %)
+",
+      opts.pQ, opts.pR, opts.pS, opts.pU,
+      opts.ss, opts.sl, opts.si, opts.sp, opts.so, opts.sm, opts.sn,
+      opts.download_only, opts.no_confirm, opts.show_version, opts.list_ops,
+      opts.quiet_mode, opts.upgrades, opts.refresh,
+      opts.remained,
+    );
+  }
+
+  if (getopt_results.helpWanted) {
+    defaultGetoptPrinter("List of options:", getopt_results.options);
+    opts.result = false;
+  }
+
+  if (opts.pQ + opts.pR + opts.pS + opts.pU != 1) {
+    "Primary option (Q R S U) must be specified at most once.".warning;
+    opts.result = false;
+  }
+
+  return opts;
+}
+
+unittest {
+  import std.format;
+
+  auto p1 = argumentParser(["pacman", "-R", "-U"]);
+  assert(! p1.result, "Multiple primary action -RU is rejected.");
+
+  auto p2 = argumentParser(["pacman", "-i", "-s"]);
+  assert(! p2.result, "Primary action must be specified.");
+
+  auto primary_actions = ["R", "S", "Q", "U"];
+  foreach (p; primary_actions) {
+    auto px = argumentParser(["pacman", "-" ~ p]);
+    assert(px.result, "At least on primary action (%s) is acceptable.".format(p));
+    auto py = argumentParser(["pacman", "-" ~ p ~ p]);
+    assert(! py.result, "Multiple primary action (%s) is not acceptable.".format(p));
+  }
+
+  auto p3 = argumentParser(["pacman", "-R", "-s", "-h"]);
+  assert(! p3.result, "Help query should return false");
+}
