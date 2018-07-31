@@ -209,6 +209,7 @@ struct pacmanOptions {
     show_version = false,   /* -V */
     list_ops = false,       /* -P */
     help_wanted = false,
+    pass_through = false,
 
     quiet_mode = false,     /* -q */
     upgrades = false,       /* -u */
@@ -332,7 +333,12 @@ struct pacmanOptions {
     }
 
     // FIXME: We should passthrough option
-    if (pQ + pR + pS + pU != 1) {
+    auto const c_primaries = pQ + pR + pS + pU;
+    if (c_primaries == 0) {
+      "Primary option not found. Passthrough mode enabled".warning;
+      pass_through = true;
+      result = true;
+    } else if (c_primaries > 1) {
       "Primary option (Q R S U) must be specified at most once.".warning;
       result = false;
     }
@@ -399,12 +405,12 @@ unittest {
   assert(! p1.result, "Multiple primary action -RU is rejected.");
 
   auto p2 = pacmanOptions(["pacman", "-i", "-s"]);
-  assert(! p2.result, "Primary action must be specified.");
+  assert(p2.result && p2.pass_through, "Passthrough mode should enabled.");
 
   auto primary_actions = ["R", "S", "Q", "U"];
   foreach (p; primary_actions) {
     auto px = pacmanOptions(["pacman", "-" ~ p]);
-    assert(px.result, "At least on primary action (%s) is acceptable.".format(p));
+    assert(px.result && ! px.pass_through, "At least on primary action (%s) is acceptable.".format(p));
     auto py = pacmanOptions(["pacman", "-" ~ p ~ p]);
     assert(! py.result, "Multiple primary action (%s) is not acceptable.".format(p));
   }
