@@ -58,7 +58,7 @@ auto issue2pacman() {
   }
 
   if (pacman != "unknown") {
-    debug stderr.writefln("(debug) pkg found: %s", pacman);
+    debug stderr.writefln("(debug) pkg found from issue file(s): %s", pacman);
     return pacman;
   }
 
@@ -159,15 +159,6 @@ unittest {
   assert(p2 == "conda", "pacman-conda should return conda pacman");
   assert(p3 == "unknown", "pacman.conda with dot splitter is not supported");
 }
-
-auto guessPacman() {
-  auto pacman = programName2pacman;
-  if (pacman == "unknown") {
-    pacman = issue2pacman;
-  }
-  return pacman;
-}
-
 
 auto warning(in string text) {
   import std.stdio;
