@@ -12,4 +12,5 @@ subPackage {
   targetName  "pacapt"
   targetPath  "output/"
   importPaths "dmain/"
+  stringImportPaths "output/"
 }
