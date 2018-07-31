@@ -372,7 +372,7 @@ unittest {
 
   auto p7 = argumentParser(["macports", "-Suwv"], "macports");
   assert(p7.result, "macports supports -w.");
-  assert(p7.remained[0] == "fetch", "macports successfully injects custom options [%(%s, %)]".format(p7.remained));
+  assert(p7.remained[1] == "fetch", "macports successfully injects custom options [%(%s, %)]".format(p7.remained));
 }
 
 auto translateWoption(in string pacman) {
