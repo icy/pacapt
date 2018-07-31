@@ -144,11 +144,8 @@ auto programName2pacman(in string path = "") {
   auto pacman = "unknown";
 
   if (names.length > 1) {
-    auto const supported_pacmans = ":conda:tlmgr:texlive:gem:npm:pip:";
     auto last_name = names[$-1];
-    if (supported_pacmans.indexOf(":" ~ last_name ~ ":") > -1) {
-      pacman = last_name;
-    }
+    pacman = last_name;
   }
 
   return pacman;
@@ -158,7 +155,7 @@ unittest {
   auto p1 = programName2pacman("/usr/bin/pacman-foobar");
   auto p2 = programName2pacman("/usr/bin/pacman-conda");
   auto p3 = programName2pacman("/usr/bin/pacman.conda");
-  assert(p1 == "unknown", "pacman-foobar should return unknown pacman");
+  assert(p1 == "foobar", "pacman-foobar should return unknown pacman [foobar]");
   assert(p2 == "conda", "pacman-conda should return conda pacman");
   assert(p3 == "unknown", "pacman.conda with dot splitter is not supported");
 }
@@ -187,6 +184,10 @@ unittest {
   import std.exception: assertThrown, assertNotThrown;
   assertNotThrown("This is a test warning.".warning);
   assertThrown("This is an error message.".error);
+}
+
+auto buildPacmanMethod(pacmanOptions opts) {
+  return false;
 }
 
 struct pacmanOptions {
@@ -220,6 +221,7 @@ struct pacmanOptions {
 
   string[] args0;
   string[] remained;
+  string pacman;
 }
 /*
   FIXME: This would be part of the help message.
@@ -240,7 +242,7 @@ struct pacmanOptions {
     -w                        Download only [Need translation]
     -v                        Verbose [Need translation]
 */
-auto argumentParser(string[] args, in string pacman = "unknown") {
+auto argumentParser(string[] args) {
   import std.getopt;
 
   pacmanOptions opts;
@@ -276,6 +278,11 @@ auto argumentParser(string[] args, in string pacman = "unknown") {
   opts.args0 = args[0..1];
   opts.remained = args[1..$];
 
+  opts.pacman = programName2pacman(opts.args0.length > 0 ? opts.args0[0] : "");
+  if (opts.pacman == "unknown") {
+    opts.pacman = issue2pacman;
+  }
+
   if (getopt_results.helpWanted) {
     defaultGetoptPrinter("List of options:", getopt_results.options);
     opts.result = false;
@@ -288,19 +295,19 @@ auto argumentParser(string[] args, in string pacman = "unknown") {
   }
 
   if (opts.download_only) {
-    auto tx_download_only = translateWoption(pacman);
+    auto tx_download_only = translateWoption(opts.pacman);
     opts.args0 ~= tx_download_only;
     opts.result &= (tx_download_only.length > 0);
   }
 
   if (opts.verbose) {
-    auto tx_verbose = translateDebugOption(pacman);
+    auto tx_verbose = translateDebugOption(opts.pacman);
     opts.args0 ~= tx_verbose;
     opts.result &= (tx_verbose.length > 0);
   }
 
   if (opts.no_confirm) {
-    auto tx_no_confirm = translateNoConfirmOption(pacman);
+    auto tx_no_confirm = translateNoConfirmOption(opts.pacman);
     opts.args0 ~= tx_no_confirm;
     opts.result &= (tx_no_confirm.length > 0);
   }
@@ -358,9 +365,9 @@ unittest {
     assert(! py.result, "Multiple primary action (%s) is not acceptable.".format(p));
   }
 
-  auto p3 = argumentParser(["pacman", "-R", "-s", "-h"]);
+  auto p3 = argumentParser(["/usr/bin/pacman", "-R", "-s", "-h"]);
   assert(! p3.result, "Help query should return false");
-  assert(p3.args0[0] == "pacman", "args[0] should be captured.");
+  assert(p3.pacman == "pacman", "Found pacman package manager.");
 
   auto p4 = argumentParser(["pacman", "-R", "--", "-R"]);
   assert(p4.result, "Termination (--) is working fine.");
@@ -368,11 +375,13 @@ unittest {
   auto p5 = argumentParser(["pacman", "-S", "-cc", "-c"]);
   assert(p5.result && (p5.clean >= 3), "-Sccc (%d) bundling is working fine".format(p5.clean));
 
-  auto p6 = argumentParser(["tazpkg", "-Suw"], "tazpkg");
+  auto p6 = argumentParser(["/usr/bin/pacapt-tazpkg", "-Suw"]);
   assert(p6.result == false, "tarzpkg does not support -w.");
+  assert(p6.pacman == "tazpkg", "Found correct pacman: tazpkg");
 
-  auto p7 = argumentParser(["macports", "-Suwv"], "macports");
+  auto p7 = argumentParser(["/usr/local/bin/pacapt-macports", "-Suwv"]);
   assert(p7.result, "macports supports -w.");
+  assert(p7.pacman == "macports", "Should found macports");
   assert(p7.args0[1] == "fetch", "macports injects custom options [%(%s, %), %(%s, %)]".format(p7.args0, p7.remained));
 }
 

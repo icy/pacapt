@@ -9,13 +9,10 @@ import std.stdio;
 public import pacapt.internals;
 
 void main(string[] args) {
-  auto pacman = guessPacman;
-  if (pacman == "unknown") {
+  auto opts = argumentParser(args);
+  if (opts.pacman == "Unknown") {
     "Unable to detect pacman.".error;
   }
-  writefln("Your pacman is %s", pacman);
-
-  auto opts = argumentParser(args, pacman);
   if (! opts.result) {
     "Unable to parse input arguments.".error;
   }
