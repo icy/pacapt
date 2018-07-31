@@ -4,6 +4,7 @@
 # Author : Somasis <somasissounds@gmail.com>
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/somasis/pacapt/
+# Cave   : http://paludis.exherbo.org/clients/cave.html
 
 # Copyright (C) 2014 Somasis
 #
@@ -18,17 +19,22 @@ _cave_init() {
   shopt -u globstar
 }
 
+cave_Qq() {
+  cave show -f "${@:-world}" \
+  | grep -v '^$'
+}
+
 cave_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
-    cave show -f "${@:-world}" \
-    | grep -v '^$'
-  else
-    cave show -f "${@:-world}"
-  fi
+  cave show -f "${@:-world}"
 }
 
 cave_Qi() {
   cave show "$@"
+}
+
+cave_Qlq() {
+  : "${QUIET_MODE:=1}"
+  cave_Ql "$@"
 }
 
 cave_Ql() {
@@ -40,7 +46,7 @@ cave_Ql() {
   cave show -f "${@:-world}" \
   | grep -v '^$' \
   | while read -r _pkg; do
-      if [[ "$_TOPT" == "q" ]]; then
+      if [ "${QUIET_MODE}" = "1" ]; then
         cave --color no contents "$_pkg"
       else
         cave contents "$_pkg"
@@ -74,18 +80,21 @@ cave_Qs() {
   cave show -f world | grep -- "$@"
 }
 
+## FIXME: Wrong use...
 cave_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
-    cave uninstall -r "$@" \
-    && echo "Control-C to stop uninstalling..." \
-    && sleep 2s \
-    && cave uninstall -xr "$@"
-  else
-    cave purge "$@" \
-    && echo "Control-C to stop uninstalling (+ dependencies)..." \
-    && sleep 2s \
-    && cave purge -x "$@"
-  fi
+  cave uninstall -r "$@" \
+  && echo "Control-C to stop uninstalling..." \
+  && sleep 2s \
+  && cave uninstall -xr "$@"
+}
+
+## FIXME: Wrong use...
+cave_Ru() {
+  ## Uninstall unused packages.
+  cave purge "$@" \
+  && echo "Control-C to stop uninstalling (+ dependencies)..." \
+  && sleep 2s \
+  && cave purge -x "$@"
 }
 
 cave_Rn() {
@@ -144,10 +153,10 @@ cave_Sccc() {
 }
 
 cave_S() {
-  cave resolve $_TOPT "$@" \
+  cave resolve "$@" \
   && echo "Control-C to stop installing..." \
   && sleep 2s \
-  && cave resolve -x $_TOPT "$@"
+  && cave resolve -x "$@"
 }
 
 # cave_U _not_implemented
