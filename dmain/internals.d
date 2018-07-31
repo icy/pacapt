@@ -191,13 +191,13 @@ version(unittest) {
 unittest {
   assert("dpkg_Rs" == ["test-dpkg", "-Rs"]._m);
   assert("dpkg_Rs" == ["test-dpkg", "-Rss"]._m);
-  assert("dpkg_Rs" == ["test-dpkg", "-Rsw"]._m);
-  assert("dpkg_Rqs" == ["test-dpkg", "-Rqsw"]._m);
-  assert("dpkg_Rqsy" == ["test-dpkg", "-Rqsw", "-y", "-v"]._m);
+  assert("dpkg_Rsw" == ["test-dpkg", "-Rsw"]._m);
+  assert("dpkg_Rqsw" == ["test-dpkg", "-Rqsw"]._m);
+  assert("dpkg_Rqsyw" == ["test-dpkg", "-Rqsw", "-y", "-v"]._m);
   assert("dpkg_Suy" == ["test-dpkg", "-S", "-u", "-yyyyy"]._m);
   assert("dpkg_Suy" == ["test-dpkg", "-S", "-yyyyy", "-uuu"]._m);
   assert("dpkg_Scccy" == ["test-dpkg", "-S", "-yyyyy", "-cccccc"]._m);
-  assert("dpkg_Sccc" == ["test-dpkg", "-S", "-w", "-cccccc"]._m);
+  assert("dpkg_Scccw" == ["test-dpkg", "-S", "-w", "-cccccc"]._m);
   assert("dpkg_Sci" == ["test-dpkg", "-S", "-i", "-c"]._m);
 }
 
@@ -241,28 +241,60 @@ struct pacmanOptions {
     import std.format: format;
 
     auto cmds = "";
-
     cmds ~= "#!/usr/bin/env sh\n";
-    if (verbose) {
-      cmds ~= "set -x\n";
-    }
+    cmds ~= exportEnvs;
     cmds ~= "set --\n";
     cmds ~= "set -- %(%s %) %(%s %)\n".format(args0[1..$], remained);
+    // FIXME: sometimes `pacman` doesn't reflect the actual command.
     cmds ~= "exec '%s' \"$@\"\n".format(pacman);
 
     return cmds;
   }
 
+  auto exportEnvs() {
+    string[] envs = [];
+
+    envs ~= "set -u";
+    if (verbose) {
+      envs ~= "set -x\n";
+    }
+
+    if (! pass_through) {
+      envs ~= "unset GREP_OPTIONS";
+      envs ~= ": \"${GREP:=grep}\"";
+      envs ~= ": \"${AWK:=awk}\"";
+      envs ~= "_sun_tools_init \\"; /* Dirty tricky patch for SunOS */
+      envs ~= "|| { echo >&2 \":: Error: '_sun_tools_init' failed.\"; exit 1; }";
+    }
+
+    if (no_confirm) {
+      envs ~= "export DEBIAN_FRONTEND=noninteractive";
+    }
+
+    envs ~= "";
+
+    import std.format: format;
+    auto result = "%-(%s\n%)".format(envs);
+    return result;
+  }
+
+  unittest {
+    auto ret = pacmanOptions(["pacman", "-Swy"]).exportEnvs;
+    import std.stdio;
+    writeln("(unittest) Envs should be exported:");
+    writeln(ret);
+    writeln("(unittest) //");
+  }
+
   auto makeScript(in bool withLibs = false) {
     import std.format: format;
     auto cmds = "";
-
-    if (verbose) {
-      cmds ~= "set -x\n";
-    }
+    cmds ~= exportEnvs;
     cmds ~= "_validate_operation '%s' \\\n".format(pacmanMethod);
-    cmds ~= "|| { echo >&2 \"Error: '%s' is not defined.\"; exit 1; }\n".format(pacmanMethod);
+    cmds ~= "|| { echo >&2 \":: Error: '%s' is not defined.\"; exit 1; }\n".format(pacmanMethod);
     cmds ~= "set --\n";
+    cmds ~= "'_%s_init' \\\n".format(pacman);
+    cmds ~= "|| { echo >&2 \":: Error: '_%s_init' failed.\"; exit 1; }\n".format(pacman);
     cmds ~= "set -- %(%s %) %(%s %)\n".format(args0[1..$], remained);
     cmds ~= "'%s' \"$@\"\n".format(pacmanMethod);
 
@@ -315,7 +347,7 @@ struct pacmanOptions {
     method ~= pS ? "S" : "";
     method ~= pU ? "U" : "";
 
-    /* cilmnop[q]s[u][v-w-][y] */
+    /* cilmnop[q]s[u][v-]w[y] */
 
     method ~= (clean >= 3 ? "ccc" : clean == 2 ? "cc" : clean == 1 ? "c" : "");
     method ~= (si >= 2 ? "ii" : si == 1 ? "i" : "");
@@ -328,6 +360,7 @@ struct pacmanOptions {
     method ~= (ss >= 1 ? "s" : "");
     method ~= (upgrades ? "u" : "");
     method ~= (refresh ? "y" : "");
+    method ~= (download_only ? "w" : "");
 
     return method;
   }
