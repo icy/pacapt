@@ -1,5 +1,6 @@
 BINDIR=/usr/local/bin/
 DISTRO=debian:stable
+DEBUG=1
 
 default:
 	@echo "This is an experimental Makefile. Use it at your own risk."
@@ -104,7 +105,7 @@ shellcheck:
 
 .PHONY: dtest
 dtest:
-	@dub test pacapt:main
+	@dub test --debug="$(DEBUG)" pacapt:main
 
 .PHONY: tests
 tests:
