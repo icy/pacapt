@@ -360,6 +360,7 @@ unittest {
 
   auto p3 = argumentParser(["pacman", "-R", "-s", "-h"]);
   assert(! p3.result, "Help query should return false");
+  assert(p3.args0[0] == "pacman", "args[0] should be captured.");
 
   auto p4 = argumentParser(["pacman", "-R", "--", "-R"]);
   assert(p4.result, "Termination (--) is working fine.");
