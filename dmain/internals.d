@@ -177,40 +177,9 @@ unittest {
   assertThrown("This is an error message.".error);
 }
 
-auto buildPacmanMethod(pacmanOptions opts) {
-  import std.format: format;
-  auto method = "";
-
-  method ~= opts.pacman;
-
-  method ~= "_";
-
-  /* QRSU */
-  method ~= opts.pQ ? "Q" : "";
-  method ~= opts.pR ? "R" : "";
-  method ~= opts.pS ? "S" : "";
-  method ~= opts.pU ? "U" : "";
-
-  /* cilmnop[q]s[u][v-w-][y] */
-
-  method ~= (opts.clean >= 3 ? "ccc" : opts.clean == 2 ? "cc" : opts.clean == 1 ? "c" : "");
-  method ~= (opts.si >= 2 ? "ii" : opts.si == 1 ? "i" : "");
-  method ~= (opts.sl >= 1 ? "l" : "");
-  method ~= (opts.sm >= 1 ? "m" : "");
-  method ~= (opts.sn >= 1 ? "n" : "");
-  method ~= (opts.so >= 1 ? "o" : "");
-  method ~= (opts.sp >= 1 ? "p" : "");
-  method ~= (opts.quiet_mode ? "q" : "");
-  method ~= (opts.ss >= 1 ? "s" : "");
-  method ~= (opts.upgrades ? "u" : "");
-  method ~= (opts.refresh ? "y" : "");
-
-  return method;
-}
-
 version(unittest) {
   auto _m(string[] args) {
-    auto _r = args.argumentParser.buildPacmanMethod;
+    auto _r = args.pacmanOptions.pacmanMethod;
     debug(2) {
       import std.stdio, std.format;
       writefln("Found method: %s", _r);
@@ -220,7 +189,6 @@ version(unittest) {
 }
 
 unittest {
-  import std.format;
   assert("dpkg_Rs" == ["test-dpkg", "-Rs"]._m);
   assert("dpkg_Rs" == ["test-dpkg", "-Rss"]._m);
   assert("dpkg_Rs" == ["test-dpkg", "-Rsw"]._m);
@@ -240,6 +208,7 @@ struct pacmanOptions {
     no_confirm = false,     /* --noconfirm */
     show_version = false,   /* -V */
     list_ops = false,       /* -P */
+    help_wanted = false,
 
     quiet_mode = false,     /* -q */
     upgrades = false,       /* -u */
@@ -265,166 +234,196 @@ struct pacmanOptions {
   string[] args0;
   string[] remained;
   string pacman;
-}
-/*
-  FIXME: This would be part of the help message.
 
-  An overview of options from the stable pacapt script
 
-    -h --help                 Help
-    --noconfirm --no-confirm  No confirmation [Need translation]
-    --                        Termination
-    -V                        pacapt version
-    -P                        List of supported operations
-    -Q R S U  (+)             Primary action
-    -s l i p o m n (+)        Secondary action
-    -q                        Third option
-    -u                        Converted to uy or u
-    -y                        Same as above
-    -c (+)                    Clean (c, cc, ccc)
-    -w                        Download only [Need translation]
-    -v                        Verbose [Need translation]
-*/
-auto argumentParser(string[] args) {
-  import std.getopt;
+  auto pacmanMethod() {
+    import std.format: format;
+    auto method = "";
 
-  pacmanOptions opts;
+    method ~= pacman;
 
-  auto getopt_results = getopt(args,
-    std.getopt.config.caseSensitive,
-    std.getopt.config.bundling,
-    std.getopt.config.passThrough,
-    "query|Q+", "Query", &opts.pQ,
-    "remove|R+", "Remove", &opts.pR,
-    "sync|S+", "Sync", &opts.pS,
-    "upgrade|U+", "Upgrade", &opts.pU,
-    "search|s+", "Search", &opts.ss,
-    "recursive+", "Recursive option used with --remove. Short version: -s", &opts.ss,
-    "list|l+", "listing option", &opts.sl,
-    "info|i+", &opts.si,
-    "file|p+", &opts.sp,
-    "owns|o+", &opts.so,
-    "foreign|m+", &opts.sm,
-    "n|nosave|native+", &opts.sn,
-    "verbose|v", "Be verbose", &opts.verbose,
-    "download-only|w", "Download without installing", &opts.download_only,
-    "version|V", "Show pacapt version", &opts.show_version,
-    "P", "Print list of supported options", &opts.list_ops,
-    "quiet|q", "Be quiet in some operation", &opts.quiet_mode,
-    "upgrades|u", &opts.upgrades,
-    "refresh|y", "Refresh local package database", &opts.refresh,
-    "noconfirm", "Assume yes to all questions", &opts.no_confirm,
-    "no-confirm", "Assume yes to all questions", &opts.no_confirm,
-    "clean|c+", "Clean packages.", &opts.clean,
-  );
+    method ~= "_";
 
-  opts.args0 = args[0..1];
-  opts.remained = args[1..$];
+    /* QRSU */
+    method ~= pQ ? "Q" : "";
+    method ~= pR ? "R" : "";
+    method ~= pS ? "S" : "";
+    method ~= pU ? "U" : "";
 
-  opts.pacman = programName2pacman(opts.args0.length > 0 ? opts.args0[0] : "");
-  if (opts.pacman == "unknown") {
-    opts.pacman = issue2pacman;
+    /* cilmnop[q]s[u][v-w-][y] */
+
+    method ~= (clean >= 3 ? "ccc" : clean == 2 ? "cc" : clean == 1 ? "c" : "");
+    method ~= (si >= 2 ? "ii" : si == 1 ? "i" : "");
+    method ~= (sl >= 1 ? "l" : "");
+    method ~= (sm >= 1 ? "m" : "");
+    method ~= (sn >= 1 ? "n" : "");
+    method ~= (so >= 1 ? "o" : "");
+    method ~= (sp >= 1 ? "p" : "");
+    method ~= (quiet_mode ? "q" : "");
+    method ~= (ss >= 1 ? "s" : "");
+    method ~= (upgrades ? "u" : "");
+    method ~= (refresh ? "y" : "");
+
+    return method;
   }
 
-  if (getopt_results.helpWanted) {
-    defaultGetoptPrinter("List of options:", getopt_results.options);
-    opts.result = false;
-  }
+  /*
+    FIXME: This would be part of the help message.
 
-  // FIXME: We should passthrough option
-  if (opts.pQ + opts.pR + opts.pS + opts.pU != 1) {
-    "Primary option (Q R S U) must be specified at most once.".warning;
-    opts.result = false;
-  }
+    An overview of options from the stable pacapt script
 
-  if (opts.download_only) {
-    auto tx_download_only = translateWoption(opts.pacman);
-    opts.args0 ~= tx_download_only;
-    opts.result &= (tx_download_only.length > 0);
-  }
+      -h --help                 Help
+      --noconfirm --no-confirm  No confirmation [Need translation]
+      --                        Termination
+      -V                        pacapt version
+      -P                        List of supported operations
+      -Q R S U  (+)             Primary action
+      -s l i p o m n (+)        Secondary action
+      -q                        Third option
+      -u                        Converted to uy or u
+      -y                        Same as above
+      -c (+)                    Clean (c, cc, ccc)
+      -w                        Download only [Need translation]
+      -v                        Verbose [Need translation]
+  */
+  this(string[] args) {
+    import std.getopt;
 
-  if (opts.verbose) {
-    auto tx_verbose = translateDebugOption(opts.pacman);
-    opts.args0 ~= tx_verbose;
-    opts.result &= (tx_verbose.length > 0);
-  }
-
-  if (opts.no_confirm) {
-    auto tx_no_confirm = translateNoConfirmOption(opts.pacman);
-    opts.args0 ~= tx_no_confirm;
-    opts.result &= (tx_no_confirm.length > 0);
-  }
-
-  debug(2) {
-    import std.stdio, std.format;
-    stderr.writefln(
-"
-(debug)
-  Query         : %d
-  Remove        : %d
-  Sync          : %d
-  Upgrade       : %d
-  s             : %d
-  l             : %d
-  i             : %d
-  p             : %d
-  o             : %d
-  m             : %d
-  n             : %d
-  download only : %b
-  no confirm    : %b
-  show version  : %b
-  print ops     : %b
-  quiet mode    : %b
-  upgrades      : %b
-  refresh       : %b
-  args0         : %(%s, %)
-  remains       : %(%s, %)
-  pacman        : %s
-",
-      opts.pQ, opts.pR, opts.pS, opts.pU,
-      opts.ss, opts.sl, opts.si, opts.sp, opts.so, opts.sm, opts.sn,
-      opts.download_only, opts.no_confirm, opts.show_version, opts.list_ops,
-      opts.quiet_mode, opts.upgrades, opts.refresh,
-      opts.args0, opts.remained, opts.pacman,
+    auto getopt_results = getopt(args,
+      std.getopt.config.caseSensitive,
+      std.getopt.config.bundling,
+      std.getopt.config.passThrough,
+      "query|Q+", "Query", &pQ,
+      "remove|R+", "Remove", &pR,
+      "sync|S+", "Sync", &pS,
+      "upgrade|U+", "Upgrade", &pU,
+      "search|s+", "Search", &ss,
+      "recursive+", "Recursive option used with --remove. Short version: -s", &ss,
+      "list|l+", "listing option", &sl,
+      "info|i+", &si,
+      "file|p+", &sp,
+      "owns|o+", &so,
+      "foreign|m+", &sm,
+      "n|nosave|native+", &sn,
+      "verbose|v", "Be verbose", &verbose,
+      "download-only|w", "Download without installing", &download_only,
+      "version|V", "Show pacapt version", &show_version,
+      "P", "Print list of supported options", &list_ops,
+      "quiet|q", "Be quiet in some operation", &quiet_mode,
+      "upgrades|u", &upgrades,
+      "refresh|y", "Refresh local package database", &refresh,
+      "noconfirm", "Assume yes to all questions", &no_confirm,
+      "no-confirm", "Assume yes to all questions", &no_confirm,
+      "clean|c+", "Clean packages.", &clean,
     );
-  }
 
-  return opts;
+    args0 = args[0..1];
+    remained = args[1..$];
+
+    pacman = programName2pacman(args0.length > 0 ? args0[0] : "");
+    if (pacman == "unknown") {
+      pacman = issue2pacman;
+    }
+
+    if (getopt_results.helpWanted) {
+      help_wanted = true;
+      defaultGetoptPrinter("List of options:", getopt_results.options);
+      result = false;
+    }
+
+    // FIXME: We should passthrough option
+    if (pQ + pR + pS + pU != 1) {
+      "Primary option (Q R S U) must be specified at most once.".warning;
+      result = false;
+    }
+
+    if (download_only) {
+      auto tx_download_only = translateWoption(pacman);
+      args0 ~= tx_download_only;
+      result &= (tx_download_only.length > 0);
+    }
+
+    if (verbose) {
+      auto tx_verbose = translateDebugOption(pacman);
+      args0 ~= tx_verbose;
+      result &= (tx_verbose.length > 0);
+    }
+
+    if (no_confirm) {
+      auto tx_no_confirm = translateNoConfirmOption(pacman);
+      args0 ~= tx_no_confirm;
+      result &= (tx_no_confirm.length > 0);
+    }
+
+    debug(2) {
+      import std.stdio, std.format;
+      stderr.writefln(
+  "
+  (debug)
+    Query         : %d
+    Remove        : %d
+    Sync          : %d
+    Upgrade       : %d
+    s             : %d
+    l             : %d
+    i             : %d
+    p             : %d
+    o             : %d
+    m             : %d
+    n             : %d
+    download only : %b
+    no confirm    : %b
+    show version  : %b
+    print ops     : %b
+    quiet mode    : %b
+    upgrades      : %b
+    refresh       : %b
+    args0         : %(%s, %)
+    remains       : %(%s, %)
+    pacman        : %s
+  ",
+        pQ, pR, pS, pU,
+        ss, sl, si, sp, so, sm, sn,
+        download_only, no_confirm, show_version, list_ops,
+        quiet_mode, upgrades, refresh,
+        args0, remained, pacman,
+      );
+    }
+  }
 }
 
 unittest {
   import std.format;
 
-  auto p1 = argumentParser(["pacman", "-R", "-U"]);
+  auto p1 = pacmanOptions(["pacman", "-R", "-U"]);
   assert(! p1.result, "Multiple primary action -RU is rejected.");
 
-  auto p2 = argumentParser(["pacman", "-i", "-s"]);
+  auto p2 = pacmanOptions(["pacman", "-i", "-s"]);
   assert(! p2.result, "Primary action must be specified.");
 
   auto primary_actions = ["R", "S", "Q", "U"];
   foreach (p; primary_actions) {
-    auto px = argumentParser(["pacman", "-" ~ p]);
+    auto px = pacmanOptions(["pacman", "-" ~ p]);
     assert(px.result, "At least on primary action (%s) is acceptable.".format(p));
-    auto py = argumentParser(["pacman", "-" ~ p ~ p]);
+    auto py = pacmanOptions(["pacman", "-" ~ p ~ p]);
     assert(! py.result, "Multiple primary action (%s) is not acceptable.".format(p));
   }
 
-  auto p3 = argumentParser(["/usr/bin/pacman", "-R", "-s", "-h"]);
+  auto p3 = pacmanOptions(["/usr/bin/pacman", "-R", "-s", "-h"]);
   assert(! p3.result, "Help query should return false");
   assert(p3.pacman == "pacman", "Found pacman package manager.");
 
-  auto p4 = argumentParser(["pacman", "-R", "--", "-R"]);
+  auto p4 = pacmanOptions(["pacman", "-R", "--", "-R"]);
   assert(p4.result, "Termination (--) is working fine.");
 
-  auto p5 = argumentParser(["pacman", "-S", "-cc", "-c"]);
+  auto p5 = pacmanOptions(["pacman", "-S", "-cc", "-c"]);
   assert(p5.result && (p5.clean >= 3), "-Sccc (%d) bundling is working fine".format(p5.clean));
 
-  auto p6 = argumentParser(["/usr/bin/pacapt-tazpkg", "-Suw"]);
+  auto p6 = pacmanOptions(["/usr/bin/pacapt-tazpkg", "-Suw"]);
   assert(p6.result == false, "tarzpkg does not support -w.");
   assert(p6.pacman == "tazpkg", "Found correct pacman: tazpkg");
 
-  auto p7 = argumentParser(["/usr/local/bin/pacapt-macports", "-Suwv"]);
+  auto p7 = pacmanOptions(["/usr/local/bin/pacapt-macports", "-Suwv"]);
   assert(p7.result, "macports supports -w.");
   assert(p7.pacman == "macports", "Should found macports");
   assert(p7.args0[1] == "fetch", "macports injects custom options [%(%s, %), %(%s, %)]".format(p7.args0, p7.remained));

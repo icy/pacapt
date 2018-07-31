@@ -9,11 +9,11 @@ import std.stdio;
 public import pacapt.internals;
 
 void main(string[] args) {
-  auto opts = argumentParser(args);
+  auto opts = pacmanOptions(args);
   if (opts.pacman == "Unknown") {
     "Unable to detect pacman.".error;
   }
-  if (! opts.result) {
+  if (! opts.result && ! opts.help_wanted) {
     "Unable to parse input arguments.".error;
   }
 
