@@ -271,6 +271,13 @@ struct pacmanOptions {
       envs ~= "export DEBIAN_FRONTEND=noninteractive";
     }
 
+    if (quiet_mode) {
+      envs ~= "export QUIET_MODE=1";
+    }
+    else {
+      envs ~= "export QUIET_MODE=0";
+    }
+
     envs ~= "";
 
     import std.format: format;
