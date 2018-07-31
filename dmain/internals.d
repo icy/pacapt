@@ -236,6 +236,26 @@ struct pacmanOptions {
   string[] remained;
   string pacman;
 
+  auto makeScript() {
+    import std.format: format;
+    auto cmds = "";
+    //cmds ~= pacmanLibs;
+    cmds ~= "_validate_operation '%s' || exit 1\n".format(pacmanMethod);
+    cmds ~= "set --\n";
+    cmds ~= "set %(\"%s\" %) %(\"%s\" %)\n".format(args0[1..$], remained);
+    cmds ~= "%s \"@\"\n".format(pacmanMethod);
+
+    debug {
+      import std.stdio;
+      writefln("Return script:\n%s", cmds);
+    }
+    return cmds;
+  }
+
+  unittest {
+    auto p = pacmanOptions(["pacman-dpkg", "-R", "-s"]);
+    p.makeScript;
+  }
 
   auto pacmanMethod() {
     import std.format: format;
@@ -511,4 +531,13 @@ auto translateDebugOption(in string pacman, in string opt = "-v") {
 unittest {
   assert(translateDebugOption("tazpkg") == []);
   assert(translateDebugOption("pacman") != []);
+}
+
+auto pacmanLibs() {
+  auto src = import("pacapt.libs");
+  return src;
+}
+
+unittest {
+  auto src = pacmanLibs;
 }

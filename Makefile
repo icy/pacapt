@@ -107,6 +107,10 @@ shellcheck:
 dtest:
 	@dub test --debug="$(DEBUG)" pacapt:main
 
+.PHONY: dbuild
+dbuild:
+	@dub build --debug="$(DEBUG)" pacapt:main
+
 .PHONY: tests
 tests:
 	@cd tests/ && make all
