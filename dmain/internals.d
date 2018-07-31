@@ -218,6 +218,7 @@ struct pacmanOptions {
     clean = 0
     ;
 
+  string[] args0;
   string[] remained;
 }
 /*
@@ -272,7 +273,8 @@ auto argumentParser(string[] args, in string pacman = "unknown") {
     "clean|c+", "Clean packages.", &opts.clean,
   );
 
-  opts.remained = args;
+  opts.args0 ~= args[0..1];
+  opts.remained = args[1..$];
 
   if (getopt_results.helpWanted) {
     defaultGetoptPrinter("List of options:", getopt_results.options);
@@ -285,24 +287,22 @@ auto argumentParser(string[] args, in string pacman = "unknown") {
     opts.result = false;
   }
 
+  if (opts.download_only) {
+    auto tx_download_only = translateWoption(pacman);
+    opts.args0 ~= tx_download_only;
+    opts.result &= (tx_download_only.length > 0);
+  }
+
   if (opts.verbose) {
     auto tx_verbose = translateDebugOption(pacman);
-    opts.remained = (tx_verbose ~ opts.remained);
+    opts.args0 ~= tx_verbose;
     opts.result &= (tx_verbose.length > 0);
   }
 
   if (opts.no_confirm) {
     auto tx_no_confirm = translateNoConfirmOption(pacman);
-    opts.remained = (tx_no_confirm ~ opts.remained);
+    opts.args0 ~= tx_no_confirm;
     opts.result &= (tx_no_confirm.length > 0);
-  }
-
-  // NOTE: Should be done at the last step to inject
-  // NOTE: non parameter action to the destination (e.g., macports)
-  if (opts.download_only) {
-    auto tx_download_only = translateWoption(pacman);
-    opts.remained = (tx_download_only ~ opts.remained);
-    opts.result &= (tx_download_only.length > 0);
   }
 
   debug(2) {
@@ -372,7 +372,7 @@ unittest {
 
   auto p7 = argumentParser(["macports", "-Suwv"], "macports");
   assert(p7.result, "macports supports -w.");
-  assert(p7.remained[1] == "fetch", "macports successfully injects custom options [%(%s, %)]".format(p7.remained));
+  assert(p7.args0[1] == "fetch", "macports injects custom options [%(%s, %), %(%s, %)]".format(p7.args0, p7.remained));
 }
 
 auto translateWoption(in string pacman) {
