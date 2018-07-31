@@ -235,26 +235,70 @@ struct pacmanOptions {
   string[] args0;
   string[] remained;
   string pacman;
+  string[] argsOrigin;
 
-  auto makeScript() {
+  auto makePassthroughScript() {
     import std.format: format;
-    auto cmds = "";
-    //cmds ~= pacmanLibs;
-    cmds ~= "_validate_operation '%s' || exit 1\n".format(pacmanMethod);
-    cmds ~= "set --\n";
-    cmds ~= "set %(\"%s\" %) %(\"%s\" %)\n".format(args0[1..$], remained);
-    cmds ~= "%s \"@\"\n".format(pacmanMethod);
 
-    debug {
-      import std.stdio;
-      writefln("Return script:\n%s", cmds);
+    auto cmds = "";
+
+    cmds ~= "#!/usr/bin/env sh\n";
+    if (verbose) {
+      cmds ~= "set -x\n";
     }
+    cmds ~= "set --\n";
+    cmds ~= "set -- %(%s %) %(%s %)\n".format(args0[1..$], remained);
+    cmds ~= "exec '%s' \"$@\"\n".format(pacman);
+
     return cmds;
   }
 
+  auto makeScript(in bool withLibs = false) {
+    import std.format: format;
+    auto cmds = "";
+
+    if (verbose) {
+      cmds ~= "set -x\n";
+    }
+    cmds ~= "_validate_operation '%s' \\\n".format(pacmanMethod);
+    cmds ~= "|| { echo >&2 \"Error: '%s' is not defined.\"; exit 1; }\n".format(pacmanMethod);
+    cmds ~= "set --\n";
+    cmds ~= "set -- %(%s %) %(%s %)\n".format(args0[1..$], remained);
+    cmds ~= "'%s' \"$@\"\n".format(pacmanMethod);
+
+    if (withLibs) {
+      return pacmanLibs ~ "\n" ~ cmds;
+    }
+    else {
+      return cmds;
+    }
+  }
+
+  auto executeScript(in string in_shell = null) {
+    string shell = in_shell.dup;
+    if (shell is null) {
+      if (in_shell !is null) {
+        ("Unable to find custom shell: " ~ in_shell).warning;
+      }
+      shell = findShell;
+    }
+    if (shell is null) {
+      "Unable to find Bash or Sh shell".error;
+    }
+
+    auto script = (pass_through ? makePassthroughScript : makeScript(true));
+    import std.process: pipeProcess, Redirect, wait;
+    auto pipes = pipeProcess([shell, "-s"], Redirect.stdin);
+    pipes.stdin.writeln(script);
+    pipes.stdin.flush;
+    pipes.stdin.close();
+    wait(pipes.pid);
+  }
+
   unittest {
+    import std.exception: assertThrown, assertNotThrown;
     auto p = pacmanOptions(["pacman-dpkg", "-R", "-s"]);
-    p.makeScript;
+    assertThrown(p.executeScript("special-shell"));
   }
 
   auto pacmanMethod() {
@@ -310,6 +354,9 @@ struct pacmanOptions {
   this(string[] args) {
     import std.getopt;
 
+    /* Useful if we want to have passthrough support */
+    argsOrigin = args.dup;
+
     auto getopt_results = getopt(args,
       std.getopt.config.caseSensitive,
       std.getopt.config.bundling,
@@ -346,21 +393,27 @@ struct pacmanOptions {
       pacman = issue2pacman;
     }
 
+    if (pacman == "pacman") {
+      "Passthrough mode enabled for 'pacman'".warning;
+      pass_through = true;
+    }
+
     if (getopt_results.helpWanted) {
       help_wanted = true;
       defaultGetoptPrinter("List of options:", getopt_results.options);
       result = false;
     }
 
-    // FIXME: We should passthrough option
-    auto const c_primaries = pQ + pR + pS + pU;
-    if (c_primaries == 0) {
-      "Primary option not found. Passthrough mode enabled".warning;
-      pass_through = true;
-      result = true;
-    } else if (c_primaries > 1) {
-      "Primary option (Q R S U) must be specified at most once.".warning;
-      result = false;
+    if (!pass_through) {
+      auto const c_primaries = pQ + pR + pS + pU;
+      if (c_primaries == 0) {
+        "Primary option not found. Passthrough mode enabled".warning;
+        pass_through = true;
+        result = true;
+      } else if (c_primaries > 1) {
+        "Primary option (Q R S U) must be specified at most once.".warning;
+        result = false;
+      }
     }
 
     if (download_only) {
@@ -407,12 +460,14 @@ struct pacmanOptions {
     args0         : %(%s, %)
     remains       : %(%s, %)
     pacman        : %s
+    argsOrigin    : %(%s, %)
   ",
         pQ, pR, pS, pU,
         ss, sl, si, sp, so, sm, sn,
         download_only, no_confirm, show_version, list_ops,
         quiet_mode, upgrades, refresh,
         args0, remained, pacman,
+        argsOrigin,
       );
     }
   }
@@ -421,17 +476,20 @@ struct pacmanOptions {
 unittest {
   import std.format;
 
-  auto p1 = pacmanOptions(["pacman", "-R", "-U"]);
+  auto p1 = pacmanOptions(["pacman-foobar", "-R", "-U"]);
   assert(! p1.result, "Multiple primary action -RU is rejected.");
 
   auto p2 = pacmanOptions(["pacman", "-i", "-s"]);
   assert(p2.result && p2.pass_through, "Passthrough mode should enabled.");
 
+  auto p22 = pacmanOptions(["pacman", "-RR", "-Rs"]);
+  assert(p22.result && p22.pass_through, "Passthrough mode should enabled.");
+
   auto primary_actions = ["R", "S", "Q", "U"];
   foreach (p; primary_actions) {
-    auto px = pacmanOptions(["pacman", "-" ~ p]);
+    auto px = pacmanOptions(["pacman-foo", "-" ~ p]);
     assert(px.result && ! px.pass_through, "At least on primary action (%s) is acceptable.".format(p));
-    auto py = pacmanOptions(["pacman", "-" ~ p ~ p]);
+    auto py = pacmanOptions(["pacman-bar", "-" ~ p ~ p]);
     assert(! py.result, "Multiple primary action (%s) is not acceptable.".format(p));
   }
 
@@ -540,4 +598,39 @@ auto pacmanLibs() {
 
 unittest {
   auto src = pacmanLibs;
+}
+
+
+auto getBestShell(in string shell = "bash") {
+  import std.process: executeShell;
+  import std.string: strip;
+
+  auto result = ("command -v " ~ shell).executeShell;
+  if (result.status == 0) {
+    debug {
+      import std.stdio, std.format;
+      stderr.writefln("(debug) Found %s shell: '%s'", shell, result.output.strip);
+    }
+    return result.output.strip;
+  }
+
+  return null;
+}
+
+auto findShell() {
+  auto shell = getBestShell("bash");
+  if (shell is null) {
+    shell = getBestShell("sh");
+  }
+  return shell;
+}
+
+unittest {
+  auto bash = getBestShell("bash");
+  assert(bash, "Bash should be found on your system :)");
+  auto sh = getBestShell("sh");
+  assert(sh, "Sh should be found on your system.");
+
+  auto any_shell = getBestShell("non-existent") || getBestShell("sh");
+  assert(any_shell, "Should found a good shell for us");
 }

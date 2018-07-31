@@ -10,11 +10,18 @@ public import pacapt.internals;
 
 void main(string[] args) {
   auto opts = pacmanOptions(args);
-  if (opts.pacman == "Unknown") {
-    "Unable to detect pacman.".error;
+
+  if (opts.help_wanted) {
+    return;
   }
-  if (! opts.result && ! opts.help_wanted) {
+
+  if (! opts.result) {
     "Unable to parse input arguments.".error;
   }
 
+  if (opts.pacman == "unknown") {
+    "Unable to detect pacman.".error;
+  }
+
+  opts.executeScript;
 }
