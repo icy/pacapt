@@ -178,20 +178,71 @@ unittest {
 }
 
 auto buildPacmanMethod(pacmanOptions opts) {
-  return false;
+  import std.format: format;
+  auto method = "";
+
+  method ~= opts.pacman;
+
+  method ~= "_";
+
+  /* QRSU */
+  method ~= opts.pQ ? "Q" : "";
+  method ~= opts.pR ? "R" : "";
+  method ~= opts.pS ? "S" : "";
+  method ~= opts.pU ? "U" : "";
+
+  /* cilmnop[q]s[u][v-w-][y] */
+
+  method ~= (opts.clean >= 3 ? "ccc" : opts.clean == 2 ? "cc" : opts.clean == 1 ? "c" : "");
+  method ~= (opts.si >= 2 ? "ii" : opts.si == 1 ? "i" : "");
+  method ~= (opts.sl >= 1 ? "l" : "");
+  method ~= (opts.sm >= 1 ? "m" : "");
+  method ~= (opts.sn >= 1 ? "n" : "");
+  method ~= (opts.so >= 1 ? "o" : "");
+  method ~= (opts.sp >= 1 ? "p" : "");
+  method ~= (opts.quiet_mode ? "q" : "");
+  method ~= (opts.ss >= 1 ? "s" : "");
+  method ~= (opts.upgrades ? "u" : "");
+  method ~= (opts.refresh ? "y" : "");
+
+  return method;
+}
+
+
+unittest {
+  import std.format;
+  auto _m(string[] args) {
+    auto _r = args.argumentParser.buildPacmanMethod;
+    debug(2) {
+      import std.stdio, std.format;
+      writefln("Found method: %s", _r);
+    }
+    return _r;
+  }
+
+  assert("dpkg_Rs" == _m(["test-dpkg", "-Rs"]));
+  assert("dpkg_Rs" == _m(["test-dpkg", "-Rss"]));
+  assert("dpkg_Rs" == _m(["test-dpkg", "-Rsw"]));
+  assert("dpkg_Rqs" == _m(["test-dpkg", "-Rqsw"]));
+  assert("dpkg_Rqsy" == _m(["test-dpkg", "-Rqsw", "-y", "-v"]));
+  assert("dpkg_Suy" == _m(["test-dpkg", "-S", "-u", "-yyyyy"]));
+  assert("dpkg_Suy" == _m(["test-dpkg", "-S", "-yyyyy", "-uuu"]));
+  assert("dpkg_Scccy" == _m(["test-dpkg", "-S", "-yyyyy", "-cccccc"]));
+  assert("dpkg_Sccc" == _m(["test-dpkg", "-S", "-w", "-cccccc"]));
+  assert("dpkg_Sci" == _m(["test-dpkg", "-S", "-i", "-c"]));
 }
 
 struct pacmanOptions {
   bool
-    verbose = false,
-    download_only = false,
-    no_confirm = false,
-    show_help = false,
-    show_version = false,
-    list_ops = false,
-    quiet_mode = false,
-    upgrades = false,
-    refresh = false,
+    verbose = false,        /* -v */
+    download_only = false,  /* -w */
+    no_confirm = false,     /* --noconfirm */
+    show_version = false,   /* -V */
+    list_ops = false,       /* -P */
+
+    quiet_mode = false,     /* -q */
+    upgrades = false,       /* -u */
+    refresh = false,        /* -y */
     result = true
     ;
 
@@ -207,7 +258,7 @@ struct pacmanOptions {
     so = 0,
     sm = 0,
     sn = 0,
-    clean = 0
+    clean = 0 /* -c */
     ;
 
   string[] args0;
@@ -334,7 +385,7 @@ auto argumentParser(string[] args) {
       opts.ss, opts.sl, opts.si, opts.sp, opts.so, opts.sm, opts.sn,
       opts.download_only, opts.no_confirm, opts.show_version, opts.list_ops,
       opts.quiet_mode, opts.upgrades, opts.refresh,
-      opts.args0, opts.remained, pacman,
+      opts.args0, opts.remained, opts.pacman,
     );
   }
 
