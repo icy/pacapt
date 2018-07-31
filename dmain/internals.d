@@ -273,7 +273,7 @@ auto argumentParser(string[] args, in string pacman = "unknown") {
     "clean|c+", "Clean packages.", &opts.clean,
   );
 
-  opts.args0 ~= args[0..1];
+  opts.args0 = args[0..1];
   opts.remained = args[1..$];
 
   if (getopt_results.helpWanted) {
