@@ -208,9 +208,7 @@ auto buildPacmanMethod(pacmanOptions opts) {
   return method;
 }
 
-
-unittest {
-  import std.format;
+version(unittest) {
   auto _m(string[] args) {
     auto _r = args.argumentParser.buildPacmanMethod;
     debug(2) {
@@ -219,17 +217,20 @@ unittest {
     }
     return _r;
   }
+}
 
-  assert("dpkg_Rs" == _m(["test-dpkg", "-Rs"]));
-  assert("dpkg_Rs" == _m(["test-dpkg", "-Rss"]));
-  assert("dpkg_Rs" == _m(["test-dpkg", "-Rsw"]));
-  assert("dpkg_Rqs" == _m(["test-dpkg", "-Rqsw"]));
-  assert("dpkg_Rqsy" == _m(["test-dpkg", "-Rqsw", "-y", "-v"]));
-  assert("dpkg_Suy" == _m(["test-dpkg", "-S", "-u", "-yyyyy"]));
-  assert("dpkg_Suy" == _m(["test-dpkg", "-S", "-yyyyy", "-uuu"]));
-  assert("dpkg_Scccy" == _m(["test-dpkg", "-S", "-yyyyy", "-cccccc"]));
-  assert("dpkg_Sccc" == _m(["test-dpkg", "-S", "-w", "-cccccc"]));
-  assert("dpkg_Sci" == _m(["test-dpkg", "-S", "-i", "-c"]));
+unittest {
+  import std.format;
+  assert("dpkg_Rs" == ["test-dpkg", "-Rs"]._m);
+  assert("dpkg_Rs" == ["test-dpkg", "-Rss"]._m);
+  assert("dpkg_Rs" == ["test-dpkg", "-Rsw"]._m);
+  assert("dpkg_Rqs" == ["test-dpkg", "-Rqsw"]._m);
+  assert("dpkg_Rqsy" == ["test-dpkg", "-Rqsw", "-y", "-v"]._m);
+  assert("dpkg_Suy" == ["test-dpkg", "-S", "-u", "-yyyyy"]._m);
+  assert("dpkg_Suy" == ["test-dpkg", "-S", "-yyyyy", "-uuu"]._m);
+  assert("dpkg_Scccy" == ["test-dpkg", "-S", "-yyyyy", "-cccccc"]._m);
+  assert("dpkg_Sccc" == ["test-dpkg", "-S", "-w", "-cccccc"]._m);
+  assert("dpkg_Sci" == ["test-dpkg", "-S", "-i", "-c"]._m);
 }
 
 struct pacmanOptions {
