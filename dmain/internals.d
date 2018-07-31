@@ -326,13 +326,15 @@ auto argumentParser(string[] args) {
   quiet mode    : %b
   upgrades      : %b
   refresh       : %b
-  remains       : %(%s %)
+  args0         : %(%s, %)
+  remains       : %(%s, %)
+  pacman        : %s
 ",
       opts.pQ, opts.pR, opts.pS, opts.pU,
       opts.ss, opts.sl, opts.si, opts.sp, opts.so, opts.sm, opts.sn,
       opts.download_only, opts.no_confirm, opts.show_version, opts.list_ops,
       opts.quiet_mode, opts.upgrades, opts.refresh,
-      opts.remained,
+      opts.args0, opts.remained, pacman,
     );
   }
 
