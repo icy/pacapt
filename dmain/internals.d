@@ -107,8 +107,8 @@ auto issue2pacman() {
   }
 
   import std.process: executeShell;
-  auto brew_status = "command -v brew >/dev/null".executeShell.status;
-  if (brew_status == 0) {
+  auto brew = findCommand("brew");
+  if (brew !is null) {
     debug stderr.writefln("(debug) Found homebrew in search path");
     pacman = "homebrew";
     return pacman;
@@ -601,11 +601,11 @@ unittest {
 }
 
 
-auto getBestShell(in string shell = "bash") {
+auto findCommand(in string shell = "bash") {
   import std.process: executeShell;
   import std.string: strip;
 
-  auto result = ("command -v " ~ shell).executeShell;
+  auto result = ("command -pv " ~ shell).executeShell;
   if (result.status == 0) {
     debug {
       import std.stdio, std.format;
@@ -618,19 +618,19 @@ auto getBestShell(in string shell = "bash") {
 }
 
 auto findShell() {
-  auto shell = getBestShell("bash");
+  auto shell = findCommand("bash");
   if (shell is null) {
-    shell = getBestShell("sh");
+    shell = findCommand("sh");
   }
   return shell;
 }
 
 unittest {
-  auto bash = getBestShell("bash");
+  auto bash = findCommand("bash");
   assert(bash, "Bash should be found on your system :)");
-  auto sh = getBestShell("sh");
+  auto sh = findCommand("sh");
   assert(sh, "Sh should be found on your system.");
 
-  auto any_shell = getBestShell("non-existent") || getBestShell("sh");
+  auto any_shell = findCommand("non-existent") || findCommand("sh");
   assert(any_shell, "Should found a good shell for us");
 }
