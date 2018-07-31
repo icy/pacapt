@@ -18,29 +18,24 @@ _apk_init() {
   :
 }
 
-# apk_Q may _not_implemented
 apk_Q() {
-  if [[ -z "$_TOPT" ]]; then
-    apk info
-  else
-    _not_implemented
-  fi
+  apk info
 }
 
 apk_Qi() {
-  apk info -a -- "$@"
+  apk info -a "$@"
 }
 
 apk_Ql() {
-  apk info -L -- "$@"
+  apk info -L "$@"
 }
 
 apk_Qo() {
-  apk info --who-owns -- "$@"
+  apk info --who-owns "$@"
 }
 
 apk_Qs() {
-  apk info -- "*${*}*"
+  apk info "*${*}*"
 }
 
 apk_Qu() {
@@ -48,28 +43,23 @@ apk_Qu() {
 }
 
 apk_R() {
-  apk del -- "$@"
+  apk del "$@"
 }
 
 apk_Rn() {
-  apk del --purge -- "$@"
+  apk del --purge "$@"
 }
 
 apk_Rns() {
-  apk del --purge -r -- "$@"
+  apk del --purge -r "$@"
 }
 
 apk_Rs() {
-  apk del -r -- "$@"
+  apk del -r "$@"
 }
 
 apk_S() {
-  case ${_EOPT} in
-    # Download only
-    ("fetch") shift
-              apk fetch        -- "$@" ;;
-          (*) apk add   $_TOPT -- "$@" ;;
-  esac
+  apk add "$@"
 }
 
 apk_Sc() {
@@ -89,11 +79,11 @@ apk_Si() {
 }
 
 apk_Sii() {
-  apk info -r -- "$@"
+  apk info -r "$@"
 }
 
 apk_Sl() {
-  apk search -v -- "$@"
+  apk search -v "$@"
 }
 
 apk_Ss() {
@@ -106,7 +96,7 @@ apk_Su() {
 
 apk_Suy() {
   if [ "$#" -gt 0 ]; then
-    apk add -U -u -- "$@"
+    apk add -U -u "$@"
   else
     apk upgrade -U -a
   fi
@@ -117,9 +107,9 @@ apk_Sy() {
 }
 
 apk_Sw() {
-  apk fetch -- "$@"
+  apk "$@"
 }
 
 apk_U() {
-  apk add --allow-untrusted -- "$@"
+  apk add --allow-untrusted "$@"
 }
