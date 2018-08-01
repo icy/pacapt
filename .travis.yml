@@ -1,7 +1,5 @@
 sudo: required
-language:
-- bash
-- d
+language: d
 services:
 - docker
 script:
