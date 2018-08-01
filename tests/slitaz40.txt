@@ -35,10 +35,10 @@ ou ^busybox
 in ! echo Y | pacman -S htop
 ou htop.+ is installed.
 
-in ! echo Y | pacman -S --forced htop
-ou Unknown option
+# in ! echo Y | pacman -S --forced htop
+# ou Unknown option
 
-in ! echo Y | pacman -S -- --forced htop
+in ! echo Y | pacman -S --forced htop
 ou htop.+ is installed.
 
 # FIXME: Slitaz-4.0: test passed
