@@ -5,6 +5,13 @@
 
 For developers:
 
+* `Makefile`: When `VERSION` is not specified, the development script
+  (`pacapt.dev`) is generated. Otherwise, a stable script is made.
+* `dmain/`: The main development is now written in `DLang`.
+  Please try `make dtest` and `make dbuild` for details. The stable
+  core/main Bash script will be now legacy and they will generate warning
+  when being used. (Users should use the stable script on `ng` branch.)
+
 * Reduce shellcheck warning/error reports
 
 ## v2.3.15
