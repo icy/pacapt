@@ -107,7 +107,7 @@ auto issue2pacman() {
   }
 
   import std.process: executeShell;
-  auto brew = findCommand("brew");
+  auto brew = findCommand("brew", "");
   if (brew !is null) {
     debug stderr.writefln("(debug) Found homebrew in search path");
     pacman = "homebrew";
@@ -259,6 +259,7 @@ struct pacmanOptions {
       envs ~= "set -x\n";
     }
 
+    // FIXME: Should we have a libs/common.sh instead?
     if (! pass_through) {
       envs ~= "unset GREP_OPTIONS";
       envs ~= ": \"${GREP:=grep}\"";
@@ -434,7 +435,7 @@ struct pacmanOptions {
     }
 
     if (pacman == "pacman") {
-      "Passthrough mode enabled for 'pacman'".warning;
+      "Passthrough mode enabled for 'pacman'.".warning;
       pass_through = true;
     }
 
@@ -447,7 +448,7 @@ struct pacmanOptions {
     if (!pass_through) {
       auto const c_primaries = pQ + pR + pS + pU;
       if (c_primaries == 0) {
-        "Primary option not found. Passthrough mode enabled".warning;
+        "Primary option not found. Passthrough mode enabled.".warning;
         pass_through = true;
         result = true;
       } else if (c_primaries > 1) {
@@ -544,7 +545,8 @@ unittest {
   assert(p5.result && (p5.clean >= 3), "-Sccc (%d) bundling is working fine".format(p5.clean));
 
   auto p6 = pacmanOptions(["/usr/bin/pacapt-tazpkg", "-Suw"]);
-  assert(p6.result == false, "tarzpkg does not support -w.");
+  // FIXME: tazpkg doesn't support -w, but let us free now.
+  assert(p6.result == true, "tazpkg does not support -w.");
   assert(p6.pacman == "tazpkg", "Found correct pacman: tazpkg");
 
   auto p7 = pacmanOptions(["/usr/local/bin/pacapt-macports", "-Suwv"]);
@@ -578,13 +580,18 @@ auto translateWoption(in string pacman) {
     }
   }
 
+  // If we haven't found any translation, let's keep it as-is.
+  if (result.length == 0) {
+    result ~= "-w";
+  }
+
   return result;
 }
 
 unittest {
-  assert(translateWoption("tazpkg") == []);
+  assert(translateWoption("tazpkg") == ["-w"]);
   assert(translateWoption("pkgng") == ["fetch"]);
-  assert(translateWoption("foobar") == []);
+  assert(translateWoption("foobar") == ["-w"]);
 }
 
 // FIXME: Update environment DEBIAN_FRONTEND=noninteractive
@@ -608,11 +615,16 @@ auto translateNoConfirmOption(in string pacman) {
     }
   }
 
+  // FIXME: Unknown translation should keep them as-is.
+  if (result.length == 0) {
+    result ~= "--noconfirm";
+  }
+
   return result;
 }
 
 unittest {
-  assert(translateNoConfirmOption("foobar") == []);
+  assert(translateNoConfirmOption("foobar") == ["--noconfirm"]);
 }
 
 auto translateDebugOption(in string pacman, in string opt = "-v") {
@@ -640,12 +652,11 @@ unittest {
   auto src = pacmanLibs;
 }
 
-
-auto findCommand(in string shell = "bash") {
+auto findCommand(in string shell = "bash", in string opts = "-p") {
   import std.process: executeShell;
   import std.string: strip;
 
-  auto result = ("command -pv " ~ shell).executeShell;
+  auto result = ("command -v " ~ opts ~ " " ~ shell).executeShell;
   if (result.status == 0) {
     debug {
       import std.stdio, std.format;
