@@ -36,16 +36,14 @@ default:
 install.dev:
 	@VERSION= make $(BINDIR)/pacapt
 
-pacapt.dev:
-	@VERSION= make pacapt
-
 .PHONY: pacapt.check
 pacapt.check:
 	@test -n "${VERSION}" \
 		|| echo ":: Please specify VERSION to make stable version."
 	@echo ":: Your pacapt output is: $(OUTPUT)"
 
-$(OUTPUT): pacapt.check ./lib/*.sh ./lib/*.txt bin/compile.sh
+pacapt.dev: pacapt
+pacapt: pacapt.check ./lib/*.sh ./lib/*.txt bin/compile.sh
 	@./bin/compile.sh > $(OUTPUT).tmp || { rm -fv $(OUTPUT).tmp; exit 1; }
 	@mv -fv $(OUTPUT).tmp $(OUTPUT)
 	@bash -n $(OUTPUT)
