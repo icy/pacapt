@@ -325,7 +325,12 @@ struct pacmanOptions {
 
   auto showSupportedOps() {
     import std.stdio, std.format: format;
-    writefln("%s: Supported operations:\n%-(%s %)", pacman, supportedOps);
+    if (!pass_through) {
+      writefln("%s: Supported operations:\n%-(%s %)", pacman, supportedOps);
+    }
+    else {
+      "%s: Please see man 'pacman' for details.".format(pacman).warning;
+    }
   }
 
   auto executeScript(in string in_shell = null, in string script = null) {
