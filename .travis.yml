@@ -8,6 +8,7 @@ script:
 # lib{json,uri}-perl is required for `make shellcheck`
 - sudo apt-get install libjson-perl liburi-perl
 - make shellcheck
+- mkdir -pv output/
 - make tests
 
 notifications:
