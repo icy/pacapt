@@ -2,17 +2,21 @@ BINDIR=/usr/local/bin/
 DISTRO=debian:stable
 DEBUG=1
 
+ifeq ($(VERSION),)
+	OUTPUT = "pacapt.dev"
+else
+	OUTPUT = "pacapt"
+endif
+
 default:
 	@echo "This is an experimental Makefile. Use it at your own risk."
 	@echo ""
-	@echo "  pacapt.dev  : Generate development script."
-	@echo '  install.dev : Install development script into $$BINDIR.'
+	@echo '  install     : Install script into $$BINDIR.'
 	@echo "  pacapt      : Generate stable script."
-	@echo '  install     : Install stable script into $$BINDIR.'
 	@echo "  clean       : (Experimental) Remove git-ignored files."
 	@echo "  shellcheck  : Syntax and style checking. Use http://shellcheck.net/."
 	@echo "  docker.i    : Launch interactive Docker container which mounts."
-	@echo '                your local 'pacapt.dev' script to $$BINDIR/pacman.'
+	@echo '                your local 'pacapt[.dev]' script to $$BINDIR/pacman.'
 	@echo '                Please use DISTRO= to specify Docker image'
 	@echo "  tests       : Run all tests. Please read tests/README.md first."
 	@echo "                Use TESTS= to specify a package. Docker is required."
@@ -22,39 +26,34 @@ default:
 	@echo "Environments:"
 	@echo ""
 	@echo "  VERSION     : Version information. Default: git commit hash."
+	@echo "                (If specified, the stable script is generated.)"
 	@echo "  BINDIR      : Destination directory. Default: /usr/local/bin."
 	@echo "  DISTRO      : Container image. Default: debian:stable."
 
 # Build and install development script
 
-pacapt.dev: ./lib/*.sh ./lib/*.txt bin/compile.sh
-	@./bin/compile.sh > $(@) || { rm -fv $(@); exit 1; }
-	@bash -n $(@)
-	@chmod 755 $(@)
-	@echo 1>&2 "The output file is '$(@)' (unstable version)"
+pacapt.dev:
+	@VERSION= make pacapt
 
 .PHONY: install.dev
-install.dev: pacapt.dev
-	@if [ -e $(@) ] && ! file $(@) | grep -q 'script'; then \
-		echo >&2 "Makefile Will not overwrite non-script $(@)"; \
-		exit 1; \
-	else \
-		install -vm755 pacapt.dev $(BINDIR)/pacapt; \
-	fi
+install.dev:
+	@VERSION= make $(BINDIR)/pacapt
 
-# Build and install stable script
+pacapt.dev:
+	@VERSION= make pacapt
 
 .PHONY: pacapt.check
-
 pacapt.check:
-	@test -n "${VERSION}" || { echo ":: Please specify VERSION, i.e., make pacapt VERSION=1.2.3"; exit 1; }
+	@test -n "${VERSION}" \
+		|| echo ":: Please specify VERSION to make stable version."
+	@echo ":: Your pacapt output is: $(OUTPUT)"
 
 pacapt: pacapt.check ./lib/*.sh ./lib/*.txt bin/compile.sh
-	@./bin/compile.sh > $(@).tmp || { rm -fv $(@).tmp; exit 1; }
-	@mv -fv $(@).tmp $(@)
-	@bash -n $(@)
-	@chmod 755 $(@)
-	@echo 1>&2 "The output file is '$(@)' (stable version)"
+	@./bin/compile.sh > $(OUTPUT).tmp || { rm -fv $(OUTPUT).tmp; exit 1; }
+	@mv -fv $(OUTPUT).tmp $(OUTPUT)
+	@bash -n $(OUTPUT)
+	@chmod 755 $(OUTPUT)
+	@echo 1>&2 "The output file is '$(OUTPUT)'."
 
 .PHONY: install
 install: $(BINDIR)/pacapt
@@ -69,13 +68,17 @@ $(BINDIR)/pacapt: pacapt
 		echo >&2 "Makefile Will not overwrite non-script $(@)"; \
 		exit 1; \
 	else \
-		install -vm755 pacapt $(BINDIR)/pacapt; \
+		if [ "${VERSION}x" = "x" ]; then \
+			install -vm755 pacapt.dev $(BINDIR)/pacapt; \
+		else \
+			install -vm755 pacapt $(BINDIR)/pacapt; \
+		fi ; \
 	fi
 
 .PHONY: docker.i
 docker.i:
 	@docker run --rm -ti \
-    -v $(PWD)/pacapt.dev:$(BINDIR)/pacman \
+    -v $(PWD)/$(OUTPUT):$(BINDIR)/pacman \
     $(DISTRO) /bin/bash
 
 .PHONY: update_stats
@@ -103,12 +106,15 @@ clean:
 shellcheck:
 	@./bin/check.sh _check_files bin/*.sh lib/*.sh
 
+output/pacapt.libs: $(OUTPUT)
+	@PACAPT_LIBS_ONLY=yes ./bin/compile.sh > $(@)
+
 .PHONY: dtest
-dtest:
+dtest: output/pacapt.libs
 	@dub test --debug="$(DEBUG)" pacapt:main
 
 .PHONY: dbuild
-dbuild:
+dbuild:output/pacapt.libs
 	@dub build --debug="$(DEBUG)" pacapt:main
 
 .PHONY: tests
