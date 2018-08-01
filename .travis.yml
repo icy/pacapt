@@ -7,7 +7,6 @@ script:
 # lib{json,uri}-perl is required for `make shellcheck`
 - sudo apt-get install libjson-perl liburi-perl
 - make shellcheck
-- mkdir -pv output/
 #- curl -fsS https://dlang.org/install.sh | bash -s ldc
 #- source ~/dlang/ldc-*/activate
 - make tests

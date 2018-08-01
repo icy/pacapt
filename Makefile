@@ -103,14 +103,17 @@ shellcheck:
 	@./bin/check.sh _check_files bin/*.sh lib/*.sh
 
 output/pacapt.libs:: $(OUTPUT)
+	@mkdir -pv output/
 	@PACAPT_LIBS_ONLY=yes ./bin/compile.sh > $(@)
 
 .PHONY: dtest
 dtest: output/pacapt.libs
+	@mkdir -pv output/
 	@dub test --compiler=$(DC) --debug="$(DEBUG)" pacapt:main
 
 .PHONY: dbuild
 dbuild: output/pacapt.libs
+	@mkdir -pv output/
 	@DFLAGS="-static" \
 		dub build --compiler=$(DC) --debug="$(DEBUG)" pacapt:main
 
