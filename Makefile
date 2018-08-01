@@ -3,9 +3,9 @@ DISTRO=debian:stable
 DEBUG=1
 
 ifeq ($(VERSION),)
-	OUTPUT = "pacapt.dev"
+	OUTPUT = pacapt.dev
 else
-	OUTPUT = "pacapt"
+	OUTPUT = pacapt
 endif
 
 default:
