@@ -674,7 +674,9 @@ auto translateDebugOption(in string pacman, in string opt = "-v") {
   if (pacman == "tazpkg") {
     "Debug option (-v) is not supported by tazpkg".warning;
   }
-  else {
+  else if (pacman == "dpkg") {
+    "FIXME: -v option does not work for dpkg".warning;
+  } else {
     result ~= opt;
   }
   return result;
