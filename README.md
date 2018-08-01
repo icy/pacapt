@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/icy/pacapt.svg?branch=ng)](https://travis-ci.org/icy/pacapt)
+[![Build Status](https://travis-ci.org/icy/pacapt.svg?branch=nd)](https://travis-ci.org/icy/pacapt)
 
 ## Table of contents
 
