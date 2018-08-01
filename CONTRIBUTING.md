@@ -36,11 +36,9 @@ $ docker run --rm -ti \
 
 ## Generating `pacapt` script
 
-1. The `pacapt` script is generated from the latest stable branch,
-   it is there to make installation process simple;
-1. Please **do not** use `make pacapt` to update `pacapt`,
-   and/or modify it manually;
-1. For your development, use `make pacapt.dev`;
+Please use `make pacapt` to generate the development script.
+Make sure your variable `VERSION` is empty. Otherwise a stable work
+will be made.
 
 ## Branches
 
