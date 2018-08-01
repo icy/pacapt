@@ -357,7 +357,11 @@ struct pacmanOptions {
     import std.process: spawnProcess, wait;
     auto tmp_script = makeTempScript(my_script);
     auto pid = spawnProcess([shell, tmp_script]);
-    scope(exit) wait(pid);
+    scope(exit) {
+      wait(pid);
+      import std.file: remove;
+      tmp_script.remove;
+    }
   }
 
   unittest {
@@ -764,7 +768,7 @@ List of options:
 auto makeTempScript(in string script = "") {
   // https://stackoverflow.com/questions/6393774/obtaining-a-plain-char-from-a-string-in-d
   import core.sys.posix.stdlib: mkstemp;
-  import std.file: tempDir, write, remove;
+  import std.file: tempDir, write;
   import std.path: buildPath;
   import std.conv: to;
 
@@ -778,7 +782,6 @@ auto makeTempScript(in string script = "") {
 
   file_name.write(script);
   debug(2) { (":: Temp file " ~ file_name).warning; }
-  scope(exit) file_name.remove;
   return file_name;
 }
 
