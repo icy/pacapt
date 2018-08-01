@@ -214,6 +214,7 @@ struct pacmanOptions {
     quiet_mode = false,     /* -q */
     upgrades = false,       /* -u */
     refresh = false,        /* -y */
+    show_pacman = false,    /* ? */
     result = true
     ;
 
@@ -294,6 +295,10 @@ struct pacmanOptions {
     writeln("(unittest) //");
   }
 
+  auto makeScriptViaPacmanLibs(in string script) {
+    return pacmanLibs ~ "\n" ~ exportEnvs ~ "\n" ~ script;
+  }
+
   auto makeScript(in bool withLibs = false) {
     import std.format: format;
     auto cmds = "";
@@ -314,7 +319,16 @@ struct pacmanOptions {
     }
   }
 
-  auto executeScript(in string in_shell = null) {
+  auto showVersion() {
+    executeScript(null, makeScriptViaPacmanLibs("_print_pacapt_version"));
+  }
+
+  auto showSupportedOps() {
+    import std.stdio, std.format: format;
+    writefln("%s: Supported operations:\n%-(%s %)", pacman, supportedOps);
+  }
+
+  auto executeScript(in string in_shell = null, in string script = null) {
     string shell = in_shell.dup;
     if (shell is null) {
       if (in_shell !is null) {
@@ -326,10 +340,17 @@ struct pacmanOptions {
       "Unable to find Bash or Sh shell".error;
     }
 
-    auto script = (pass_through ? makePassthroughScript : makeScript(true));
+    string my_script;
+
+    if (script is null) {
+      my_script = (pass_through ? makePassthroughScript : makeScript(true));
+    }
+    else {
+      my_script = script;
+    }
     import std.process: pipeProcess, Redirect, wait;
     auto pipes = pipeProcess([shell, "-s"], Redirect.stdin);
-    pipes.stdin.writeln(script);
+    pipes.stdin.writeln(my_script);
     pipes.stdin.flush;
     pipes.stdin.close();
     wait(pipes.pid);
@@ -424,6 +445,7 @@ struct pacmanOptions {
       "noconfirm", "Assume yes to all questions", &no_confirm,
       "no-confirm", "Assume yes to all questions", &no_confirm,
       "clean|c+", "Clean packages.", &clean,
+      "?", "Show the current package manager.", &show_pacman,
     );
 
     args0 = args[0..1];
@@ -434,18 +456,20 @@ struct pacmanOptions {
       pacman = issue2pacman;
     }
 
-    if (pacman == "pacman") {
+    if (pacman == "pacman" && !show_pacman) {
       "Passthrough mode enabled for 'pacman'.".warning;
       pass_through = true;
     }
 
     if (getopt_results.helpWanted) {
       help_wanted = true;
-      defaultGetoptPrinter("List of options:", getopt_results.options);
+      // NOTE: This is useful to capture the help message
+      // to our custom show_help method.
+      debug defaultGetoptPrinter("List of options:", getopt_results.options);
       result = false;
     }
 
-    if (!pass_through) {
+    if (!pass_through && !show_pacman) {
       auto const c_primaries = pQ + pR + pS + pU;
       if (c_primaries == 0) {
         "Primary option not found. Passthrough mode enabled.".warning;
@@ -511,6 +535,19 @@ struct pacmanOptions {
         argsOrigin,
       );
     }
+  }
+
+  auto supportedOps() {
+    import std.stdio;
+    import std.regex;
+    auto r = regex("^" ~ pacman ~ "_[^ \\t]+\\(\\)", "m");
+    string[] ops = [];
+    foreach (c; matchAll(pacmanLibs, r)) {
+      auto item = c.hit.replaceAll(("^" ~ pacman ~ "_").regex, "")
+                  .replaceAll(r"\(\).*".regex, "");
+      ops ~= item;
+    }
+    return ops;
   }
 }
 
@@ -684,4 +721,40 @@ unittest {
 
   auto any_shell = findCommand("non-existent") || findCommand("sh");
   assert(any_shell, "Should found a good shell for us");
+}
+
+void show_help() {
+    import std.stdio;
+    writefln(
+"Welcome to pacapt.
+
+List of options:
+   -?                 Show the current package manager.
+   -P                 Print list of supported options
+   -h          --help This help information.
+   -V                 Show pacapt version.
+
+  -Q+         --query Query
+  -R+        --remove Remove
+  -S+          --sync Sync
+  -U+       --upgrade Upgrade
+
+  -s+        --search Search
+         --recursive+ Recursive option used with --remove. Short version: -s
+  -l+          --list listing option
+  -i+          --info
+  -p+          --file
+  -o+          --owns
+  -m+       --foreign
+   -n        --nosave
+   -v       --verbose Be verbose
+   -w --download-only Download without installing
+
+   -q         --quiet Be quiet in some operation
+   -u      --upgrades
+   -y       --refresh Refresh local package database
+          --noconfirm Assume yes to all questions
+         --no-confirm Assume yes to all questions
+  -c+         --clean Clean packages."
+  );
 }

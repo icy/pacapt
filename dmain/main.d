@@ -11,7 +11,23 @@ public import pacapt.internals;
 void main(string[] args) {
   auto opts = pacmanOptions(args);
 
+  if (opts.show_pacman) {
+    writeln(opts.pacman);
+    return;
+  }
+
   if (opts.help_wanted) {
+    show_help;
+    return;
+  }
+
+  if (opts.show_version) {
+    opts.showVersion;
+    return;
+  }
+
+  if (opts.list_ops) {
+    opts.showSupportedOps;
     return;
   }
 
