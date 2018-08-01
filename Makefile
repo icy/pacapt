@@ -61,16 +61,12 @@ $(BINDIR)/pacman:
 		ln -vs $(BINDIR)/pacapt $(@); \
 	fi
 
-$(BINDIR)/pacapt: pacapt
+$(BINDIR)/pacapt: $(OUTPUT)
 	@if [ -e $(@) ] && ! file $(@) | grep -q 'script'; then \
 		echo >&2 "Makefile Will not overwrite non-script $(@)"; \
 		exit 1; \
 	else \
-		if [ "${VERSION}x" = "x" ]; then \
-			install -vm755 pacapt.dev $(BINDIR)/pacapt; \
-		else \
-			install -vm755 pacapt $(BINDIR)/pacapt; \
-		fi ; \
+		install -vm755 $(OUTPUT) $(BINDIR)/pacapt; \
 	fi
 
 .PHONY: docker.i
