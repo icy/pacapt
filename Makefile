@@ -103,7 +103,7 @@ clean:
 shellcheck:
 	@./bin/check.sh _check_files bin/*.sh lib/*.sh
 
-output/pacapt.libs: $(OUTPUT)
+output/pacapt.libs:: $(OUTPUT)
 	@PACAPT_LIBS_ONLY=yes ./bin/compile.sh > $(@)
 
 .PHONY: dtest
