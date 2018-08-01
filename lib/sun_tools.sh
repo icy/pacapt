@@ -16,7 +16,7 @@
 _sun_tools_init() {
   # The purpose of `if` is to make sure this function
   # can be invoked on other system (Linux, BSD).
-  if [[ "$(uname)" == "SunOS" ]]; then
+  if [ "`uname`" = "SunOS" ]; then
     export GREP=/usr/xpg4/bin/grep
     export AWK=nawk
   fi

@@ -17,25 +17,29 @@ _dpkg_init() {
   :
 }
 
-# dpkg_Q may _not_implemented
+dpkg_Qq() {
+  dpkg -l \
+  | grep -E '^[hi]i' \
+  | awk '{print $2}'
+}
+
 dpkg_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
-    dpkg -l \
-    | grep -E '^[hi]i' \
-    | awk '{print $2}'
-  elif [[ "$_TOPT" == "" ]]; then
-    dpkg -l "$@" \
-    | grep -E '^[hi]i'
-  else
-    _not_implemented
-  fi
+  dpkg -l "$@" \
+  | grep -E '^[hi]i'
 }
 
 dpkg_Qi() {
   dpkg-query -s "$@"
 }
 
+dpkg_Qlq() {
+  : "${QUIET_MODE:=1}"
+  dpkg_Ql "$@"
+}
+
 dpkg_Ql() {
+  : "${QUIET_MODE:=0}"
+
   if [[ -n "$*" ]]; then
     dpkg-query -L "$@"
     return
@@ -45,7 +49,7 @@ dpkg_Ql() {
   | grep -E '^[hi]i' \
   | awk '{print $2}' \
   | while read -r _pkg; do
-      if [[ "$_TOPT" == "q" ]]; then
+      if [ "${QUIET_MODE}" = 1 ]; then
         dpkg-query -L "$_pkg"
       else
         dpkg-query -L "$_pkg" \
@@ -78,13 +82,8 @@ dpkg_Qs() {
   | grep -Ei "${@:-.}"
 }
 
-# dpkg_Rs may _not_implemented
 dpkg_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
-    apt-get autoremove "$@"
-  else
-    _not_implemented
-  fi
+  apt-get autoremove "$@"
 }
 
 dpkg_Rn() {
@@ -113,11 +112,9 @@ dpkg_Su() {
 }
 
 # See also https://github.com/icy/pacapt/pull/78
-# This `-w` option is implemented in `00_core/_translate_w`
-#
-# dpkg_Sw() {
-#   apt-get --download-only install "$@"
-# }
+dpkg_Sw() {
+  apt-get install "$@"
+}
 
 # FIXME: Should we remove "$@"?
 dpkg_Sy() {
@@ -137,7 +134,7 @@ dpkg_Scc() {
 }
 
 dpkg_S() {
-  apt-get install $_TOPT "$@"
+  apt-get install "$@"
 }
 
 dpkg_U() {

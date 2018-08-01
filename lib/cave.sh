@@ -38,6 +38,8 @@ cave_Qlq() {
 }
 
 cave_Ql() {
+  : "${QUIET_MODE:=0}"
+
   if [[ -n "$*" ]]; then
     cave contents "$@"
     return
