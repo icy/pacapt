@@ -40,7 +40,7 @@ _test() {
     (
       cd tmp/ || return 1
       docker run --rm \
-        -v $PWD/pacapt.dev:/usr/bin/pacman \
+        -v $PWD/pacapt:/usr/bin/pacman \
         -v "$PWD/$_basename.sh:/tmp/test.sh" \
         $_img \
         /tmp/test.sh 2>"$_basename.${_img//\//-}.log"

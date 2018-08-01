@@ -112,5 +112,5 @@ dbuild:output/pacapt.libs
 	@dub build --debug="$(DEBUG)" pacapt:main
 
 .PHONY: tests
-tests:
+tests: dtest
 	@cd tests/ && make all

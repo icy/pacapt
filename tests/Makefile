@@ -5,11 +5,11 @@ default:
 	@grep -E "^# [a-z].+:" Makefile
 
 # gen:
-# gen: Generating `pacapt.dev`
-tmp/pacapt.dev::
-	@( cd ../ && make -s pacapt.dev ; )
+# gen: Generating `pacapt`
+tmp/pacapt::
+	@( cd ../ && VERSION= DEBUG=2 make -s dbuild; )
 	@mkdir -p ./tmp/
-	@cp -u ../pacapt.dev tmp/
+	@cp -u ../output/pacapt tmp/
 	@chmod 755 $(@)
 
 # all:
@@ -17,13 +17,13 @@ tmp/pacapt.dev::
 # all: To execute a subset of tests, list them with TESTS=...
 # all: for example, `make all TESTS="foo.txt bar.txt"
 .PHONY: all
-all: tmp/pacapt.dev
+all: tmp/pacapt
 	@./test.sh $(TESTS)
 
 # gen:
 # gen: Generate test scripts but don't execute them
 .PHONY: gen
-gen: tmp/pacapt.dev
+gen: tmp/pacapt
 	@TESTS_DO_NOT_RUN=1 ./test.sh *.txt
 
 # clean:
@@ -31,5 +31,5 @@ gen: tmp/pacapt.dev
 # clean: (but still keep all log files.)
 .PHONY: clean
 clean:
-	@rm -fv tmp/*.sh tmp/pacapt.dev
+	@rm -fv tmp/*.sh tmp/pacapt
 	@echo Please remove tmp/*.log manually.
