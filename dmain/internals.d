@@ -490,19 +490,16 @@ struct pacmanOptions {
     if (download_only) {
       auto tx_download_only = translateWoption(pacman);
       args0 ~= tx_download_only;
-      result &= (tx_download_only.length > 0);
     }
 
     if (verbose) {
       auto tx_verbose = translateDebugOption(pacman);
       args0 ~= tx_verbose;
-      result &= (tx_verbose.length > 0);
     }
 
     if (no_confirm) {
       auto tx_no_confirm = translateNoConfirmOption(pacman);
       args0 ~= tx_no_confirm;
-      result &= (tx_no_confirm.length > 0);
     }
 
     debug(2) {
