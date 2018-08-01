@@ -563,10 +563,10 @@ unittest {
   auto p1 = pacmanOptions(["pacman-foobar", "-R", "-U"]);
   assert(! p1.result, "Multiple primary action -RU is rejected.");
 
-  auto p2 = pacmanOptions(["pacman", "-i", "-s"]);
+  auto p2 = pacmanOptions(["pacman-pacman", "-i", "-s"]);
   assert(p2.result && p2.pass_through, "Passthrough mode should enabled.");
 
-  auto p22 = pacmanOptions(["pacman", "-RR", "-Rs"]);
+  auto p22 = pacmanOptions(["pacman-pacman", "-RR", "-Rs"]);
   assert(p22.result && p22.pass_through, "Passthrough mode should enabled.");
 
   auto primary_actions = ["R", "S", "Q", "U"];
@@ -579,7 +579,6 @@ unittest {
 
   auto p3 = pacmanOptions(["/usr/bin/pacman", "-R", "-s", "-h"]);
   assert(! p3.result, "Help query should return false");
-  assert(p3.pacman == "pacman", "Found pacman package manager.");
 
   auto p4 = pacmanOptions(["pacman", "-R", "--", "-R"]);
   assert(p4.result, "Termination (--) is working fine.");
