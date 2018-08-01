@@ -32,9 +32,6 @@ default:
 
 # Build and install development script
 
-pacapt.dev:
-	@VERSION= make pacapt
-
 .PHONY: install.dev
 install.dev:
 	@VERSION= make $(BINDIR)/pacapt
@@ -48,7 +45,7 @@ pacapt.check:
 		|| echo ":: Please specify VERSION to make stable version."
 	@echo ":: Your pacapt output is: $(OUTPUT)"
 
-pacapt: pacapt.check ./lib/*.sh ./lib/*.txt bin/compile.sh
+$(OUTPUT): pacapt.check ./lib/*.sh ./lib/*.txt bin/compile.sh
 	@./bin/compile.sh > $(OUTPUT).tmp || { rm -fv $(OUTPUT).tmp; exit 1; }
 	@mv -fv $(OUTPUT).tmp $(OUTPUT)
 	@bash -n $(OUTPUT)
