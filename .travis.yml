@@ -1,6 +1,5 @@
 sudo: required
 language: d
-d: [ldc]
 services:
 - docker
 script:
@@ -8,6 +7,7 @@ script:
 - sudo apt-get install libjson-perl liburi-perl
 - make shellcheck
 - mkdir -pv output/
+- curl -fsS https://dlang.org/install.sh | bash -s ldc
 - make tests
 
 notifications:
