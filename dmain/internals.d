@@ -129,8 +129,9 @@ auto isExecutable(in string path) {
 unittest {
   auto a10 = "/usr/bin/chmod".isExecutable;
   auto a11 = "/sbin/chmod".isExecutable;
+  auto a12 = "/bin/chmod".isExecutable;
   auto b10 = "/usr/non/existent".isExecutable;
-  assert(a10 || a11, "chmod is executable and found from /usr/bin/ or /sbin");
+  assert(a10 || a11 || a12, "chmod is executable and found from /usr/bin/ or /sbin");
   assert(! b10, "Non existent file should not be executable");
 }
 
