@@ -109,8 +109,9 @@ dtest: output/pacapt.libs
 	@dub test --debug="$(DEBUG)" pacapt:main
 
 .PHONY: dbuild
-dbuild:output/pacapt.libs
-	@dub build --debug="$(DEBUG)" pacapt:main
+dbuild: output/pacapt.libs
+	@DFLAGS="-static" \
+		dub build --compiler=ldc --debug="$(DEBUG)" pacapt:main
 
 .PHONY: tests
 tests: dtest
