@@ -1,6 +1,7 @@
 BINDIR=/usr/local/bin/
 DISTRO=debian:stable
 DEBUG=1
+DC=ldc2
 
 ifeq ($(VERSION),)
 	OUTPUT = pacapt.dev
@@ -111,7 +112,7 @@ dtest: output/pacapt.libs
 .PHONY: dbuild
 dbuild: output/pacapt.libs
 	@DFLAGS="-static" \
-		dub build --compiler=ldc --debug="$(DEBUG)" pacapt:main
+		dub build --compiler=$(DC) --debug="$(DEBUG)" pacapt:main
 
 .PHONY: tests
 tests: dtest
