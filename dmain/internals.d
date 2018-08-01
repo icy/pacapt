@@ -354,12 +354,10 @@ struct pacmanOptions {
     else {
       my_script = script;
     }
-    import std.process: pipeProcess, Redirect, wait;
-    auto pipes = pipeProcess([shell, "-s"], Redirect.stdin);
-    pipes.stdin.writeln(my_script);
-    pipes.stdin.flush;
-    pipes.stdin.close();
-    wait(pipes.pid);
+    import std.process: spawnProcess, wait;
+    auto tmp_script = makeTempScript(my_script);
+    auto pid = spawnProcess([shell, tmp_script]);
+    scope(exit) wait(pid);
   }
 
   unittest {
@@ -761,4 +759,29 @@ List of options:
          --no-confirm Assume yes to all questions
   -c+         --clean Clean packages."
   );
+}
+
+auto makeTempScript(in string script = "") {
+  // https://stackoverflow.com/questions/6393774/obtaining-a-plain-char-from-a-string-in-d
+  import core.sys.posix.stdlib: mkstemp;
+  import std.file: tempDir, write, remove;
+  import std.path: buildPath;
+  import std.conv: to;
+
+  auto str = tempDir.buildPath("pacapt-XXXXXX");
+  auto cstring = new char[](str.length + 1);
+  cstring[0 .. str.length] = str[];
+  cstring[$ - 1] = '\0';
+
+  auto file_tmp = mkstemp(cstring.ptr);
+  auto file_name = to!string(cstring);
+
+  file_name.write(script);
+  debug(2) { (":: Temp file " ~ file_name).warning; }
+  scope(exit) file_name.remove;
+  return file_name;
+}
+
+unittest {
+  // makeTempScript("Testing\n");
 }
