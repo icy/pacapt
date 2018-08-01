@@ -1,6 +1,6 @@
 sudo: required
 language: d
-d: [dmd, ldc]
+d: [ldc]
 services:
 - docker
 script:

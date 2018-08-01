@@ -106,7 +106,7 @@ output/pacapt.libs:: $(OUTPUT)
 
 .PHONY: dtest
 dtest: output/pacapt.libs
-	@dub test --debug="$(DEBUG)" pacapt:main
+	@dub test --compiler=ldc --debug="$(DEBUG)" pacapt:main
 
 .PHONY: dbuild
 dbuild: output/pacapt.libs
