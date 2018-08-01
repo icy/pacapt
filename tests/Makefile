@@ -7,7 +7,8 @@ default:
 # gen:
 # gen: Generating `pacapt`
 tmp/pacapt::
-	@( cd ../ && VERSION= DEBUG=2 make -s dbuild; )
+	# FIXME: DEBUG !is empty will generate strange output and `grep` may fail.
+	@( cd ../ && make dbuild VERSION= DEBUG=0 ; )
 	@mkdir -p ./tmp/
 	@cp -u ../output/pacapt tmp/
 	@chmod 755 $(@)

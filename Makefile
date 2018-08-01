@@ -94,6 +94,7 @@ clean:
 			*) exit 1;; \
 		esac ; \
 	fi
+	@rm -fv output/* || true;
 	@cd tests/ && make -s clean
 
 .PHONY: shellcheck
