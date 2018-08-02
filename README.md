@@ -112,22 +112,23 @@ A short description can be found at
 ## Implemented operations
 
 ```
-           Q Qc Qi Qk Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Si Sii Sl Ss Su Suy Sw Sy U
-      apk  ~     *     *     *     *  * *  *   *  * *  *   *    *  *   *  *  *  *   *  *  * *
-     cave  *     *     *     *  *  *  * *  *   *  * *  *   *    x  *         *  *   *     * x
-      dnf  ~  *  *     *  *  *  *  *  * *           *  *   *    *  *      *  *  *   *  *  * *
-     dpkg  ~     *     *     *  *  *  * *  *   *  ~ *  *   *    *  *   *     *  *   *     * *
- homebrew  ~  *  *     *     *     *  * *         * *  *   *    *  *         *  *   *     *
- macports     *        *     *        * *         ~ *  *   *       *         *  *   *     *
-    pkgng  *     *     *     *  *     * *         * *  *   *       *         *  *   *     *
-pkg_tools  ~     *     *     *  *     * *  *   *  ~ *  *   x       *      *  ~  *   *     x
-  portage  *  *  *     *     *        * *         * *  *   *    *  *         *  *   *     *
-sun_tools  *     *     *     *     *    *                                                   *
-    swupd           *        *     *    *           *                        *  *   *     *
-   tazpkg  *     *     *     *          *           *  *   *                 *  *   *     * *
-    tlmgr        *  *              *    *           *              *         *      *       *
-      yum  *  *  *     *  *  *  *  *  * *         * *  *   *    *  *   *     *  *   *     * *
-   zypper  *  *  *     *  *  *  *  *  * *  *   *  * *  *   *    *  *   *  *  *  *   *  *  * *
+           Q Qc Qi Qk Ql Qlq Qm Qo Qp Qq Qql Qs Qu R Rn Rns Rs Ru S Sc Scc Sccc Si Sii Sl Ss Su Suy Sw Sy U
+      apk  *     *     *         *            *  * *  *   *  *    *  *   *    *  *   *  *  *  *   *  *  * *
+     cave  *     *     *   *     *  *  *      *  * *  *   *  *  * *  *   *    x  *         *  *   *     * x
+      dnf  ~  *  *     *      *  *  *         *  * *              *  *   *    *  *      *  *  *   *  *  * *
+     dpkg  *     *     *   *     *  *  *      *  * *  *   *  *    *  *   *    *  *   *     *  *   *  *  * *
+      gem  *                                                                                               
+ homebrew  ~  *  *     *         *            *  * *         *    *  *   *    *  *         *  *   *     *  
+ macports     *        *         *               * *         ~    *  *   *       *         *  *   *     *  
+    pkgng  *     *     *         *  *            * *         *    *  *   *       *         *  *   *     *  
+pkg_tools  ~     *     *         *  *            * *  *   *  ~    *  *   x       *      *  ~  *   *     x  
+  portage  *  *  *     *         *               * *         *    *  *   *    *  *         *  *   *     *  
+sun_tools  *     *     *         *            *    *                                                      *
+    swupd           *            *            *    *              *                        *  *   *     *  
+   tazpkg  *     *     *         *     *   *       *              *  *   *                 *  *   *     * *
+    tlmgr        *  *                         *    *              *              *         *      *       *
+      yum  *  *  *     *      *  *  *         *  * *         *    *  *   *    *  *   *     *  *   *     * *
+   zypper  *  *  *     *      *  *  *         *  * *  *   *  *    *  *   *    *  *   *  *  *  *   *  *  * *
 ```
 
 **Notes:**
