@@ -35,19 +35,21 @@ sun_tools_Qo() {
 }
 
 sun_tools_Qs() {
-  pkginfo | $GREP -i "$@"
+  pkginfo | "$GREP" -i "$@"
+}
+
+sun_tools_Qq() {
+  # the dash after the pkg name is so we don't catch partial matches
+  # because all packages in openbsd have the format 'pkgname-pkgver'
+  if [[ ! -z "$*" ]]; then
+    pkginfo | "$GREP" "$@"
+  elif [[ -z "$*" ]]; then
+    pkginfo
+  fi
 }
 
 sun_tools_Q() {
-  # the dash after the pkg name is so we don't catch partial matches
-  # because all packages in openbsd have the format 'pkgname-pkgver'
-  if [[ "$_TOPT" == "q" && ! -z "$*" ]]; then
-    pkginfo | $GREP "$@"
-  elif [[ "$_TOPT" == "q" && -z "$*" ]]; then
-    pkginfo
-  else
-    pkginfo "$@"
-  fi
+  pkginfo "$@"
 }
 
 sun_tools_R() {

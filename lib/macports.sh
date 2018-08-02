@@ -33,13 +33,8 @@ macports_Qu() {
   port outdated "$@"
 }
 
-# macports_Rs may _not_implemented
 macports_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
-    port uninstall --follow-dependencies "$@"
-  else
-    _not_implemented
-  fi
+  port uninstall --follow-dependencies "$@"
 }
 
 macports_R() {
@@ -77,9 +72,10 @@ macports_Scc() {
 }
 
 macports_S() {
-  if [[ "$_TOPT" == "fetch" ]]; then
-    port patch "$@"
-  else
-    port install "$@"
-  fi
+  port install "$@"
+}
+
+macports_Sw() {
+  shift; # Remove `fetch`
+  port patch "$@"
 }

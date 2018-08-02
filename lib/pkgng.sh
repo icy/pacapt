@@ -42,23 +42,17 @@ pkgng_Qu() {
   pkg upgrade -n "$@"
 }
 
+pkgng_Qq() {
+  pkg query '%n' "$@"
+}
+
 pkgng_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
-    pkg query '%n' "$@"
-  elif [[ "$_TOPT" == "" ]]; then
-    pkg query '%n %v' "$@"
-  else
-    _not_implemented
-  fi
+  pkg query '%n %v' "$@"
 }
 
 pkgng_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
-    pkg remove "$@"
-    pkg autoremove
-  else
-    _not_implemented
-  fi
+  pkg remove "$@"
+  pkg autoremove
 }
 
 pkgng_R() {
@@ -93,10 +87,11 @@ pkgng_Scc() {
   pkg clean -a "$@"
 }
 
-pkgng_S() {
-  if [[ "$_TOPT" == "fetch" ]]; then
-    pkg fetch "$@"
-  else
-    pkg install "$@"
-  fi
+pkgng_Sw() {
+  # NOTE: $1 is always a fetch
+  pkg "$@"
+}
+
+pkgng_Q() {
+  pkg install "$@"
 }

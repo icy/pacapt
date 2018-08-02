@@ -55,29 +55,20 @@ homebrew_Qs() {
   brew list | grep "$@"
 }
 
-# homebrew_Q may _not_implemented
 homebrew_Q() {
-  if [[ "$_TOPT" == "" ]]; then
-    if [[ "$*" == "" ]]; then
-      brew list
-    else
-      brew list | grep "$@"
-    fi
+  if [[ "$*" == "" ]]; then
+    brew list
   else
-    _not_implemented
+    brew list | grep "$@"
   fi
 }
 
 # FIXME: make sure "join" does exit
 # FIXME: Add quoting support, be cause "join" can fail
-# homebew_Rs may _not_implemented
-homebrew_Rs() {
-  if [[ "$_TOPT" == "s" ]]; then
-    brew rm "$@"
-    brew rm $(join <(brew leaves) <(brew deps "$@"))
-  else
-    _not_implemented
-  fi
+# FIXME: Former method is _Rs
+homebrew_Rss() {
+  brew rm "$@"
+  brew rm $(join <(brew leaves) <(brew deps "$@"))
 }
 
 homebrew_R() {
@@ -135,5 +126,5 @@ homebrew_Sccc() {
 }
 
 homebrew_S() {
-  brew install $_TOPT "$@"
+  brew install "$@"
 }

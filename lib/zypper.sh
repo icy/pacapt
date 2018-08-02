@@ -50,24 +50,18 @@ zypper_Qs() {
   zypper search --installed-only "$@"
 }
 
+zypper_Qq() {
+  zypper search -i "$@" \
+  | grep ^i \
+  | awk '{print $3}'
+}
+
 zypper_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
-    zypper search -i "$@" \
-    | grep ^i \
-    | awk '{print $3}'
-  elif [[ "$_TOPT" == "" ]]; then
-    zypper search -i "$@"
-  else
-    _not_implemented
-  fi
+  zypper search -i "$@"
 }
 
 zypper_Rs() {
-  if [[ "$_TOPT" == "s" ]]; then
-    zypper remove "$@" --clean-deps
-  else
-    _not_implemented
-  fi
+  zypper remove "$@" --clean-deps
 }
 
 zypper_R() {
@@ -86,12 +80,8 @@ zypper_Rn() {
   zypper remove "$@"
 }
 
-zypper_Rs() {
-  if [[ "$_TOPT" == "s" ]]; then
-    zypper remove "$@" --clean-deps
-  else
-    _not_implemented
-  fi
+zypper_Rss() {
+  zypper remove "$@" --clean-deps
 }
 
 zypper_Rns() {
@@ -158,7 +148,7 @@ zypper_Sii() {
 }
 
 zypper_S() {
-  zypper install $_TOPT "$@"
+  zypper install "$@"
 }
 
 zypper_Sw() {

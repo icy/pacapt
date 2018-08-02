@@ -9,9 +9,9 @@ _gem_init() {
 }
 
 gem_Qq() {
-  gem list | awk '{print $1}'
+  gem list --local | awk '{print $1}'
 }
 
 gem_Q() {
-  gem list
+  gem list --local
 }

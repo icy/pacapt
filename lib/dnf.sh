@@ -18,7 +18,7 @@ _dnf_init() {
 }
 
 dnf_S() {
-  dnf install $_TOPT "$@"
+  dnf install "$@"
 }
 
 dnf_Suy() {
@@ -58,18 +58,16 @@ dnf_Su() {
 }
 
 dnf_Sy() {
-  dnf clean expire-cache && dnf check-update
+  dnf clean expire-cache \
+  && dnf check-update
 }
 
-# dnf_Q may _not_implemented
+dnf_Qq() {
+  rpm -qa --qf "%{NAME}\\n"
+}
+
 dnf_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
-    rpm -qa --qf "%{NAME}\\n"
-  elif [[ "$_TOPT" == "" ]]; then
-    rpm -qa --qf "%{NAME} %{VERSION}\\n"
-  else
-    _not_implemented
-  fi
+  rpm -qa --qf "%{NAME} %{VERSION}\\n"
 }
 
 dnf_Qi() {

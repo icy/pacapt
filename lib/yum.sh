@@ -17,14 +17,12 @@ _yum_init() {
   :
 }
 
+yum_Qq() {
+  rpm -qa --qf "%{NAME}\\n"
+}
+
 yum_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
-    rpm -qa --qf "%{NAME}\\n"
-  elif [[ "$_TOPT" == "" ]]; then
-    rpm -qa --qf "%{NAME} %{VERSION}\\n"
-  else
-    _not_implemented
-  fi
+  rpm -qa --qf "%{NAME} %{VERSION}\\n"
 }
 
 yum_Qi() {
@@ -60,11 +58,7 @@ yum_Qm() {
 }
 
 yum_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
-    yum erase "$@"
-  else
-    _not_implemented
-  fi
+  yum erase "$@"
 }
 
 yum_R() {
@@ -104,7 +98,7 @@ yum_Sccc() {
 }
 
 yum_S() {
-  yum install $_TOPT "$@"
+  yum install "$@"
 }
 
 yum_U() {

@@ -42,45 +42,32 @@ pkg_tools_Qu() {
   pkg_add -u "$@"
 }
 
-# pkg_tools_Q may _not_implemented
-pkg_tools_Q() {
+pkg_tools_Qq() {
   export PKG_PATH=
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
-  if [[ "$_TOPT" == "q" && ! -z "$*" ]]; then
+  if [[ ! -z "$*" ]]; then
     pkg_info -q | grep "^${*}-"
-  elif [[ "$_TOPT" == "q" && -z "$*" ]];then
+  else
     pkg_info -q
-  elif [[ "$_TOPT" == "" && ! -z "$*" ]]; then
+  fi
+}
+
+pkg_tools_Q() {
+  if [[ ! -z "$*" ]]; then
+    # FIXME: Maybe sth wrong with `grep`
     pkg_info | grep "^${*}-"
-  elif [[ "$_TOPT" == "" && -z "$*" ]];then
+  else
     pkg_info
-  else
-    _not_implemented
   fi
 }
 
-# pkg_tools_Rs may _not_implemented
 pkg_tools_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
-    pkg_delete -D dependencies "$@"
-  else
-    _not_implemented
-  fi
+  pkg_delete -D dependencies "$@"
 }
 
-# pkg_tools_rn may _not_implemented
 pkg_tools_Rn() {
-  if [[ "$_TOPT" == "" ]];then
-    pkg_delete -c "$@"
-  else
-    _not_implemented
-  fi
-}
-
-# pkg_tools_rns _not_implemented
-pkg_tools_Rns() {
-  _not_implemented
+  pkg_delete -c "$@"
 }
 
 pkg_tools_R() {
@@ -108,34 +95,19 @@ pkg_tools_Su() {
   pkg_add -u "$@"
 }
 
-# pkg_tools_Sy _not_implemented
-pkg_tools_Sy() {
-  _not_implemented
-}
-
-# pkg_tools_Ss may _not_implemented
 pkg_tools_Ss() {
-  if [[ -z "$*" ]];then
-    _not_implemented
-  else
-    pkg_info -Q "$@"
-  fi
+  pkg_info -Q "$@"
 }
 
 pkg_tools_Sc() {
   # by default no cache directory is used
-  if [[ -z "$PKG_CACHE" ]];then
+  if [[ -z "${PKG_CACHE}" ]];then
     echo "You have no cache directory set, set \$PKG_CACHE for a cache directory."
   elif [[ ! -d "$PKG_CACHE" ]];then
     echo "You have a cache directory set, but it does not exist. Create \"$PKG_CACHE\"."
   else
     _removing_is_dangerous "rm -rf $PKG_CACHE/*"
   fi
-}
-
-# pkg_tools_Scc _not_implemented
-pkg_tools_Scc() {
-  _not_implemented
 }
 
 pkg_tools_S() {

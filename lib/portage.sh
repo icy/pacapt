@@ -49,26 +49,18 @@ portage_Qu() {
 }
 
 portage_Q() {
-  if [[ "$_TOPT" == "" ]]; then
-    if [[ -x '/usr/bin/eix' ]]; then
-      eix -I "$@"
-    elif [[ -x '/usr/bin/equery' ]]; then
-      equery list -i "$@"
-    else
-      LS_COLORS=never \
-      ls -1 -d /var/db/pkg/*/*
-    fi
+  if [[ -x '/usr/bin/eix' ]]; then
+    eix -I "$@"
+  elif [[ -x '/usr/bin/equery' ]]; then
+    equery list -i "$@"
   else
-    _not_implemented
+    LS_COLORS=never \
+    ls -1 -d /var/db/pkg/*/*
   fi
 }
 
 portage_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
-    emerge --depclean world "$@"
-  else
-    _not_implemented
-  fi
+  emerge --depclean world "$@"
 }
 
 portage_R() {
