@@ -114,7 +114,7 @@ A short description can be found at
 ```
            Q Qc Qi Qk Ql Qlq Qm Qo Qp Qq Qql Qs Qu R Rn Rns Rs Rss Ru S Sc Scc Sccc Si Sii Sl Ss Su Suy Sw Sy U
       apk  *     *     *         *            *  * *  *   *  *        *  *   *    *  *   *  *  *  *   *  *  * *
-     cave  *     *     *   *     *  *  *      *  * *  *   *  *      * *  *   *    x  *         *  *   *     * x
+     cave  *     *     *   *     *     *      *  * *         *      * *  *   *       *         *  *   *     *  
       dnf  *  *  *     *      *  *  *  *      *  * *                  *  *   *    *  *      *  *  *   *  *  * *
      dpkg  *     *     *   *     *  *  *      *  * *  *   *  *        *  *   *    *  *   *     *  *   *  *  * *
       gem  *                           *                                                                       

@@ -60,10 +60,6 @@ cave_Qo() {
   cave owner "$@"
 }
 
-cave_Qp() {
-  _not_implemented
-}
-
 cave_Qu() {
   if [[ -z "$*" ]];then
     cave resolve -c world \
@@ -97,14 +93,6 @@ cave_Ru() {
   && echo "Control-C to stop uninstalling (+ dependencies)..." \
   && sleep 2s \
   && cave purge -x "$@"
-}
-
-cave_Rn() {
-  _not_implemented
-}
-
-cave_Rns() {
-  _not_implemented
 }
 
 cave_R() {
@@ -148,20 +136,9 @@ cave_Scc() {
   cave fix-cache "$@"
 }
 
-# cave_Sccc _not_implemented
-cave_Sccc() {
-  #rm -fv /var/cache/paludis/*
-  _not_implemented
-}
-
 cave_S() {
   cave resolve "$@" \
   && echo "Control-C to stop installing..." \
   && sleep 2s \
   && cave resolve -x "$@"
-}
-
-# cave_U _not_implemented
-cave_U() {
-  _not_implemented
 }
