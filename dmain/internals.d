@@ -190,7 +190,7 @@ version(unittest) {
 
 unittest {
   assert("dpkg_Rs" == ["test-dpkg", "-Rs"]._m);
-  assert("dpkg_Rs" == ["test-dpkg", "-Rss"]._m);
+  assert("dpkg_Rss" == ["test-dpkg", "-Rss"]._m);
   assert("dpkg_Rsw" == ["test-dpkg", "-Rsw"]._m);
   assert("dpkg_Rqsw" == ["test-dpkg", "-Rqsw"]._m);
   assert("dpkg_Rqsyw" == ["test-dpkg", "-Rqsw", "-y", "-v"]._m);
@@ -395,7 +395,7 @@ struct pacmanOptions {
     method ~= (so >= 1 ? "o" : "");
     method ~= (sp >= 1 ? "p" : "");
     method ~= (quiet_mode ? "q" : "");
-    method ~= (ss >= 1 ? "s" : "");
+    method ~= (ss >= 2 ? "ss" : ss == 1 ? "s" : "");
     method ~= (upgrades ? "u" : "");
     method ~= (refresh ? "y" : "");
     method ~= (download_only ? "w" : "");
