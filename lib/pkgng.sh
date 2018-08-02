@@ -19,7 +19,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
 _pkgng_init() {
-  :
+  export _PKGNG_PASSTHROUGH=pkg
 }
 
 pkgng_Qi() {
