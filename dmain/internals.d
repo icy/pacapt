@@ -265,11 +265,13 @@ struct pacmanOptions {
       envs ~= "unset GREP_OPTIONS";
       envs ~= ": \"${GREP:=grep}\"";
       envs ~= ": \"${AWK:=awk}\"";
-      envs ~= "_sun_tools_init \\"; /* Dirty tricky patch for SunOS */
-      envs ~= "|| { echo >&2 \":: Error: '_sun_tools_init' failed.\"; exit 1; }";
+      if (pacman == "sun_tools") {
+        envs ~= "_sun_tools_init \\"; /* Dirty tricky patch for SunOS */
+        envs ~= "|| { echo >&2 \":: Error: '_sun_tools_init' failed.\"; exit 1; }";
+      }
     }
 
-    if (no_confirm) {
+    if (no_confirm && (pacman == "dpkg")) {
       envs ~= "export DEBIAN_FRONTEND=noninteractive";
     }
 
