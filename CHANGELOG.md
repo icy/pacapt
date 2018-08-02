@@ -1,18 +1,55 @@
 ## v2.4.x
 
-* Support non-system package manager (`npm`, `gem`, ...)
+Important changes for users
+
+* New option `-?` to print the detected package manager
+
+* The main program is now written in `Dlang`. The `pacapt` script
+  is not legacy. If you still need them, please check out the
+  latest script on the `ng` branch and/or from the releases `2.3.x`.
+
+* `passthrough` mode: If non of capital options (`QRSU`) is provided,
+  the `passthrough` mode is enabled. This mode is also enabled if
+  the current package manager is `pacman`.
+
+  When `passthrough` mode is on, all users arguments are provided
+  to the back end package manager.
+
+* To use non-system package manager (e.g, `npm`, `gem`, `tlmgr`, )
+  please create a symlink to the main program, for example,
+  `pacapt-npm`, `pacapt-gem`, `pacapt-tlmgr`, ...
+
+Other changes:
+
 * `lib/tlmgr`: Add TeXLive support (Antony Lee)
+* `lib/gem`: Add Rubygems support (Ky-Anh Huynh)
 
 For developers:
 
 * `Makefile`: When `VERSION` is not specified, the development script
   (`pacapt.dev`) is generated. Otherwise, a stable script is made.
+
 * `dmain/`: The main development is now written in `DLang`.
   Please try `make dtest` and `make dbuild` for details. The stable
   core/main Bash script will be now legacy and they will generate warning
   when being used. (Users should use the stable script on `ng` branch.)
 
 * Reduce shellcheck warning/error reports
+
+* We don't use tricky environment variables `$_POPT`, `$_SOPT`,
+  `$_TOPT` and `$_EOPT`. All libraries from `lib/*.sh` need to be rewritten
+  without them. Most user's options are glued to create final method.
+
+* If you want to custom the command used by `passthrough` mode, please
+  set up new environment `_<LIB_NAME>_PASSTHROUGH` to that command.
+  This should be done in the `_init` method.
+  See the definition of `_macports_init` in `lib/macports.sh` as an example.
+
+* Support non-system package manager (`npm`, `gem`, ...)
+
+* If the program name has the form `foo-bar`, then `pacapt` skips all
+  detection and understands that `bar` is a package manager. This is
+  useful for using `pacapt` as a wrapper for `npm`, `gem`, `pip`, ...
 
 ## v2.3.15
 
