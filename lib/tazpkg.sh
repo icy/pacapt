@@ -9,30 +9,27 @@ _tazpkg_init() {
   :
 }
 
-# tarpkg_Q may _not_implemented
+tazpkg_Qq() {
+  tazpkg list "$@" \
+  | awk '{ if (NF == 2 || NF == 3) { print $1; }}'
+}
+
 tazpkg_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
-    tazpkg list "$@" \
-    | awk '{ if (NF == 2 || NF == 3) { print $1; }}'
-  elif [[ "$_TOPT" == "" ]]; then
-    tazpkg list "$@"
-  else
-    _not_implemented
-  fi
+  tazpkg list "$@"
 }
 
 tazpkg_Qi() {
   tazpkg info "$@"
 }
 
-# tarpkg_Ql may _not_implemented
-tazpkg_Ql() {
-  if [[ -z "$*" ]]; then
-    _not_implemented
-    return
-  fi
+tazpkg_Qql() {
+  : "${QUIET_MODE:=1}"
+  tazpkg_Ql "$@"
+}
 
-  if [[ "$_TOPT" == "q" ]]; then
+tazpkg_Ql() {
+  : "${QUIET_MODE:=0}"
+  if [ "${QUIET_MODE}" = "1" ]; then
     {
       tazpkg list-files "$@"
       tazpkg list-config "$@"

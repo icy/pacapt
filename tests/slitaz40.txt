@@ -27,7 +27,7 @@ in -sS htop
 ou ^htop((-)|( +))[[:digit:]]+
 
 in -Qs htop
-ou not implemented
+is not defined
 
 in -Qo /bin/busybox
 ou ^busybox
@@ -59,7 +59,7 @@ in -U $TAZPKG_FILE
 ou htop.+ is installed.
 
 in -Sccc
-ou not implemented
+is not defined
 
 in -Scc
 in clear
