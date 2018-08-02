@@ -106,7 +106,6 @@ auto issue2pacman() {
     return pacman;
   }
 
-  import std.process: executeShell;
   auto brew = findCommand("brew", "");
   if (brew !is null) {
     debug stderr.writefln("(debug) Found homebrew in search path");
