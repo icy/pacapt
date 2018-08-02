@@ -117,7 +117,7 @@ A short description can be found at
      cave  *     *     *   *     *  *  *      *  * *  *   *  *  * *  *   *    x  *         *  *   *     * x
       dnf  ~  *  *     *      *  *  *         *  * *              *  *   *    *  *      *  *  *   *  *  * *
      dpkg  *     *     *   *     *  *  *      *  * *  *   *  *    *  *   *    *  *   *     *  *   *  *  * *
-      gem  *                                                                                               
+      gem  *                           *                                                                   
  homebrew  ~  *  *     *         *            *  * *         *    *  *   *    *  *         *  *   *     *  
  macports     *        *         *               * *         ~    *  *   *       *         *  *   *     *  
     pkgng  *     *     *         *  *            * *         *    *  *   *       *         *  *   *     *  
