@@ -1,6 +1,6 @@
 ## v2.4.x
 
-Important changes for users
+### Important changes for users
 
 * New option `-?` to print the detected package manager
 
@@ -19,12 +19,12 @@ Important changes for users
   please create a symlink to the main program, for example,
   `pacapt-npm`, `pacapt-gem`, `pacapt-tlmgr`, ...
 
-Other changes:
+### Other changes
 
 * `lib/tlmgr`: Add TeXLive support (Antony Lee)
 * `lib/gem`: Add Rubygems support (Ky-Anh Huynh)
 
-For developers:
+### For developers
 
 * `Makefile`: When `VERSION` is not specified, the development script
   (`pacapt.dev`) is generated. Otherwise, a stable script is made.
