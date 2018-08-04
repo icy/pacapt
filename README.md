@@ -117,15 +117,15 @@ A short description can be found at
      cave  *     *     *     *  *  *  * *  *   *  * *  *   *    x  *         *  *   *     * x
       dnf  ~  *  *     *  *  *  *  *  * *           *  *   *    *  *      *  *  *   *  *  * *
      dpkg  ~     *     *     *  *  *  * *  *   *  ~ *  *   *    *  *   *     *  *   *     * *
- homebrew  ~  *  *     *     *     *  * *         * *  *   *    *  *         *  *   *     *
- macports     *        *     *        * *         ~ *  *   *       *         *  *   *     *
-    pkgng  *     *     *     *  *     * *         * *  *   *       *         *  *   *     *
-pkg_tools  ~     *     *     *  *     * *  *   *  ~ *  *   x       *      *  ~  *   *     x
-  portage  *  *  *     *     *        * *         * *  *   *    *  *         *  *   *     *
+ homebrew  ~  *  *     *     *     *  * *         * *  *   *    *  *         *  *   *     *  
+ macports     *        *     *        * *         ~ *  *   *       *         *  *   *     *  
+    pkgng  *     *     *     *  *     * *         * *  *   *       *         *  *   *     *  
+pkg_tools  ~     *     *     *  *     * *  *   *  ~ *  *   x       *      *  ~  *   *     x  
+  portage  *  *  *     *     *        * *         * *  *   *    *  *         *  *   *     *  
 sun_tools  *     *     *     *     *    *                                                   *
-    swupd           *        *     *    *           *                        *  *   *     *
+    swupd           *        *     *    *           *                        *  *   *     *  
    tazpkg  *     *     *     *          *           *  *   *                 *  *   *     * *
-    tlmgr        *  *              *    *           *              *         *      *       *
+    tlmgr        *  *  *                *           *              *         *      *       *
       yum  *  *  *     *  *  *  *  *  * *         * *  *   *    *  *   *     *  *   *     * *
    zypper  *  *  *     *  *  *  *  *  * *  *   *  * *  *   *    *  *   *  *  *  *   *  *  * *
 ```
