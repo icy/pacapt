@@ -25,12 +25,8 @@ tlmgr_Qk() {
   tlmgr check files
 }
 
-tlmgr_Qs() {
-  tlmgr search --only-installed --list "$@"
-}
-
-tlmgr_Qs() {
-  tlmgr search --only-installed "$@"
+tlmgr_Ql() {
+  tlmgr info --only-installed --list "$@"
 }
 
 tlmgr_R() {
