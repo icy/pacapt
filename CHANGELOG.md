@@ -5,14 +5,14 @@
 * New option `-?` to print the detected package manager
 
 * The main program is now written in `Dlang`. The `pacapt` script
-  is not legacy. If you still need them, please check out the
+  is now legacy. If you still need them, please check out the
   latest script on the `ng` branch and/or from the releases `2.3.x`.
 
-* `passthrough` mode: If non of capital options (`QRSU`) is provided,
+* `passthrough` mode: If none of capital options (`QRSU`) is provided,
   the `passthrough` mode is enabled. This mode is also enabled if
   the current package manager is `pacman`.
 
-  When `passthrough` mode is on, all users arguments are provided
+  When `passthrough` mode is on, all users arguments are sent directly
   to the back end package manager.
 
 * To use non-system package manager (e.g, `npm`, `gem`, `tlmgr`, )
@@ -26,13 +26,15 @@
 
 ### For developers
 
+* `pacapt` the stable script is removed from the root directory.
+
 * `Makefile`: When `VERSION` is not specified, the development script
   (`pacapt.dev`) is generated. Otherwise, a stable script is made.
 
 * `dmain/`: The main development is now written in `DLang`.
   Please try `make dtest` and `make dbuild` for details. The stable
-  core/main Bash script will be now legacy and they will generate warning
-  when being used. (Users should use the stable script on `ng` branch.)
+  core/main `Bash` script will be now legacy and they will generate warning
+  when being used.
 
 * Reduce shellcheck warning/error reports
 
