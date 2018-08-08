@@ -119,7 +119,7 @@ dtest: output/pacapt.libs
 .PHONY: dbuild
 dbuild: output/pacapt.libs
 	@mkdir -pv output/
-	@$(DOCKER) dub build --compiler=$(DC) --debug="$(DEBUG)" pacapt:main
+	@$(DOCKER) dub build --compiler=$(DC) --debug="0" pacapt:main
 
 .PHONY: tests
 tests: dtest
