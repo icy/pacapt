@@ -169,6 +169,6 @@ if [[ -n "${PACAPT_LIBS_ONLY}" ]]; then
   :
   echo >&2 "pacapt-lib '$VERSION' has been generated."
 else
-  $GREP -v '^#' lib/zz_main.sh
+  [[ ! -f lib/zz_main.sh ]] || $GREP -v '^#' lib/zz_main.sh
   echo >&2 "pacapt version '$VERSION' has been generated."
 fi
