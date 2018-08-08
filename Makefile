@@ -2,6 +2,7 @@ BINDIR=/usr/local/bin/
 DISTRO=debian:stable
 DEBUG=1
 DC=ldc2
+DOCKER=docker run --rm -ti -e DFLAGS="-static" -v `pwd`:/src dlanguage/ldc
 
 ifeq ($(VERSION),)
 	OUTPUT = pacapt.dev
@@ -113,13 +114,12 @@ output/pacapt_passthrough.libs: lib/*.sh
 .PHONY: dtest
 dtest: output/pacapt.libs
 	@mkdir -pv output/
-	@dub test --compiler=$(DC) --debug="$(DEBUG)" pacapt:main
+	@$(DOCKER) dub test --compiler=$(DC) --debug="$(DEBUG)" pacapt:main
 
 .PHONY: dbuild
 dbuild: output/pacapt.libs
 	@mkdir -pv output/
-	@DFLAGS="-static" \
-		dub build --compiler=$(DC) --debug="$(DEBUG)" pacapt:main
+	@$(DOCKER) dub build --compiler=$(DC) --debug="$(DEBUG)" pacapt:main
 
 .PHONY: tests
 tests: dtest
