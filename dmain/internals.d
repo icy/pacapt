@@ -245,6 +245,9 @@ struct pacmanOptions {
     cmds ~= "#!/usr/bin/env sh\n";
     cmds ~= exportEnvs;
     cmds ~= "set --\n";
+    // FIXME: pacman -v -- -Sy
+    // Expectation: back-end -Sy (passthrough)
+    // Actual result: back-end -v -- -Sy
     cmds ~= "set -- %(%s %)\n".format(argsOrigin[1..$]);
     cmds ~= "export %s_passthrough=%s\n".format(pacman, pacman);
     cmds ~= pacmanPassthroughEnvs;
