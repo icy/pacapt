@@ -246,8 +246,9 @@ struct pacmanOptions {
     cmds ~= exportEnvs;
     cmds ~= "set --\n";
     cmds ~= "set -- %(%s %) %(%s %)\n".format(args0[1..$], remained);
-    // FIXME: sometimes `pacman` doesn't reflect the actual command.
-    cmds ~= "exec '%s' \"$@\"\n".format(pacman);
+    cmds ~= "export %s_passthrough=%s\n".format(pacman, pacman);
+    cmds ~= pacmanPassthroughEnvs;
+    cmds ~= "exec \"$%s_passthrough\" \"$@\"\n".format(pacman);
 
     return cmds;
   }
@@ -689,6 +690,11 @@ unittest {
 
 auto pacmanLibs() {
   auto src = import("pacapt.libs");
+  return src;
+}
+
+auto pacmanPassthroughEnvs() {
+  auto src = import("pacapt_passthrough.libs");
   return src;
 }
 

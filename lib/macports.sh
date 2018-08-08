@@ -14,7 +14,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
 _macports_init() {
-  export _MACPORTS_PASSTHROUGH=port
+  export PASSTHROUGH=port
 }
 
 macports_Ql() {

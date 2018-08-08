@@ -106,6 +106,10 @@ output/pacapt.libs:: $(OUTPUT)
 	@mkdir -pv output/
 	@PACAPT_LIBS_ONLY=yes ./bin/compile.sh > $(@)
 
+output/pacapt_passthrough.libs: lib/*.sh
+	@mkdir -pv output/
+	@./bin/compile_passthrough.sh > $(@)
+
 .PHONY: dtest
 dtest: output/pacapt.libs
 	@mkdir -pv output/

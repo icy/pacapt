@@ -14,7 +14,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
 _homebrew_init() {
-  export _HOMEBREW_PASSTHROUGH=brew
+  export PASSTHROUGH=brew
 }
 
 homebrew_Qi() {

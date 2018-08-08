@@ -43,9 +43,10 @@
   without them. Most user's options are glued to create final method.
 
 * If you want to custom the command used by `passthrough` mode, please
-  set up new environment `_<LIB_NAME>_PASSTHROUGH` to that command.
+  set up new environment `PASSTHROUGH` to that command.
   This should be done in the `_init` method.
   See the definition of `_macports_init` in `lib/macports.sh` as an example.
+  By default, this variable is set to the package manager.
 
 * Support non-system package manager (`npm`, `gem`, ...)
 
