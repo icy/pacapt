@@ -112,12 +112,12 @@ output/pacapt_passthrough.libs: lib/*.sh
 	@./bin/compile_passthrough.sh > $(@)
 
 .PHONY: dtest
-dtest: output/pacapt.libs
+dtest: output/pacapt.libs output/pacapt_passthrough.libs
 	@mkdir -pv output/
 	@$(DOCKER) dub test --compiler=$(DC) --debug="$(DEBUG)" pacapt:main
 
 .PHONY: dbuild
-dbuild: output/pacapt.libs
+dbuild: output/pacapt.libs output/pacapt_passthrough.libs
 	@mkdir -pv output/
 	@$(DOCKER) dub build --compiler=$(DC) --debug="0" pacapt:main
 
