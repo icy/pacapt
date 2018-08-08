@@ -473,9 +473,6 @@ struct pacmanOptions {
 
     if (getopt_results.helpWanted) {
       help_wanted = true;
-      // NOTE: This is useful to capture the help message
-      // to our custom show_help method.
-      debug defaultGetoptPrinter("List of options:", getopt_results.options);
       result = false;
     }
 
