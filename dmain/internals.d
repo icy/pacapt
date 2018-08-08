@@ -245,7 +245,7 @@ struct pacmanOptions {
     cmds ~= "#!/usr/bin/env sh\n";
     cmds ~= exportEnvs;
     cmds ~= "set --\n";
-    cmds ~= "set -- %(%s %) %(%s %)\n".format(args0[1..$], remained);
+    cmds ~= "set -- %(%s %)\n".format(argsOrigin[1..$]);
     cmds ~= "export %s_passthrough=%s\n".format(pacman, pacman);
     cmds ~= pacmanPassthroughEnvs;
     cmds ~= "exec \"$%s_passthrough\" \"$@\"\n".format(pacman);
