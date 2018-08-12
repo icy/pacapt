@@ -18,7 +18,7 @@ in -Sy
 in -Qq
 ou ^apt$
 
-# Listing with version and packge name
+# Listing with version and package name
 in -Q
 # ou ^ii +apt +.+ubuntu
 ou ^ii +apt +
