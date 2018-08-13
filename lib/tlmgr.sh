@@ -18,7 +18,7 @@ _tlmgr_init() {
 }
 
 tlmgr_Qi() {
-  tlmgr info "$@"
+  tlmgr info --only-installed "$@"
 }
 
 tlmgr_Qk() {
@@ -39,6 +39,10 @@ tlmgr_S() {
 
 tlmgr_Si() {
   tlmgr info "$@"
+}
+
+tlmgr_Sl() {
+  tlmgr info
 }
 
 tlmgr_Ss() {
