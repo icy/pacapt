@@ -73,7 +73,7 @@ ENVIRONMENT
 NOTES
 
   When being executed on Arch-based system, the tool simply invokes
-  the system package manager (`/usr/bin/pacman`.)
+  the system package manager (`/usr/bin/pacman`).
 
   Though you can specify option by its own word, for example,
       $ pacapt -S -y -u
