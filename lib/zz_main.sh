@@ -106,7 +106,7 @@ while :; do
     #
     # FIXME: Please check pacman(8) to see if they are really 2nd operation
     #
-    s|l|i|p|o|m|n)
+    e|i|l|m|n|o|p|s)
       if [[ "$_SOPT" == '' ]]; then
         _SOPT="$_opt"
         continue
