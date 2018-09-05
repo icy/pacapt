@@ -31,3 +31,4 @@ BEGIN {
 
 mv README.md.tmp README.md
 git diff README.md
+rm stats.tmp
