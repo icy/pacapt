@@ -72,6 +72,10 @@ dnf_Q() {
   fi
 }
 
+dnf_Qe() {
+  dnf repoquery --userinstalled "$@"
+}
+
 dnf_Qi() {
   dnf info "$@"
 }

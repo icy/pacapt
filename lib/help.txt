@@ -16,6 +16,7 @@ OPERATIONS
   Query
     -Q              list all installed packages
     -Qc <package>   show package's changelog
+    -Qe [<package>] only list explicitly installed packages
     -Qi <package>   print package status
     -Ql <package>   list package's files
     -Qm             list installed packages that aren't available
