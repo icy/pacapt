@@ -112,23 +112,23 @@ A short description can be found at
 ## Implemented operations
 
 ```
-           Q Qc Qe Qi Qk Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Si Sii Sl Ss Su Suy Sw Sy U
-      apk  ~        *     *     *     *  * *  *   *  * *  *   *    *  *   *  *  *  *   *  *  * *
-     cave  *        *     *     *  *  *  * *  *   *  * *  *   *    x  *         *  *   *     * x
-    conda  *                               *           *  *           *         *      *        
-      dnf  ~  *  *  *     *  *  *  *  *  * *           *  *   *    *  *      *  *  *   *  *  * *
-     dpkg  ~        *     *     *  *  *  * *  *   *  ~ *  *   *    *  *   *     *  *   *     * *
- homebrew  ~  *     *     *     *     *  * *         * *  *   *    *  *         *  *   *     *  
- macports     *           *     *        * *         ~ *  *   *       *         *  *   *     *  
-    pkgng  *        *     *     *  *     * *         * *  *   *       *         *  *   *     *  
-pkg_tools  ~        *     *     *  *     * *  *   *  ~ *  *   x       *      *  ~  *   *     x  
-  portage  *  *     *     *     *        * *         * *  *   *    *  *         *  *   *     *  
-sun_tools  *        *     *     *     *    *                                                   *
-    swupd              *        *     *    *           *                        *  *   *     *  
-   tazpkg  *        *     *     *          *           *  *   *                 *  *   *     * *
-    tlmgr           *  *  *                *           *              *      *  *      *       *
-      yum  *  *     *     *  *  *  *  *  * *         * *  *   *    *  *   *     *  *   *     * *
-   zypper  *  *     *     *  *  *  *  *  * *  *   *  * *  *   *    *  *   *  *  *  *   *  *  * *
+           Q Qc Qe Qi Qk Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Sg Si Sii Sl Ss Su Suy Sw Sy U
+      apk  ~        *     *     *     *  * *  *   *  * *  *   *    *     *   *  *  *  *   *  *  * *
+     cave  *        *     *     *  *  *  * *  *   *  * *  *   *    x     *         *  *   *     * x
+    conda  *                               *           *  *              *         *      *        
+      dnf  ~  *  *  *     *  *  *  *  *  * *           *  *   *    *  *  *      *  *  *   *  *  * *
+     dpkg  ~        *     *     *  *  *  * *  *   *  ~ *  *   *    *     *   *     *  *   *     * *
+ homebrew  ~  *     *     *     *     *  * *         * *  *   *    *     *         *  *   *     *  
+ macports     *           *     *        * *         ~ *  *   *          *         *  *   *     *  
+    pkgng  *        *     *     *  *     * *         * *  *   *          *         *  *   *     *  
+pkg_tools  ~        *     *     *  *     * *  *   *  ~ *  *   x          *      *  ~  *   *     x  
+  portage  *  *     *     *     *        * *         * *  *   *    *     *         *  *   *     *  
+sun_tools  *        *     *     *     *    *                                                      *
+    swupd              *        *     *    *           *                           *  *   *     *  
+   tazpkg  *        *     *     *          *           *  *   *                    *  *   *     * *
+    tlmgr           *  *  *                *           *                 *      *  *      *       *
+      yum  *  *     *     *  *  *  *  *  * *         * *  *   *    *     *   *     *  *   *     * *
+   zypper  *  *     *     *  *  *  *  *  * *  *   *  * *  *   *    *     *   *  *  *  *   *  *  * *
 ```
 
 **Notes:**
