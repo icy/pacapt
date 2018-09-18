@@ -37,6 +37,14 @@ dnf_Si() {
   dnf info "$@"
 }
 
+dnf_Sg() {
+  if [[ $# -gt 0 ]]; then
+    dnf group info "$@"
+  else
+    dnf group list
+  fi
+}
+
 dnf_Sl() {
   dnf list available "$@"
 }
