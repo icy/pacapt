@@ -1,10 +1,15 @@
 ## Table of contents
 
+1. [Future development](#future-development)
 1. [Coding style](#coding-style)
 1. [Testing. Writting test cases](#testing-writting-test-cases)
 1. [Generating pacapt script](#generating-pacapt-script)
 1. [Branches](#branches)
 1. [Closed branches](#closed-branches)
+
+## Future development
+
+See also [README.md](README.md#read-me-first)
 
 ## Coding style
 
