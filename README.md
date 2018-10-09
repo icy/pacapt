@@ -115,16 +115,16 @@ A short description can be found at
            Q Qc Qe Qi Qk Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Sg Si Sii Sl Ss Su Suy Sw Sy U
       apk  ~        *     *     *     *  * *  *   *  * *  *   *    *     *   *  *  *  *   *  *  * *
      cave  *        *     *     *  *  *  * *  *   *  * *  *   *    x     *         *  *   *     * x
-    conda  *                               *           *  *              *         *      *        
+    conda  *                               *           *  *              *         *      *
       dnf  ~  *  *  *     *  *  *  *  *  * *           *  *   *    *  *  *      *  *  *   *  *  * *
      dpkg  ~        *     *     *  *  *  * *  *   *  ~ *  *   *    *     *   *     *  *   *     * *
- homebrew  ~  *     *     *     *     *  * *         * *  *   *    *     *         *  *   *     *  
- macports     *           *     *        * *         ~ *  *   *          *         *  *   *     *  
-    pkgng  *        *     *     *  *     * *         * *  *   *          *         *  *   *     *  
-pkg_tools  ~        *     *     *  *     * *  *   *  ~ *  *   x          *      *  ~  *   *     x  
-  portage  *  *     *     *     *        * *         * *  *   *    *     *         *  *   *     *  
+ homebrew  ~  *     *     *     *     *  * *         * *  *   *    *     *         *  *   *     *
+ macports     *           *     *        * *         ~ *  *   *          *         *  *   *     *
+    pkgng  *        *     *     *  *     * *         * *  *   *          *         *  *   *     *
+pkg_tools  ~        *     *     *  *     * *  *   *  ~ *  *   x          *      *  ~  *   *     x
+  portage  *  *     *     *     *        * *         * *  *   *    *     *         *  *   *     *
 sun_tools  *        *     *     *     *    *                                                      *
-    swupd              *        *     *    *           *                           *  *   *     *  
+    swupd              *        *     *    *           *                           *  *   *     *
    tazpkg  *        *     *     *          *           *  *   *                    *  *   *     * *
     tlmgr           *  *  *                *           *                 *      *  *      *       *
       yum  *  *     *     *  *  *  *  *  * *         * *  *   *    *     *   *     *  *   *     * *
@@ -151,11 +151,11 @@ The following message is published on project's Gitter group on Oct 09th 2018.
 
 > Hi everyone, long time no see :) I've not been using Gitter IM actively as it's not very convenient on my browser, and Gitter requires a lot of access grants to my Github profile ^.^
 >
-> I've rewritten pacapt in Dlang (https://github.com/icy/pacapt/tree/nd). There are two issues remained: (1) passthrough option (2) publish artifacts (32bit binary, 64 bit binary, arm support,...) to Github/S3. I'm not sure there is any way to this latest CI step simple and secure (Dlang hasn't had good Reproducible build yet.) Using S3 is not persistent, Github requires my personal API token...
+> I've rewritten pacapt in Dlang (https://github.com/icy/pacapt/tree/nd). There are two issues remained: (1) passthrough option (2) publish artifacts (32bit binary, 64 bit binary, arm support,...) to Github/S3. I'm not sure there is any way to make this latest CI step simple and secure (Dlang hasn't had good Reproducible build yet.) Using S3 is not persistent, Github requires my personal API token...
 >
-> The primary motivation of rewriting pacapt in Dlang is to support some restricted environment where Bash is not available. I picked Dlang simply it's the language I'm studying. The major parts of the project (lib/*.sh) are still in shell format. The be specific, the (binary) executable file will help to handle users' arguments and the actual steps are delegated to system shell(s).
+> The primary motivation of rewriting pacapt in Dlang is to support some restricted environment where Bash is not available. I picked Dlang simply it's the language I'm studying. The major parts of the project (lib/*.sh) are still in shell format. To be specific, the (binary) executable file will help to handle users' arguments and the actual steps are delegated to system shell(s).
 >
-> The current stable branch (ng) still accepts active development, however it would be come legacy when nd is released. Cherry-picks are required to make contributors' works on ng available on nd branch. (in case the names are confusing you, here is a tip: ng sounds like next generation, while nd emphasizes Dlang use.)
+> The current stable branch (ng) still accepts active development, however it would become legacy when `nd` is released. Cherry-picks are required to make contributors' works on `ng` available on `nd` branch. (In case the names are confusing you, here is a tip: `ng` sounds like next generation, while `nd` emphasizes Dlang use.)
 >
 > Feel free to take a look. Any comments are appreciated.
 >
