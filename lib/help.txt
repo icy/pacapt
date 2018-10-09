@@ -27,6 +27,8 @@ OPERATIONS
 
   Synchronize
     -S <package>    install package(s)
+    -Sg             list groups
+    -Sg <group>     list packages in group
     -Ss <package>   search for packages
     -Su             upgrade the system
     -Sy             update package database

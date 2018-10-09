@@ -21,26 +21,6 @@ dnf_S() {
   dnf install $_TOPT "$@"
 }
 
-dnf_Suy() {
-  dnf upgrade "$@"
-}
-
-dnf_Sw() {
-  dnf download "$@"
-}
-
-dnf_Si() {
-  dnf info "$@"
-}
-
-dnf_Sl() {
-  dnf list available "$@"
-}
-
-dnf_Ss() {
-  dnf search "$@"
-}
-
 dnf_Sc() {
   dnf clean expire-cache "$@"
 }
@@ -53,8 +33,36 @@ dnf_Sccc() {
   dnf clean all "$@"
 }
 
+dnf_Si() {
+  dnf info "$@"
+}
+
+dnf_Sg() {
+  if [[ $# -gt 0 ]]; then
+    dnf group info "$@"
+  else
+    dnf group list
+  fi
+}
+
+dnf_Sl() {
+  dnf list available "$@"
+}
+
+dnf_Ss() {
+  dnf search "$@"
+}
+
 dnf_Su() {
   dnf upgrade "$@"
+}
+
+dnf_Suy() {
+  dnf upgrade "$@"
+}
+
+dnf_Sw() {
+  dnf download "$@"
 }
 
 dnf_Sy() {
@@ -72,6 +80,10 @@ dnf_Q() {
   fi
 }
 
+dnf_Qc() {
+  rpm -q --changelog "$@"
+}
+
 dnf_Qe() {
   dnf repoquery --userinstalled "$@"
 }
@@ -80,16 +92,12 @@ dnf_Qi() {
   dnf info "$@"
 }
 
-dnf_Qu() {
-  dnf list updates "$@"
-}
-
-dnf_Qs() {
-  rpm -qa "*${*}*"
-}
-
 dnf_Ql() {
   rpm -ql "$@"
+}
+
+dnf_Qm() {
+  dnf list extras
 }
 
 dnf_Qo() {
@@ -100,12 +108,12 @@ dnf_Qp() {
   rpm -qp "$@"
 }
 
-dnf_Qc() {
-  rpm -q --changelog "$@"
+dnf_Qs() {
+  rpm -qa "*${*}*"
 }
 
-dnf_Qm() {
-  dnf list extras
+dnf_Qu() {
+  dnf list updates "$@"
 }
 
 dnf_R() {
