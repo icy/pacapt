@@ -17,7 +17,7 @@ void main(string[] args) {
   }
 
   if (opts.help_wanted) {
-    show_help;
+    opts.showHelp;
     return;
   }
 

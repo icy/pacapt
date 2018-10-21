@@ -556,6 +556,42 @@ struct pacmanOptions {
     }
     return ops;
   }
+
+  static void showHelp() {
+      import std.stdio;
+      writefln(
+  "Welcome to pacapt.
+
+  List of options:
+     -?                 Show the current package manager.
+     -P                 Print list of supported options
+     -h          --help This help information.
+     -V                 Show pacapt version.
+
+    -Q+         --query Query
+    -R+        --remove Remove
+    -S+          --sync Sync
+    -U+       --upgrade Upgrade
+
+    -s+        --search Search
+           --recursive+ Recursive option used with --remove. Short version: -s
+    -l+          --list listing option
+    -i+          --info
+    -p+          --file
+    -o+          --owns
+    -m+       --foreign
+     -n        --nosave
+     -v       --verbose Be verbose
+     -w --download-only Download without installing
+
+     -q         --quiet Be quiet in some operation
+     -u      --upgrades
+     -y       --refresh Refresh local package database
+            --noconfirm Assume yes to all questions
+           --no-confirm Assume yes to all questions
+    -c+         --clean Clean packages."
+    );
+  }
 }
 
 unittest {
@@ -734,42 +770,6 @@ unittest {
 
   auto any_shell = findCommand("non-existent") || findCommand("sh");
   assert(any_shell, "Should found a good shell for us");
-}
-
-void show_help() {
-    import std.stdio;
-    writefln(
-"Welcome to pacapt.
-
-List of options:
-   -?                 Show the current package manager.
-   -P                 Print list of supported options
-   -h          --help This help information.
-   -V                 Show pacapt version.
-
-  -Q+         --query Query
-  -R+        --remove Remove
-  -S+          --sync Sync
-  -U+       --upgrade Upgrade
-
-  -s+        --search Search
-         --recursive+ Recursive option used with --remove. Short version: -s
-  -l+          --list listing option
-  -i+          --info
-  -p+          --file
-  -o+          --owns
-  -m+       --foreign
-   -n        --nosave
-   -v       --verbose Be verbose
-   -w --download-only Download without installing
-
-   -q         --quiet Be quiet in some operation
-   -u      --upgrades
-   -y       --refresh Refresh local package database
-          --noconfirm Assume yes to all questions
-         --no-confirm Assume yes to all questions
-  -c+         --clean Clean packages."
-  );
 }
 
 auto makeTempScript(in string script = "") {
