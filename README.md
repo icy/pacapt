@@ -93,6 +93,15 @@ $ ln -s /usr/local/bin/pacapt /usr/local/bin/pacapt-tlmgr
 $ ln -s /usr/local/bin/pacapt /usr/local/bin/pacapt-conda
 ```
 
+You can also use shorter links:
+
+```
+$ ln -s /usr/local/bin/pacapt /usr/local/bin/p-tlmgr
+$ ln -s /usr/local/bin/pacapt /usr/local/bin/p-conda
+```
+
+noting the suffix (e.g., `-tlmgr`, `-conda`) is mandatory.
+
 ## Usage
 
 ### Basic operations
