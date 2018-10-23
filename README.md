@@ -58,6 +58,9 @@ The tool supports the following package managers:
 * `apk`           by `Alpine Linux`
 * `tazpkg`        by `SliTaz Linux`
 * `swupd`         by `Clear Linux`
+
+Non-system package manager
+
 * `tlmgr`         by `TeX Live`
 * `conda`         by [`Conda`](https://conda.io/docs/)
 
@@ -83,14 +86,18 @@ On some system, `/usr/local/bin` is not in the search paths when the
 command is executed by `sudo`. You may want to use `/usr/bin/pacman`
 or `/usr/bin/pacapt` instead.
 
-This stable script is generated from the latest stable branch,
-which is `v2.0` at the moment. If you want to compile a script
-from its components, please make sure you use a correct branch.
-See `CONTRIBUTING.md` for details.
+For non-system package manager, you need to create symbolic links
+
+```
+$ ln -s /usr/local/bin/pacapt /usr/local/bin/pacapt-tlmgr
+$ ln -s /usr/local/bin/pacapt /usr/local/bin/pacapt-conda
+```
 
 ## Usage
 
 ### Basic operations
+
+For system package manager
 
 * Update package database: `pacapt -Sy`
 * Install a package: `pacapt -S foo`
@@ -100,9 +107,16 @@ See `CONTRIBUTING.md` for details.
 * Remove orphans: `pacapt -Sc`
 * Clean up: `pacapt -Scc` or `pacapt -Sccc`
 
-See also  https://github.com/icy/pacapt/blob/ng/lib/help.txt.
+For non-system package manager:
+
+Similar as above, however you need to call correct script name, e.g.,
+
+* Intall a Conda package: `pacapt-conda -S foo`
+* Remove a Conda package: `pacapt-conda -R foo`
 
 ### Basic options
+
+See also https://github.com/icy/pacapt/blob/ng/lib/help.txt.
 
 Some basic command line options
 
@@ -113,7 +127,7 @@ Some basic command line options
 Some popular options of the original `ArchLinux`'s `pacman` program
 are supported and listed in the table in the next section.
 
-A long list of operations can be found from [`ArchLinux`'s wiki](https://wiki.archlinux.org/index.php/Pacman/Rosetta).
+A long list of options and operations can be found from [`ArchLinux`'s wiki](https://wiki.archlinux.org/index.php/Pacman/Rosetta).
 
 ### Implemented operations
 
