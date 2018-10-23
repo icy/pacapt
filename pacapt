@@ -3,13 +3,14 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.3.15
+# Version: 2.4.0
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2018 \
 #                           | 10sr (10sr)
 #                           | Alexander Dupuy (dupuy)
 #                           | Anh K. Huynh (icy)
+#                           | Antony Lee (anntzer)
 #                           | Alex Lyon (Arcterus)
 #                           | Carl X. Su (bcbcarl)
 #                           | Cuong Manh Le (Gnouc)
@@ -43,12 +44,13 @@
 
 _print_pacapt_version() {
   cat <<_EOF_
-pacapt version '2.3.15'
+pacapt version '2.4.0'
 
 Copyright (C) 2010 - 2018 \\
                           | 10sr (10sr)
                           | Alexander Dupuy (dupuy)
                           | Anh K. Huynh (icy)
+                          | Antony Lee (anntzer)
                           | Alex Lyon (Arcterus)
                           | Carl X. Su (bcbcarl)
                           | Cuong Manh Le (Gnouc)
@@ -81,13 +83,12 @@ DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 _EOF_
 }
 
-export PACAPT_VERSION='2.3.15'
+export PACAPT_VERSION='2.4.0'
 
 _help() {
   cat <<'EOF'
 NAME
-  pacapt - An Arch's pacman-like package manager for some Unices.
-  More details can be found at https://github.com/icy/pacapt .
+  pacapt - An `ArchLinux`'s pacman-like wrapper for many package managers.
 
 SYNTAX
 
@@ -103,6 +104,7 @@ OPERATIONS
   Query
     -Q              list all installed packages
     -Qc <package>   show package's changelog
+    -Qe [<package>] only list explicitly installed packages
     -Qi <package>   print package status
     -Ql <package>   list package's files
     -Qm             list installed packages that aren't available
@@ -113,6 +115,8 @@ OPERATIONS
 
   Synchronize
     -S <package>    install package(s)
+    -Sg             list groups
+    -Sg <group>     list packages in group
     -Ss <package>   search for packages
     -Su             upgrade the system
     -Sy             update package database
@@ -160,13 +164,17 @@ ENVIRONMENT
 NOTES
 
   When being executed on Arch-based system, the tool simply invokes
-  the system package manager (`/usr/bin/pacman`.)
+  the system package manager (`/usr/bin/pacman`).
 
   Though you can specify option by its own word, for example,
       $ pacapt -S -y -u
 
   it's always the best to combine them
       $ pacapt -Syu
+
+READMORE
+
+  Please visit https://github.com/icy/pacapt.
 EOF
 
 }
@@ -179,12 +187,18 @@ _error() {
   return 1
 }
 
+_warn() {
+  echo >&2 "Warning: $*"
+  return 0
+}
+
 _die() {
   echo >&2 "$@"
   exit 1
 }
 
 _not_implemented() {
+  # shellcheck disable=2153
   echo >&2 "${_PACMAN}: '${_POPT}:${_SOPT}:${_TOPT}' operation is invalid or not implemented."
   return 1
 }
@@ -217,6 +231,8 @@ _issue2pacman() {
 }
 
 _PACMAN_detect() {
+  _PACMAN_found_from_script_name && return
+
   _issue2pacman sun_tools "SunOS" && return
   _issue2pacman pacman "Arch Linux" && return
   _issue2pacman dpkg "Debian GNU/Linux" && return
@@ -248,7 +264,7 @@ _PACMAN_detect() {
 
   # Prevent a loop when this script is installed on non-standard system
   if [[ -x "/usr/bin/pacman" ]]; then
-    $GREP -q "$FUNCNAME" '/usr/bin/pacman' >/dev/null 2>&1
+    $GREP -q "${FUNCNAME[0]}" '/usr/bin/pacman' >/dev/null 2>&1
     [[ $? -ge 1 ]] && _PACMAN="pacman" \
     && return
   fi
@@ -355,9 +371,11 @@ _translate_noconfirm() {
 
 _translate_all() {
   local _args=""
-  local _debug="$(_translate_debug)"
-  local _noconfirm="$(_translate_noconfirm)"
+  local _debug=
+  local _noconfirm=
 
+  _debug="$(_translate_debug)"
+  _noconfirm="$(_translate_noconfirm)"
   _args="$(_translate_w)" || return 1
   _args="${_args}${_noconfirm:+ }${_noconfirm}" || return 1
   _args="${_args}${_debug:+ }${_debug}" || return 1
@@ -367,14 +385,49 @@ _translate_all() {
 
 _print_supported_operations() {
   local _pacman="$1"
-  echo -n "pacapt: available operations:"
-  $GREP -E "^${_pacman}_[^ \t]+\(\)" "$0" \
+  echo -n "pacapt($_pacman): available operations:"
+  # shellcheck disable=2016
+  $GREP -E "^${_pacman}_[^ \\t]+\\(\\)" "$0" \
   | $AWK -F '(' '{print $1}' \
   | sed -e "s/${_pacman}_//g" \
-  | while read O; do
+  | while read -r O; do
       echo -n " $O"
     done
   echo
+}
+
+
+export _SUPPORTED_EXTERNALS="
+  :conda
+  :tlmgr
+  :texlive
+  :gem
+  :npm
+  :pip
+"
+readonly _SUPPORTED_EXTERNALS
+
+_PACMAN_found_from_script_name() {
+  local _tmp_name=
+  local _pacman=
+
+  _tmp_name="${BASH_SOURCE[0]:-?}"
+  if [[ "$_tmp_name" == "?" ]]; then
+    _error "Unable to get script name."
+    return 1
+  fi
+
+  _tmp_name="${_tmp_name##*/}" # base name (remove everything before the last `/`)
+  _tmp_name="${_tmp_name%.*}"  # remove extension if any (remove everything from the last `.`)
+  _pacman="${_tmp_name##*-}"   # remove every thing before the last `-`
+
+  if grep -Eq -e ":$_pacman[[:space:]]*" <<< "$_SUPPORTED_EXTERNALS"; then
+    export _PACMAN="$_pacman"
+    return 0
+  else
+    export _PACMAN=""
+    return 1
+  fi
 }
 
 
@@ -404,7 +457,7 @@ apk_Qo() {
 }
 
 apk_Qs() {
-  apk info -- "*$@*"
+  apk info -- "*${*}*"
 }
 
 apk_Qu() {
@@ -508,14 +561,14 @@ cave_Qi() {
 }
 
 cave_Ql() {
-  if [[ -n "$@" ]]; then
+  if [[ -n "$*" ]]; then
     cave contents "$@"
     return
   fi
 
   cave show -f "${@:-world}" \
   | grep -v '^$' \
-  | while read _pkg; do
+  | while read -r _pkg; do
       if [[ "$_TOPT" == "q" ]]; then
         cave --color no contents "$_pkg"
       else
@@ -533,10 +586,10 @@ cave_Qp() {
 }
 
 cave_Qu() {
-  if [[ -z "$@" ]];then
+  if [[ -z "$*" ]];then
     cave resolve -c world \
     | grep '^u.*' \
-    | while read _pkg; do
+    | while read -r _pkg; do
         echo "$_pkg" | cut -d'u' -f2-
       done
   else
@@ -631,32 +684,51 @@ cave_U() {
 
 
 
+_conda_init() {
+  :
+}
+
+conda_Q() {
+  if [[ $# -gt 0 ]]; then
+    conda list "$(python -c 'import sys; print("^" + "|".join(sys.argv[1:]) + "$")' "$@")"
+  else
+    conda list
+  fi
+}
+
+conda_R() {
+  conda remove "$@"
+}
+
+conda_S() {
+  conda install "$@"
+}
+
+conda_Sc() {
+  conda clean --all "$@"
+}
+
+conda_Si() {
+  conda search "$@" --info
+}
+
+conda_Ss() {
+  conda search "*$@*"
+}
+
+conda_Suy() {
+  conda update --all "$@"
+}
+
+
+
+
 _dnf_init() {
   :
 }
 
 dnf_S() {
   dnf install $_TOPT "$@"
-}
-
-dnf_Suy() {
-  dnf upgrade "$@"
-}
-
-dnf_Sw() {
-  dnf download "$@"
-}
-
-dnf_Si() {
-  dnf info "$@"
-}
-
-dnf_Sl() {
-  dnf list available "$@"
-}
-
-dnf_Ss() {
-  dnf search "$@"
 }
 
 dnf_Sc() {
@@ -671,8 +743,36 @@ dnf_Sccc() {
   dnf clean all "$@"
 }
 
+dnf_Si() {
+  dnf info "$@"
+}
+
+dnf_Sg() {
+  if [[ $# -gt 0 ]]; then
+    dnf group info "$@"
+  else
+    dnf group list
+  fi
+}
+
+dnf_Sl() {
+  dnf list available "$@"
+}
+
+dnf_Ss() {
+  dnf search "$@"
+}
+
 dnf_Su() {
   dnf upgrade "$@"
+}
+
+dnf_Suy() {
+  dnf upgrade "$@"
+}
+
+dnf_Sw() {
+  dnf download "$@"
 }
 
 dnf_Sy() {
@@ -681,28 +781,32 @@ dnf_Sy() {
 
 dnf_Q() {
   if [[ "$_TOPT" == "q" ]]; then
-    rpm -qa --qf "%{NAME}\n"
+    rpm -qa --qf "%{NAME}\\n"
   elif [[ "$_TOPT" == "" ]]; then
-    rpm -qa --qf "%{NAME} %{VERSION}\n"
+    rpm -qa --qf "%{NAME} %{VERSION}\\n"
   else
     _not_implemented
   fi
+}
+
+dnf_Qc() {
+  rpm -q --changelog "$@"
+}
+
+dnf_Qe() {
+  dnf repoquery --userinstalled "$@"
 }
 
 dnf_Qi() {
   dnf info "$@"
 }
 
-dnf_Qu() {
-  dnf list updates "$@"
-}
-
-dnf_Qs() {
-  rpm -qa "*$@*"
-}
-
 dnf_Ql() {
   rpm -ql "$@"
+}
+
+dnf_Qm() {
+  dnf list extras
 }
 
 dnf_Qo() {
@@ -713,12 +817,12 @@ dnf_Qp() {
   rpm -qp "$@"
 }
 
-dnf_Qc() {
-  rpm -q --changelog "$@"
+dnf_Qs() {
+  rpm -qa "*${*}*"
 }
 
-dnf_Qm() {
-  dnf list extras
+dnf_Qu() {
+  dnf list updates "$@"
 }
 
 dnf_R() {
@@ -753,7 +857,7 @@ dpkg_Qi() {
 }
 
 dpkg_Ql() {
-  if [[ -n "$@" ]]; then
+  if [[ -n "$*" ]]; then
     dpkg-query -L "$@"
     return
   fi
@@ -761,12 +865,12 @@ dpkg_Ql() {
   dpkg -l \
   | grep -E '^[hi]i' \
   | awk '{print $2}' \
-  | while read _pkg; do
+  | while read -r _pkg; do
       if [[ "$_TOPT" == "q" ]]; then
         dpkg-query -L "$_pkg"
       else
         dpkg-query -L "$_pkg" \
-        | while read _line; do
+        | while read -r _line; do
             echo "$_pkg $_line"
           done
       fi
@@ -880,7 +984,7 @@ homebrew_Qo() {
   local pkg prefix cellar
 
   # FIXME: What happens if the file is not exectutable?
-  cd "$(dirname -- "$(which "$@")")"
+  cd "$(dirname -- "$(which "$@")")" || return
   pkg="$(pwd -P)/$(basename -- "$@")"
   prefix="$(brew --prefix)"
   cellar="$(brew --cellar)"
@@ -908,7 +1012,7 @@ homebrew_Qs() {
 
 homebrew_Q() {
   if [[ "$_TOPT" == "" ]]; then
-    if [[ "$@" == "" ]]; then
+    if [[ "$*" == "" ]]; then
       brew list
     else
       brew list | grep "$@"
@@ -969,7 +1073,7 @@ homebrew_Sccc() {
   _dcache="$(brew --cache)"
   case "$_dcache" in
   ""|"/"|" ")
-    _error "$FUNCNAME: Unable to delete '$_dcache'."
+    _error "${FUNCNAME[0]}: Unable to delete '$_dcache'."
     ;;
 
   *)
@@ -1176,13 +1280,13 @@ pkg_tools_Q() {
   export PKG_PATH=
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
-  if [[ "$_TOPT" == "q" && ! -z "$@" ]]; then
+  if [[ "$_TOPT" == "q" && ! -z "$*" ]]; then
     pkg_info -q | grep "^${*}-"
-  elif [[ "$_TOPT" == "q" && -z "$@" ]];then
+  elif [[ "$_TOPT" == "q" && -z "$*" ]];then
     pkg_info -q
-  elif [[ "$_TOPT" == "" && ! -z "$@" ]]; then
+  elif [[ "$_TOPT" == "" && ! -z "$*" ]]; then
     pkg_info | grep "^${*}-"
-  elif [[ "$_TOPT" == "" && -z "$@" ]];then
+  elif [[ "$_TOPT" == "" && -z "$*" ]];then
     pkg_info
   else
     _not_implemented
@@ -1239,7 +1343,7 @@ pkg_tools_Sy() {
 }
 
 pkg_tools_Ss() {
-  if [[ -z "$@" ]];then
+  if [[ -z "$*" ]];then
     _not_implemented
   else
     pkg_info -Q "$@"
@@ -1418,9 +1522,9 @@ sun_tools_Qs() {
 sun_tools_Q() {
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
-  if [[ "$_TOPT" == "q" && ! -z "$@" ]]; then
+  if [[ "$_TOPT" == "q" && ! -z "$*" ]]; then
     pkginfo | $GREP "$@"
-  elif [[ "$_TOPT" == "q" && -z "$@" ]]; then
+  elif [[ "$_TOPT" == "q" && -z "$*" ]]; then
     pkginfo
   else
     pkginfo "$@"
@@ -1499,7 +1603,7 @@ tazpkg_Qi() {
 }
 
 tazpkg_Ql() {
-  if [[ -z "$@" ]]; then
+  if [[ -z "$*" ]]; then
     _not_implemented
     return
   fi
@@ -1532,8 +1636,7 @@ tazpkg_Suy() {
 tazpkg_S() {
   local _forced=""
 
-  grep -q -- "--forced" <<<"*"
-  if [[ $? -eq 0 ]]; then
+  if grep -q -- "--forced" <<<"$*"; then
     _forced="--forced"
   fi
 
@@ -1552,8 +1655,7 @@ tazpkg_S() {
 tazpkg_R() {
   local _auto=""
 
-  grep -q -- "--auto" <<<"*"
-  if [[ $? -eq 0 ]]; then
+  if grep -q -- "--auto" <<<"$*"; then
     _auto="--auto"
   fi
 
@@ -1596,8 +1698,7 @@ tazpkg_Qo() {
 tazpkg_U() {
   local _forced=""
 
-  grep -q -- "--forced" <<<"*"
-  if [[ $? -eq 0 ]]; then
+  if grep -q -- "--forced" <<<"$*"; then
     _forced="--forced"
   fi
 
@@ -1615,241 +1716,48 @@ tazpkg_U() {
 
 
 
-_xbps_init() {
+_tlmgr_init() {
   :
- }
-
-_xbps_pkgs_only() {
-  xbps-query --list-pkgs \
-  | awk '{ print $2 }' \
-  | xargs -n1 xbps-uhelper getpkgname
 }
 
-_xbps_inputs_only() {
-    RESULT=""
-    for PKG in $@
-    do
-        RESULT="$RESULT|$PKG"
-    done
-    RESULT="$(echo $RESULT | sed -e 's/^|//')"
-    echo "$RESULT"
+tlmgr_Qi() {
+  tlmgr info --only-installed "$@"
 }
 
-
-xbps_Q() {
-  # PACAPT DOES NOT SUPPORT Qe ? // CANNOT TEST
-  if [[ "$_TOPT" == "e" ]]
-  then
-    if [ $# -eq 0 ]
-    then
-      xbps-query --list-manual-pkgs
-    else
-      RESULT="$(_xbps_inputs_only $@)"
-      xbps-query --list-manual-pkgs | grep -iE "$RESULT"
-    fi
-  elif [[ "$_TOPT" == "" ]]; then
-    if [ $# -eq 0 ]
-    then
-      xbps-query --list-pkgs
-    else
-      RESULT="$(_xbps_inputs_only $@)"
-      xbps-query --list-pkgs | grep -iE "$RESULT"
-    fi
-  else
-    _not_implemented
-  fi
+tlmgr_Qk() {
+  tlmgr check files
 }
 
-xbps_Qi() {
-  PKGS="$@"
-  COLOR_CYAN="$(tput setaf 14)"
-  COLOR_RESET="$(tput sgr0)"
-  if [ $# -eq 0 ]
-  then
-    PKGS="$(_xbps_pkgs_only)"
-  fi
-  for PKG in $PKGS
-  do
-    RESULT="$(xbps-query "$PKG")"
-	if [ "$?" -eq 0 ]
-	then
-      echo "${COLOR_CYAN}name: ${COLOR_RESET}$PKG"
-      xbps-query "$PKG"
-	  echo
-	else
-	  _error "package '$PKG' was not found"
-	fi
-  done
+tlmgr_Ql() {
+  tlmgr info --only-installed --list "$@"
 }
 
-xbps_Ql() {
-  PKGS="$@"
-  COLOR_CYAN="$(tput setaf 14)"
-  COLOR_RESET="$(tput sgr0)"
-  if [ -z "$PKGS" ]
-  then
-    PKGS="$(_xbps_pkgs_only)"
-  fi
-  for PKG in $PKGS
-  do
-    xbps-query --files "$PKG" | sed -e "s/^/${COLOR_CYAN}${PKG} ${COLOR_RESET}/g"
-  done
+tlmgr_R() {
+  tlmgr remove "$@"
 }
 
-xbps_Qo() {
-  if [ $# -eq 0 ]
-  then
-    _error "no targets specified"
-  fi
-  PKGS="$@"
-  for PKG in $PKGS
-  do
-    if [ -f "$PKG" ]
-    then
-      xbps-query --ownedby "$PKG"
-    elif which $PKG &>/dev/null
-    then
-      xbps-query --ownedby "$(which $PKG)"
-    else
-      _error "failed to find '$PKG' in PATH: No such file or directory"
-    fi
-  done
+tlmgr_S() {
+  tlmgr install "$@"
 }
 
-xbps_Qp() {
-  _not_implemented
+tlmgr_Si() {
+  tlmgr info "$@"
 }
 
-xbps_Qs() {
-  if [ $# -eq 0 ]
-  then
-    xbps-query --search ''''
-  elif [ $# -eq 1 ]
-  then
-    xbps-query --search "$@"
-  else
-    RESULT=""
-    for PKG in $@
-    do
-        RESULT="$(xbps-query --search '''' | grep -i "$PKG")"
-    done
-    echo "$RESULT"
-  fi
+tlmgr_Sl() {
+  tlmgr info
 }
 
-xbps_Qu() {
-  xbps-install --sync --update --dry-run "$@"
+tlmgr_Ss() {
+  tlmgr search --global "$@"
 }
 
-xbps_R() {
-  xbps-remove "$@"
+tlmgr_Suy() {
+  tlmgr update --all
 }
 
-xbps_Rn() {
-  xbps-remove --recursive "$@"
-}
-
-xbps_Rs() {
-  xbps-remove --recursive "$@"
-}
-
-xbps_Rns() {
-  xbps-remove --recursive "$@"
-}
-
-xbps_S() {
-  xbps-install $_TOPT "$@"
-}
-
-
-xbps_Sc() {
-  xbps-remove --clean-cache "$@"
-}
-
-xbps_Scc() {
-  xbps-remove --remove-orphans "$@"
-}
-
-xbps_Sccc() {
-  xbps-remove --clean-cache --remove-orphans "$@"
-}
-
-xbps_Si() {
-  PKGS="$@"
-  COLOR_CYAN="$(tput setaf 14)"
-  COLOR_RESET="$(tput sgr0)"
-  if [ $# -eq 1 ]
-  then
-    RESULT="$(xbps-query --repository "$PKGS")"
-	if [ "$?" -eq 0 ]
-    then
-        echo "${COLOR_CYAN}name: ${COLOR_RESET}$PKGS"
-        xbps-query --repository "$PKGS"
-    fi
-  else
-    if [ $# -eq 0 ]
-    then
-      PKGS="$(_xbps_pkgs_only)"
-    fi
-    for PKG in $PKGS
-    do
-      RESULT="$(xbps-query --repository "$PKG")"
-	  if [ "$?" -eq 0 ]
-      then
-          echo "${COLOR_CYAN}name: ${COLOR_RESET}$PKG"
-          xbps-query --repository "$PKG"
-          echo
-      fi
-    done
-  fi
-}
-
-xbps_Sii() {
-  COLOR_CYAN="$(tput setaf 14)"
-  COLOR_RESET="$(tput sgr0)"
-  PKGS="$@"
-  for PKG in $PKGS
-  do
-      RESULT="$(xbps-query --repository --revdeps "$PKG")"
-	  if [ "$?" -eq 0 ]
-	  then
-        echo "$RESULT" \
-        | xargs -n1 xbps-uhelper getpkgname \
-        | xargs \
-        | sed -e "s/ /  /g" -e "s/^/${COLOR_CYAN}${PKG} ${COLOR_RESET}/g"
-	  else
-	    _error "package '$PKG' was not found or has no dependenices"
-	  fi
-  done
-}
-
-xbps_Ss() {
-  if (( $# )); then
-    xbps-query --repository --search "$@"
-  else
-    RESULT="$(_xbps_inputs_only $@)"
-    xbps-query --repository --search '''' | grep -iE "$RESULT"
-  fi
-}
-
-xbps_Su() {
-  xbps-install --update "$@"
-}
-
-xbps_Suy() {
-  xbps-install --sync --update $_TOPT "$@"
-}
-
-xbps_Sw() {
-  _not_implemented
-}
-
-xbps_Sy() {
-  xbps-install --sync "$@"
-}
-
-xbps_U() {
-  _not_implemented
+tlmgr_U() {
+  tlmgr install --file "$@"
 }
 
 
@@ -1860,9 +1768,9 @@ _yum_init() {
 
 yum_Q() {
   if [[ "$_TOPT" == "q" ]]; then
-    rpm -qa --qf "%{NAME}\n"
+    rpm -qa --qf "%{NAME}\\n"
   elif [[ "$_TOPT" == "" ]]; then
-    rpm -qa --qf "%{NAME} %{VERSION}\n"
+    rpm -qa --qf "%{NAME} %{VERSION}\\n"
   else
     _not_implemented
   fi
@@ -1873,7 +1781,7 @@ yum_Qi() {
 }
 
 yum_Qs() {
-  rpm -qa "*$@*"
+  rpm -qa "*${*}*"
 }
 
 yum_Ql() {
@@ -2021,7 +1929,7 @@ zypper_R() {
 
 zypper_Rn() {
   # Remove configuration files
-  while read file; do
+  while read -r file; do
     if [[ -f "$file" ]]; then
       rm -fv "$file"
     fi
@@ -2041,7 +1949,7 @@ zypper_Rs() {
 
 zypper_Rns() {
   # Remove configuration files
-  while read file; do
+  while read -r file; do
     if [[ -f "$file" ]]; then
       rm -fv "$file"
     fi
@@ -2159,26 +2067,35 @@ _validate_operation() {
   "cave_Sccc") ;;
   "cave_S") ;;
   "cave_U") ;;
+  "conda_Q") ;;
+  "conda_R") ;;
+  "conda_S") ;;
+  "conda_Sc") ;;
+  "conda_Si") ;;
+  "conda_Ss") ;;
+  "conda_Suy") ;;
   "dnf_S") ;;
-  "dnf_Suy") ;;
-  "dnf_Sw") ;;
-  "dnf_Si") ;;
-  "dnf_Sl") ;;
-  "dnf_Ss") ;;
   "dnf_Sc") ;;
   "dnf_Scc") ;;
   "dnf_Sccc") ;;
+  "dnf_Si") ;;
+  "dnf_Sg") ;;
+  "dnf_Sl") ;;
+  "dnf_Ss") ;;
   "dnf_Su") ;;
+  "dnf_Suy") ;;
+  "dnf_Sw") ;;
   "dnf_Sy") ;;
   "dnf_Q") ;;
+  "dnf_Qc") ;;
+  "dnf_Qe") ;;
   "dnf_Qi") ;;
-  "dnf_Qu") ;;
-  "dnf_Qs") ;;
   "dnf_Ql") ;;
+  "dnf_Qm") ;;
   "dnf_Qo") ;;
   "dnf_Qp") ;;
-  "dnf_Qc") ;;
-  "dnf_Qm") ;;
+  "dnf_Qs") ;;
+  "dnf_Qu") ;;
   "dnf_R") ;;
   "dnf_U") ;;
   "dpkg_Q") ;;
@@ -2316,29 +2233,16 @@ _validate_operation() {
   "tazpkg_Ss") ;;
   "tazpkg_Qo") ;;
   "tazpkg_U") ;;
-  "xbps_Q") ;;
-  "xbps_Qi") ;;
-  "xbps_Ql") ;;
-  "xbps_Qo") ;;
-  "xbps_Qp") ;;
-  "xbps_Qs") ;;
-  "xbps_Qu") ;;
-  "xbps_R") ;;
-  "xbps_Rn") ;;
-  "xbps_Rs") ;;
-  "xbps_Rns") ;;
-  "xbps_S") ;;
-  "xbps_Sc") ;;
-  "xbps_Scc") ;;
-  "xbps_Sccc") ;;
-  "xbps_Si") ;;
-  "xbps_Sii") ;;
-  "xbps_Ss") ;;
-  "xbps_Su") ;;
-  "xbps_Suy") ;;
-  "xbps_Sw") ;;
-  "xbps_Sy") ;;
-  "xbps_U") ;;
+  "tlmgr_Qi") ;;
+  "tlmgr_Qk") ;;
+  "tlmgr_Ql") ;;
+  "tlmgr_R") ;;
+  "tlmgr_S") ;;
+  "tlmgr_Si") ;;
+  "tlmgr_Sl") ;;
+  "tlmgr_Ss") ;;
+  "tlmgr_Suy") ;;
+  "tlmgr_U") ;;
   "yum_Q") ;;
   "yum_Qi") ;;
   "yum_Qs") ;;
@@ -2405,12 +2309,12 @@ _sun_tools_init       # Dirty tricky patch for SunOS
 
 export PACAPT_DEBUG GREP AWK
 
-_POPT="" # primary operation
-_SOPT="" # secondary operation
-_TOPT="" # options for operations
-_EOPT="" # extra options (directly given to package manager)
-         # these options will be translated by (_translate_all) method.
-_PACMAN="" # name of the package manager
+_POPT=""    # primary operation
+_SOPT=""    # secondary operation
+_TOPT=""    # options for operations
+_EOPT=""    # extra options (directly given to package manager)
+            # these options will be translated by (_translate_all) method.
+_PACMAN=""  # name of the package manager
 
 _PACMAN_detect \
 || _die "'pacapt' doesn't support your package manager."
@@ -2460,7 +2364,7 @@ while :; do
       exit 0
       ;;
     P)
-      _print_supported_operations $_PACMAN
+      _print_supported_operations "$_PACMAN"
       exit 0
       ;;
 
@@ -2486,7 +2390,7 @@ while :; do
     #
     # FIXME: Please check pacman(8) to see if they are really 2nd operation
     #
-    s|l|i|p|o|m|n)
+    e|g|i|l|m|n|o|p|s)
       if [[ "$_SOPT" == '' ]]; then
         _SOPT="$_opt"
         continue
@@ -2594,7 +2498,7 @@ _validate_operation "${_PACMAN}_${_POPT}${_SOPT}" \
 
 _translate_all || exit
 
-if [[ -n "$@" ]]; then
+if [[ -n "$*" ]]; then
   case "${_POPT}${_SOPT}" in
   "Su"|"Sy"|"Suy")
     echo 1>&2 "WARNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
@@ -2611,6 +2515,6 @@ if [[ -n "$PACAPT_DEBUG" ]]; then
   echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT ${*}'"
   declare -f "${_PACMAN}_${_POPT}${_SOPT}"
 else
-  "_${_PACMAN}_init"
+  "_${_PACMAN}_init" || exit
   "${_PACMAN}_${_POPT}${_SOPT}" $_EOPT "$@"
 fi
