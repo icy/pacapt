@@ -161,7 +161,7 @@ sun_tools  *        *     *     *     *    *                                    
 * [`batch-pacapt`](https://github.com/Grenadingue/batch-pacapt): An Arch's pacman-like package manager for Windows
 * [`node-pacapt`](https://github.com/Grenadingue/node-pacapt): A node.js wrapper of pacapt + batch-pacapt
 
-## Similar project
+## Similar projects
 
 * [`sysget`](https://github.com/emilengler/sysget)
 
