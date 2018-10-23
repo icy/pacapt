@@ -16,7 +16,7 @@
 
 ## Name
 
-`pacapt` - An `Arch`'s pacman-like package manager for some `Unices`.
+`pacapt` - An `Arch`'s pacman-like wrapper for many package managers.
 
 ## Description
 
@@ -55,6 +55,7 @@ The tool supports the following package managers:
 * `tazpkg`        by `SliTaz Linux`
 * `swupd`         by `Clear Linux`
 * `tlmgr`         by `TeX Live`
+* `conda`         by [`Conda`](https://conda.io/docs/)
 
 ## Installation
 

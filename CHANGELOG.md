@@ -1,10 +1,11 @@
-## v2.4.x
+## v2.4.0
 
-* Support non-system package manager (`npm`, `gem`, ...)
 * `lib/tlmgr`: Add TeXLive support (Antony Lee)
+* `lib/conda`: Conda support (Antony Lee)
 
 For developers:
 
+* Ability to support non-system package manager (`npm`, `gem`, ...)
 * Reduce shellcheck warning/error reports
 
 ## v2.3.15
