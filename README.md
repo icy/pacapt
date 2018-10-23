@@ -107,9 +107,7 @@ For system package manager
 * Remove orphans: `pacapt -Sc`
 * Clean up: `pacapt -Scc` or `pacapt -Sccc`
 
-For non-system package manager:
-
-Similar as above, however you need to call correct script name, e.g.,
+For non-system package manager: Similar as above, however you need to call correct script name, e.g.,
 
 * Intall a Conda package: `pacapt-conda -S foo`
 * Remove a Conda package: `pacapt-conda -R foo`
