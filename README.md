@@ -6,37 +6,41 @@
 * [Description](#description)
 * [Installation](#installation)
   * [Install stable from Github](#install-stable-script-from-github)
-  * [Installation from Pival81 repository](#installation-from-pival81-repository)
 * [Usage](#usage)
-* [Implemented Operations](#implemented-operations)
+  * [Basic options](#basic-options)
+  * [Basic operations](#basic-operations)
+  * [Implemented Operations](#implemented-operations)
 * [Related projects](#related-projects)
+* [Similar projects](#similar-projects)
 * [Development](#development)
 * [License](#license)
 * [Authors](#authors-contributors)
 
 ## Name
 
-`pacapt` - An `Arch`'s pacman-like wrapper for many package managers.
+`pacapt` - An `ArchLinux`'s pacman-like wrapper for many package managers.
 
 ## Description
 
-An `Arch`'s pacman-like package manager for some `Unices`.
-Actually this `Bash` script provides a wrapper for system's package manager.
-For example, on `CentOS` machines, you can install `htop` with command
+`pacapt` is an `Arch`'s pacman-like wrapper for many package managers
+(system packages managers, software package managers). It's written in
+`Bash` and its capacity can be extended easily. A newer version is being
+developer in `Dlang` and [it's reaching an alpha release](https://github.com/icy/pacapt/tree/nd).
+
+A sample usage of the script on `CentOS`/`Ubuntu`/`FreeBSD` machines:
 
     $ pacapt -S htop
+
+The command format doesn't depend on `OS` you're working on.
 
 Instead of remembering various options/tools on different `OS`s, you only
 need a common way to manipulate packages. Not all options of the native
 package manager are ported; the tool only provides a very basic interface
 to search, install, remove packages, and/or update the system.
 
-`Arch`'s pacman is chosen, as pacman is quite smart when it divides all
-packages-related operations into three major groups:
+`Arch`'s pacman is chosen, as pacman is quite simple when its set of operations
+are simple and divided into three memorable major groups:
   `Synchronize`, `Query` and `Remove/Clean up`.
-It has a clean man page, and it is the only tool needed to manipulate
-official packages on system.
-(`Debian`, for example, requires you to use `apt-get`, `dpkg`, and/or `aptitude`.)
 
 The tool supports the following package managers:
 
@@ -84,18 +88,21 @@ which is `v2.0` at the moment. If you want to compile a script
 from its components, please make sure you use a correct branch.
 See `CONTRIBUTING.md` for details.
 
-### Installation from Pival81 repository
-
-@Pival81 creates specification to build packages on various Linux
-distributions (CentOS, Debian, Fedora, OpenSUSE, RHEL, Ubuntu).
-The specification can be found under the `contrib/` directory.
-
-@Pival81 also builds packages which are ready to use on your machine.
-See the following link for details.
-
-  http://software.opensuse.org/download.html?project=home:Pival81&package=pacapt
-
 ## Usage
+
+### Basic operations
+
+* Update package database: `pacapt -Sy`
+* Install a package: `pacapt -S foo`
+* Search a package: `pacapt -Ss foo`
+* Remove a package: `pacapt -R foo`
+* Upgrade system: `pacapt -Su`
+* Remove orphans: `pacapt -Sc`
+* Clean up: `pacapt -Scc` or `pacapt -Sccc`
+
+See also  https://github.com/icy/pacapt/blob/ng/lib/help.txt.
+
+### Basic options
 
 Some basic command line options
 
@@ -106,11 +113,9 @@ Some basic command line options
 Some popular options of the original `ArchLinux`'s `pacman` program
 are supported and listed in the table in the next section.
 
-A short description can be found at
+A long list of operations can be found from [`ArchLinux`'s wiki](https://wiki.archlinux.org/index.php/Pacman/Rosetta).
 
-  https://github.com/icy/pacapt/blob/ng/lib/help.txt.
-
-## Implemented operations
+### Implemented operations
 
 ```
            Q Qc Qe Qi Qk Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Sg Si Sii Sl Ss Su Suy Sw Sy U
@@ -143,6 +148,10 @@ sun_tools  *        *     *     *     *    *                                    
 
 * [`batch-pacapt`](https://github.com/Grenadingue/batch-pacapt): An Arch's pacman-like package manager for Windows
 * [`node-pacapt`](https://github.com/Grenadingue/node-pacapt): A node.js wrapper of pacapt + batch-pacapt
+
+## Similar project
+
+* [`sysget`](https://github.com/emilengler/sysget)
 
 ## Development
 

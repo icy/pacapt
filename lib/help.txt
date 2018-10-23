@@ -1,6 +1,5 @@
 NAME
-  pacapt - An Arch's pacman-like package manager for some Unices.
-  More details can be found at https://github.com/icy/pacapt .
+  pacapt - An `ArchLinux`'s pacman-like wrapper for many package managers.
 
 SYNTAX
 
@@ -83,3 +82,7 @@ NOTES
 
   it's always the best to combine them
       $ pacapt -Syu
+
+READMORE
+
+  Please visit https://github.com/icy/pacapt.
