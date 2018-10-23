@@ -38,7 +38,7 @@ need a common way to manipulate packages. Not all options of the native
 package manager are ported; the tool only provides a very basic interface
 to search, install, remove packages, and/or update the system.
 
-`Arch`'s pacman is chosen, as pacman is quite simple when its set of operations
+`Arch`'s pacman is chosen, because its set of operations
 are simple and divided into three memorable major groups:
   `Synchronize`, `Query` and `Remove/Clean up`.
 
