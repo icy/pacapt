@@ -5,7 +5,7 @@
 * [Name](#name)
 * [Description](#description)
 * [Installation](#installation)
-  * [Install stable from Github](#install-stable-script-from-github)
+  * [Install stable cript from Github](#install-stable-script-from-github)
 * [Usage](#usage)
   * [Basic options](#basic-options)
   * [Basic operations](#basic-operations)
