@@ -3,19 +3,10 @@
 [![Build Status](https://travis-ci.org/icy/pacapt.svg?branch=ng)](https://travis-ci.org/icy/pacapt)
 
 `pacapt` is an `Arch`'s pacman-like wrapper for many package managers
-(system packages managers, software package managers). A sample usage
-of the script on any `Linux` machines:
-
-    $ pacapt -S htop
-
-The command format doesn't depend on `OS` you're working on: it can be
-`CentOS`, `Ubuntu` or `FreeBSD` :)
-
-Instead of remembering various options/tools on different `OS`s, you only
-need a common way to manipulate packages. Not all options of the native
-package manager are ported; the tool only provides a very basic interface
-to search, install, remove packages, and/or update the system.
-
+(system packages managers, software package managers).
+For example, the command `pacapt -S htop` works any `Linux` and some
+`FFreeBSD` machines, and that will install `htop` package.
+You only need to work with the same set of command options on `OS`s.
 `Arch`'s pacman is chosen, because its set of operations
 are simple and divided into three memorable major groups:
   `Synchronize`, `Query` and `Remove/Clean up`.
