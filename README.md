@@ -38,7 +38,7 @@ Non-system package manager
 
 * [Description](#description)
 * [Installation](#installation)
-  * [Install stable `Bash` script 2.4.x from Github](#install-stable-bash-script-2.4.x-from-github)
+  * [Install stable `Bash` script 2.4.x from Github](#install-stable-bash-script-24x-from-github)
 * [Usage](#usage)
   * [Basic options](#basic-options)
   * [Basic operations](#basic-operations)
