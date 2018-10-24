@@ -1,13 +1,10 @@
-## `pacapt` - An `ArchLinux`'s pacman-like wrapper for many package managers.
+## `pacapt` - An `ArchLinux`'s pacman-like wrapper for many package managers
 
 [![Build Status](https://travis-ci.org/icy/pacapt.svg?branch=ng)](https://travis-ci.org/icy/pacapt)
 
 `pacapt` is an `Arch`'s pacman-like wrapper for many package managers
-(system packages managers, software package managers). It's written in
-`Bash` and its capacity can be extended easily. A newer version is being
-developer in `Dlang` and [it's reaching an alpha release](https://github.com/icy/pacapt/tree/nd).
-
-A sample usage of the script on any `Linux` machines:
+(system packages managers, software package managers). A sample usage
+of the script on any `Linux` machines:
 
     $ pacapt -S htop
 
