@@ -2,7 +2,7 @@ BINDIR=/usr/local/bin/
 DISTRO=debian:stable
 DEBUG=1
 DC=ldc2
-DOCKER=docker run --rm -ti -e DFLAGS="-static" -v `pwd`:/src dlanguage/ldc
+DOCKER=docker run --rm -ti -e DFLAGS="-static" -v `pwd`:/src dlanguage/ldc:1.9.0
 
 ifeq ($(VERSION),)
 	OUTPUT = pacapt.dev
