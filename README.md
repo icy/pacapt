@@ -34,12 +34,27 @@ Non-system package manager
 * `tlmgr`         by `TeX Live`
 * `conda`         by [`Conda`](https://conda.io/docs/)
 
+## TOC
+
+* [Description](#description)
+* [Installation](#installation)
+  * [Install stable `Bash` script 2.4.x from Github](#install-stable-bash-script-2.4.x-from-github)
+* [Usage](#usage)
+  * [Basic options](#basic-options)
+  * [Basic operations](#basic-operations)
+  * [Implemented Operations](#implemented-operations)
+* [Related projects](#related-projects)
+* [Similar projects](#similar-projects)
+* [Development](#development)
+* [License](#license)
+* [Authors](#authors-contributors)
+
 ## Installation
 
 1. This script shouldn't be installed on an Arch-based system;
 2. On `FreeBSD` and `Alpine Linux`, please install `bash` package first.
 
-### Install stable script from Github
+### Install stable `Bash` script 2.4.x from Github
 
 You can download the stable script and make it executable
 
