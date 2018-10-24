@@ -1,37 +1,18 @@
+## `pacapt` - An `ArchLinux`'s pacman-like wrapper for many package managers.
+
 [![Build Status](https://travis-ci.org/icy/pacapt.svg?branch=ng)](https://travis-ci.org/icy/pacapt)
-
-## Table of contents
-
-* [Name](#name)
-* [Description](#description)
-* [Installation](#installation)
-  * [Install stable cript from Github](#install-stable-script-from-github)
-* [Usage](#usage)
-  * [Basic options](#basic-options)
-  * [Basic operations](#basic-operations)
-  * [Implemented Operations](#implemented-operations)
-* [Related projects](#related-projects)
-* [Similar projects](#similar-projects)
-* [Development](#development)
-* [License](#license)
-* [Authors](#authors-contributors)
-
-## Name
-
-`pacapt` - An `ArchLinux`'s pacman-like wrapper for many package managers.
-
-## Description
 
 `pacapt` is an `Arch`'s pacman-like wrapper for many package managers
 (system packages managers, software package managers). It's written in
 `Bash` and its capacity can be extended easily. A newer version is being
 developer in `Dlang` and [it's reaching an alpha release](https://github.com/icy/pacapt/tree/nd).
 
-A sample usage of the script on `CentOS`/`Ubuntu`/`FreeBSD` machines:
+A sample usage of the script on any `Linux` machines:
 
     $ pacapt -S htop
 
-The command format doesn't depend on `OS` you're working on.
+The command format doesn't depend on `OS` you're working on: it can be
+`CentOS`, `Ubuntu` or `FreeBSD` :)
 
 Instead of remembering various options/tools on different `OS`s, you only
 need a common way to manipulate packages. Not all options of the native
