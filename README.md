@@ -36,7 +36,7 @@ Non-system package manager
 
 ## TOC
 
-* [Description](#description)
+* [Description](#pacapt---an-archlinuxs-pacman-like-wrapper-for-many-package-managers)
 * [Installation](#installation)
   * [Install stable `Bash` script 2.4.x from Github](#install-stable-bash-script-24x-from-github)
 * [Usage](#usage)
