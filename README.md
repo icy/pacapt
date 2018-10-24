@@ -56,7 +56,8 @@ Non-system package manager
 
 ### Install stable `Bash` script 2.4.x from Github
 
-You can download the stable script and make it executable
+You can download the stable script and make it executable.
+On non-Arch-based system, you may use `pacman` as script name instead of `pacapt`.
 
 ````
 $ sudo wget -O /usr/local/bin/pacapt \
@@ -66,10 +67,6 @@ $ sudo chmod 755 /usr/local/bin/pacapt
 
 $ sudo ln -sv /usr/local/bin/pacapt /usr/local/bin/pacman || true
 ````
-
-On some system, `/usr/local/bin` is not in the search paths when the
-command is executed by `sudo`. You may want to use `/usr/bin/pacman`
-or `/usr/bin/pacapt` instead.
 
 For non-system package manager, you need to create symbolic links
 
