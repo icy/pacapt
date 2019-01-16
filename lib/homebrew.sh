@@ -109,7 +109,7 @@ homebrew_R() {
     echo >&2 ":: (pacapt) fallback on cask"
     brew cask remove "$@"
   else
-    return "${_remote[0]}"
+    return "${_ret[0]}"
   fi
 }
 
