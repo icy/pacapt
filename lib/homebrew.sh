@@ -103,9 +103,13 @@ homebrew_R() {
   | {
       cat 3>&2 2>&1 1>&3 3>&- ;
     }
-  if [[ "${PIPESTATUS[1]}" == "217" ]]; then
+  _ret=( ${PIPESTATUS[*]} )
+
+  if [[ "${_ret[1]}" == "217" ]]; then
     echo >&2 ":: (pacapt) fallback on cask"
     brew cask remove "$@"
+  else
+    return "${_remote[0]}"
   fi
 }
 
@@ -177,9 +181,12 @@ homebrew_S() {
         }
       }
     '
+  _ret=( ${PIPESTATUS[*]} )
 
-  if [[ "${PIPESTATUS[1]}" == "217" ]]; then
+  if [[ "${_ret[1]}" == "217" ]]; then
     echo >&2 ":: (pacapt) fall back on cask"
     brew cask insall $_TOPT "$@"
+  else
+    return "${_ret[0]}"
   fi
 }
