@@ -99,10 +99,7 @@ homebrew_R() {
           exit 217;
         }
       }
-    ' \
-  | {
-      cat 3>&2 2>&1 1>&3 3>&- ;
-    }
+    '
   _ret=( ${PIPESTATUS[*]} )
 
   if [[ "${_ret[1]}" == "217" ]]; then
