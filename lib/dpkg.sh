@@ -125,7 +125,11 @@ dpkg_Sy() {
 }
 
 dpkg_Ss() {
-  apt-cache search "$@"
+  if command -v apt >/dev/null; then
+    apt search "$@"
+  else
+    apt-cache search "$@"
+  fi
 }
 
 dpkg_Sc() {
