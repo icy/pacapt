@@ -923,11 +923,13 @@ dpkg_Si() {
 
 dpkg_Suy() {
   apt-get update \
-  && apt-get upgrade "$@"
+  && apt-get upgrade "$@" \
+  && apt-get dist-upgrade "$@"
 }
 
 dpkg_Su() {
-  apt-get upgrade "$@"
+  apt-get upgrade "$@" \
+  && apt-get dist-upgrade "$@"
 }
 
 
