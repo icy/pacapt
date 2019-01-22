@@ -3,10 +3,10 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.4.0
+# Version: 2.4.1
 # Authors: Anh K. Huynh et al.
 
-# Copyright (C) 2010 - 2018 \
+# Copyright (C) 2010 - 2019 \
 #                           | 10sr (10sr)
 #                           | Alexander Dupuy (dupuy)
 #                           | Anh K. Huynh (icy)
@@ -44,9 +44,9 @@
 
 _print_pacapt_version() {
   cat <<_EOF_
-pacapt version '2.4.0'
+pacapt version '2.4.1'
 
-Copyright (C) 2010 - 2018 \\
+Copyright (C) 2010 - 2019 \\
                           | 10sr (10sr)
                           | Alexander Dupuy (dupuy)
                           | Anh K. Huynh (icy)
@@ -83,7 +83,7 @@ DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 _EOF_
 }
 
-export PACAPT_VERSION='2.4.0'
+export PACAPT_VERSION='2.4.1'
 
 _help() {
   cat <<'EOF'
@@ -94,12 +94,23 @@ SYNTAX
 
   $ pacapt <option(s)> <operation(s)> <package(s)>
 
-OPERATIONS
+BASIC OPTIONS
 
-  Basic
     -h or --help    print this help message
     -P              print supported operations
     -V              print version information
+
+SYSGET STYLE OPERATIONS
+
+  update                        Update package database
+  upgrade                       Upgrade system
+  install <options> <packages>  Install some packages
+  search  <options> <package>   Search some package
+  remove  <options> <packages>  Remove some packages
+  autoremove                    Remove orphans (WIP; may not work correctly)
+  clean                         Clean package manager caches
+
+PACMAN STYLE OPERATIONS
 
   Query
     -Q              list all installed packages
@@ -2327,6 +2338,16 @@ if [[ -z "$PACAPT_DEBUG" ]]; then
 elif [[ "$PACAPT_DEBUG" != "auto" ]]; then
   _PACMAN="$PACAPT_DEBUG"
 fi
+
+case "${1:-}" in
+"update")     shift; set -- -Sy   "$@" ;;
+"upgrade")    shift; set -- -Su   "$@" ;;
+"install")    shift; set -- -S    "$@" ;;
+"search")     shift; set -- -Ss   "$@" ;;
+"remove")     shift; set -- -R    "$@" ;;
+"autoremove") shift; set -- -Rs   "$@" ;;
+"clean")      shift; set -- -Scc  "$@" ;;
+esac
 
 while :; do
   _args="${1-}"
