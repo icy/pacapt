@@ -42,6 +42,16 @@ elif [[ "$PACAPT_DEBUG" != "auto" ]]; then
   _PACMAN="$PACAPT_DEBUG"
 fi
 
+case "${1:-}" in
+"update")     shift; set -- -Sy   "$@" ;;
+"upgrade")    shift; set -- -Su   "$@" ;;
+"install")    shift; set -- -S    "$@" ;;
+"search")     shift; set -- -Ss   "$@" ;;
+"remove")     shift; set -- -R    "$@" ;;
+"autoremove") shift; set -- -Rs   "$@" ;;
+"clean")      shift; set -- -Scc  "$@" ;;
+esac
+
 while :; do
   _args="${1-}"
 
