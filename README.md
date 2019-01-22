@@ -90,13 +90,13 @@ noting the suffix (e.g., `-tlmgr`, `-conda`) is mandatory.
 
 For system package manager
 
-* Update package database: `pacapt -Sy`
-* Install a package: `pacapt -S foo`
-* Search a package: `pacapt -Ss foo`
-* Remove a package: `pacapt -R foo`
-* Upgrade system: `pacapt -Su`
-* Remove orphans: `pacapt -Sc`
-* Clean up: `pacapt -Scc` or `pacapt -Sccc`
+* Update package database: `pacapt -Sy`, or `pacapt update`
+* Install a package: `pacapt -S foo`, or `pacapt install foo`
+* Search a package: `pacapt -Ss foo`, or `pacapt search foo`
+* Remove a package: `pacapt -R foo`, or `pacapt remove foo`
+* Upgrade system: `pacapt -Su`, or `pacapt upgrade`
+* Remove orphans: `pacapt -Sc`, or `pacapt remove foo`
+* Clean up: `pacapt -Scc` or `pacapt -Sccc`, or `pacapt clean`
 
 For non-system package manager: Similar as above, however you need to call correct script name, e.g.,
 

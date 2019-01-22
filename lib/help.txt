@@ -5,12 +5,23 @@ SYNTAX
 
   $ pacapt <option(s)> <operation(s)> <package(s)>
 
-OPERATIONS
+BASIC OPTIONS
 
-  Basic
     -h or --help    print this help message
     -P              print supported operations
     -V              print version information
+
+SYSGET STYLE OPERATIONS
+
+  update                        Update package database
+  upgrade                       Upgrade system
+  install <options> <packages>  Install some packages
+  search  <options> <package>   Search some package
+  remove  <options> <packages>  Remove some packages
+  autoremove                    Remove orphans (WIP; may not work correctly)
+  clean                         Clean package manager caches
+
+PACMAN STYLE OPERATIONS
 
   Query
     -Q              list all installed packages
