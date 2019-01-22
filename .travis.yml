@@ -1,7 +1,5 @@
 sudo: required
-language: d
-d:
-- ldc
+language: ruby
 services:
 - docker
 script:
