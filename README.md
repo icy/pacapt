@@ -95,7 +95,7 @@ For system package manager
 * Search a package: `pacapt -Ss foo`, or `pacapt search foo`
 * Remove a package: `pacapt -R foo`, or `pacapt remove foo`
 * Upgrade system: `pacapt -Su`, or `pacapt upgrade`
-* Remove orphans: `pacapt -Sc`, or `pacapt remove foo`
+* Remove orphans: `pacapt -Sc`, or `pacapt autoremove foo`
 * Clean up: `pacapt -Scc` or `pacapt -Sccc`, or `pacapt clean`
 
 For non-system package manager: Similar as above, however you need to call correct script name, e.g.,
