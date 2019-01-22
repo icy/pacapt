@@ -9,10 +9,10 @@ if [[ "${TRAVIS_BRANCH:-}" != "nd" ]]; then
   echo >& ":: Skip deployment as current branch '${TRAVIS_BRANCH:-} is not 'nd'."
 fi
 
-if command -v apt-get >/dev/null; then
-  sudo apt-get install ruby
-  sudo -H gem install bundler
-fi
+# if command -v apt-get >/dev/null; then
+#   sudo apt-get install ruby
+#   sudo -H gem install bundler
+# fi
 
 D_ROOT="$(dirname "${BASH_SOURCE[0]:-.}")/../"
 D_ROOT="$(cd "${D_ROOT}" && pwd -P)"
