@@ -23,6 +23,7 @@ tar xfvz ${BIN_TAG}.tar.gz
 
 cd bin-${BIN_TAG#v*} || exit
 pwd
+rm -fv Gemfile.lock
 bundle install
 
 FILE_NAME="pacapt-${TRAVIS_BRANCH:-nd}-linux-amd64.tar.gz"
