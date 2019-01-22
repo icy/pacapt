@@ -1,20 +1,22 @@
 sudo: required
 language: d
-d: [ldc]
+d:
+- ldc
 services:
 - docker
 script:
-# lib{json,uri}-perl is required for `make shellcheck`
 - sudo apt-get install libjson-perl liburi-perl
 - make shellcheck
-#- curl -fsS https://dlang.org/install.sh | bash -s ldc
-#- source ~/dlang/ldc-*/activate
 - make tests
+- make deploy
 
 notifications:
   webhooks:
     urls:
-      - https://webhooks.gitter.im/e/228a31b6140b028bcf79
-    on_success: change  # options: [always|never|change] default: always
-    on_failure: always  # options: [always|never|change] default: always
-    on_start: never     # options: [always|never|change] default: always
+    - https://webhooks.gitter.im/e/228a31b6140b028bcf79
+    on_success: change
+    on_failure: always
+    on_start: never
+env:
+  global:
+    secure: foIPMOaDK1egJO6uYPItmG1DutLtcXAY0rKzgb9fDKsdurKxhqwaItu3/wiCNE+Dy93jwcIbOVAXVUzS9rUnQqNIqdz3JR6Gz0BkB/w5P9pmD8k2J8Xf5w4eBqx0YdngnrXMhJ8FF67m2xtHRWVNlaepu2rOOx5Sykl+2Yf9Kq4am5HJAUCOcx+FkEQyijXoJFI+WBU1lswdjKidQTJIDZ6C2Hlf2TZ42MfFkW8Y5GN8//P+p/WvIVAGLkHjD7Kc+V37V/zxaqXUpZJAHwB6QVwVfjB2U7VRt4r3SJqAxMiKCXm7DBMumAvwNWELOhGUx6oQhJVUGLJPkF5bkYBsFldQdqLGZetwzrWKfJFckVZxYjqWXcQs5Or+PRdQ/17B6kcM5CrTqgV6u1g6Qa9eXWfNJiaqSdY6Q1UYyFPfNzI5tpcJLXeiUjHweQ47rTWjkMGD67YY9v9pUBunK7pMghmfLxjCczirlkoDh9/QUMivdqBl8wju8y/yZprHPE9FVBLzFaVRD0x4SRA8DgxAZN2YAuywdkKiVz+N3BB+CNgcDfKsQZQCE8xQ90lTItQfgc6HcFrkiDryOHSz+/kWgltjSN7XIZma81NerOIukds3Br7pMHg99362an0HrnVQawn/B41fwCKVo4mtmJ0nLQX14bTYugFDhhXhtERnF6U=

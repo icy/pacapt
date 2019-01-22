@@ -124,3 +124,7 @@ dbuild: output/pacapt.libs output/pacapt_passthrough.libs
 .PHONY: tests
 tests: dtest
 	@cd tests/ && make all
+
+.PHONY: deploy
+deploy:
+	@$(shell pwd -P)/bin/deploy.sh
