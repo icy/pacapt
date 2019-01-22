@@ -33,11 +33,13 @@ sha256sum "$FILE_NAME" > "$FILE_NAME.sha256"
 bundle exec -- foo.rb \
   --user icy --repo bin \
   --release "pacapt-devel" \
+  --overwrite \
   --name "$FILE_NAME" \
   --file "$FILE_NAME"
 
 bundle exec -- foo.rb \
   --user icy --repo bin \
   --release "pacapt-devel" \
+  --overwrite \
   --name "$FILE_NAME.sha256" \
   --file "$FILE_NAME.sha256"
