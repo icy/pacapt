@@ -11,7 +11,7 @@ fi
 
 if command -v apt-get >/dev/null; then
   sudo apt-get install ruby
-  sudo -H gem install bundle
+  sudo -H gem install bundler
 fi
 
 D_ROOT="$(dirname "${BASH_SOURCE[0]:-.}")/../"
