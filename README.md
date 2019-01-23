@@ -22,9 +22,6 @@ The tool supports the following package managers:
 * `apk`           by `Alpine Linux`
 * `tazpkg`        by `SliTaz Linux`
 * `swupd`         by `Clear Linux`
-
-Non-system package manager
-
 * `tlmgr`         by `TeX Live`
 * `conda`         by [`Conda`](https://conda.io/docs/)
 
