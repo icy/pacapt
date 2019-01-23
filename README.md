@@ -2,15 +2,9 @@
 
 [![Build Status](https://travis-ci.org/icy/pacapt.svg?branch=ng)](https://travis-ci.org/icy/pacapt)
 
-`pacapt` is an `Arch`'s pacman-like wrapper for many package managers
-(system package managers, software package managers like `npm`, `gem`, `conda`).
-For example, the command `pacapt -S htop` works any supported `Linux` or `BSD`
-machines, and that will install `htop` package.
-You only need to work with the same set of command options on any `OS`s
-and/or any software package managers.
-`Arch`'s pacman is chosen, because its set of operations
-are simple and divided into three memorable major groups:
-  `Synchronize`, `Query` and `Remove/Clean up`.
+`pacapt` is a wrapper for many package managers.
+Simply install package with `pacpat -S htop` or `pacapt install htop`
+on any `Linux`, `BSD`, `Mac OS` machines.
 
 The tool supports the following package managers:
 
