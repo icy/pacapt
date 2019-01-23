@@ -14,7 +14,7 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
 _dpkg_init() {
-  :
+  : "${DPKG_USE_APT:=1}"
 }
 
 # dpkg_Q may _not_implemented
@@ -127,7 +127,9 @@ dpkg_Sy() {
 }
 
 dpkg_Ss() {
-  if command -v apt >/dev/null; then
+  if [["${DPKG_USE_APT:-1}" == "1" ]] \
+    && command -v apt >/dev/null; \
+  then
     apt search "$@"
   else
     apt-cache search "$@"
