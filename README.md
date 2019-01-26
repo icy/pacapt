@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/icy/pacapt.svg?branch=ng)](https://travis-ci.org/icy/pacapt)
 
 `pacapt` is a wrapper for many package managers.
-Simply install package with `pacpat -S htop` or `pacapt install htop`
+Simply install package with `pacapt -S htop` or `pacapt install htop`
 on any `Linux`, `BSD`, `Mac OS` machines.
 
 The tool supports the following package managers:
