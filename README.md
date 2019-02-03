@@ -5,8 +5,7 @@
 `pacapt` is a wrapper for many package managers.
 Simply install package with `pacapt -S htop` or `pacapt install htop`
 on any `Linux`, `BSD`, `Mac OS` machines.
-
-The tool supports the following package managers:
+It supports the following package managers:
 
 * `pacman`        by `Arch Linux`, `ArchBang`, `Manjaro`, etc.
 * `dpkg/apt-get`  by `Debian`, `Ubuntu`, etc.
