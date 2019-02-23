@@ -68,9 +68,17 @@ homebrew_Q() {
   fi
 }
 
-# FIXME: make sure "join" does exit
-# FIXME: Add quoting support, be cause "join" can fail
 homebrew_Rs() {
+    join
+    if [ $? -ne 0 ]; then
+      _error "${FUNCNAME[0]}: join binary does not exist in system."
+    fi
+
+    sort
+    if [ $? -ne 0 ]; then
+      _error "${FUNCNAME[0]}: sort binary does not exist in system."
+    fi
+
     brew rm "$@"
     brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps "$@")))
 }
