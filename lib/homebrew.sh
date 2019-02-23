@@ -72,11 +72,13 @@ homebrew_Rs() {
     which join > /dev/null
     if [ $? -ne 0 ]; then
       _error "${FUNCNAME[0]}: join binary does not exist in system."
+      return 1
     fi
 
     which sort > /dev/null
     if [ $? -ne 0 ]; then
       _error "${FUNCNAME[0]}: sort binary does not exist in system."
+      return 1
     fi
 
     brew rm "$@"
