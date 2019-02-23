@@ -69,12 +69,12 @@ homebrew_Q() {
 }
 
 homebrew_Rs() {
-    join
+    which join > /dev/null
     if [ $? -ne 0 ]; then
       _error "${FUNCNAME[0]}: join binary does not exist in system."
     fi
 
-    sort
+    which sort > /dev/null
     if [ $? -ne 0 ]; then
       _error "${FUNCNAME[0]}: sort binary does not exist in system."
     fi
