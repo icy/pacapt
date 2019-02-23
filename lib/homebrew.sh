@@ -79,12 +79,20 @@ homebrew_Rs() {
       _die "pacapt: sort binary does not exist in system."
     fi
 
-    brew rm "$@"
+    if [[ "$@" == "" ]]; then
+      _die "pacapt: ${FUNCNAME[0]} requires arguments"
+    fi
 
-    while [ "$(join <(sort <(brew leaves)) <(sort <(brew deps "$@")))" != "" ]
+    for _target in $@;
     do
-      brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps "$@")))
+      brew rm $_target
+
+      while [ "$(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))" != "" ]
+      do
+        brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))
+      done
     done
+
 }
 
 homebrew_R() {
