@@ -71,14 +71,12 @@ homebrew_Q() {
 homebrew_Rs() {
     which join > /dev/null
     if [ $? -ne 0 ]; then
-      _error "pacapt: join binary does not exist in system."
-      return 1
+      _die "pacapt: join binary does not exist in system."
     fi
 
     which sort > /dev/null
     if [ $? -ne 0 ]; then
-      _error "pacapt: sort binary does not exist in system."
-      return 1
+      _die "pacapt: sort binary does not exist in system."
     fi
 
     brew rm "$@"
