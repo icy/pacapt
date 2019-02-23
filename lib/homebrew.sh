@@ -82,7 +82,11 @@ homebrew_Rs() {
     fi
 
     brew rm "$@"
-    brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps "$@")))
+
+    while [ "$(join <(sort <(brew leaves)) <(sort <(brew deps "$@")))" != "" ]
+    do
+      brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps "$@")))
+    done
 }
 
 homebrew_R() {
