@@ -74,7 +74,7 @@ homebrew_Q() {
 homebrew_Rs() {
   if [[ "$_TOPT" == "s" ]]; then
     brew rm "$@"
-    brew rm $(join <(brew leaves) <(brew deps "$@"))
+    brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps "$@")))
   else
     _not_implemented
   fi
