@@ -70,14 +70,9 @@ homebrew_Q() {
 
 # FIXME: make sure "join" does exit
 # FIXME: Add quoting support, be cause "join" can fail
-# homebew_Rs may _not_implemented
 homebrew_Rs() {
-  if [[ "$_TOPT" == "s" ]]; then
     brew rm "$@"
     brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps "$@")))
-  else
-    _not_implemented
-  fi
 }
 
 homebrew_R() {
