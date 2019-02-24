@@ -68,16 +68,31 @@ homebrew_Q() {
   fi
 }
 
-# FIXME: make sure "join" does exit
-# FIXME: Add quoting support, be cause "join" can fail
-# homebew_Rs may _not_implemented
 homebrew_Rs() {
-  if [[ "$_TOPT" == "s" ]]; then
-    brew rm "$@"
-    brew rm $(join <(brew leaves) <(brew deps "$@"))
-  else
-    _not_implemented
-  fi
+    which join > /dev/null
+    if [ $? -ne 0 ]; then
+      _die "pacapt: join binary does not exist in system."
+    fi
+
+    which sort > /dev/null
+    if [ $? -ne 0 ]; then
+      _die "pacapt: sort binary does not exist in system."
+    fi
+
+    if [[ "$@" == "" ]]; then
+      _die "pacapt: ${FUNCNAME[0]} requires arguments"
+    fi
+
+    for _target in $@;
+    do
+      brew rm $_target
+
+      while [ "$(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))" != "" ]
+      do
+        brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))
+      done
+    done
+
 }
 
 homebrew_R() {
