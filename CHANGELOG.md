@@ -1,3 +1,10 @@
+## v2.4.2
+
+* Update README.md
+* Support sysget-style sub commands (`pacapt install`, `pacapt upgrade`,...)
+* `lib/homebrew/Rs`: Improvements (#124, @Mnkai)
+* `lib/dpkg`: Use `dist-upgrade` for `Suy` and `Su` operations
+
 ## v2.4.0
 
 * `lib/tlmgr`: Add TeXLive support (Antony Lee)
