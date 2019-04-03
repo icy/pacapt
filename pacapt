@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.4.1
+# Version: 2.4.2
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2019 \
@@ -44,7 +44,7 @@
 
 _print_pacapt_version() {
   cat <<_EOF_
-pacapt version '2.4.1'
+pacapt version '2.4.2'
 
 Copyright (C) 2010 - 2019 \\
                           | 10sr (10sr)
@@ -83,7 +83,7 @@ DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 _EOF_
 }
 
-export PACAPT_VERSION='2.4.1'
+export PACAPT_VERSION='2.4.2'
 
 _help() {
   cat <<'EOF'
@@ -1036,12 +1036,30 @@ homebrew_Q() {
 }
 
 homebrew_Rs() {
-  if [[ "$_TOPT" == "s" ]]; then
-    brew rm "$@"
-    brew rm $(join <(brew leaves) <(brew deps "$@"))
-  else
-    _not_implemented
-  fi
+    which join > /dev/null
+    if [ $? -ne 0 ]; then
+      _die "pacapt: join binary does not exist in system."
+    fi
+
+    which sort > /dev/null
+    if [ $? -ne 0 ]; then
+      _die "pacapt: sort binary does not exist in system."
+    fi
+
+    if [[ "$@" == "" ]]; then
+      _die "pacapt: ${FUNCNAME[0]} requires arguments"
+    fi
+
+    for _target in $@;
+    do
+      brew rm $_target
+
+      while [ "$(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))" != "" ]
+      do
+        brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))
+      done
+    done
+
 }
 
 homebrew_R() {
