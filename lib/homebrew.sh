@@ -96,7 +96,31 @@ homebrew_Rs() {
 }
 
 homebrew_R() {
-  brew remove "$@"
+  brew remove "$@" 2>&1 \
+  | awk '
+      BEGIN {
+        cask = 0;
+      }
+      {
+        print;
+        if ($0 ~ /Error: No such keg:/) {
+          may_cask = 1;
+        }
+      }
+      END {
+        if (may_cask == 1) {
+          exit 217;
+        }
+      }
+    '
+  _ret=( ${PIPESTATUS[*]} )
+
+  if [[ "${_ret[1]}" == "217" ]]; then
+    echo >&2 ":: (pacapt) fallback on cask"
+    brew cask remove "$@"
+  else
+    return "${_ret[0]}"
+  fi
 }
 
 homebrew_Si() {
@@ -150,5 +174,29 @@ homebrew_Sccc() {
 }
 
 homebrew_S() {
-  brew install $_TOPT "$@"
+  brew install $_TOPT "$@" 2>&1 \
+  | awk '
+      BEGIN {
+        cask = 0;
+      }
+      {
+        print;
+        if ($0 ~ /Found a cask named/) {
+          cask = 1;
+        }
+      }
+      END {
+        if (cask == 1) {
+          exit 217;
+        }
+      }
+    '
+  _ret=( ${PIPESTATUS[*]} )
+
+  if [[ "${_ret[1]}" == "217" ]]; then
+    echo >&2 ":: (pacapt) fall back on cask"
+    brew cask install $_TOPT "$@"
+  else
+    return "${_ret[0]}"
+  fi
 }
