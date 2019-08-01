@@ -99,7 +99,7 @@ homebrew_R() {
   brew remove "$@" 2>&1 \
   | awk '
       BEGIN {
-        cask = 0;
+        may_cask = 0;
       }
       {
         print;
@@ -177,16 +177,16 @@ homebrew_S() {
   brew install $_TOPT "$@" 2>&1 \
   | awk '
       BEGIN {
-        cask = 0;
+        may_cask = 0;
       }
       {
         print;
         if ($0 ~ /Found a cask named/) {
-          cask = 1;
+          may_cask = 1;
         }
       }
       END {
-        if (cask == 1) {
+        if (may_cask == 1) {
           exit 217;
         }
       }
