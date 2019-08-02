@@ -129,11 +129,13 @@ homebrew_Si() {
 
 homebrew_Suy() {
   brew update \
-  && brew upgrade "$@"
+  && brew upgrade "$@" \
+  && brew cask upgrade
 }
 
 homebrew_Su() {
-  brew upgrade "$@"
+  brew upgrade "$@" \
+  && brew cask upgrade
 }
 
 homebrew_Sy() {
