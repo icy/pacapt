@@ -5,7 +5,7 @@
 # License : MIT
 
 # FIXME: debian:squeeze It's unable to run `pacman -Sy`
-im ubuntu:16.04 ubuntu:14.04 debian:wheezy
+im ubuntu:14.04 ubuntu:16.04 ubuntu:18.04 debian:buster debian:jessie debian:stretch
 
 # Remove `docker-clean` because we need *.deb files under /var/cache
 in ! rm -fv /etc/apt/apt.conf.d/docker-clean
@@ -27,7 +27,7 @@ ou ^ii +apt +
 in -Qi apt
 ou ^Package: apt$
 ou ^Status: install ok installed$
-ou ^Priority: important$
+ou ^Priority: (important|required)$
 
 # File listing for `apt`
 in -Ql apt

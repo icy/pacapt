@@ -33,7 +33,7 @@ Basically we execute the following command
     $ docker run --rm \
         -v $PWD/test.sh:/tmp/test.sh \
         -v $PWD/pacapt.dev:/usr/bin/pacman \
-        ubuntu:14.04 \
+        ubuntu:18.04 \
         /tmp/test.sh
 
 This command will return 0 if all tests pass, or return 1 if any test fails.
