@@ -150,5 +150,13 @@ homebrew_Sccc() {
 }
 
 homebrew_S() {
-  brew install $_TOPT "$@"
+  2>&1 brew install $_TOPT "$@" \
+  | awk '{print; if ($0 ~ /brew cask install/) { exit(126); }}'
+  ret=( ${PIPESTATUS[*]} )
+  if [[ "${ret[1]}" == 126 ]]; then
+    echo >&2 ":: Now trying with brew/cask..."
+    brew cask install $_TOPT "$@"
+  else
+    return "${ret[0]}"
+  fi
 }
