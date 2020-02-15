@@ -1,3 +1,8 @@
+## v2.4.3
+
+* `lib/homebrew`: Support `cask` (fix #117)
+* `tests/dpkg`: Support new distros, drop support for old distro
+
 ## v2.4.2
 
 * Update README.md

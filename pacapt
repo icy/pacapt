@@ -3,10 +3,10 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.4.2
+# Version: 2.4.3
 # Authors: Anh K. Huynh et al.
 
-# Copyright (C) 2010 - 2019 \
+# Copyright (C) 2010 - 2020 \
 #                           | 10sr (10sr)
 #                           | Alexander Dupuy (dupuy)
 #                           | Anh K. Huynh (icy)
@@ -44,9 +44,9 @@
 
 _print_pacapt_version() {
   cat <<_EOF_
-pacapt version '2.4.2'
+pacapt version '2.4.3'
 
-Copyright (C) 2010 - 2019 \\
+Copyright (C) 2010 - 2020 \\
                           | 10sr (10sr)
                           | Alexander Dupuy (dupuy)
                           | Anh K. Huynh (icy)
@@ -83,7 +83,7 @@ DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 _EOF_
 }
 
-export PACAPT_VERSION='2.4.2'
+export PACAPT_VERSION='2.4.3'
 
 _help() {
   cat <<'EOF'
@@ -1117,7 +1117,15 @@ homebrew_Sccc() {
 }
 
 homebrew_S() {
-  brew install $_TOPT "$@"
+  2>&1 brew install $_TOPT "$@" \
+  | awk '{print; if ($0 ~ /brew cask install/) { exit(126); }}'
+  ret=( ${PIPESTATUS[*]} )
+  if [[ "${ret[1]}" == 126 ]]; then
+    echo >&2 ":: Now trying with brew/cask..."
+    brew cask install $_TOPT "$@"
+  else
+    return "${ret[0]}"
+  fi
 }
 
 
