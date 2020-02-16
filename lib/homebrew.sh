@@ -17,16 +17,51 @@ _homebrew_init() {
   :
 }
 
+# NOTE: brew can call cask if necessary.
+# NOTE: However, it always returns 1 when cask is used.
+# NOTE: homebrew/cask complete
 homebrew_Qi() {
   brew info "$@"
 }
 
+# homebrew_QL may _not_implemented
+# NOTE: homebrew features are inconsistent. Without any arguments
+# NOTE: it prints the list of all installed packages. Otherwise
+# NOTE: it prints the list of files of a package.
+# NOTE: homebrew/cask almost complete
 homebrew_Ql() {
-  brew list "$@"
+  if [[ -z "${@:-}" ]]; then
+    _not_implemented
+    return
+  fi
+
+  2>&1 brew list "$@" \
+  | awk 'BEGIN { idx = 0; }
+    { lines[idx] = $0; idx += 1; if ($0 ~ /Found a cask named/) { idx = 0; exit(126); } }
+    END { for (j = 0; j < idx; j ++) { print(lines[j]); } }'
+  ret=( ${PIPESTATUS[*]} )
+  if [[ "${ret[1]}" != 126 ]]; then
+    return "${ret[0]}"
+  fi
+
+  echo >&2 ":: Trying now with homebrew/cask"
+  brew cask info "$@" 2>&1 \
+  | grep -oEe "^(/.+Caskroom/.+) \([0-9]+ files, " \
+  | sed -E -e 's/ \([0-9]+ files, //' \
+  | while read -r dir; do
+      find "$dir" -type f
+    done
 }
 
+# FIXME: This function doesn't work well.
+# FIXME: THis function doesn't support homebrew/cask
 homebrew_Qo() {
   local pkg prefix cellar
+
+  if [[ -z "${@:-}" ]]; then
+    _not_implemented
+    return
+  fi
 
   # FIXME: What happens if the file is not exectutable?
   cd "$(dirname -- "$(which "$@")")" || return
@@ -44,15 +79,15 @@ homebrew_Qo() {
 }
 
 homebrew_Qc() {
-  brew log "$@"
+  brew log "${@:-}"
 }
 
 homebrew_Qu() {
-  brew outdated | grep "$@"
+  brew outdated | grep "${@:-.}"
 }
 
 homebrew_Qs() {
-  brew list | grep "$@"
+  brew list | grep "${@:-.}"
 }
 
 # homebrew_Q may _not_implemented
@@ -60,8 +95,9 @@ homebrew_Q() {
   if [[ "$_TOPT" == "" ]]; then
     if [[ "$*" == "" ]]; then
       brew list
+      brew cask list
     else
-      brew list | grep "$@"
+      { brew list ; brew cask list ; } | grep "$@"
     fi
   else
     _not_implemented
