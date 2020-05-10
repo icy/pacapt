@@ -184,7 +184,7 @@ Feel free to contribute in https://github.com/rami3l/pacaptr.
 We tried to rewrite the project in Dlang, but it's not mature enough.
 See on `nd` branch: https://github.com/icy/pacapt/tree/nd.
 
-We also tried to rewrite in https://github.com/rami3l/pacapt-py, 
+We also tried to rewrite in Python https://github.com/rami3l/pacapt-py, 
 golang (https://github.com/icy/pacapt/issues/126).
 
 ## License
