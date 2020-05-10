@@ -36,6 +36,8 @@ It supports the following package managers:
 * [Related projects](#related-projects)
 * [Similar projects](#similar-projects)
 * [Development](#development)
+  * [General steps](#general-steps)
+  * [Experimental projects](#experimental-projects)
 * [License](#license)
 * [Authors](#authors-contributors)
 
@@ -141,7 +143,8 @@ sun_tools  *        *     *     *     *    *                                    
 
 * [`batch-pacapt`](https://github.com/Grenadingue/batch-pacapt): An Arch's pacman-like package manager for Windows
 * [`node-pacapt`](https://github.com/Grenadingue/node-pacapt): A node.js wrapper of pacapt + batch-pacapt
-* [`pacaptr`](https://github.com/rami3l/pacaptr): A Rust port of pacapt with decent `homebrew`/`choco`/`dpkg` support and more
+* [`pacaptr`](https://github.com/rami3l/pacaptr): A Rust port of pacapt with decent `homebrew`/`choco`/`dpkg` support and more.
+  See also [Experimental projects](#experimental-projects)
 
 ## Similar projects
 
@@ -172,6 +175,17 @@ $ sudo install -m755 ./pacapt.dev /usr/local/bin/pacapt
 ````
 
 Please read the sample `Makefile` for some details.
+
+### Experimental projects
+
+We are trying to port the project to Rustlang.
+Feel free to contribute in https://github.com/rami3l/pacaptr.
+
+We tried to rewrite the project in Dlang, but it's not mature enough.
+See on `nd` branch: https://github.com/icy/pacapt/tree/nd.
+
+We also tried to rewrite in https://github.com/rami3l/pacapt-py, 
+golang (https://github.com/icy/pacapt/issues/126).
 
 ## License
 
@@ -207,6 +221,7 @@ authors and contributors.
 * Kevin Brubeck (unhammer)
 * Konrad Borowski (xfix)
 * Kylie McClain (somasis)
+* Rami3L
 * Valerio Pizzi (Pival81)
 * Siôn Le Roux (sinisterstuf)
 * Thiago Perrotta (thiagowfx)
