@@ -141,6 +141,7 @@ sun_tools  *        *     *     *     *    *                                    
 
 * [`batch-pacapt`](https://github.com/Grenadingue/batch-pacapt): An Arch's pacman-like package manager for Windows
 * [`node-pacapt`](https://github.com/Grenadingue/node-pacapt): A node.js wrapper of pacapt + batch-pacapt
+* [`pacaptr`](https://github.com/rami3l/pacaptr): A Rust port of pacapt with decent `homebrew`/`choco`/`dpkg` support and more
 
 ## Similar projects
 
