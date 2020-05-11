@@ -26,8 +26,6 @@ It supports the following package managers:
 
 ## TOC
 
-- [`pacapt` - An `ArchLinux`'s pacman-like wrapper for many package managers](#pacapt---an-archlinuxs-pacman-like-wrapper-for-many-package-managers)
-- [TOC](#toc)
 - [Installation](#installation)
   - [Install stable `Bash` script 2.4.x from Github](#install-stable-bash-script-24x-from-github)
 - [Usage](#usage)
