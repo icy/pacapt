@@ -26,18 +26,20 @@ It supports the following package managers:
 
 ## TOC
 
-* [Description](#pacapt---an-archlinuxs-pacman-like-wrapper-for-many-package-managers)
-* [Installation](#installation)
-  * [Install stable `Bash` script 2.4.x from Github](#install-stable-bash-script-24x-from-github)
-* [Usage](#usage)
-  * [Basic options](#basic-options)
-  * [Basic operations](#basic-operations)
-  * [Implemented Operations](#implemented-operations)
-* [Related projects](#related-projects)
-* [Similar projects](#similar-projects)
-* [Development](#development)
-* [License](#license)
-* [Authors](#authors-contributors)
+- [Description](#pacapt---an-archlinuxs-pacman-like-wrapper-for-many-package-managers)
+- [Installation](#installation)
+  - [Install stable `Bash` script 2.4.x from Github](#install-stable-bash-script-24x-from-github)
+- [Usage](#usage)
+  - [Basic operations](#basic-operations)
+  - [Basic options](#basic-options)
+  - [Implemented operations](#implemented-operations)
+- [Related projects](#related-projects)
+- [Similar projects](#similar-projects)
+- [Development](#development)
+  - [General steps](#general-steps)
+  - [Experimental projects](#experimental-projects)
+- [License](#license)
+- [Authors and Contributors](#authors-contributors)
 
 ## Installation
 
@@ -141,6 +143,8 @@ sun_tools  *        *     *     *     *    *                                    
 
 * [`batch-pacapt`](https://github.com/Grenadingue/batch-pacapt): An Arch's pacman-like package manager for Windows
 * [`node-pacapt`](https://github.com/Grenadingue/node-pacapt): A node.js wrapper of pacapt + batch-pacapt
+* [`pacaptr`](https://github.com/rami3l/pacaptr): A Rust port of pacapt with decent `homebrew`/`choco`/`dpkg` support and more.
+  See also [Experimental projects](#experimental-projects)
 
 ## Similar projects
 
@@ -171,6 +175,20 @@ $ sudo install -m755 ./pacapt.dev /usr/local/bin/pacapt
 ````
 
 Please read the sample `Makefile` for some details.
+
+### Experimental projects
+
+As the original Bash script grows, we feel a necessity to facilitate its maintenance. In [#126](https://github.com/icy/pacapt/issues/126), we propose to rewrite the project in Go, and some discussions have been made on the future of this project.
+
+Feel free to contribute to our new Rust port: [`pacaptr`](https://github.com/rami3l/pacaptr).
+
+Before that, we have also made several tries to rewrite the project:
+
+* `pacapt`'s [`nd`](https://github.com/icy/pacapt/tree/nd) branch: A rewrite in Dlang, but not mature enough.
+
+* [`pacapt-py`](https://github.com/rami3l/pacapt-py): A proof of concept in Python to provide pacapt-like experience to Homebrew.
+
+* [`pacapt-go`](https://github.com/rami3l/pacaptr/tree/go-dev): A more complete rewrite in Go, now lives in the [`go-dev`](https://github.com/rami3l/pacaptr/tree/go-dev) branch of `pacaptr` as legacy code.
 
 ## License
 
@@ -206,6 +224,7 @@ authors and contributors.
 * Kevin Brubeck (unhammer)
 * Konrad Borowski (xfix)
 * Kylie McClain (somasis)
+* Gen Li (Rami3L)
 * Valerio Pizzi (Pival81)
 * Siôn Le Roux (sinisterstuf)
 * Thiago Perrotta (thiagowfx)
