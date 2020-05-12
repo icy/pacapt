@@ -39,7 +39,7 @@ It supports the following package managers:
   - [General steps](#general-steps)
   - [Experimental projects](#experimental-projects)
 - [License](#license)
-- [AUTHORS. CONTRIBUTORS](#authors-contributors)
+- [Authors and Contributors](#authors-contributors)
 
 ## Installation
 
