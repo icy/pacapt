@@ -1,0 +1,70 @@
+#!/bin/sh
+
+# Purpose : Testing script for Slitaz support
+# Author  : Ky-Anh Huynh
+# License : MIT
+
+im icymatter/slitaz40-minimal
+
+in -Sy
+ou (Connecting to)|(Recharging repository)
+ou (is ready to use)|(Main is up to date)
+
+in -Q
+ou ^busybox.+[[:digit:]]+
+
+# FIXME: slitaz generates some special characters
+in -Qq
+ou ^busybox
+
+in -Qi busybox
+ou Package.+:.+busybox
+
+in -Ql busybox
+ou ^/bin/busybox
+
+in -sS htop
+ou ^htop((-)|( +))[[:digit:]]+
+
+in -Qs htop
+ou not implemented
+
+in -Qo /bin/busybox
+ou ^busybox
+
+in ! echo Y | pacman -S htop
+ou htop.+ is installed.
+
+in ! echo Y | pacman -S --forced htop
+ou Unknown option
+
+in ! echo Y | pacman -S -- --forced htop
+ou htop.+ is installed.
+
+# FIXME: Slitaz-4.0: test passed
+# FIXME: Slitaz-5.0: test failed. Possibly a tazpkg bug?
+in ! echo N | pacman -R htop
+ou Uninstallation of htop cancelled
+
+# FIXME: Weird, slitaz doesn't understand Y :)
+# FIXME: It's actually a timeout problem here...?
+in ! echo Y | pacman -R htop
+ou Uninstallation of htop cancelled
+
+in ! echo y | pacman -R htop
+ou Removing all files installed
+
+in ! export TAZPKG_FILE=`find /var/cache/tazpkg/ -type f -iname "htop*.tazpkg"`
+in -U $TAZPKG_FILE
+ou htop.+ is installed.
+
+in -Sccc
+ou not implemented
+
+in -Scc
+in clear
+
+# FIXME: Slitaz-4.0: passed
+# FIXME: Slitaz-5.0: failed; `-Ss` runs `-Sy` automatically.
+in -sS htop
+ou No 'packages.list' found to check
