@@ -1,0 +1,5 @@
+*~
+.*.swp
+pacapt.dev
+pacapt-*
+tests/tmp/*
