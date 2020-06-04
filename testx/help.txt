@@ -1,0 +1,99 @@
+NAME
+  pacapt - An `ArchLinux`'s pacman-like wrapper for many package managers.
+
+SYNTAX
+
+  $ pacapt <option(s)> <operation(s)> <package(s)>
+
+BASIC OPTIONS
+
+    -h or --help    print this help message
+    -P              print supported operations
+    -V              print version information
+
+SYSGET STYLE OPERATIONS
+
+  update                        Update package database
+  upgrade                       Upgrade system
+  install <options> <packages>  Install some packages
+  search  <options> <package>   Search some package
+  remove  <options> <packages>  Remove some packages
+  autoremove                    Remove orphans (WIP; may not work correctly)
+  clean                         Clean package manager caches
+
+PACMAN STYLE OPERATIONS
+
+  Query
+    -Q              list all installed packages
+    -Qc <package>   show package's changelog
+    -Qe [<package>] only list explicitly installed packages
+    -Qi <package>   print package status
+    -Ql <package>   list package's files
+    -Qm             list installed packages that aren't available
+                    in any installation source
+    -Qo <file>      query package that provides <file>
+    -Qp <file>      query a package file (don't use package database)
+    -Qs <package>   search for installed package
+
+  Synchronize
+    -S <package>    install package(s)
+    -Sg             list groups
+    -Sg <group>     list packages in group
+    -Ss <package>   search for packages
+    -Su             upgrade the system
+    -Sy             update package database
+    -Suy            update package database, then upgrade the system
+
+  Remove / Clean up
+    -R <packages>   remove some packages
+    -Sc             delete old downloaded packages
+    -Scc            delete all downloaded packages
+    -Sccc           clean variant files.
+                    (debian) See also http://dragula.viettug.org/blogs/646
+
+  Upgrade
+    -U              upgrade or add package from local file path (or remote uri)
+
+OPTIONS
+
+    -w              download packages but don't install them
+    --noconfirm     don't wait for user's confirmation
+
+EXAMPLES
+
+  1. To install a package from Debian's backports repository
+      $ pacapt -S foobar -t lenny-backports
+      $ pacapt -S -- -t lenny-backports foobar
+
+  2. To update package database and then update your system
+      $ pacapt -Syu
+
+  3. To download a package without installing it
+      $ pacapt -Sw foobar
+
+
+ENVIRONMENT
+
+  PACAPT_DEBUG
+
+    This is useful for debugging purpose. The variable can be set to `auto`
+    or any valid packager. For example, on `Debian` system the two following
+    commands are the same and they will print out what the script would do:
+
+        PACAPT_DEBUG=auto pacman -Su
+        PACAPT_DEBUG=dpkg pacman -Su
+
+NOTES
+
+  When being executed on Arch-based system, the tool simply invokes
+  the system package manager (`/usr/bin/pacman`).
+
+  Though you can specify option by its own word, for example,
+      $ pacapt -S -y -u
+
+  it's always the best to combine them
+      $ pacapt -Syu
+
+READMORE
+
+  Please visit https://github.com/icy/pacapt.
