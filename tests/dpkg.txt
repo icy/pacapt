@@ -1,0 +1,101 @@
+#!/bin/sh
+
+# Purpose : Testing script for dpkg support
+# Author  : Ky-Anh Huynh
+# License : MIT
+
+# FIXME: debian:squeeze It's unable to run `pacman -Sy`
+im ubuntu:14.04 ubuntu:16.04 ubuntu:18.04 debian:buster debian:jessie debian:stretch
+
+# Remove `docker-clean` because we need *.deb files under /var/cache
+in ! rm -fv /etc/apt/apt.conf.d/docker-clean
+ou ^removed .*docker-clean
+
+# Update package databses
+in -Sy
+
+# Simple query that lists all packages
+in -Qq
+ou ^apt$
+
+# Listing with version and package name
+in -Q
+# ou ^ii +apt +.+ubuntu
+ou ^ii +apt +
+
+# Information of `apt`
+in -Qi apt
+ou ^Package: apt$
+ou ^Status: install ok installed$
+ou ^Priority: (important|required)$
+
+# File listing for `apt`
+in -Ql apt
+ou ^/usr/bin/apt-key
+
+# File listing (all packages)
+# FIXME: Debian-squeeze doesn't have /usr/bin/apt
+in -Ql
+ou ^apt /usr/bin/apt-key$
+
+# File listing (all packages), files only
+in -Qql
+ou ^/usr/bin/apt-key$
+
+# Look up package name
+in -Qo /bin/bash
+ou ^bash: /bin/bash$
+
+# Search for pattern in installed package (names + descriptions)
+in -Qs bash
+ou ^bash.+Bourne
+
+in -Qs bourne
+ou ^bash.+Bourne
+
+in -Qs screen
+ou empty
+
+in -Qs "Bourne Again"
+ou ^bash.+Bourne
+
+# Install and Deinstall a package
+
+# Download without installation
+in ! echo Y | pacman -Sw screen
+in ! which screen || echo "command not found"
+ou command not found
+
+# Display remote package information
+in -Si screen
+ou ^Package: screen
+
+in -Sii screen
+ou ^Reverse Depends:
+
+# Now installation
+in ! echo Y | pacman -S screen
+in ! which screen
+ou ^/usr/bin/screen
+
+# Now remove the package
+in ! echo Y | pacman -R screen
+in -Qi screen
+ou ^Status: deinstall
+
+# Query information from a .deb package
+in ! export DEB_FILE=`find /var/cache/apt/ -type f -iname "screen*.deb"`
+in -Qp $DEB_FILE
+ou ^ Package: screen
+
+# Clean up package databases
+in -Sc
+in clear
+in -sS tmux
+ou tmux
+
+# Strong cleaning up
+in -Sccc
+in clear
+in -sS tmux
+ou empty
