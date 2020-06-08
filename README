@@ -1,0 +1,118 @@
+NAME
+
+  pacapt - An Arch's pacman-like package manager for some Unices.
+
+DESCRIPTION
+
+  An Arch's pacman-like package manager for some Unices.  Actually this Bash
+  script provides a wrapper for system's package manager.
+
+  Instead of remembering various options/tools on different OSs, you only
+  need a common way to manipulate packages. Not all options of the native
+  package manager are ported; the tool only provides a very basic interface
+  to search, install, remove packages, and/or update the system.
+
+  Arch's pacman is chosen, as pacman is quite smart when it divides all
+  packages-related operations into three major groups: Synchronize, Query
+  and Remove/Clean up. It has a clean man page, and it is the only tool
+  needed to manipulate official packages on system. (Debian, for example,
+  requires you to use apt-get, dpkg, and/or aptitude.)
+
+  The tool supports the following package managers:
+
+    pacman        by Arch Linux, ArchBang, Manjaro, etc.
+    dpkg/apt-get  by Debian, Ubuntu, etc.
+    homebrew      by Mac OS X
+    macports      by Mac OS X
+    yum/rpm       by Redhat, CentOS, Fedora, etc.
+    portage       by Gentoo
+    zypper        by OpenSUSE
+
+INSTALL
+
+  This script shouldn't be installed on an Arch-based system.
+
+  Download the script 'pacapt' and install it into /usr/local/bin.
+
+    $ wget \
+        https://github.com/icy/pacapt/raw/master/pacapt \
+        -O /usr/local/bin/pacapt
+
+    $ chmod 755 /usr/local/bin/pacapt
+
+  If you have problem with Github's SSL certificate you may try
+
+    $ wget \
+        --no-check-certificate \
+        https://github.com/icy/pacapt/raw/master/pacapt \
+        -O /usr/local/bin/pacapt
+
+  However this way isn't recommended unless you know what you're doing.
+
+SYNTAX
+
+  $ pacapt <operation> <option(s)> <packages>
+
+OPERATIONS
+
+  Query
+
+    -Q              list all installed packages
+    -Qc <package>   show package's changelog
+    -Qi <package>   print package status
+    -Ql <package>   list package's files
+    -Qm             list installed packages that aren't available
+                      in any installation source
+    -Qo <file>      query package that provides <file>
+    -Qp <file>      query a package file (don't use package database)
+    -Qs <package>   search for installed package
+
+  Synchronize
+
+    -S <package>    install package(s)
+    -Ss <package>   search for packages
+    -Su             upgrade the system
+    -Sy             update package database
+    -Suy            update package database, then upgrade the system
+
+  Remove / Clean up
+
+    -R <packages>   remove some packages
+    -Sc             delete old downloaded packages
+    -Scc            delete all downloaded packages
+    -Sccc           clean variant files.
+                    (debian) See more at http://dragula.viettug.org/blogs/646
+
+OPTIONS
+
+    -f              force yes
+    -v              be verbose
+    -w              download packages but don't install them
+
+NOTES
+
+  To install a package from backports repository on Debian system:
+              $ pacapt -S foobar -t lenny-backports
+
+  Similarly, any further option which isn't recognized by getopts (1)
+  can be passed to system tool.
+
+  When being executed on Arch-based system, the tool simply invokes
+  the system tool '/usr/bin/pacman'.
+
+THANKS
+
+  Special thanks to
+
+    Châu An, Nguyễn   (told me about 'Pacman Rosetta' [1])
+    Karol Blazewicz   (for comments about '-Sy')
+    James Pearson     (for userful comments and patches.
+                       See also http://github.com/xiongchiamiov/pacapt)
+    Alexander Dupuy   (for userful comments and patches.
+                       See also https://github.com/dupuy/pacapt)
+    Hà Dương, Nguyễn  (for adding Gentoo support.
+                       See also https://github.com/CMPITG/pacapt)
+
+REFERENCES
+
+  1. Pacman Rosetta, https://wiki.archlinux.org/index.php?title=Pacman_Rosetta

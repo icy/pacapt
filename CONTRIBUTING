@@ -1,0 +1,14 @@
+Some guidelines
+
+  1. Don't use tab or smart tab.
+  2. Use 2-space instead of a tab
+  3. Contribute to library file under `./lib/` directory
+  4. Don't use `master` branch unless you need to fix bugs
+  5. Use 'PACAPT_DEBUG=foo' where 'foobar' is a package manager
+     (dpkg, pacman, zypper, ...) to print what 'pacapt' will do.
+
+Git branches
+
+  1. master   The old stable code of the `pacapt`
+              This branch is closed on May 4th, 2014
+  2. ng       `pacapt` is rewritten in a new way
