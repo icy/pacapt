@@ -113,23 +113,23 @@ A long list of options and operations can be found from [`ArchLinux`'s wiki](htt
 ### Implemented operations
 
 ```
-           Q Qc Qe Qi Qk Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Sg Si Sii Sl Ss Su Suy Sw Sy U
-      apk  ~        *     *     *     *  * *  *   *  * *  *   *    *     *   *  *  *  *   *  *  * *
-     cave  *        *     *     *  *  *  * *  *   *  * *  *   *    x     *         *  *   *     * x
-    conda  *                               *           *  *              *         *      *
-      dnf  ~  *  *  *     *  *  *  *  *  * *           *  *   *    *  *  *      *  *  *   *  *  * *
-     dpkg  ~        *     *     *  *  *  * *  *   *  ~ *  *   *    *     *   *     *  *   *     * *
- homebrew  ~  *     *     *     *     *  * *         * *  *   *    *     *         *  *   *     *
- macports     *           *     *        * *         ~ *  *   *          *         *  *   *     *
-    pkgng  *        *     *     *  *     * *         * *  *   *          *         *  *   *     *
-pkg_tools  ~        *     *     *  *     * *  *   *  ~ *  *   x          *      *  ~  *   *     x
-  portage  *  *     *     *     *        * *         * *  *   *    *     *         *  *   *     *
-sun_tools  *        *     *     *     *    *                                                      *
-    swupd              *        *     *    *           *                           *  *   *     *
-   tazpkg  *        *     *     *          *           *  *   *                    *  *   *     * *
-    tlmgr           *  *  *                *           *                 *      *  *      *       *
-      yum  *  *     *     *  *  *  *  *  * *         * *  *   *    *     *   *     *  *   *     * *
-   zypper  *  *     *     *  *  *  *  *  * *  *   *  * *  *   *    *     *   *  *  *  *   *  *  * *
+           Q Qc Qe Qi Qk Ql Qm Qo Qp Qs Qsq Qu R Rn Rns Rs S Sc Scc Sccc Sg Si Sii Sl Ss Ssq Su Suy Sw Sy U
+      apk  ~        *     *     *     *      * *  *   *  * *  *   *    *     *   *  *  *      *   *  *  * *
+     cave  *        *     *     *  *  *      * *  *   *  * *  *   *    x     *         *      *   *     * x
+    conda  *                                   *           *  *              *         *          *
+      dnf  ~  *  *  *     *  *  *  *  *      * *           *  *   *    *  *  *      *  *      *   *  *  * *
+     dpkg  ~        *     *     *  *  *      * *  *   *  ~ *  *   *    *     *   *     *      *   *     * *
+ homebrew  ~  *     *     *     *     *      * *         * *  *   *    *     *         *      *   *     *
+ macports     *           *     *            * *         ~ *  *   *          *         *      *   *     *
+    pkgng  *        *     *     *  *         * *         * *  *   *          *         *      *   *     *
+pkg_tools  ~        *     *     *  *         * *  *   *  ~ *  *   x          *      *  ~      *   *     x
+  portage  *  *     *     *     *            * *         * *  *   *    *     *         *      *   *     *
+sun_tools  *        *     *     *     *        *                                                          *
+    swupd              *        *     *        *           *                           *      *   *     *
+   tazpkg  *        *     *     *              *           *  *   *                    *      *   *     * *
+    tlmgr           *  *  *                    *           *                 *      *  *          *       *
+      yum  *  *     *     *  *  *  *  *      * *         * *  *   *    *     *   *     *      *   *     * *
+   zypper  *  *     *     *  *  *  *  *      * *  *   *  * *  *   *    *     *   *  *  *      *   *  *  * *
 ```
 
 **Notes:**
