@@ -1,9 +1,12 @@
-BINDIR=/usr/local/bin/
-DISTRO=debian:stable
+BINDIR:=/usr/local/bin/
+DISTRO:=debian:stable
+V:=$(shell git log -1 --format="%ci")
+V:=$(firstword $V)
+VERSION:=$(subst -,.,$V)
 
 default:
 	@echo "This is an experimental Makefile. Use it at your own risk."
-	@echo ""
+	@echo
 	@echo "  pacapt.dev  : Generate development script."
 	@echo '  install.dev : Install development script into $$BINDIR.'
 	@echo "  pacapt      : Generate stable script."
@@ -17,10 +20,10 @@ default:
 	@echo "                Use TESTS= to specify a package. Docker is required."
 	@echo "  stats       : Generate table of implemented operations in development branch."
 	@echo "  update_stats: Update README.md using results from 'stats' section."
-	@echo ""
-	@echo "Environments:"
-	@echo ""
-	@echo "  VERSION     : Version information. Default: git commit hash."
+	@echo
+	@echo "Environments (that you can override):"
+	@echo
+	@echo '  VERSION     : Version information. Default: Last commit date of local as in "git log -1 --format="%ci"'
 	@echo "  BINDIR      : Destination directory. Default: /usr/local/bin."
 	@echo "  DISTRO      : Container image. Default: debian:stable."
 
@@ -45,11 +48,11 @@ install.dev: pacapt.dev
 
 .PHONY: pacapt.check
 
-pacapt.check:
-	@test -n "${VERSION}" || { echo ":: Please specify VERSION, i.e., make pacapt VERSION=1.2.3"; exit 1; }
+#pacapt.check:
+#	@test -n "${VERSION}" || { echo ":: Please specify VERSION, e.g., make pacapt VERSION=1.2.3"; exit 1; }
 
-pacapt: pacapt.check ./lib/*.sh ./lib/*.txt bin/compile.sh
-	@./bin/compile.sh > $(@).tmp || { rm -fv $(@).tmp; exit 1; }
+pacapt: ./lib/*.sh ./lib/*.txt bin/compile.sh
+	@VERSION=$(VERSION) ./bin/compile.sh > $(@).tmp || { rm -fv $(@).tmp; exit 1; }
 	@mv -fv $(@).tmp $(@)
 	@bash -n $(@)
 	@chmod 755 $(@)
