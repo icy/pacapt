@@ -23,7 +23,7 @@ default:
 	@echo
 	@echo "Environments (that you can override):"
 	@echo
-	@echo '  VERSION     : Version information. Default: Last commit date of local as in "git log -1 --format="%ci"'
+	@echo '  VERSION     : Version information. It is last commit date of local as in "git log -1 --format="%ci"'
 	@echo "  BINDIR      : Destination directory. Default: /usr/local/bin."
 	@echo "  DISTRO      : Container image. Default: debian:stable."
 
@@ -31,7 +31,7 @@ default:
 
 pacapt.dev: ./lib/*.sh ./lib/*.txt bin/compile.sh
 	@./bin/compile.sh > $(@) || { rm -fv $(@); exit 1; }
-	@bash -n $(@)
+	@exec bash -n $(@)
 	@chmod 755 $(@)
 	@echo 1>&2 "The output file is '$(@)' (unstable version)"
 
@@ -54,7 +54,7 @@ install.dev: pacapt.dev
 pacapt: ./lib/*.sh ./lib/*.txt bin/compile.sh
 	@VERSION=$(VERSION) ./bin/compile.sh > $(@).tmp || { rm -fv $(@).tmp; exit 1; }
 	@mv -fv $(@).tmp $(@)
-	@bash -n $(@)
+	@exec bash -n $(@)
 	@chmod 755 $(@)
 	@echo 1>&2 "The output file is '$(@)' (stable version)"
 
