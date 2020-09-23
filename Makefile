@@ -1,8 +1,6 @@
 BINDIR:=/usr/local/bin/
 DISTRO:=debian:stable
-V:=$(shell git log -1 --format="%ci")
-V:=$(firstword $V)
-VERSION:=$(subst -,.,$V)
+VERSION:=$(shell git describe --abbrev=0)
 
 default:
 	@echo "This is an experimental Makefile. Use it at your own risk."
@@ -21,9 +19,9 @@ default:
 	@echo "  stats       : Generate table of implemented operations in development branch."
 	@echo "  update_stats: Update README.md using results from 'stats' section."
 	@echo
-	@echo "Environments (that you can override):"
+	@echo "Environments (which you can override):"
 	@echo
-	@echo '  VERSION     : Version information. It is last commit date of local as in "git log -1 --format="%ci"'
+	@echo '  VERSION     : Version information. The last tagging of commit in "git -a tag ...'
 	@echo "  BINDIR      : Destination directory. Default: /usr/local/bin."
 	@echo "  DISTRO      : Container image. Default: debian:stable."
 
@@ -47,9 +45,6 @@ install.dev: pacapt.dev
 # Build and install stable script
 
 .PHONY: pacapt.check
-
-#pacapt.check:
-#	@test -n "${VERSION}" || { echo ":: Please specify VERSION, e.g., make pacapt VERSION=1.2.3"; exit 1; }
 
 pacapt: ./lib/*.sh ./lib/*.txt bin/compile.sh
 	@VERSION=$(VERSION) ./bin/compile.sh > $(@).tmp || { rm -fv $(@).tmp; exit 1; }
