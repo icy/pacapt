@@ -21,7 +21,7 @@ default:
 	@echo
 	@echo "Environments (which you can override):"
 	@echo
-	@echo '  VERSION     : Version information. The last tagging of commit in "git -a tag ...'
+	@echo '  VERSION     : Version information. The last tagging of commit in "git -a tag ..."'
 	@echo "  BINDIR      : Destination directory. Default: /usr/local/bin."
 	@echo "  DISTRO      : Container image. Default: debian:stable."
 
