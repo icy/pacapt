@@ -34,7 +34,7 @@ dnf_Sccc() {
 }
 
 dnf_Si() {
-  dnf info "$@"
+  dnf info "$@" && dnf repoquery --deplist "$@"
 }
 
 dnf_Sg() {
@@ -89,7 +89,7 @@ dnf_Qe() {
 }
 
 dnf_Qi() {
-  dnf info "$@"
+  dnf info --installed "$@" && dnf repoquery --deplist "$@"
 }
 
 dnf_Ql() {
