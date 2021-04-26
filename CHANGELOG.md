@@ -1,3 +1,7 @@
+## v2.4.4
+
+* `lib/dnf`: Minor improvements (#148)
+
 ## v2.4.3
 
 * `lib/homebrew`: Support `cask` (fix #117)

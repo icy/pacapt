@@ -3,10 +3,10 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 2.4.3
+# Version: 2.4.4
 # Authors: Anh K. Huynh et al.
 
-# Copyright (C) 2010 - 2020 \
+# Copyright (C) 2010 - 2021 \
 #                           | 10sr (10sr)
 #                           | Alexander Dupuy (dupuy)
 #                           | Anh K. Huynh (icy)
@@ -30,6 +30,7 @@
 #                           | Kevin Brubeck (unhammer)
 #                           | Konrad Borowski (xfix)
 #                           | Kylie McClain (somasis)
+#                           | Gen Li (Rami3L)
 #                           | Valerio Pizzi (Pival81)
 #                           | Siôn Le Roux (sinisterstuf)
 #                           | Thiago Perrotta (thiagowfx)
@@ -44,9 +45,9 @@
 
 _print_pacapt_version() {
   cat <<_EOF_
-pacapt version '2.4.3'
+pacapt version '2.4.4'
 
-Copyright (C) 2010 - 2020 \\
+Copyright (C) 2010 - 2021 \\
                           | 10sr (10sr)
                           | Alexander Dupuy (dupuy)
                           | Anh K. Huynh (icy)
@@ -70,6 +71,7 @@ Copyright (C) 2010 - 2020 \\
                           | Kevin Brubeck (unhammer)
                           | Konrad Borowski (xfix)
                           | Kylie McClain (somasis)
+                          | Gen Li (Rami3L)
                           | Valerio Pizzi (Pival81)
                           | Siôn Le Roux (sinisterstuf)
                           | Thiago Perrotta (thiagowfx)
@@ -83,7 +85,7 @@ DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 _EOF_
 }
 
-export PACAPT_VERSION='2.4.3'
+export PACAPT_VERSION='2.4.4'
 
 _help() {
   cat <<'EOF'
@@ -755,7 +757,7 @@ dnf_Sccc() {
 }
 
 dnf_Si() {
-  dnf info "$@"
+  dnf info "$@" && dnf repoquery --deplist "$@"
 }
 
 dnf_Sg() {
@@ -809,7 +811,7 @@ dnf_Qe() {
 }
 
 dnf_Qi() {
-  dnf info "$@"
+  dnf info --installed "$@" && dnf repoquery --deplist "$@"
 }
 
 dnf_Ql() {
