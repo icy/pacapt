@@ -19,9 +19,9 @@ _yum_init() {
 
 yum_Q() {
   if [[ "$_TOPT" == "q" ]]; then
-    rpm -qa --qf "%{NAME}\n"
+    rpm -qa --qf "%{NAME}\\n"
   elif [[ "$_TOPT" == "" ]]; then
-    rpm -qa --qf "%{NAME} %{VERSION}\n"
+    rpm -qa --qf "%{NAME} %{VERSION}\\n"
   else
     _not_implemented
   fi
@@ -32,7 +32,7 @@ yum_Qi() {
 }
 
 yum_Qs() {
-  rpm -qa "*$@*"
+  rpm -qa "*${*}*"
 }
 
 yum_Ql() {

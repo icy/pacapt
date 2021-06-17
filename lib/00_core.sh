@@ -18,12 +18,18 @@ _error() {
   return 1
 }
 
+_warn() {
+  echo >&2 "Warning: $*"
+  return 0
+}
+
 _die() {
   echo >&2 "$@"
   exit 1
 }
 
 _not_implemented() {
+  # shellcheck disable=2153
   echo >&2 "${_PACMAN}: '${_POPT}:${_SOPT}:${_TOPT}' operation is invalid or not implemented."
   return 1
 }
@@ -59,6 +65,8 @@ _issue2pacman() {
 
 # Detect package type
 _PACMAN_detect() {
+  _PACMAN_found_from_script_name && return
+
   _issue2pacman sun_tools "SunOS" && return
   _issue2pacman pacman "Arch Linux" && return
   _issue2pacman dpkg "Debian GNU/Linux" && return
@@ -90,7 +98,7 @@ _PACMAN_detect() {
 
   # Prevent a loop when this script is installed on non-standard system
   if [[ -x "/usr/bin/pacman" ]]; then
-    $GREP -q "$FUNCNAME" '/usr/bin/pacman' >/dev/null 2>&1
+    $GREP -q "${FUNCNAME[0]}" '/usr/bin/pacman' >/dev/null 2>&1
     [[ $? -ge 1 ]] && _PACMAN="pacman" \
     && return
   fi
@@ -203,9 +211,11 @@ _translate_noconfirm() {
 
 _translate_all() {
   local _args=""
-  local _debug="$(_translate_debug)"
-  local _noconfirm="$(_translate_noconfirm)"
+  local _debug=
+  local _noconfirm=
 
+  _debug="$(_translate_debug)"
+  _noconfirm="$(_translate_noconfirm)"
   _args="$(_translate_w)" || return 1
   _args="${_args}${_noconfirm:+ }${_noconfirm}" || return 1
   _args="${_args}${_debug:+ }${_debug}" || return 1
@@ -215,26 +225,13 @@ _translate_all() {
 
 _print_supported_operations() {
   local _pacman="$1"
-  echo -n "pacapt: available operations:"
-  $GREP -E "^${_pacman}_[^ \t]+\(\)" "$0" \
+  echo -n "pacapt($_pacman): available operations:"
+  # shellcheck disable=2016
+  $GREP -E "^${_pacman}_[^ \\t]+\\(\\)" "$0" \
   | $AWK -F '(' '{print $1}' \
   | sed -e "s/${_pacman}_//g" \
-  | while read O; do
+  | while read -r O; do
       echo -n " $O"
     done
   echo
-}
-
-_print_pacapt_version() {
-  cat <<EOF
-pacapt version '${1:-unknown}'
-
-Copyright (C) 2010 - $(date +%Y) Anh K. Huynh et al.
-
-Usage of the works is permitted provided that this
-instrument is retained with the works, so that any
-entity that uses the works is notified of this instrument.
-
-DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
-EOF
 }

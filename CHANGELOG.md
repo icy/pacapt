@@ -1,3 +1,44 @@
+## v2.4.4
+
+* `lib/dnf`: Minor improvements (#148)
+
+## v2.4.3
+
+* `lib/homebrew`: Support `cask` (fix #117)
+* `tests/dpkg`: Support new distros, drop support for old distro
+
+## v2.4.2
+
+* Update README.md
+* Support sysget-style sub commands (`pacapt install`, `pacapt upgrade`,...)
+* `lib/homebrew/Rs`: Improvements (#124, @Mnkai)
+* `lib/dpkg`: Use `dist-upgrade` for `Suy` and `Su` operations
+
+## v2.4.0
+
+* `lib/tlmgr`: Add TeXLive support (Antony Lee)
+* `lib/conda`: Conda support (Antony Lee)
+
+For developers:
+
+* Ability to support non-system package manager (`npm`, `gem`, ...)
+* Reduce shellcheck warning/error reports
+
+## v2.3.15
+
+* A warm up release with very minor updates.
+
+## v2.3.14
+
+* `lib/homebrew`: `brew upgrade` is equivalant to `brew upgrade --all`.
+  See #90 and #101.
+* Support `Clear Linux`. See #94.
+
+For developers:
+
+* Add Travis support
+* Add and update test cases for Ubuntu 16.04, Ubuntu 14.04
+
 ## v2.3.13
 
 * `lib/dpkg`: Fix `-Qs` for old `dpkg`.

@@ -18,6 +18,7 @@ _apk_init() {
   :
 }
 
+# apk_Q may _not_implemented
 apk_Q() {
   if [[ -z "$_TOPT" ]]; then
     apk info
@@ -39,7 +40,7 @@ apk_Qo() {
 }
 
 apk_Qs() {
-  apk info -- "*$@*"
+  apk info -- "*${*}*"
 }
 
 apk_Qu() {

@@ -71,7 +71,7 @@ _has_shellcheck() {
 _check_file() {
   local _file="${1:-/x/x/x/x/x/x/x/}"
 
-  echo >&2 ":: $FUNCNAME: $1"
+  echo >&2 ":: ${FUNCNAME[0]}: $1"
 
   [[ -f "$_file" ]] \
   || {

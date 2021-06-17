@@ -17,6 +17,7 @@ _dpkg_init() {
   :
 }
 
+# dpkg_Q may _not_implemented
 dpkg_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     dpkg -l \
@@ -35,7 +36,7 @@ dpkg_Qi() {
 }
 
 dpkg_Ql() {
-  if [[ -n "$@" ]]; then
+  if [[ -n "$*" ]]; then
     dpkg-query -L "$@"
     return
   fi
@@ -43,12 +44,12 @@ dpkg_Ql() {
   dpkg -l \
   | grep -E '^[hi]i' \
   | awk '{print $2}' \
-  | while read _pkg; do
+  | while read -r _pkg; do
       if [[ "$_TOPT" == "q" ]]; then
         dpkg-query -L "$_pkg"
       else
         dpkg-query -L "$_pkg" \
-        | while read _line; do
+        | while read -r _line; do
             echo "$_pkg $_line"
           done
       fi
@@ -77,6 +78,7 @@ dpkg_Qs() {
   | grep -Ei "${@:-.}"
 }
 
+# dpkg_Rs may _not_implemented
 dpkg_Rs() {
   if [[ "$_TOPT" == "" ]]; then
     apt-get autoremove "$@"
@@ -103,11 +105,13 @@ dpkg_Si() {
 
 dpkg_Suy() {
   apt-get update \
-  && apt-get upgrade "$@"
+  && apt-get upgrade "$@" \
+  && apt-get dist-upgrade "$@"
 }
 
 dpkg_Su() {
-  apt-get upgrade "$@"
+  apt-get upgrade "$@" \
+  && apt-get dist-upgrade "$@"
 }
 
 # See also https://github.com/icy/pacapt/pull/78

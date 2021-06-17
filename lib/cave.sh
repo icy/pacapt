@@ -32,14 +32,14 @@ cave_Qi() {
 }
 
 cave_Ql() {
-  if [[ -n "$@" ]]; then
+  if [[ -n "$*" ]]; then
     cave contents "$@"
     return
   fi
 
   cave show -f "${@:-world}" \
   | grep -v '^$' \
-  | while read _pkg; do
+  | while read -r _pkg; do
       if [[ "$_TOPT" == "q" ]]; then
         cave --color no contents "$_pkg"
       else
@@ -57,10 +57,10 @@ cave_Qp() {
 }
 
 cave_Qu() {
-  if [[ -z "$@" ]];then
+  if [[ -z "$*" ]];then
     cave resolve -c world \
     | grep '^u.*' \
-    | while read _pkg; do
+    | while read -r _pkg; do
         echo "$_pkg" | cut -d'u' -f2-
       done
   else
@@ -137,6 +137,7 @@ cave_Scc() {
   cave fix-cache "$@"
 }
 
+# cave_Sccc _not_implemented
 cave_Sccc() {
   #rm -fv /var/cache/paludis/*
   _not_implemented
@@ -149,6 +150,7 @@ cave_S() {
   && cave resolve -x $_TOPT "$@"
 }
 
+# cave_U _not_implemented
 cave_U() {
   _not_implemented
 }

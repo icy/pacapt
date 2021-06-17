@@ -42,23 +42,25 @@ pkg_tools_Qu() {
   pkg_add -u "$@"
 }
 
+# pkg_tools_Q may _not_implemented
 pkg_tools_Q() {
   export PKG_PATH=
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
-  if [[ "$_TOPT" == "q" && ! -z "$@" ]]; then
+  if [[ "$_TOPT" == "q" && ! -z "$*" ]]; then
     pkg_info -q | grep "^${*}-"
-  elif [[ "$_TOPT" == "q" && -z "$@" ]];then
+  elif [[ "$_TOPT" == "q" && -z "$*" ]];then
     pkg_info -q
-  elif [[ "$_TOPT" == "" && ! -z "$@" ]]; then
+  elif [[ "$_TOPT" == "" && ! -z "$*" ]]; then
     pkg_info | grep "^${*}-"
-  elif [[ "$_TOPT" == "" && -z "$@" ]];then
+  elif [[ "$_TOPT" == "" && -z "$*" ]];then
     pkg_info
   else
     _not_implemented
   fi
 }
 
+# pkg_tools_Rs may _not_implemented
 pkg_tools_Rs() {
   if [[ "$_TOPT" == "" ]]; then
     pkg_delete -D dependencies "$@"
@@ -67,6 +69,7 @@ pkg_tools_Rs() {
   fi
 }
 
+# pkg_tools_rn may _not_implemented
 pkg_tools_Rn() {
   if [[ "$_TOPT" == "" ]];then
     pkg_delete -c "$@"
@@ -75,6 +78,7 @@ pkg_tools_Rn() {
   fi
 }
 
+# pkg_tools_rns _not_implemented
 pkg_tools_Rns() {
   _not_implemented
 }
@@ -104,12 +108,14 @@ pkg_tools_Su() {
   pkg_add -u "$@"
 }
 
+# pkg_tools_Sy _not_implemented
 pkg_tools_Sy() {
   _not_implemented
 }
 
+# pkg_tools_Ss may _not_implemented
 pkg_tools_Ss() {
-  if [[ -z "$@" ]];then
+  if [[ -z "$*" ]];then
     _not_implemented
   else
     pkg_info -Q "$@"
@@ -127,6 +133,7 @@ pkg_tools_Sc() {
   fi
 }
 
+# pkg_tools_Scc _not_implemented
 pkg_tools_Scc() {
   _not_implemented
 }

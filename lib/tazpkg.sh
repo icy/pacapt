@@ -9,6 +9,7 @@ _tazpkg_init() {
   :
 }
 
+# tarpkg_Q may _not_implemented
 tazpkg_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     tazpkg list "$@" \
@@ -24,8 +25,9 @@ tazpkg_Qi() {
   tazpkg info "$@"
 }
 
+# tarpkg_Ql may _not_implemented
 tazpkg_Ql() {
-  if [[ -z "$@" ]]; then
+  if [[ -z "$*" ]]; then
     _not_implemented
     return
   fi
@@ -58,8 +60,7 @@ tazpkg_Suy() {
 tazpkg_S() {
   local _forced=""
 
-  grep -q -- "--forced" <<<"*"
-  if [[ $? -eq 0 ]]; then
+  if grep -q -- "--forced" <<<"$*"; then
     _forced="--forced"
   fi
 
@@ -78,8 +79,7 @@ tazpkg_S() {
 tazpkg_R() {
   local _auto=""
 
-  grep -q -- "--auto" <<<"*"
-  if [[ $? -eq 0 ]]; then
+  if grep -q -- "--auto" <<<"$*"; then
     _auto="--auto"
   fi
 
@@ -125,8 +125,7 @@ tazpkg_Qo() {
 tazpkg_U() {
   local _forced=""
 
-  grep -q -- "--forced" <<<"*"
-  if [[ $? -eq 0 ]]; then
+  if grep -q -- "--forced" <<<"$*"; then
     _forced="--forced"
   fi
 

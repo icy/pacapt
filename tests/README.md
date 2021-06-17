@@ -6,8 +6,8 @@ See also https://travis-ci.org/icy/pacapt.
 
 1. [Preparing test environment](#preparing-test-environment)
 1. [Invoking test scripts](#invoking-test-scripts)
-1. [Writting test cases](#writting-test-cases)
-1. [Notes](#notes-on-writting-test-cases)
+1. [Writing test cases](#writing-test-cases)
+1. [Notes](#notes-on-writing-test-cases)
 
 ## Preparing test environment
 
@@ -33,7 +33,7 @@ Basically we execute the following command
     $ docker run --rm \
         -v $PWD/test.sh:/tmp/test.sh \
         -v $PWD/pacapt.dev:/usr/bin/pacman \
-        ubuntu:14.04 \
+        ubuntu:18.04 \
         /tmp/test.sh
 
 This command will return 0 if all tests pass, or return 1 if any test fails.
@@ -55,7 +55,7 @@ This script will create a temporary directory `tests/tmp/` to store
 all logs and details. If there is any test script fails, the process
 is stopped for investigation.
 
-## Writting test cases
+## Writing test cases
 
 See examples in `tests/dpkg.txt`. Each test case combines of input command
 and output regular expressions used by `grep -E`. Input command is started
@@ -85,7 +85,7 @@ can install `htop` package, then remove it. An alternative test is
     echo Y | pacman -R htop
     pacman -Qi htop | grep -E '^Status: deinstall'
 
-## Notes on writting test cases
+## Notes on writing test cases
 
 1. To specify a list of container images, use `im image [image]...`;
 1. Each test case has its own temporary file to store all output;

@@ -33,6 +33,7 @@ macports_Qu() {
   port outdated "$@"
 }
 
+# macports_Rs may _not_implemented
 macports_Rs() {
   if [[ "$_TOPT" == "" ]]; then
     port uninstall --follow-dependencies "$@"

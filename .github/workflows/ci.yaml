@@ -1,0 +1,22 @@
+name: pacapt-tests
+
+on:
+  push:
+    branches-ignore:
+    - no-we-want-to-run-check-on-all-branches
+
+jobs:
+  smoke-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: shellcheck
+      run: |
+        sudo apt-get install libjson-perl liburi-perl
+        make shellcheck
+
+    - name: tests
+      run: make tests

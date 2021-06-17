@@ -12,8 +12,13 @@ default:
 	@echo "  shellcheck  : Syntax and style checking. Use http://shellcheck.net/."
 	@echo "  docker.i    : Launch interactive Docker container which mounts."
 	@echo '                your local 'pacapt.dev' script to $$BINDIR/pacman.'
+	@echo '                Please use DISTRO= to specify Docker image'
+	@echo "  tests       : Run all tests. Please read tests/README.md first."
+	@echo "                Use TESTS= to specify a package. Docker is required."
+	@echo "  stats       : Generate table of implemented operations in development branch."
+	@echo "  update_stats: Update README.md using results from 'stats' section."
 	@echo ""
-	@echo "Environments"
+	@echo "Environments:"
 	@echo ""
 	@echo "  VERSION     : Version information. Default: git commit hash."
 	@echo "  BINDIR      : Destination directory. Default: /usr/local/bin."
@@ -71,6 +76,14 @@ docker.i:
 	@docker run --rm -ti \
     -v $(PWD)/pacapt.dev:$(BINDIR)/pacman \
     $(DISTRO) /bin/bash
+
+.PHONY: update_stats
+update_stats:
+	@./bin/update_stats.sh
+
+.PHONY: stats
+stats:
+	@./bin/gen_stats.sh
 
 .PHONY: clean
 clean:

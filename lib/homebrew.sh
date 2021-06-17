@@ -29,7 +29,7 @@ homebrew_Qo() {
   local pkg prefix cellar
 
   # FIXME: What happens if the file is not exectutable?
-  cd "$(dirname -- "$(which "$@")")"
+  cd "$(dirname -- "$(which "$@")")" || return
   pkg="$(pwd -P)/$(basename -- "$@")"
   prefix="$(brew --prefix)"
   cellar="$(brew --cellar)"
@@ -55,9 +55,10 @@ homebrew_Qs() {
   brew list | grep "$@"
 }
 
+# homebrew_Q may _not_implemented
 homebrew_Q() {
   if [[ "$_TOPT" == "" ]]; then
-    if [[ "$@" == "" ]]; then
+    if [[ "$*" == "" ]]; then
       brew list
     else
       brew list | grep "$@"
@@ -67,15 +68,31 @@ homebrew_Q() {
   fi
 }
 
-# FIXME: make sure "join" does exit
-# FIXME: Add quoting support, be cause "join" can fail
 homebrew_Rs() {
-  if [[ "$_TOPT" == "s" ]]; then
-    brew rm "$@"
-    brew rm $(join <(brew leaves) <(brew deps "$@"))
-  else
-    _not_implemented
-  fi
+    which join > /dev/null
+    if [ $? -ne 0 ]; then
+      _die "pacapt: join binary does not exist in system."
+    fi
+
+    which sort > /dev/null
+    if [ $? -ne 0 ]; then
+      _die "pacapt: sort binary does not exist in system."
+    fi
+
+    if [[ "$@" == "" ]]; then
+      _die "pacapt: ${FUNCNAME[0]} requires arguments"
+    fi
+
+    for _target in $@;
+    do
+      brew rm $_target
+
+      while [ "$(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))" != "" ]
+      do
+        brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))
+      done
+    done
+
 }
 
 homebrew_R() {
@@ -120,7 +137,7 @@ homebrew_Sccc() {
   _dcache="$(brew --cache)"
   case "$_dcache" in
   ""|"/"|" ")
-    _error "$FUNCNAME: Unable to delete '$_dcache'."
+    _error "${FUNCNAME[0]}: Unable to delete '$_dcache'."
     ;;
 
   *)
@@ -133,5 +150,13 @@ homebrew_Sccc() {
 }
 
 homebrew_S() {
-  brew install $_TOPT "$@"
+  2>&1 brew install $_TOPT "$@" \
+  | awk '{print; if ($0 ~ /brew cask install/) { exit(126); }}'
+  ret=( ${PIPESTATUS[*]} )
+  if [[ "${ret[1]}" == 126 ]]; then
+    echo >&2 ":: Now trying with brew/cask..."
+    brew cask install $_TOPT "$@"
+  else
+    return "${ret[0]}"
+  fi
 }

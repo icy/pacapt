@@ -24,22 +24,33 @@ _sun_tools_init       # Dirty tricky patch for SunOS
 
 export PACAPT_DEBUG GREP AWK
 
-_POPT="" # primary operation
-_SOPT="" # secondary operation
-_TOPT="" # options for operations
-_EOPT="" # extra options (directly given to package manager)
-         # these options will be translated by (_translate_all) method.
-_PACMAN="" # name of the package manager
+_POPT=""    # primary operation
+_SOPT=""    # secondary operation
+_TOPT=""    # options for operations
+_EOPT=""    # extra options (directly given to package manager)
+            # these options will be translated by (_translate_all) method.
+_PACMAN=""  # name of the package manager
 
 _PACMAN_detect \
 || _die "'pacapt' doesn't support your package manager."
 
+# FIXME: If `pacman-foo` is being used, `PACAPT_DEBUG` is still overwriting that.
 if [[ -z "$PACAPT_DEBUG" ]]; then
   [[ "$_PACMAN" != "pacman" ]] \
   || exec "/usr/bin/pacman" "$@"
 elif [[ "$PACAPT_DEBUG" != "auto" ]]; then
   _PACMAN="$PACAPT_DEBUG"
 fi
+
+case "${1:-}" in
+"update")     shift; set -- -Sy   "$@" ;;
+"upgrade")    shift; set -- -Su   "$@" ;;
+"install")    shift; set -- -S    "$@" ;;
+"search")     shift; set -- -Ss   "$@" ;;
+"remove")     shift; set -- -R    "$@" ;;
+"autoremove") shift; set -- -Rs   "$@" ;;
+"clean")      shift; set -- -Scc  "$@" ;;
+esac
 
 while :; do
   _args="${1-}"
@@ -75,11 +86,11 @@ while :; do
       exit 0
       ;;
     V)
-      _print_pacapt_version $PACAPT_VERSION;
+      _print_pacapt_version;
       exit 0
       ;;
     P)
-      _print_supported_operations $_PACMAN
+      _print_supported_operations "$_PACMAN"
       exit 0
       ;;
 
@@ -105,7 +116,7 @@ while :; do
     #
     # FIXME: Please check pacman(8) to see if they are really 2nd operation
     #
-    s|l|i|p|o|m|n)
+    e|g|i|l|m|n|o|p|s)
       if [[ "$_SOPT" == '' ]]; then
         _SOPT="$_opt"
         continue
@@ -221,7 +232,7 @@ _translate_all || exit
 # expect to just update/upgrade one package (and its dependencies)
 # and apt-get and pacman have no way to do this.
 #
-if [[ -n "$@" ]]; then
+if [[ -n "$*" ]]; then
   case "${_POPT}${_SOPT}" in
   "Su"|"Sy"|"Suy")
     echo 1>&2 "WARNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
@@ -238,6 +249,6 @@ if [[ -n "$PACAPT_DEBUG" ]]; then
   echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT ${*}'"
   declare -f "${_PACMAN}_${_POPT}${_SOPT}"
 else
-  "_${_PACMAN}_init"
+  "_${_PACMAN}_init" || exit
   "${_PACMAN}_${_POPT}${_SOPT}" $_EOPT "$@"
 fi
