@@ -196,6 +196,9 @@ _translate_noconfirm() {
   "zypper") _opt="--no-confirm";;
   "pkgng")  _opt="-y";;
   "tazpkg") _opt="--auto";;
+  # apk is supposed to run in non-interactive mode by default (FIXME)
+  # This addresses https://github.com/icy/pacapt/issues/150
+  "apk")    _opt="";;
   *)
     _opt=""
     _ret=1
