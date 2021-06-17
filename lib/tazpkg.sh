@@ -119,7 +119,11 @@ tazpkg_Ss() {
 }
 
 tazpkg_Qo() {
-  tazpkg search-pkgname "$@"
+  if cmd="$(command -v -- "$@")"; then
+    tazpkg search-pkgname "$cmd"
+  else
+    tazpkg search-pkgname "$@"
+  fi
 }
 
 tazpkg_U() {

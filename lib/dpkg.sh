@@ -57,7 +57,11 @@ dpkg_Ql() {
 }
 
 dpkg_Qo() {
-  dpkg-query -S "$@"
+  if cmd="$(command -v -- "$@")"; then
+    dpkg-query -S "$cmd"
+  else
+    dpkg-query -S "$@"
+  fi
 }
 
 dpkg_Qp() {

@@ -101,7 +101,11 @@ dnf_Qm() {
 }
 
 dnf_Qo() {
-  rpm -qf "$@"
+  if cmd="$(command -v -- "$@")"; then
+    rpm -qf "$cmd"
+  else
+    rpm -qf "$@"
+  fi
 }
 
 dnf_Qp() {

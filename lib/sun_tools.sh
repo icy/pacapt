@@ -31,7 +31,11 @@ sun_tools_Ql() {
 }
 
 sun_tools_Qo() {
-  $GREP "$@" /var/sadm/install/contents
+  if cmd="$(command -v -- "$@")"; then
+    $GREP "$cmd" /var/sadm/install/contents
+  else
+    $GREP "$@" /var/sadm/install/contents
+  fi
 }
 
 sun_tools_Qs() {

@@ -31,7 +31,11 @@ pkgng_Ql() {
 }
 
 pkgng_Qo() {
-  pkg which "$@"
+  if cmd="$(command -v -- "$@")"; then
+    pkg which "$cmd"
+  else
+    pkg which "$@"
+  fi
 }
 
 pkgng_Qp() {

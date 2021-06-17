@@ -22,7 +22,11 @@ swupd_Qk() {
 }
 
 swupd_Qo() {
-  swupd search "$@"
+  if cmd="$(command -v -- "$@")"; then
+    swupd search "$cmd"
+  else
+    swupd search "$@"
+  fi
 }
 
 swupd_Qs() {
