@@ -75,7 +75,8 @@ dpkg_Qs() {
   dpkg-query -W -f='${Status} ${Package}\t${Version}\t${Description}\n' \
   | grep -E '^((hold)|(install)|(deinstall))' \
   | sed -r -e 's#^(\w+ ){3}##g' \
-  | grep -Ei "${@:-.}"
+  | grep -Ei "${@:-.}" \
+  | _quiet_field1
 }
 
 # dpkg_Rs may _not_implemented

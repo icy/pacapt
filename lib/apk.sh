@@ -39,8 +39,10 @@ apk_Qo() {
   apk info --who-owns -- "$@"
 }
 
+# apk_Qs may _not_implemented
 apk_Qs() {
-  apk info -- "*${*}*"
+  apk info -- "*${*}*" \
+  | _quiet_field1_not_implemented
 }
 
 apk_Qu() {

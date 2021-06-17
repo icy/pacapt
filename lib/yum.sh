@@ -32,7 +32,13 @@ yum_Qi() {
 }
 
 yum_Qs() {
-  rpm -qa "*${*}*"
+  if [[ "$_TOPT" == "q" ]]; then
+    rpm -qa --qf "%{NAME}\\n" "*${*}*"
+  elif [[ "$_TOPT" == "" ]]; then
+    rpm -qa --qf "%{NAME} %{VERSION}\\n" "*${*}*"
+  else
+    _not_implemented
+  fi
 }
 
 yum_Ql() {

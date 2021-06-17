@@ -1,3 +1,8 @@
+## next
+
+* `lib/yum`, `lib/dpkg`, `lib/apk`: Fix #96, #143
+  by adding  `--quiet` option for `Qs`.
+
 ## v2.4.4
 
 * `lib/dnf`: Minor improvements (#148)
