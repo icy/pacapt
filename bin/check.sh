@@ -94,7 +94,7 @@ _check_POSIX_files() {
 _check_files() {
   while (( $# )); do
     # FIXME: For now, we always return 0!!!
-    _check_file "$1" || return 0
+    _check_file "$1"
     shift
   done
 }
