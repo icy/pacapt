@@ -241,8 +241,3 @@ _quiet_field1() {
     awk '{print $1}'
   fi
 }
-
-_quiet_field1_not_implemented() {
-  cat >/dev/null
-  _not_implemented
-}
