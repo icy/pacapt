@@ -5,6 +5,7 @@
 * `lib/apk`: `Q` prints version information.
 * `lib/apk`: Fix `--noconfirm` issue (#150)
 * `tests/`: Support new `ubuntu`/`debian` systems
+* `lib/apk`: Fix many implementation issues.
 
 ## v2.4.4
 

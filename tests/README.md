@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.org/icy/pacapt.svg?branch=ng)](https://travis-ci.org/icy/pacapt)
+[![Build Status](https://github.com/icy/pacapt/actions/workflows/ci.yaml/badge.svg)](https://github.com/icy/pacapt/actions)
 
 ## Table of contents
 
-See also https://travis-ci.org/icy/pacapt.
+See also https://github.com/icy/pacapt/actions.
 
 1. [Preparing test environment](#preparing-test-environment)
 1. [Invoking test scripts](#invoking-test-scripts)
