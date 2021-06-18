@@ -21,7 +21,7 @@ _apk_init() {
 
 # apk_Q may _not_implemented
 apk_Q() {
-  case "$_TOPT" in
+  case $_TOPT in
   "")
     apk list --installed "$@"
     ;;
@@ -41,8 +41,10 @@ apk_Qi() {
     return
   fi
 
-  if apk info --installed "$_TOPT" "$@"; then
-    apk info --all "$_TOPT" "$@"
+  # shellcheck disable=2086
+  if apk info --installed $_TOPT "$@"; then
+    # shellcheck disable=2086
+    apk info --all $_TOPT "$@"
   else
     >&2 echo ":: Error: Package not installed: '${*}'"
   fi
@@ -60,7 +62,7 @@ apk_Ql() {
     | awk -v pkg="$pkg" '/\// {printf("%s %s\n", pkg, $0)}'
   done \
   | {
-    case "$_TOPT" in
+    case $_TOPT in
     "q") awk '{print $NF}';;
     "")  cat ;;
     *)   _not_implemented ; exit 1;;
@@ -77,7 +79,8 @@ apk_Qo() {
 }
 
 apk_Qs() {
-  apk list --installed "$_TOPT" "*${*}*"
+  # shellcheck disable=2086
+  apk list --installed $_TOPT "*${*}*"
 }
 
 apk_Qu() {
@@ -85,27 +88,32 @@ apk_Qu() {
 }
 
 apk_R() {
-  apk del "$_TOPT" -- "$@"
+  # shellcheck disable=2086
+  apk del $_TOPT -- "$@"
 }
 
 apk_Rn() {
-  apk del --purge "$_TOPT" -- "$@"
+  # shellcheck disable=2086
+  apk del --purge $_TOPT -- "$@"
 }
 
 apk_Rns() {
-  apk del --purge -r "$_TOPT" -- "$@"
+  # shellcheck disable=2086
+  apk del --purge -r $_TOPT -- "$@"
 }
 
 apk_Rs() {
-  apk del -r "$_TOPT" -- "$@"
+  # shellcheck disable=2086
+  apk del -r $_TOPT -- "$@"
 }
 
 apk_S() {
+  # shellcheck disable=2086
   case ${_EOPT} in
     # Download only
     ("fetch") shift
-              apk fetch "$_TOPT" -- "$@" ;;
-          (*) apk add   "$_TOPT" -- "$@" ;;
+              apk fetch $_TOPT -- "$@" ;;
+          (*) apk add   $_TOPT -- "$@" ;;
   esac
 }
 
@@ -122,7 +130,8 @@ apk_Sccc() {
 }
 
 apk_Si() {
-  apk info "$_TOPT" "$@"
+  # shellcheck disable=2086
+  apk info $_TOPT "$@"
 }
 
 apk_Sii() {
@@ -154,9 +163,11 @@ apk_Sy() {
 }
 
 apk_Sw() {
-  apk fetch "$_TOPT" -- "$@"
+  # shellcheck disable=2086
+  apk fetch $_TOPT -- "$@"
 }
 
 apk_U() {
-  apk add --allow-untrusted "$_TOPT" -- "$@"
+  # shellcheck disable=2086
+  apk add --allow-untrusted $_TOPT -- "$@"
 }
