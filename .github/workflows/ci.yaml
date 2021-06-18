@@ -13,13 +13,18 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: shellcheck
+    - name: prepare
       run: |
         sudo apt-get install libjson-perl liburi-perl
+
+    - name: shellcheck
+      run: |
+        export CI_SHELLCHECK_UPDATE=yes
         make shellcheck
 
     - name: shellcheck-POSIX
       run: |
+        export CI_SHELLCHECK_UPDATE=yes
         make POSIX
 
     - name: tests
