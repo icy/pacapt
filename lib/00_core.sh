@@ -179,7 +179,6 @@ _translate_debug() {
 # Translate the --noconfirm option.
 # FIXME: does "yes | pacapt" just help?
 _translate_noconfirm() {
-
   echo "$_EOPT" | $GREP -q ":noconfirm:" || return 0
 
   local _opt=
@@ -196,8 +195,6 @@ _translate_noconfirm() {
   "zypper") _opt="--no-confirm";;
   "pkgng")  _opt="-y";;
   "tazpkg") _opt="--auto";;
-  # apk is supposed to run in non-interactive mode by default (FIXME)
-  # This addresses https://github.com/icy/pacapt/issues/150
   "apk")    _opt="";;
   *)
     _opt=""
@@ -206,8 +203,8 @@ _translate_noconfirm() {
     ;;
   esac
 
-  echo $_opt
-  return $_ret
+  echo "$_opt"
+  return "$_ret"
 }
 
 _translate_all() {
@@ -215,11 +212,12 @@ _translate_all() {
   local _debug=
   local _noconfirm=
 
-  _debug="$(_translate_debug)"
-  _noconfirm="$(_translate_noconfirm)"
+  _debug="$(_translate_debug)" || return 1
+  _noconfirm="$(_translate_noconfirm)" || return 1
   _args="$(_translate_w)" || return 1
-  _args="${_args}${_noconfirm:+ }${_noconfirm}" || return 1
-  _args="${_args}${_debug:+ }${_debug}" || return 1
+
+  _args="${_args}${_noconfirm:+ }${_noconfirm}"
+  _args="${_args}${_debug:+ }${_debug}"
 
   export _EOPT="${_args# }"
 }

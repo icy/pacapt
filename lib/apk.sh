@@ -60,26 +60,26 @@ apk_Qu() {
 }
 
 apk_R() {
-  apk del -- "$@"
+  apk del $_TOPT -- "$@"
 }
 
 apk_Rn() {
-  apk del --purge -- "$@"
+  apk del --purge $_TOPT -- "$@"
 }
 
 apk_Rns() {
-  apk del --purge -r -- "$@"
+  apk del --purge -r $_TOPT -- "$@"
 }
 
 apk_Rs() {
-  apk del -r -- "$@"
+  apk del -r $_TOPT -- "$@"
 }
 
 apk_S() {
   case ${_EOPT} in
     # Download only
     ("fetch") shift
-              apk fetch        -- "$@" ;;
+              apk fetch $_TOPT -- "$@" ;;
           (*) apk add   $_TOPT -- "$@" ;;
   esac
 }
@@ -129,9 +129,9 @@ apk_Sy() {
 }
 
 apk_Sw() {
-  apk fetch -- "$@"
+  apk fetch $_TOPT -- "$@"
 }
 
 apk_U() {
-  apk add --allow-untrusted -- "$@"
+  apk add --allow-untrusted $_TOPT -- "$@"
 }
