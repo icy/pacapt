@@ -18,5 +18,9 @@ jobs:
         sudo apt-get install libjson-perl liburi-perl
         make shellcheck
 
+    - name: shellcheck-POSIX
+      run: |
+        make POSIX
+
     - name: tests
       run: make tests

@@ -102,6 +102,10 @@ clean:
 shellcheck:
 	@./bin/check.sh _check_files bin/*.sh lib/*.sh
 
+.PHONY: POSIX
+POSIX:
+	@./bin/check.sh _check_POSIX_files bin/*.sh lib/*.sh
+
 .PHONY: tests
 tests:
 	@cd tests/ && make all

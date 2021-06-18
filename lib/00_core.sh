@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# POSIX  : Ready
 # Purpose: Provide some basic functions
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
@@ -14,17 +15,17 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
 _error() {
-  echo >&2 "Error: $*"
+  echo >&2 ":: Error: $*"
   return 1
 }
 
 _warn() {
-  echo >&2 "Warning: $*"
+  echo >&2 ":: Warning: $*"
   return 0
 }
 
 _die() {
-  echo >&2 "$@"
+  echo >&2 ":: $*"
   exit 1
 }
 
@@ -239,4 +240,18 @@ _quiet_field1() {
   else
     awk '{print $1}'
   fi
+}
+
+# Get nth char of from a string [the first index: 1]
+_string_nth() {
+  local_idx="$1"; shift
+  # shellcheck disable=SC2016
+  echo "$@" \
+  | "$AWK" -vidx="$local_idx" '{printf("%s",substr($0,idx,1))}'
+}
+
+_string_less_than() {
+  # shellcheck disable=SC2016
+  echo "$@" \
+  | "$AWK" '{ if ($1 < $2) {exit(0);} else {exit 1;}}'
 }
