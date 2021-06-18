@@ -4,6 +4,7 @@
   by adding  `-q` (quiet) option for `Qs`.
 * `lib/apk`: `Q` prints version information.
 * `lib/apk`: Fix `--noconfirm` issue (#150)
+* `tests/`: Support new `ubuntu`/`debian` systems
 
 ## v2.4.4
 

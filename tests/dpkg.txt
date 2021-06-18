@@ -5,7 +5,8 @@
 # License : MIT
 
 # FIXME: debian:squeeze It's unable to run `pacman -Sy`
-im ubuntu:14.04 ubuntu:16.04 ubuntu:18.04 debian:buster debian:jessie debian:stretch
+im ubuntu:14.04 ubuntu:16.04 ubuntu:18.04 ubuntu:20.04 ubuntu
+im debian:buster debian:jessie debian:stretch debian:buster debian
 
 # Remove `docker-clean` because we need *.deb files under /var/cache
 in ! rm -fv /etc/apt/apt.conf.d/docker-clean
@@ -46,6 +47,9 @@ ou ^/usr/bin/apt-key$
 in -Qo /bin/bash
 ou ^bash: /bin/bash$
 
+# On ubuntu:20.04, /usr/bin/bash is not part of the `bash` package
+# (maybe it's a symlink/file created by installation process)
+# hence the looking up would fail
 in -Qo bash
 ou ^bash: /bin/bash$
 
@@ -77,9 +81,10 @@ in -Sii screen
 ou ^Reverse Depends:
 
 # Now installation
+# From ubuntu:20.04 it becomes /bin/screen =))
 in ! echo Y | pacman -S screen
 in ! which screen
-ou ^/usr/bin/screen
+ou ^(/usr)?/bin/screen
 
 # Now remove the package
 in ! echo Y | pacman -R screen

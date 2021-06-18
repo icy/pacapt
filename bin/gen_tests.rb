@@ -20,7 +20,7 @@ BEGIN {
   puts ""
   puts "# Notes: This file is generated. Please don't modify them manually."
   puts ""
-  puts "export PATH=/usr/bin:$PATH"
+  puts "export PATH=/sbin:/bin:/usr/sbin:/usr/bin:$PATH"
   puts ""
   puts "N_TEST=0  # Total number of tests"
   puts "N_FAIL=0  # Number of failed tests"
