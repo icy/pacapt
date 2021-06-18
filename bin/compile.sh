@@ -43,8 +43,14 @@ export GREP AWK VERSION PACAPT_STATS
 # Print the shebang and header
 ########################################################################
 
+if [[ "${PACAPT_POSIX:-}" == "yes" ]]; then
+  OUTPUT_SHELL="sh"
+else
+  OUTPUT_SHELL="bash"
+fi
+
 cat <<EOF
-#!/usr/bin/env sh
+#!/usr/bin/env ${OUTPUT_SHELL}
 #
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
