@@ -1,13 +1,19 @@
 ## next
 
+* We now have two versions: `pacapt` (where `bash` is available)
+  and `POSIX_pacapt` for systems where limited `sh`/`POSIX` is required.
+
 * `lib/yum`, `lib/dpkg`, `lib/apk`: Fix #96, #143
   by adding  `-q` (quiet) option for `Qs`.
-* `lib/apk`: `Q` prints version information.
-* `lib/apk`: Fix `--noconfirm` issue (#150)
-* `lib/apk`: Fix many implementation issues.
-* `lib/apk.sh`: POSIX going well
 * `lib/00_core.sh`: POSIX going well
 * `lib/zz_main.sh`: POSIX going well
+
+* `lib/apk`:
+  * `Q` prints version information.
+  * Fix `--noconfirm` issue (#150)
+  * Fix many implementation issues.
+  * POSIX going well
+  * POSIX version (`pacapt-POSIX` works perfectly without `bash`)
 
 ## v2.4.4
 

@@ -35,6 +35,18 @@ _PACMAN=""  # name of the package manager
 _PACMAN_detect \
 || _die "'pacapt' doesn't support your package manager."
 
+case "$_PACMAN:${__PACAPT_SHELL_POSIX___:-}" in
+"apk:maybe")
+  ;;
+
+*:maybe)
+  _die "Bash shell not found, and pacapt library ($_PACMAN) doesn't support POSIX at the moment."
+  ;;
+
+*)
+  ;;
+esac
+
 # FIXME: If `pacman-foo` is being used, `PACAPT_DEBUG` is still overwriting that.
 if [ -z "$PACAPT_DEBUG" ]; then
   [ "$_PACMAN" != "pacman" ] \

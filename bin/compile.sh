@@ -44,7 +44,7 @@ export GREP AWK VERSION PACAPT_STATS
 ########################################################################
 
 cat <<EOF
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 #
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
@@ -109,10 +109,22 @@ EOF
 EOS
 
 ########################################################################
+# Creating a list of files to print out
+########################################################################
+library_files() {
+  if [[ "${PACAPT_POSIX:-}" == "yes" ]]; then
+    >&2 echo ":: Generating only a POSIX version..."
+    grep -Elie "^# +POSIX.*:.*Ready" ./lib/*.sh
+  else
+    ls ./lib/*.sh
+  fi
+}
+
+########################################################################
 # Print the source of all library files, except (zz_main.sh)
 ########################################################################
 
-for L in ./lib/*.sh; do
+for L in $(library_files); do
   bash -n "$L" || exit 1
   [[ "${L##*/}" != "zz_main.sh" ]] \
   || continue
@@ -128,7 +140,7 @@ done
 echo "_validate_operation() {"
 echo "  case \"\$1\" in"
 
-for L in ./lib/*.sh; do
+for L in $(library_files); do
   _PKGNAME="${L##*/}"
   _PKGNAME="${_PKGNAME%.*}"
 

@@ -21,9 +21,9 @@ See also [README.md](README.md#read-me-first)
 
 ## Testing. Writting test cases
 
-See also `tests/README.md` and https://travis-ci.org/icy/pacapt.
+See also `tests/README.md` and https://github.com/icy/pacapt/actions.
 
-1. Use `make shellcheck` if you have a network connection,
+1. Use `make shellcheck POSIX` if you have shellcheck
    and enough `Perl` packages (`JSON`, `URI::Escape`) on your system;
 1. Use `PACAPT_DEBUG=foo` where `foo` is a package manager
    (`dpkg`, `pacman`, `zypper`, ...) to print what `pacapt` will do.
@@ -38,6 +38,16 @@ $ docker run --rm -ti \
     debian:stable /bin/bash
 # you are in container now
 ````
+
+If you want to generate a `POSIX` version of the script, try
+
+```
+$ export PACAPT_POSIX=yes
+$ make pacapt.dev
+```
+
+The output contains all library files which include `POSIX: Ready`
+as part of their comments. See for examle [lib/00_core.sh](lib/00_core.sh).
 
 ## Generating `pacapt` script
 

@@ -14,6 +14,21 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+### Shell switching ~~~~ :!!
+
+if [[ -n "${___PACAPT_SHELL_SWITCHED___:-}" ]]; then
+  :
+else
+  export ___PACAPT_SHELL_SWITCHED___="yes"
+  if command -v bash >/dev/null; then
+    exec bash "$0" "$@"
+  else
+    export __PACAPT_SHELL_POSIX___="maybe"
+  fi
+fi
+
+### //shell switching
+
 _error() {
   echo >&2 ":: Error: $*"
   return 1

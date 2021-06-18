@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# POSIX  : Ready
 # Purpose: SunOS support
 # Author : Daniel YC Lin <dlin.tw@gmail.com>
 # License: Fair license (http://www.opensource.org/licenses/fair)
@@ -16,7 +17,7 @@
 _sun_tools_init() {
   # The purpose of `if` is to make sure this function
   # can be invoked on other system (Linux, BSD).
-  if [[ "$(uname)" == "SunOS" ]]; then
+  if [ "$(uname)" = "SunOS" ]; then
     export GREP=/usr/xpg4/bin/grep
     export AWK=nawk
   fi
@@ -45,9 +46,9 @@ sun_tools_Qs() {
 sun_tools_Q() {
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
-  if [[ "$_TOPT" == "q" && ! -z "$*" ]]; then
+  if [ "$_TOPT" = "q" ] && [ -n "$*" ]; then
     pkginfo | $GREP "$@"
-  elif [[ "$_TOPT" == "q" && -z "$*" ]]; then
+  elif [ "$_TOPT" = "q" ] && [ -z "$*" ]; then
     pkginfo
   else
     pkginfo "$@"
