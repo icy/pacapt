@@ -1,6 +1,6 @@
 ## `pacapt` - An `ArchLinux`'s pacman-like wrapper for many package managers
 
-[![Build Status](https://github.com/icy/pacapt/actions)](https://github.com/icy/pacapt/actions/workflows/ci.yaml/badge.svg)
+[![Build Status](https://github.com/icy/pacapt/actions/workflows/ci.yaml/badge.svg)](https://github.com/icy/pacapt/actions)
 
 `pacapt` is a wrapper for many package managers.
 Simply install package with `pacapt -S htop` or `pacapt install htop`
