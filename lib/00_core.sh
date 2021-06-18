@@ -42,9 +42,9 @@ _removing_is_dangerous() {
 # Detect package type from /etc/issue
 # FIXME: Using new `issue` file (location)
 _issue2pacman() {
-  local _pacman
+  local_pacman
 
-  _pacman="$1"; shift
+  local_pacman="$1"; shift
 
   # The following line is added by Daniel YC Lin to support SunOS.
   #
@@ -54,13 +54,13 @@ _issue2pacman() {
   # on Linux/BSD systems. To avoid extra check, I slightly modify
   # the code to make sure it's only applicable on SunOS.
   #
-  [[ "$(uname)" == "SunOS" ]] && _PACMAN="$_pacman" && return
+  [ "$(uname)" = "SunOS" ] && _PACMAN="$local_pacman" && return
 
   $GREP -qis "$@" /etc/issue \
-  && _PACMAN="$_pacman" && return
+  && _PACMAN="$local_pacman" && return
 
   $GREP -qis "$@" /etc/os-release \
-  && _PACMAN="$_pacman" && return
+  && _PACMAN="$local_pacman" && return
 }
 
 # Detect package type
@@ -94,30 +94,30 @@ _PACMAN_detect() {
   _issue2pacman pkg_tools "Bitrig" && return
   _issue2pacman apk "Alpine Linux" && return
 
-  [[ -z "$_PACMAN" ]] || return
+  [ -z "$_PACMAN" ] || return
 
   # Prevent a loop when this script is installed on non-standard system
-  if [[ -x "/usr/bin/pacman" ]]; then
-    $GREP -q "${FUNCNAME[0]}" '/usr/bin/pacman' >/dev/null 2>&1
-    [[ $? -ge 1 ]] && _PACMAN="pacman" \
+  if [ -x "/usr/bin/pacman" ]; then
+    $GREP -q "_PACMAN_detect" '/usr/bin/pacman' >/dev/null 2>&1
+    [ $? -ge 1 ] && _PACMAN="pacman" \
     && return
   fi
 
-  [[ -x "/usr/bin/apt-get" ]] && _PACMAN="dpkg" && return
-  [[ -x "/data/data/com.termux/files/usr/bin/apt-get" ]] && _PACMAN="dpkg" && return
-  [[ -x "/usr/bin/cave" ]] && _PACMAN="cave" && return
-  [[ -x "/usr/bin/dnf" ]] && _PACMAN="dnf" && return
-  [[ -x "/usr/bin/yum" ]] && _PACMAN="yum" && return
-  [[ -x "/opt/local/bin/port" ]] && _PACMAN="macports" && return
-  [[ -x "/usr/bin/emerge" ]] && _PACMAN="portage" && return
-  [[ -x "/usr/bin/zypper" ]] && _PACMAN="zypper" && return
-  [[ -x "/usr/sbin/pkg" ]] && _PACMAN="pkgng" && return
+  [ -x "/usr/bin/apt-get" ] && _PACMAN="dpkg" && return
+  [ -x "/data/data/com.termux/files/usr/bin/apt-get" ] && _PACMAN="dpkg" && return
+  [ -x "/usr/bin/cave" ] && _PACMAN="cave" && return
+  [ -x "/usr/bin/dnf" ] && _PACMAN="dnf" && return
+  [ -x "/usr/bin/yum" ] && _PACMAN="yum" && return
+  [ -x "/opt/local/bin/port" ] && _PACMAN="macports" && return
+  [ -x "/usr/bin/emerge" ] && _PACMAN="portage" && return
+  [ -x "/usr/bin/zypper" ] && _PACMAN="zypper" && return
+  [ -x "/usr/sbin/pkg" ] && _PACMAN="pkgng" && return
   # make sure pkg_add is after pkgng, FreeBSD base comes with it until converted
-  [[ -x "/usr/sbin/pkg_add" ]] && _PACMAN="pkg_tools" && return
-  [[ -x "/usr/sbin/pkgadd" ]] && _PACMAN="sun_tools" && return
-  [[ -x "/sbin/apk" ]] && _PACMAN="apk" && return
-  [[ -x "/usr/bin/tazpkg" ]] && _PACMAN="tazpkg" && return
-  [[ -x "/usr/bin/swupd" ]] && _PACMAN="swupd" && return
+  [ -x "/usr/sbin/pkg_add" ] && _PACMAN="pkg_tools" && return
+  [ -x "/usr/sbin/pkgadd" ] && _PACMAN="sun_tools" && return
+  [ -x "/sbin/apk" ] && _PACMAN="apk" && return
+  [ -x "/usr/bin/tazpkg" ] && _PACMAN="tazpkg" && return
+  [ -x "/usr/bin/swupd" ] && _PACMAN="swupd" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
@@ -130,37 +130,37 @@ _translate_w() {
 
   echo "$_EOPT" | $GREP -q ":w:" || return 0
 
-  local _opt=
-  local _ret=0
+  local_opt=
+  local_ret=0
 
   case "$_PACMAN" in
-  "dpkg")     _opt="-d";;
-  "cave")     _opt="-f";;
-  "macports") _opt="fetch";;
-  "portage")  _opt="--fetchonly";;
-  "zypper")   _opt="--download-only";;
-  "pkgng")    _opt="fetch";;
-  "yum")      _opt="--downloadonly";
+  "dpkg")     local_opt="-d";;
+  "cave")     local_opt="-f";;
+  "macports") local_opt="fetch";;
+  "portage")  local_opt="--fetchonly";;
+  "zypper")   local_opt="--download-only";;
+  "pkgng")    local_opt="fetch";;
+  "yum")      local_opt="--downloadonly";
     if ! rpm -q 'yum-downloadonly' >/dev/null 2>&1; then
       _error "'yum-downloadonly' package is required when '-w' is used."
-      _ret=1
+      local_ret=1
     fi
     ;;
   "tazpkg")
     _error "$_PACMAN: Use '$_PACMAN get' to download and save packages to current directory."
-    _ret=1
+    local_ret=1
     ;;
-  "apk")      _opt="fetch";;
+  "apk")      local_opt="fetch";;
   *)
-    _opt=""
-    _ret=1
+    local_opt=""
+    local_ret=1
 
     _error "$_PACMAN: Option '-w' is not supported/implemented."
     ;;
   esac
 
-  echo $_opt
-  return "$_ret"
+  echo "$local_opt"
+  return "$local_ret"
 }
 
 _translate_debug() {
@@ -181,62 +181,62 @@ _translate_debug() {
 _translate_noconfirm() {
   echo "$_EOPT" | $GREP -q ":noconfirm:" || return 0
 
-  local _opt=
-  local _ret=0
+  local_opt=
+  local_ret=0
 
   case "$_PACMAN" in
   # FIXME: Update environment DEBIAN_FRONTEND=noninteractive
   # FIXME: There is also --force-yes for a stronger case
-  "dpkg")   _opt="--yes";;
-  "dnf")    _opt="--assumeyes";;
-  "yum")    _opt="--assumeyes";;
+  "dpkg")   local_opt="--yes";;
+  "dnf")    local_opt="--assumeyes";;
+  "yum")    local_opt="--assumeyes";;
   # FIXME: pacman has 'assume-yes' and 'assume-no'
   # FIXME: zypper has better mode. Similar to dpkg (Debian).
-  "zypper") _opt="--no-confirm";;
-  "pkgng")  _opt="-y";;
-  "tazpkg") _opt="--auto";;
-  "apk")    _opt="";;
+  "zypper") local_opt="--no-confirm";;
+  "pkgng")  local_opt="-y";;
+  "tazpkg") local_opt="--auto";;
+  "apk")    local_opt="";;
   *)
-    _opt=""
-    _ret=1
+    local_opt=""
+    local_ret=1
     _error "$_PACMAN: Option '--noconfirm' is not supported/implemented."
     ;;
   esac
 
-  echo "$_opt"
-  return "$_ret"
+  echo "$local_opt"
+  return "$local_ret"
 }
 
 _translate_all() {
-  local _args=""
-  local _debug=
-  local _noconfirm=
+  local_args=""
+  local_debug=
+  local_noconfirm=
 
-  _debug="$(_translate_debug)" || return 1
-  _noconfirm="$(_translate_noconfirm)" || return 1
-  _args="$(_translate_w)" || return 1
+  local_debug="$(_translate_debug)" || return 1
+  local_noconfirm="$(_translate_noconfirm)" || return 1
+  local_args="$(_translate_w)" || return 1
 
-  _args="${_args}${_noconfirm:+ }${_noconfirm}"
-  _args="${_args}${_debug:+ }${_debug}"
+  local_args="${local_args}${local_noconfirm:+ }${local_noconfirm}"
+  local_args="${local_args}${local_debug:+ }${local_debug}"
 
-  export _EOPT="${_args# }"
+  export _EOPT="${local_args# }"
 }
 
 _print_supported_operations() {
-  local _pacman="$1"
-  echo -n "pacapt($_pacman): available operations:"
+  local_pacman="$1"
+  printf "%s" "pacapt($local_pacman): available operations:"
   # shellcheck disable=2016
-  $GREP -E "^${_pacman}_[^ \\t]+\\(\\)" "$0" \
+  $GREP -E "^${local_pacman}_[^ \\t]+\\(\\)" "$0" \
   | $AWK -F '(' '{print $1}' \
-  | sed -e "s/${_pacman}_//g" \
+  | sed -e "s/${local_pacman}_//g" \
   | while read -r O; do
-      echo -n " $O"
+      printf "%s" " $O"
     done
   echo
 }
 
 _quiet_field1() {
-  if [[ "${_TOPT}" == "" ]]; then
+  if [ "${_TOPT}" = "" ]; then
     cat
   else
     awk '{print $1}'
