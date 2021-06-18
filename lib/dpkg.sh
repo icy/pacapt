@@ -133,7 +133,7 @@ dpkg_Sy() {
 
 dpkg_Ss() {
   local IFS=$'\n'
-  packages=($(apt-cache search "$1"))
+  packages=($(apt-cache search "$@"))
   for package in ${packages[@]:-}
   do
     name=${package%% - *}
