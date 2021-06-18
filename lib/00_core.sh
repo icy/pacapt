@@ -42,8 +42,6 @@ _removing_is_dangerous() {
 # Detect package type from /etc/issue
 # FIXME: Using new `issue` file (location)
 _issue2pacman() {
-  local_pacman
-
   local_pacman="$1"; shift
 
   # The following line is added by Daniel YC Lin to support SunOS.
