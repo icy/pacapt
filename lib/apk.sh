@@ -20,19 +20,27 @@ _apk_init() {
 
 # apk_Q may _not_implemented
 apk_Q() {
-  if [[ -z "$_TOPT" ]]; then
+  case "$_TOPT" in
+  "")
+    apk info --all $(apk info -dws) \
+    | grep 'installed size' \
+    | awk '{ print $1}'
+    ;;
+  "q")
     apk info
-  else
+    ;;
+  *)
     _not_implemented
-  fi
+    ;;
+  esac
 }
 
 apk_Qi() {
-  apk info -a -- "$@"
+  apk info --all -- "$@"
 }
 
 apk_Ql() {
-  apk info -L -- "$@"
+  apk info --contents -- "$@"
 }
 
 apk_Qo() {
@@ -44,7 +52,7 @@ apk_Qo() {
 }
 
 apk_Qs() {
-  apk info -- "*${*}*"
+  apk_Q | grep -Ee ".*${*}.*"
 }
 
 apk_Qu() {

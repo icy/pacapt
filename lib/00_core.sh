@@ -233,3 +233,11 @@ _print_supported_operations() {
     done
   echo
 }
+
+_quiet_field1() {
+  if [[ "${_TOPT}" == "" ]]; then
+    cat
+  else
+    awk '{print $1}'
+  fi
+}

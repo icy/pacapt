@@ -1,3 +1,9 @@
+## next
+
+* `lib/yum`, `lib/dpkg`, `lib/apk`: Fix #96, #143
+  by adding  `-q` (quiet) option for `Qs`.
+* `lib/apk`: `Q` prints version information.
+
 ## v2.4.4
 
 * `lib/dnf`: Minor improvements (#148)
