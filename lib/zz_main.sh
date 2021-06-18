@@ -251,7 +251,7 @@ fi
 if [ -n "$PACAPT_DEBUG" ]; then
   echo "pacapt: $_PACMAN, p=$_POPT, s=$_SOPT, t=$_TOPT, e=$_EOPT"
   echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT ${*}'"
-  if command -v declare; then
+  if command -v declare >/dev/null; then
     # shellcheck disable=SC3044
     declare -f "${_PACMAN}_${_POPT}${_SOPT}"
   else
