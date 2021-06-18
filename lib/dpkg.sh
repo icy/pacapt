@@ -132,7 +132,8 @@ dpkg_Sy() {
 }
 
 dpkg_Ss() {
-  IFS=$'\n' packages=($(apt-cache search "$1"))
+  local IFS=$'\n'
+  packages=($(apt-cache search "$1"))
   for package in ${packages[@]:-}
   do
     name=${package%% - *}
