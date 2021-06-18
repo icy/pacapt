@@ -30,7 +30,7 @@ _PACMAN_found_from_script_name() {
   _tmp_name="${_tmp_name%.*}"  # remove extension if any (remove everything from the last `.`)
   _pacman="${_tmp_name##*-}"   # remove every thing before the last `-`
 
-  if grep -Eq -e ":$_pacman[[:space:]]*" <<< "$_SUPPORTED_EXTERNALS"; then
+  if grep -Eq -e ":${_pacman}[[:space:]]*" <<< "$_SUPPORTED_EXTERNALS"; then
     export _PACMAN="$_pacman"
     return 0
   else
