@@ -133,17 +133,20 @@ dpkg_Sy() {
 
 dpkg_Ss() {
   IFS=$'\n' packages=($(apt-cache search "$1"))
-  for package in ${packages[@]}
-  do
-    name=${package%% - *}
-    desc=${package#* - }
-    dpkg-query -W "$name" > /dev/null 2>&1
-    if [[ $? -eq 1 ]]; then
-      echo -e "package/$name \n    $desc"
-    else
-      dpkg-query -W -f='package/${binary:Package} ${Version}\t[${Status}]\n    ${binary:Summary}\n' "$name"
-    fi
-  done
+  if [[ ${#packages[@]} -ne 0 ]]
+  then 
+    for package in ${packages[@]}
+    do
+      name=${package%% - *}
+      desc=${package#* - }
+      dpkg-query -W "$name" > /dev/null 2>&1
+      if [[ $? -eq 1 ]]; then
+        echo -e "package/$name \n    $desc"
+      else
+        dpkg-query -W -f='package/${binary:Package} ${Version}\t[${Status}]\n    ${binary:Summary}\n' "$name"
+      fi
+    done
+  fi
 }
 
 dpkg_Sc() {
