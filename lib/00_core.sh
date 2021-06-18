@@ -222,19 +222,19 @@ _translate_all() {
 
 _print_supported_operations() {
   local_pacman="$1"
-  printf "%s" "pacapt($local_pacman): available operations:"
+  printf "pacapt(%s): available operations:" "$local_pacman"
   # shellcheck disable=2016
   $GREP -E "^${local_pacman}_[^ \\t]+\\(\\)" "$0" \
   | $AWK -F '(' '{print $1}' \
   | sed -e "s/${local_pacman}_//g" \
   | while read -r O; do
-      printf "%s" " $O"
+      printf " %s" "$O"
     done
   echo
 }
 
 _quiet_field1() {
-  if [ "${_TOPT}" = "" ]; then
+  if [ -z "${_TOPT}" ]; then
     cat
   else
     awk '{print $1}'
