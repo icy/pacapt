@@ -16,7 +16,9 @@
 
 BEGIN {
   new_test = true
-  puts "#!/bin/bash"
+  puts "#!/bin/sh"
+  puts ""
+  puts "# Notes: This file is generated. Please don't modify them manually."
   puts ""
   puts "export PATH=/usr/bin:$PATH"
   puts ""
