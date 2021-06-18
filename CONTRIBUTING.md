@@ -42,8 +42,7 @@ $ docker run --rm -ti \
 If you want to generate a `POSIX` version of the script, try
 
 ```
-$ export PACAPT_POSIX=yes
-$ make pacapt.dev
+$ make pacapt.dev PACAPT_POSIX=yes
 ```
 
 The output contains all library files which include `POSIX: Ready`
