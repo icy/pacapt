@@ -5,7 +5,9 @@
 * `lib/apk`: `Q` prints version information.
 * `lib/apk`: Fix `--noconfirm` issue (#150)
 * `lib/apk`: Fix many implementation issues.
+* `lib/apk.sh`: POSIX going well
 * `lib/00_core.sh`: POSIX going well
+* `lib/zz_main.sh`: POSIX going well
 
 ## v2.4.4
 

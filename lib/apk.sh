@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# POSIX  : Ready
 # Purpose: Support next-generation Alpine Linux apk package manager
 # Author : Carl X. Su <bcbcarl@gmail.com>
 #          Cuong Manh Le <cuong.manhle.vn@gmail.com>
@@ -34,23 +35,24 @@ apk_Q() {
 }
 
 apk_Qi() {
-  if [[ "$#" -eq 0 ]]; then
+  if [ "$#" -eq 0 ]; then
+    # shellcheck disable=SC2046
     apk info --all $(apk info)
     return
   fi
 
-  if apk info --installed $_TOPT "$@"; then
-    apk info --all $_TOPT "$@"
+  if apk info --installed "$_TOPT" "$@"; then
+    apk info --all "$_TOPT" "$@"
   else
-    >&2 echo ":: Error: Package not installed: '${@}'"
+    >&2 echo ":: Error: Package not installed: '${*}'"
   fi
 }
 
 apk_Ql() {
-  if [[ "$#" -eq 0 ]]; then
+  if [ "$#" -eq 0 ]; then
     packages="$(apk info)"
   else
-    packages="$@"
+    packages="$*"
   fi
 
   for pkg in ${packages:-}; do
@@ -75,7 +77,7 @@ apk_Qo() {
 }
 
 apk_Qs() {
-  apk list --installed $_TOPT "*${*}*"
+  apk list --installed "$_TOPT" "*${*}*"
 }
 
 apk_Qu() {
@@ -83,27 +85,27 @@ apk_Qu() {
 }
 
 apk_R() {
-  apk del $_TOPT -- "$@"
+  apk del "$_TOPT" -- "$@"
 }
 
 apk_Rn() {
-  apk del --purge $_TOPT -- "$@"
+  apk del --purge "$_TOPT" -- "$@"
 }
 
 apk_Rns() {
-  apk del --purge -r $_TOPT -- "$@"
+  apk del --purge -r "$_TOPT" -- "$@"
 }
 
 apk_Rs() {
-  apk del -r $_TOPT -- "$@"
+  apk del -r "$_TOPT" -- "$@"
 }
 
 apk_S() {
   case ${_EOPT} in
     # Download only
     ("fetch") shift
-              apk fetch $_TOPT -- "$@" ;;
-          (*) apk add   $_TOPT -- "$@" ;;
+              apk fetch "$_TOPT" -- "$@" ;;
+          (*) apk add   "$_TOPT" -- "$@" ;;
   esac
 }
 
@@ -120,7 +122,7 @@ apk_Sccc() {
 }
 
 apk_Si() {
-  apk info $_TOPT "$@"
+  apk info "$_TOPT" "$@"
 }
 
 apk_Sii() {
@@ -152,9 +154,9 @@ apk_Sy() {
 }
 
 apk_Sw() {
-  apk fetch $_TOPT -- "$@"
+  apk fetch "$_TOPT" -- "$@"
 }
 
 apk_U() {
-  apk add --allow-untrusted $_TOPT -- "$@"
+  apk add --allow-untrusted "$_TOPT" -- "$@"
 }
