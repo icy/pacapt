@@ -43,11 +43,12 @@ _shellcheck_output_format() {
 
 # See discussion in https://github.com/icy/pacapt/pull/59
 _has_shellcheck() {
+  : "${SHELLCHECK_TAG:=v0.7.2}"
   if [[ -n "${CI_SHELLCHECK_UPDATE:-}" && "$OSTYPE" =~ linux.* ]]; then
     echo >&2 ":: Downloading shellcheck to $(pwd -P)..."
-    wget --quiet -O shellcheck.tar.xz -c "https://github.com/koalaman/shellcheck/releases/download/v0.7.1/shellcheck-v0.7.1.linux.x86_64.tar.xz"
+    wget --quiet -O shellcheck.tar.xz -c "https://github.com/koalaman/shellcheck/releases/download/${SHELLCHECK_TAG}/shellcheck-${SHELLCHECK_TAG}.linux.x86_64.tar.xz"
     tar xJf shellcheck.tar.xz
-    PATH="$(pwd -P)"/shellcheck-v0.7.1/:$PATH
+    PATH="$(pwd -P)"/shellcheck-${SHELLCHECK_TAG}/:$PATH
     export PATH
   fi
 
@@ -99,5 +100,6 @@ _check_files() {
 }
 
 _has_perl_json && _has_shellcheck || exit 1
+shellcheck --version
 
 "$@"
