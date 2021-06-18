@@ -34,7 +34,7 @@ apk_Q() {
 }
 
 apk_Qi() {
-  if [[ -z "$@" ]]; then
+  if [[ "$#" -eq 0 ]]; then
     apk info --all $(apk info)
     return
   fi
@@ -47,7 +47,7 @@ apk_Qi() {
 }
 
 apk_Ql() {
-  if [[ -z "${@}" ]]; then
+  if [[ "$#" -eq 0 ]]; then
     packages="$(apk info)"
   else
     packages="$@"
@@ -55,8 +55,7 @@ apk_Ql() {
 
   for pkg in ${packages:-}; do
     apk info --contents "$pkg" \
-    | grep / \
-    | awk -v pkg="$pkg" '{printf("%s %s\n", pkg, $0)}'
+    | awk -v pkg="$pkg" '/\// {printf("%s %s\n", pkg, $0)}'
   done \
   | {
     case "$_TOPT" in
