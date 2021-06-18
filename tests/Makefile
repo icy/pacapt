@@ -1,4 +1,5 @@
 TESTS = *.txt
+IMAGES =
 
 .PHONY: default
 default:
@@ -18,7 +19,7 @@ tmp/pacapt.dev::
 # all: for example, `make all TESTS="foo.txt bar.txt"
 .PHONY: all
 all: tmp/pacapt.dev
-	@./test.sh $(TESTS)
+	@IMAGES=$(IMAGES) ./test.sh $(TESTS)
 
 # gen:
 # gen: Generate test scripts but don't execute them
