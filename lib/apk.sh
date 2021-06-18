@@ -22,9 +22,7 @@ _apk_init() {
 apk_Q() {
   case "$_TOPT" in
   "")
-    apk info --all $(apk info -dws) \
-    | grep 'installed size' \
-    | awk '{ print $1}'
+    apk list --installed "$@"
     ;;
   "q")
     apk info
@@ -36,11 +34,37 @@ apk_Q() {
 }
 
 apk_Qi() {
-  apk info --all -- "$@"
+  if [[ -z "$@" ]]; then
+    apk info --all $(apk info)
+    return
+  fi
+
+  if apk info --installed $_TOPT "$@"; then
+    apk info --all $_TOPT "$@"
+  else
+    >&2 echo ":: Error: Package not installed: '${@}'"
+  fi
 }
 
 apk_Ql() {
-  apk info --contents -- "$@"
+  if [[ -z "${@}" ]]; then
+    packages="$(apk info)"
+  else
+    packages="$@"
+  fi
+
+  for pkg in ${packages:-}; do
+    apk info --contents "$pkg" \
+    | grep / \
+    | awk -v pkg="$pkg" '{printf("%s %s\n", pkg, $0)}'
+  done \
+  | {
+    case "$_TOPT" in
+    "q") awk '{print $NF}';;
+    "")  cat ;;
+    *)   _not_implemented ; exit 1;;
+    esac
+  }
 }
 
 apk_Qo() {
@@ -52,7 +76,7 @@ apk_Qo() {
 }
 
 apk_Qs() {
-  apk_Q | grep -Ee ".*${*}.*"
+  apk list --installed $_TOPT "*${*}*"
 }
 
 apk_Qu() {
@@ -97,7 +121,7 @@ apk_Sccc() {
 }
 
 apk_Si() {
-  apk_Qi "$@"
+  apk info $_TOPT "$@"
 }
 
 apk_Sii() {
