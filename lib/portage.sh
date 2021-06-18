@@ -33,7 +33,11 @@ portage_Ql() {
 
 portage_Qo() {
   if [[ -x '/usr/bin/equery' ]]; then
-    equery belongs "$@"
+    if cmd="$(command -v -- "$@")"; then
+      equery belongs "$cmd"
+    else
+      equery belongs "$@"
+    fi
   else
     _error "'gentoolkit' package is required to perform this operation."
   fi

@@ -46,7 +46,11 @@ yum_Ql() {
 }
 
 yum_Qo() {
-  rpm -qf "$@"
+  if cmd="$(command -v -- "$@")"; then
+    rpm -qf "$cmd"
+  else
+    rpm -qf "$@"
+  fi
 }
 
 yum_Qp() {

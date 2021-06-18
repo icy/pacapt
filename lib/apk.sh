@@ -44,7 +44,11 @@ apk_Ql() {
 }
 
 apk_Qo() {
-  apk info --who-owns -- "$@"
+  if cmd="$(command -v -- "$@")"; then
+    apk info --who-owns -- "$cmd"
+  else
+    apk info --who-owns -- "$@"
+  fi
 }
 
 apk_Qs() {

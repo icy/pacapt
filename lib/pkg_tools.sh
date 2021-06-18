@@ -30,7 +30,11 @@ pkg_tools_Ql() {
 
 pkg_tools_Qo() {
   export PKG_PATH=
-  pkg_info -E "$@"
+  if cmd="$(command -v -- "$@")"; then
+    pkg_info -E "$cmd"
+  else
+    pkg_info -E "$@"
+  fi
 }
 
 pkg_tools_Qp() {

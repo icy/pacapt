@@ -39,7 +39,11 @@ zypper_Qm() {
 }
 
 zypper_Qo() {
-  rpm -qf "$@"
+  if cmd="$(command -v -- "$@")"; then
+    rpm -qf "$cmd"
+  else
+    rpm -qf "$@"
+  fi
 }
 
 zypper_Qp() {

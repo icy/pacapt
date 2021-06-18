@@ -46,6 +46,9 @@ ou ^/usr/bin/apt-key$
 in -Qo /bin/bash
 ou ^bash: /bin/bash$
 
+in -Qo bash
+ou ^bash: /bin/bash$
+
 # Search for pattern in installed package (names + descriptions)
 in -Qs bash
 ou ^bash.+Bourne

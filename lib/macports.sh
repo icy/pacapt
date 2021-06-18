@@ -22,7 +22,11 @@ macports_Ql() {
 }
 
 macports_Qo() {
-  port provides "$@"
+  if cmd="$(command -v -- "$@")"; then
+    port provides "$cmd"
+  else
+    port provides "$@"
+  fi
 }
 
 macports_Qc() {

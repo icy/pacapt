@@ -49,7 +49,11 @@ cave_Ql() {
 }
 
 cave_Qo() {
-  cave owner "$@"
+  if cmd="$(command -v -- "$@")"; then
+    cave owner "$cmd"
+  else
+    cave owner "$@"
+  fi
 }
 
 cave_Qp() {

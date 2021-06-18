@@ -32,6 +32,9 @@ ou not implemented
 in -Qo /bin/busybox
 ou ^busybox
 
+in -Qo busybox
+ou ^busybox
+
 in ! echo Y | pacman -S htop
 ou htop.+ is installed.
 
