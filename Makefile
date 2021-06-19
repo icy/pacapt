@@ -9,10 +9,12 @@ default:
 	@echo "  pacapt      : Generate stable script."
 	@echo '  install     : Install stable script into $$BINDIR.'
 	@echo "  clean       : (Experimental) Remove git-ignored files."
-	@echo "  shellcheck  : Syntax and style checking. Use http://shellcheck.net/."
-	@echo "  docker.i    : Launch interactive Docker container which mounts."
-	@echo '                your local 'pacapt.dev' script to $$BINDIR/pacman.'
-	@echo '                Please use DISTRO= to specify Docker image'
+	@echo "  shellcheck  : It's shellcheck."
+	@ecoh "  POSIX       : Use shellcheck with POSIX checks for some scripts."
+	@echo "  docker.i    : Launch interactive Docker container which mounts"
+	@echo '                your local working directory to /src/'
+	@echo '                and create symlink /bin/pacman to the local pacapt.dev'.
+	@echo '                Please use DISTRO= to specify Docker image.'
 	@echo "  tests       : Run all tests. Please read tests/README.md first."
 	@echo "                Use TESTS= to specify a package. Docker is required."
 	@echo "  stats       : Generate table of implemented operations in development branch."
@@ -75,8 +77,8 @@ $(BINDIR)/pacapt: pacapt
 .PHONY: docker.i
 docker.i:
 	@docker run --rm -ti \
-    -v $(PWD)/pacapt.dev:$(BINDIR)/pacman \
-    $(DISTRO) /bin/bash
+    -v $(PWD)/:/src/ \
+    $(DISTRO) /bin/sh -c 'ln -s /src/pacapt.dev /bin/pacman && exec sh'
 
 .PHONY: update_stats
 update_stats:
