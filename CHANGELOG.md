@@ -2,7 +2,6 @@
 
 * Single script can now execute within `POSIX` or `non-POSIX`
   environment and it detects/loads features dynamically.
-
 * `lib/yum`, `lib/dpkg`, `lib/apk`: Fix #96, #143
   by adding  `-q` (quiet) option for `Qs`.
 * `tests/`: Support new `ubuntu`/`debian` systems
