@@ -23,6 +23,7 @@ opkg_Sy() {
 }
 
 opkg_Q() {
+  # shellcheck disable=SC2016
   case "$_TOPT" in
   "q")
     opkg list-installed | "$AWK" '{print $1}'
