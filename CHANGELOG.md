@@ -5,6 +5,7 @@
 
 * `lib/yum`, `lib/dpkg`, `lib/apk`: Fix #96, #143
   by adding  `-q` (quiet) option for `Qs`.
+* `tests/`: Support new `ubuntu`/`debian` systems
 * `lib/00_core.sh`: POSIX going well
 * `lib/zz_main.sh`: POSIX going well
 
