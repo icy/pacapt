@@ -4,7 +4,7 @@
 
 `pacapt` is a wrapper for many package managers.
 Simply install package with `pacapt -S htop` or `pacapt install htop`
-on any `Linux`, `BSD`, `Mac OS` machines.
+on any `Linux`, `BSD`, `OpenWrt` or `Mac OS` machines.
 It supports the following package managers:
 
 * `pacman`        by `Arch Linux`, `ArchBang`, `Manjaro`, etc.
@@ -19,6 +19,7 @@ It supports the following package managers:
 * `pkg_tools`     by `OpenBSD`
 * `sun_tools`     by `Solaris(SunOS)`
 * `apk`           by `Alpine Linux`
+* `opkg`          by `OpenWrt`
 * `tazpkg`        by `SliTaz Linux`
 * `swupd`         by `Clear Linux`
 * `tlmgr`         by `TeX Live`
@@ -44,7 +45,7 @@ It supports the following package managers:
 ## Installation
 
 1. This script shouldn't be installed on an Arch-based system;
-2. On `FreeBSD` and `Alpine Linux`, please install `bash` package first.
+2. On `FreeBSD`, please install `bash` package first.
 
 ### Install stable `Bash` script 2.4.x from Github
 
