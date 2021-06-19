@@ -42,10 +42,9 @@ conda_Si() {
 }
 
 conda_Ss() {
-  conda search "*$@*"
+  conda search "*${*}*"
 }
 
 conda_Suy() {
   conda update --all "$@"
 }
-

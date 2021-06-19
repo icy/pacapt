@@ -34,7 +34,7 @@ homebrew_Qo() {
   prefix="$(brew --prefix)"
   cellar="$(brew --cellar)"
 
-  for package in $cellar/*; do
+  for package in "$cellar"/*; do
     files=(${package}/*/${pkg/#$prefix\//})
     if [[ -e "${files[${#files[@]} - 1]}" ]]; then
       echo "${package/#$cellar\//}"
@@ -69,23 +69,21 @@ homebrew_Q() {
 }
 
 homebrew_Rs() {
-    which join > /dev/null
-    if [ $? -ne 0 ]; then
+    if ! which join > /dev/null 2>&1; then
       _die "pacapt: join binary does not exist in system."
     fi
 
-    which sort > /dev/null
-    if [ $? -ne 0 ]; then
+    if ! which sort > /dev/null 2>&1; then
       _die "pacapt: sort binary does not exist in system."
     fi
 
-    if [[ "$@" == "" ]]; then
+    if [[ -z "$*" ]]; then
       _die "pacapt: ${FUNCNAME[0]} requires arguments"
     fi
 
-    for _target in $@;
+    for _target in "${@}";
     do
-      brew rm $_target
+      brew rm "$_target"
 
       while [ "$(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))" != "" ]
       do
@@ -150,11 +148,13 @@ homebrew_Sccc() {
 }
 
 homebrew_S() {
+  # shellcheck disable=SC2086
   2>&1 brew install $_TOPT "$@" \
   | awk '{print; if ($0 ~ /brew cask install/) { exit(126); }}'
   ret=( ${PIPESTATUS[*]} )
   if [[ "${ret[1]}" == 126 ]]; then
     echo >&2 ":: Now trying with brew/cask..."
+    # shellcheck disable=SC2086
     brew cask install $_TOPT "$@"
   else
     return "${ret[0]}"

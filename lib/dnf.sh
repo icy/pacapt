@@ -18,6 +18,7 @@ _dnf_init() {
 }
 
 dnf_S() {
+  # shellcheck disable=SC2086
   dnf install $_TOPT "$@"
 }
 

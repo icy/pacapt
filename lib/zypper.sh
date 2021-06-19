@@ -157,11 +157,12 @@ zypper_Sii() {
   packages="$(zypper pa -R | cut -d \| -f 3 | tr -s '\n' ' ')"
   for package in $packages; do
     zypper info --requires "$package" \
-    | grep -q "$@" && echo $package
+    | grep -q "$@" && echo "$package"
   done
 }
 
 zypper_S() {
+  # shellcheck disable=SC2086
   zypper install $_TOPT "$@"
 }
 
