@@ -15,15 +15,45 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
 set -u
+
 unset GREP_OPTIONS
 
 : "${PACAPT_DEBUG=}"  # Show what will be going
 : "${GREP:=grep}"     # Need to update in, e.g, _sun_tools_init
 : "${AWK:=awk}"       # Need to update in, e.g, _sun_tools_init
 
-_sun_tools_init       # Dirty tricky patch for SunOS
+# Dirty tricky patch for SunOS
+local_requirements="$GREP $AWK"
+if ! _sun_tools_init; then
+  local_requirements="${local_requirements} sed"
+fi
+
+for cmd in $local_requirements; do
+  if ! command -v "$cmd" >/dev/null; then
+    _die "pacapt requires '$cmd' but the tool is not found."
+  fi
+done
 
 export PACAPT_DEBUG GREP AWK
+
+# Shell switching, as fast as possible
+if [ -z "${__PACAPT_FORKED__:-}" ]; then
+  if command -v bash >/dev/null; then
+    _debug "Switching to Bash shell"
+    export __PACAPT_FORKED__="yes"
+    readonly __PACAPT_FORKED__
+
+    exec bash "$0" "${@}"
+  fi
+else
+  # Hey, this is very awesome strick to avoid syntax issue.
+  # Note: in `bocker` (github.com/icy/bocker/) we use `base64`.
+  eval 'source /dev/stdin < <("$GREP" '^#_!_POSIX_#' "$0" | sed -e 's/^#_!_POSIX_#//')' \
+  || _die "$0: Unable to load non-POSIX definitions".
+fi
+# /Shell switching
+
+## Pacman stuff
 
 _POPT=""    # primary operation
 _SOPT=""    # secondary operation
@@ -34,6 +64,18 @@ _PACMAN=""  # name of the package manager
 
 _PACMAN_detect \
 || _die "'pacapt' doesn't support your package manager."
+
+# Once we haven't switcher over `bash`, there is great chance
+# the current system are missing `Bash` ; on these systems
+# our library are not ready for pure-POSIX features!
+if [ -z "${__PACAPT_FORKED__:-}" ]; then
+  case "$_PACMAN" in
+  "apk")  ;;
+  "sun_tools" ) ;;
+  *)
+    _die "pacapt($_PACMAN) library is not ready for pure-POSIX features."
+  esac
+fi
 
 # FIXME: If `pacman-foo` is being used, `PACAPT_DEBUG` is still overwriting that.
 if [ -z "$PACAPT_DEBUG" ]; then

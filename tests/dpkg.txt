@@ -11,6 +11,9 @@ im ubuntu:14.04 ubuntu:16.04 ubuntu:18.04 debian:buster debian:jessie debian:str
 in ! rm -fv /etc/apt/apt.conf.d/docker-clean
 ou ^removed .*docker-clean
 
+in ! PACAPT_DEBUG=auto pacman
+ou "debug.*Switching to Bash shell"
+
 # Update package databses
 in -Sy
 

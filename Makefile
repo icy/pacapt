@@ -1,6 +1,5 @@
 BINDIR        = /usr/local/bin/
 DISTRO        = debian:stable
-PACAPT_POSIX  = no
 
 default:
 	@echo "This is an experimental Makefile. Use it at your own risk."
@@ -29,7 +28,7 @@ default:
 
 .PHONY: pacapt.dev
 pacapt.dev: ./lib/*.sh ./lib/*.txt bin/compile.sh
-	@PACAPT_POSIX=$(PACAPT_POSIX) ./bin/compile.sh > $(@) || { rm -fv $(@); exit 1; }
+	@./bin/compile.sh > $(@) || { rm -fv $(@); exit 1; }
 	@bash -n $(@)
 	@chmod 755 $(@)
 	@echo 1>&2 "The output file is '$(@)' (unstable version)"
@@ -51,7 +50,7 @@ pacapt.check:
 	@test -n "${VERSION}" || { echo ":: Please specify VERSION, i.e., make pacapt VERSION=1.2.3"; exit 1; }
 
 pacapt: pacapt.check ./lib/*.sh ./lib/*.txt bin/compile.sh
-	@PACAPT_POSIX=$(PACAPT_POSIX) ./bin/compile.sh > $(@).tmp || { rm -fv $(@).tmp; exit 1; }
+	@./bin/compile.sh > $(@).tmp || { rm -fv $(@).tmp; exit 1; }
 	@mv -fv $(@).tmp $(@)
 	@bash -n $(@)
 	@chmod 755 $(@)
@@ -110,4 +109,4 @@ POSIX:
 
 .PHONY: tests
 tests:
-	@cd tests/ && make all PACAPT_POSIX=$(PACAPT_POSIX)
+	@cd tests/ && make all

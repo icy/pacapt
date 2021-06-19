@@ -14,13 +14,18 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+# Initialize special things for SunOS system.
+# This method is invoked on any system though,
+# and it returns 1 if the current OS is not SunOS.
 _sun_tools_init() {
   # The purpose of `if` is to make sure this function
   # can be invoked on other system (Linux, BSD).
   if [ "$(uname)" = "SunOS" ]; then
     export GREP=/usr/xpg4/bin/grep
     export AWK=nawk
+    return 0
   fi
+  return 1
 }
 
 sun_tools_Qi() {

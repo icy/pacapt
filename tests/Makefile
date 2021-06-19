@@ -1,6 +1,5 @@
 TESTS = *.txt
 IMAGES =
-PACAPT_POSIX =
 
 .PHONY: default
 default:
@@ -9,7 +8,7 @@ default:
 # gen:
 # gen: Generating `pacapt.dev`
 tmp/pacapt.dev::
-	@( cd ../ && make -s pacapt.dev PACAPT_POSIX=$(PACAPT_POSIX) ; )
+	@( cd ../ && make -s pacapt.dev ; )
 	@mkdir -p ./tmp/
 	@cp -u ../pacapt.dev tmp/
 	@chmod 755 $(@)

@@ -36,17 +36,8 @@ $ make pacapt.dev
 $ docker run --rm -ti \
     -v $PWD/pacapt.dev:/usr/bin/pacman \
     debian:stable /bin/bash
-# you are in container now
+# Your container's shell is available from this point
 ````
-
-If you want to generate a `POSIX` version of the script, try
-
-```
-$ make pacapt.dev PACAPT_POSIX=yes
-```
-
-The output contains all library files which include `POSIX: Ready`
-as part of their comments. See for examle [lib/00_core.sh](lib/00_core.sh).
 
 ## Generating `pacapt` script
 

@@ -34,7 +34,7 @@ fi
 if [[ -f "lib/sun_tools.sh" ]]; then
   # shellcheck disable=1091
   source "lib/sun_tools.sh" :
-  _sun_tools_init
+  _sun_tools_init || true
 fi
 
 export GREP AWK VERSION PACAPT_STATS
@@ -43,14 +43,8 @@ export GREP AWK VERSION PACAPT_STATS
 # Print the shebang and header
 ########################################################################
 
-if [[ "${PACAPT_POSIX:-}" == "yes" ]]; then
-  OUTPUT_SHELL="sh"
-else
-  OUTPUT_SHELL="bash"
-fi
-
 cat <<EOF
-#!/usr/bin/env ${OUTPUT_SHELL}
+#!/usr/bin/env sh
 #
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
@@ -118,12 +112,11 @@ EOS
 # Creating a list of files to print out
 ########################################################################
 library_files() {
-  if [[ "${PACAPT_POSIX:-}" == "yes" ]]; then
-    >&2 echo ":: Generating only a POSIX version..."
-    grep -Elie "^# +POSIX.*:.*Ready" ./lib/*.sh
-  else
-    ls ./lib/*.sh
-  fi
+  ls ./lib/*.sh
+}
+
+library_POSIX_ready() {
+  grep -Eqie "^# +POSIX.*:.*Ready" "$@"
 }
 
 ########################################################################
@@ -135,7 +128,11 @@ for L in $(library_files); do
   [[ "${L##*/}" != "zz_main.sh" ]] \
   || continue
 
-  $GREP -v '^#' "$L"
+  if library_POSIX_ready "$L"; then
+    $GREP -v '^#' "$L"
+  else
+    $GREP -v '^#' "$L" | awk '{printf("#_!_POSIX_# %s\n", $0)}'
+  fi
 done
 
 ########################################################################
@@ -146,7 +143,7 @@ done
 echo "_validate_operation() {"
 echo "  case \"\$1\" in"
 
-for L in $(library_files); do
+for L in ./lib/*.sh; do
   _PKGNAME="${L##*/}"
   _PKGNAME="${_PKGNAME%.*}"
 

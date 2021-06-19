@@ -29,6 +29,12 @@ _die() {
   exit 1
 }
 
+_debug() {
+  if [ -n "${PACAPT_DEBUG:-}" ]; then
+    >&2 echo ":: [debug] $*"
+  fi
+}
+
 _not_implemented() {
   # shellcheck disable=2153
   echo >&2 "${_PACMAN}: '${_POPT}:${_SOPT}:${_TOPT}' operation is invalid or not implemented."
@@ -225,9 +231,9 @@ _print_supported_operations() {
   local_pacman="$1"
   printf "pacapt(%s): available operations:" "$local_pacman"
   # shellcheck disable=2016
-  $GREP -E "^${local_pacman}_[^ \\t]+\\(\\)" "$0" \
+  $GREP -E "^(#_!_POSIX_# )?${local_pacman}_[^ \\t]+\\(\\)" "$0" \
   | $AWK -F '(' '{print $1}' \
-  | sed -e "s/${local_pacman}_//g" \
+  | sed -e "s/.*${local_pacman}_//g" \
   | while read -r O; do
       printf " %s" "$O"
     done
