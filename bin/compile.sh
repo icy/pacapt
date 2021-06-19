@@ -143,7 +143,7 @@ done
 echo "_validate_operation() {"
 echo "  case \"\$1\" in"
 
-for L in ./lib/*.sh; do
+for L in $(library_files); do
   _PKGNAME="${L##*/}"
   _PKGNAME="${_PKGNAME%.*}"
 
