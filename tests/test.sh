@@ -32,7 +32,7 @@ _test() {
   fi
 
   if [[ -z "$IMAGES" ]]; then
-    _images="$(grep -m1 -E '^im ' "$_file")"
+    _images="$(grep -E '^im ' "$_file")"
   else
     >&2 echo ":: Using image(s) from IMAGES (${IMAGES})"
     _images="${IMAGES}"
