@@ -255,7 +255,7 @@ _string_nth() {
   local_args="${*}"
 
   local_args="${local_args}" local_idx="${local_idx}" \
-  "$AWK" 'BEGIN{printf("%s\n",substr(ENVIRON["local_args"],ENVIRON["local_idx"],1))}'
+  "$AWK" 'BEGIN{printf("%s",substr(ENVIRON["local_args"],ENVIRON["local_idx"],1))}'
 }
 
 # https://github.com/icy/pacapt/pull/161/files#r654799601
