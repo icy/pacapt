@@ -14,6 +14,7 @@ _has_perl_json() {
 }
 
 _shellcheck_output_format() {
+  PREFIX="[ ${*} ] " \
   perl -e '
     use JSON;
     my $stream = do { local $/; <>; };
@@ -30,7 +31,8 @@ _shellcheck_output_format() {
       my $comment = @{$output}[$_];
       my $color = $colors->{$comment->{"level"}} || $colors->{"default"};
 
-      printf("%s%7s %4d: line %4d col %2d, msg %s%s\n",
+      printf("%s%s%7s %4d: line %4d col %2d, msg %s%s\n",
+        $ENV{"PREFIX"},
         $color,
         $comment->{"level"}, $comment->{"code"},
         $comment->{"line"}, $comment->{"column"},
@@ -71,7 +73,9 @@ _check_file() {
 
   _simple_check "$_file" || return
 
-  shellcheck -s "${SHELLCHECK_SHELL:-bash}" -f json "$_file" | _shellcheck_output_format
+  shellcheck -s "${SHELLCHECK_SHELL:-bash}" -f json "$_file" \
+  | _shellcheck_output_format "$_file"
+
   [[ "${PIPESTATUS[0]}" == "0" ]]
 }
 
