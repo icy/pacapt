@@ -98,6 +98,7 @@ _PACMAN_detect() {
   _issue2pacman pkg_tools "OpenBSD" && return
   _issue2pacman pkg_tools "Bitrig" && return
   _issue2pacman apk "Alpine Linux" && return
+  _issue2pacman opkg "OpenWrt" && return
 
   [ -z "$_PACMAN" ] || return
 
@@ -121,6 +122,7 @@ _PACMAN_detect() {
   [ -x "/usr/sbin/pkg_add" ] && _PACMAN="pkg_tools" && return
   [ -x "/usr/sbin/pkgadd" ] && _PACMAN="sun_tools" && return
   [ -x "/sbin/apk" ] && _PACMAN="apk" && return
+  [ -x "/bin/opkg" ] && _PACMAN="opkg" && return
   [ -x "/usr/bin/tazpkg" ] && _PACMAN="tazpkg" && return
   [ -x "/usr/bin/swupd" ] && _PACMAN="swupd" && return
 

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# POSIX   : Ready
+# Purpose : Testing script for okpg support
+# Author  : Ky-Anh Huynh
+# Date    : June 19th, 2021
+# License : MIT
+
+im oofnik/openwrt:snapshot-x86-64
+
+in -Sy
+ou Updated list of available packages in /var/opkg-lists/openwrt_core
+ou Downloading.*downloads.openwrt.org
+ou Signature check passed.

@@ -8,7 +8,7 @@
 * `tests/`: Support new `ubuntu`/`debian` systems
 * `lib/00_core.sh`: POSIX going well
 * `lib/zz_main.sh`: POSIX going well
-
+* `lib/opkg`: Add support for `OpenWrt` (and alike)
 * `lib/apk`:
   * `Q` prints version information.
   * Fix `--noconfirm` issue (#150)

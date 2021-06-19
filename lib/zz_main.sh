@@ -71,6 +71,7 @@ _PACMAN_detect \
 if [ -z "${__PACAPT_FORKED__:-}" ]; then
   case "$_PACMAN" in
   "apk")  ;;
+  "opkg")  ;;
   "sun_tools" ) ;;
   *)
     _die "pacapt($_PACMAN) library is not ready for pure-POSIX features."
