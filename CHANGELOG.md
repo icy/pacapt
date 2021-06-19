@@ -4,6 +4,7 @@
   by adding  `-q` (quiet) option for `Qs`.
 * `lib/apk`: `Q` prints version information.
 * `lib/apk`: Fix `--noconfirm` issue (#150)
+* `tests/`: Support new `ubuntu`/`debian` systems
 * `lib/apk`: Fix many implementation issues.
 * `lib/00_core.sh`: POSIX going well
 
