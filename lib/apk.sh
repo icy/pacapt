@@ -21,7 +21,7 @@ _apk_init() {
 
 # apk_Q may _not_implemented
 apk_Q() {
-  case $_TOPT in
+  case "$_TOPT" in
   "")
     apk list --installed "$@"
     ;;

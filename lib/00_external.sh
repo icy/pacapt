@@ -22,11 +22,11 @@ _PACMAN_found_from_script_name() {
   local_pacman=
 
   local_tmp_name="${0}"
-  if echo "$local_tmp_name" | "$GREP" -q -- -; then
-    :
-  else
-    return 1
-  fi
+  # https://github.com/icy/pacapt/pull/161/files#r654800412
+  case "$local_tmp_name" in
+    *-*) : ;;
+    *) return 1 ;;
+  esac
 
   local_tmp_name="${local_tmp_name##*/}" # base name (remove everything before the last `/`)
   local_tmp_name="${local_tmp_name%.*}"  # remove extension if any (remove everything from the last `.`)

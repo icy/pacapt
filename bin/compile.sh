@@ -116,7 +116,7 @@ library_files() {
 }
 
 library_POSIX_ready() {
-  grep -Eqie "^# +POSIX.*:.*Ready" "$@"
+  grep -Eqie "^# +POSIX.*:.*Ready" -- "$@"
 }
 
 ########################################################################

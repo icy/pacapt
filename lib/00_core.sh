@@ -249,15 +249,16 @@ _quiet_field1() {
 }
 
 # Get nth char of from a string [the first index: 1]
+# https://github.com/icy/pacapt/pull/161/files#r654797953
 _string_nth() {
-  local_idx="$1"; shift
-  # shellcheck disable=SC2016
-  echo "$@" \
-  | "$AWK" -vidx="$local_idx" '{printf("%s",substr($0,idx,1))}'
+  local_idx="${1}"; shift
+  local_args="${*}"
+
+  local_args="${local_args}" local_idx="${local_idx}" \
+  "$AWK" 'BEGIN{printf("%s\n",substr(ENVIRON["local_args"],ENVIRON["local_idx"],1))}'
 }
 
+# https://github.com/icy/pacapt/pull/161/files#r654799601
 _string_less_than() {
-  # shellcheck disable=SC2016
-  echo "$@" \
-  | "$AWK" '{ if ($1 < $2) {exit(0);} else {exit 1;}}'
+  a="${1}" b="${2}" "$AWK" 'BEGIN {exit !(ENVIRON["a"] < ENVIRON["b"]) }'
 }
