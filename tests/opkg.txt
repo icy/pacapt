@@ -12,3 +12,14 @@ in -Sy
 ou Updated list of available packages in /var/opkg-lists/openwrt_core
 ou Downloading.*downloads.openwrt.org
 ou Signature check passed.
+
+in -Q
+ou busybox - .*
+
+in -Qq
+ou ^busybox$
+
+in -Qi
+ou busybox
+ou busybox-selinux
+ou Status: install user installed

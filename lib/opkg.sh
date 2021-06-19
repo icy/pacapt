@@ -21,3 +21,21 @@ _opkg_init() {
 opkg_Sy() {
   opkg update
 }
+
+opkg_Q() {
+  case "$_TOPT" in
+  "q")
+    opkg list-installed | "$AWK" '{print $1}'
+    ;;
+  "")
+    opkg list-installed
+    ;;
+  *)
+    _not_implemented
+    ;;
+  esac
+}
+
+opkg_Qi() {
+  opkg status "${@}"
+}
