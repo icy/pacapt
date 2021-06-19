@@ -148,6 +148,7 @@ cave_Sccc() {
 }
 
 cave_S() {
+  # shellcheck disable=SC2086
   cave resolve $_TOPT "$@" \
   && echo "Control-C to stop installing..." \
   && sleep 2s \

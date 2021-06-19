@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# POSIX  : Ready
 # Purpose: Support next-generation Alpine Linux apk package manager
 # Author : Carl X. Su <bcbcarl@gmail.com>
 #          Cuong Manh Le <cuong.manhle.vn@gmail.com>
@@ -34,23 +35,26 @@ apk_Q() {
 }
 
 apk_Qi() {
-  if [[ "$#" -eq 0 ]]; then
+  if [ "$#" -eq 0 ]; then
+    # shellcheck disable=SC2046
     apk info --all $(apk info)
     return
   fi
 
+  # shellcheck disable=2086
   if apk info --installed $_TOPT "$@"; then
+    # shellcheck disable=2086
     apk info --all $_TOPT "$@"
   else
-    >&2 echo ":: Error: Package not installed: '${@}'"
+    >&2 echo ":: Error: Package not installed: '${*}'"
   fi
 }
 
 apk_Ql() {
-  if [[ "$#" -eq 0 ]]; then
+  if [ "$#" -eq 0 ]; then
     packages="$(apk info)"
   else
-    packages="$@"
+    packages="$*"
   fi
 
   for pkg in ${packages:-}; do
@@ -58,7 +62,7 @@ apk_Ql() {
     | awk -v pkg="$pkg" '/\// {printf("%s %s\n", pkg, $0)}'
   done \
   | {
-    case "$_TOPT" in
+    case $_TOPT in
     "q") awk '{print $NF}';;
     "")  cat ;;
     *)   _not_implemented ; exit 1;;
@@ -75,6 +79,7 @@ apk_Qo() {
 }
 
 apk_Qs() {
+  # shellcheck disable=2086
   apk list --installed $_TOPT "*${*}*"
 }
 
@@ -83,22 +88,27 @@ apk_Qu() {
 }
 
 apk_R() {
+  # shellcheck disable=2086
   apk del $_TOPT -- "$@"
 }
 
 apk_Rn() {
+  # shellcheck disable=2086
   apk del --purge $_TOPT -- "$@"
 }
 
 apk_Rns() {
+  # shellcheck disable=2086
   apk del --purge -r $_TOPT -- "$@"
 }
 
 apk_Rs() {
+  # shellcheck disable=2086
   apk del -r $_TOPT -- "$@"
 }
 
 apk_S() {
+  # shellcheck disable=2086
   case ${_EOPT} in
     # Download only
     ("fetch") shift
@@ -120,6 +130,7 @@ apk_Sccc() {
 }
 
 apk_Si() {
+  # shellcheck disable=2086
   apk info $_TOPT "$@"
 }
 
@@ -152,9 +163,11 @@ apk_Sy() {
 }
 
 apk_Sw() {
+  # shellcheck disable=2086
   apk fetch $_TOPT -- "$@"
 }
 
 apk_U() {
+  # shellcheck disable=2086
   apk add --allow-untrusted $_TOPT -- "$@"
 }

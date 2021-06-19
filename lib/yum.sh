@@ -114,6 +114,7 @@ yum_Sccc() {
 }
 
 yum_S() {
+  # shellcheck disable=SC2086
   yum install $_TOPT "$@"
 }
 

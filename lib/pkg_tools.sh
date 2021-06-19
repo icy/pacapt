@@ -51,11 +51,11 @@ pkg_tools_Q() {
   export PKG_PATH=
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
-  if [[ "$_TOPT" == "q" && ! -z "$*" ]]; then
+  if [[ "$_TOPT" == "q" && -n "$*" ]]; then
     pkg_info -q | grep "^${*}-"
   elif [[ "$_TOPT" == "q" && -z "$*" ]];then
     pkg_info -q
-  elif [[ "$_TOPT" == "" && ! -z "$*" ]]; then
+  elif [[ "$_TOPT" == "" && -n "$*" ]]; then
     pkg_info | grep "^${*}-"
   elif [[ "$_TOPT" == "" && -z "$*" ]];then
     pkg_info

@@ -1,12 +1,20 @@
 ## next
 
+* Single script can now execute within `POSIX` or `non-POSIX`
+  environment and it detects/loads features dynamically.
+
 * `lib/yum`, `lib/dpkg`, `lib/apk`: Fix #96, #143
   by adding  `-q` (quiet) option for `Qs`.
-* `lib/apk`: `Q` prints version information.
-* `lib/apk`: Fix `--noconfirm` issue (#150)
 * `tests/`: Support new `ubuntu`/`debian` systems
-* `lib/apk`: Fix many implementation issues.
 * `lib/00_core.sh`: POSIX going well
+* `lib/zz_main.sh`: POSIX going well
+
+* `lib/apk`:
+  * `Q` prints version information.
+  * Fix `--noconfirm` issue (#150)
+  * Fix many implementation issues.
+  * POSIX going well
+  * POSIX version (`pacapt-POSIX` works perfectly without `bash`)
 
 ## v2.4.4
 

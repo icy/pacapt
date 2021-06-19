@@ -9,33 +9,12 @@ _simple_check() {
   bash -n "$@"
 }
 
-_perl_check() {
+_has_perl_json() {
   perl -MURI::Escape -MJSON -e 'exit(0)'
 }
 
-_shellcheck() {
-  local _data
-
-  _data="$( \
-    perl -MURI::Escape \
-      -e '
-        my $stream = do { local $/; <STDIN>; };
-        print uri_escape($stream);
-      '
-    )"
-
-  curl -LsSo- \
-    'http://www.shellcheck.net/shellcheck.php' \
-    -H 'Accept: application/json, text/javascript, */*' \
-    -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \
-    -H 'Host: www.shellcheck.net' \
-    -H 'Referer: http://www.shellcheck.net/' \
-    -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:39.0) Gecko/20100101 Firefox/39.0' \
-    -H 'X-Requested-With: XMLHttpRequest' \
-    --data "script=$_data"
-}
-
 _shellcheck_output_format() {
+  PREFIX="[ ${*} ] " \
   perl -e '
     use JSON;
     my $stream = do { local $/; <>; };
@@ -52,7 +31,8 @@ _shellcheck_output_format() {
       my $comment = @{$output}[$_];
       my $color = $colors->{$comment->{"level"}} || $colors->{"default"};
 
-      printf("%s%7s %4d: line %4d col %2d, msg %s%s\n",
+      printf("%s%s%7s %4d: line %4d col %2d, msg %s%s\n",
+        $ENV{"PREFIX"},
         $color,
         $comment->{"level"}, $comment->{"code"},
         $comment->{"line"}, $comment->{"column"},
@@ -65,7 +45,19 @@ _shellcheck_output_format() {
 
 # See discussion in https://github.com/icy/pacapt/pull/59
 _has_shellcheck() {
-  command -v shellcheck >/dev/null 2>&1
+  : "${SHELLCHECK_TAG:=v0.7.2}"
+  if [[ -n "${CI_SHELLCHECK_UPDATE:-}" && "$OSTYPE" =~ linux.* ]]; then
+    echo >&2 ":: Downloading shellcheck to $(pwd -P)..."
+    wget --quiet -O shellcheck.tar.xz -c "https://github.com/koalaman/shellcheck/releases/download/${SHELLCHECK_TAG}/shellcheck-${SHELLCHECK_TAG}.linux.x86_64.tar.xz"
+    tar xJf shellcheck.tar.xz
+    PATH="$(pwd -P)"/shellcheck-${SHELLCHECK_TAG}/:$PATH
+    export PATH
+  fi
+
+  if ! command -v shellcheck >/dev/null 2>&1; then
+    >&2 echo ":: Sorry, shellcheck is required."
+    return 1
+  fi
 }
 
 _check_file() {
@@ -81,25 +73,37 @@ _check_file() {
 
   _simple_check "$_file" || return
 
-  if _has_shellcheck; then
-    shellcheck -f json "$_file" | _shellcheck_output_format
+  shellcheck -s "${SHELLCHECK_SHELL:-bash}" -f json "$_file" \
+  | _shellcheck_output_format "$_file"
+
+  [[ "${PIPESTATUS[0]}" == "0" ]]
+}
+
+_check_POSIX_file() {
+  if ! grep -Eiqe "^# +POSIX.*:.*Ready" -- "$1" ; then
+    >&2 echo ":: $1: POSIX is not required."
   else
-    _shellcheck < "$_file" | _shellcheck_output_format
+    _check_file "$1" || return 1
   fi
 }
 
-_check_files() {
-  _has_shellcheck \
-  || {
-    echo >&2 ":: WARN: shellcheck not found."
-    echo >&2 ":: WARN: Scripts will be checked by remote web server."
-  }
+_check_POSIX_files() {
+  export SHELLCHECK_SHELL="sh"
   while (( $# )); do
-    _check_file "$1" || return 1
+    _check_POSIX_file "$1" || return 1
     shift
   done
 }
 
-_perl_check || exit 1
+_check_files() {
+  while (( $# )); do
+    # FIXME: For now, we always return 0!!!
+    _check_file "$1"
+    shift
+  done
+}
+
+_has_perl_json && _has_shellcheck || exit 1
+shellcheck --version
 
 "$@"

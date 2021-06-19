@@ -1,5 +1,5 @@
-BINDIR=/usr/local/bin/
-DISTRO=debian:stable
+BINDIR        = /usr/local/bin/
+DISTRO        = debian:stable
 
 default:
 	@echo "This is an experimental Makefile. Use it at your own risk."
@@ -26,6 +26,7 @@ default:
 
 # Build and install development script
 
+.PHONY: pacapt.dev
 pacapt.dev: ./lib/*.sh ./lib/*.txt bin/compile.sh
 	@./bin/compile.sh > $(@) || { rm -fv $(@); exit 1; }
 	@bash -n $(@)
@@ -101,6 +102,10 @@ clean:
 .PHONY: shellcheck
 shellcheck:
 	@./bin/check.sh _check_files bin/*.sh lib/*.sh
+
+.PHONY: POSIX
+POSIX:
+	@./bin/check.sh _check_POSIX_files bin/*.sh lib/*.sh
 
 .PHONY: tests
 tests:

@@ -1,11 +1,12 @@
 #!/bin/bash
 
+# POSIX  : Ready
 # Purpose: Provide some basic functions
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
 
-# Copyright (C) 2010 - 2014 Anh K. Huynh
+# Copyright (C) 2010 - 2021 Anh K. Huynh
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
@@ -14,18 +15,24 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
 _error() {
-  echo >&2 "Error: $*"
+  echo >&2 ":: Error: $*"
   return 1
 }
 
 _warn() {
-  echo >&2 "Warning: $*"
+  echo >&2 ":: Warning: $*"
   return 0
 }
 
 _die() {
-  echo >&2 "$@"
+  echo >&2 ":: $*"
   exit 1
+}
+
+_debug() {
+  if [ -n "${PACAPT_DEBUG:-}" ]; then
+    >&2 echo ":: [debug] $*"
+  fi
 }
 
 _not_implemented() {
@@ -224,9 +231,9 @@ _print_supported_operations() {
   local_pacman="$1"
   printf "pacapt(%s): available operations:" "$local_pacman"
   # shellcheck disable=2016
-  $GREP -E "^${local_pacman}_[^ \\t]+\\(\\)" "$0" \
+  $GREP -E "^(#_!_POSIX_# )?${local_pacman}_[^ \\t]+\\(\\)" "$0" \
   | $AWK -F '(' '{print $1}' \
-  | sed -e "s/${local_pacman}_//g" \
+  | sed -e "s/.*${local_pacman}_//g" \
   | while read -r O; do
       printf " %s" "$O"
     done
@@ -239,4 +246,19 @@ _quiet_field1() {
   else
     awk '{print $1}'
   fi
+}
+
+# Get nth char of from a string [the first index: 1]
+# https://github.com/icy/pacapt/pull/161/files#r654797953
+_string_nth() {
+  local_idx="${1}"; shift
+  local_args="${*}"
+
+  local_args="${local_args}" local_idx="${local_idx}" \
+  "$AWK" 'BEGIN{printf("%s",substr(ENVIRON["local_args"],ENVIRON["local_idx"],1))}'
+}
+
+# https://github.com/icy/pacapt/pull/161/files#r654799601
+_string_less_than() {
+  a="${1}" b="${2}" "$AWK" 'BEGIN {exit !(ENVIRON["a"] < ENVIRON["b"]) }'
 }
