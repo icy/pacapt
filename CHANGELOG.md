@@ -1,6 +1,6 @@
 ## next
 
-* Single script can now execute either `POSIX` or `non-POSIX`
+* Single script can now execute within `POSIX` or `non-POSIX`
   environment and it detects/loads features dynamically.
 
 * `lib/yum`, `lib/dpkg`, `lib/apk`: Fix #96, #143
