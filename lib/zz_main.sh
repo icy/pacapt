@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # POSIX  : Ready
 # Purpose: A wrapper for all Unix package managers

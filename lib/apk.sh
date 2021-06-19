@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # POSIX  : Ready
 # Purpose: Support next-generation Alpine Linux apk package manager

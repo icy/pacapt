@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # POSIX  : Ready
 # Purpose: SunOS support
