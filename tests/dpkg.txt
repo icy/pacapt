@@ -14,6 +14,9 @@ ou ^removed .*docker-clean
 in ! PACAPT_DEBUG=auto pacman
 ou "debug.*Switching to Bash shell"
 
+in -P
+ou available operations:.*( [Q][ ilos])*
+
 # Update package databses
 in -Sy
 
