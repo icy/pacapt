@@ -20,6 +20,7 @@ _apk_init() {
 }
 
 # apk_Q may _not_implemented
+# FIXME: Need to support a small list of packages
 apk_Q() {
   case "$_TOPT" in
   "")

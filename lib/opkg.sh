@@ -26,10 +26,10 @@ opkg_Q() {
   # shellcheck disable=SC2016
   case "$_TOPT" in
   "q")
-    opkg list-installed | "$AWK" '{print $1}'
+    opkg list-installed "$@" | "$AWK" '{print $1}'
     ;;
   "")
-    opkg list-installed
+    opkg list-installed "$@"
     ;;
   *)
     _not_implemented
@@ -38,5 +38,31 @@ opkg_Q() {
 }
 
 opkg_Qi() {
-  opkg status "${@}"
+  for  pkg in $(opkg__get_local_pkgs "${@}"); do
+    opkg info "$pkg"
+  done
+}
+
+# Get list of installed-packages from user list.
+opkg__get_local_pkgs() {
+  if [ "$#" -eq 0 ]; then
+    # shellcheck disable=SC2016
+    opkg list-installed | "$AWK" '{print $1}'
+  else
+    # `opkg status` returns empty if package is not installed/removed.
+    # shellcheck disable=SC2016
+    for pkg in "${@}"; do
+      opkg status "$pkg"
+    done \
+    | "$AWK" '/^Package: / {print $NF}'
+  fi
+}
+
+opkg_Ql() {
+  for pkg in $(opkg__get_local_pkgs "${@}"); do
+    # shellcheck disable=SC2016
+    opkg files "$pkg" \
+    | PKG="$pkg" "$AWK" \
+        '{ if (NR>1) {printf("%s %s\n", ENVIRON["PKG"], $0)} }'
+  done
 }

@@ -18,6 +18,10 @@ ou Signature check passed.
 
 in -Q
 ou busybox - .*
+ou libc - .*
+
+in -Q busybox
+ou busybox
 
 in -Qq
 ou ^busybox$
@@ -26,3 +30,13 @@ in -Qi
 ou busybox
 ou libc
 ou Status: install user installed
+
+in -Ql
+ou libc
+ou busybox
+
+in -Ql libc
+ou libc
+
+in -Ql ruby
+ou empty
