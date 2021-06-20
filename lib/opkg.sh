@@ -106,10 +106,12 @@ opkg_S() {
 }
 
 opkg_Si() {
+  # shellcheck disable=2086
   opkg list $_TOPT "$@"
 }
 
 opkg_Sii() {
+  # shellcheck disable=2086
   opkg list $_TOPT "$@"
   opkg whatdepends "$@"
 }
