@@ -65,3 +65,63 @@ opkg_Ql() {
         '{ if (NR>1) {printf("%s %s\n", ENVIRON["PKG"], $0)} }'
   done
 }
+
+opkg_Qo() {
+  if cmd="$(command -v -- "$@")"; then
+    opkg search "$cmd"
+  else
+    opkg search "$@"
+  fi
+}
+
+opkg_Qs() {
+  if command -v sort >/dev/null; then
+    local_filter="sort -u"
+  else
+    local_filter="cat"
+  fi
+
+  # FIXME: opkg doesn't work with wildcard by default.
+  case "$@" in
+  *\**) local_pattern="$*" ;;
+  *)    local_pattern="*${*}*" ;;
+  esac
+
+  opkg search "$local_pattern" \
+  | ${local_filter} \
+  | _quiet_field1
+}
+
+# FIXME: It's not easy to test this method =))
+opkg_Qu() {
+  opkg list-upgradable
+}
+
+opkg_R() {
+  opkg remove "$@"
+}
+
+opkg_S() {
+  opkg install "$@"
+}
+
+opkg_Si() {
+  opkg list $_TOPT "$@"
+}
+
+opkg_Sii() {
+  opkg list $_TOPT "$@"
+  opkg whatdepends "$@"
+}
+
+opkg_Ss() {
+  opkg list "$@"
+}
+
+opkg_Su() {
+  opkg upgrade "$@"
+}
+
+opkg_U() {
+  opkg install "$@"
+}

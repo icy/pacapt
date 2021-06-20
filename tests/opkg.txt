@@ -39,3 +39,53 @@ ou libc
 
 in -Ql ruby
 ou empty
+
+in -Qo
+ou empty
+
+in -Qo busybox
+ou busybox - .*
+
+in -Qo /bin/sh
+ou busybox - .*
+
+in -Qs sh
+ou base-files - .*
+ou busybox - .*
+
+in -Qqs sh
+ou ^busybox$
+
+in -Sw htop
+in ! htop
+ou Downloading.*htop
+ou htop: not found
+
+in -S htop
+in ! command -v htop
+ou /usr/bin/htop
+
+in -R htop
+in ! htop -h
+ou Removing package htop from root
+ou htop: not found
+
+in -Sw htop
+in -U ./htop*.ipk
+in ! htop -h
+ou Hisham Muhammad
+
+in -Si ruby
+in ! ruby -e true
+ou ruby: not found
+ou Ruby is .* for quick and easy
+
+in -Sii librt
+ou e2fsprogs.*depends on.*
+
+in -Ss
+ou zoneinfo-core
+ou ^zsh
+
+in -Ss perl
+ou Perl is a stable.* programming language.
