@@ -1,6 +1,5 @@
 #!/usr/bin/env sh
 
-# POSIX  : Ready
 # Purpose: Support next-generation Alpine Linux apk package manager
 # Author : Carl X. Su <bcbcarl@gmail.com>
 #          Cuong Manh Le <cuong.manhle.vn@gmail.com>

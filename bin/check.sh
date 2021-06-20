@@ -61,36 +61,33 @@ _has_shellcheck() {
 }
 
 _check_file() {
-  local _file="${1:-/x/x/x/x/x/x/x/}"
+  local_file="${1:-/x/x/x/x/x/x/x/}"
+  local_shell="${SHELLCHECK_SHELL:-bash}"
 
-  echo >&2 ":: ${FUNCNAME[0]}: $1"
+  echo >&2 ":: ${FUNCNAME[0]} (${local_shell}): $1"
 
-  [[ -f "$_file" ]] \
+  [[ -f "$local_file" ]] \
   || {
-    echo >&2 ":: File not found '$_file'"
+    echo >&2 ":: File not found '$local_file'"
     return 1
   }
 
-  _simple_check "$_file" || return
+  _simple_check "$local_file" || return
 
-  shellcheck -s "${SHELLCHECK_SHELL:-bash}" -f json "$_file" \
-  | _shellcheck_output_format "$_file"
+  shellcheck -s "${local_shell}" -f json "$local_file" \
+  | _shellcheck_output_format "$local_file"
 
   [[ "${PIPESTATUS[0]}" == "0" ]]
-}
-
-_check_POSIX_file() {
-  if ! grep -Eiqe "^# +POSIX.*:.*Ready" -- "$1" ; then
-    >&2 echo ":: $1: POSIX is not required."
-  else
-    _check_file "$1" || return 1
-  fi
 }
 
 _check_POSIX_files() {
   export SHELLCHECK_SHELL="sh"
   while (( $# )); do
-    _check_POSIX_file "$1" || return 1
+    if awk 'NR==1' < "$1" \
+      | grep -Eiqe '^#!/usr/bin/env sh' ;
+    then
+      _check_file "$1" || return 1
+    fi
     shift
   done
 }

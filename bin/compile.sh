@@ -116,7 +116,7 @@ library_files() {
 }
 
 library_POSIX_ready() {
-  grep -Eqie "^# +POSIX.*:.*Ready" -- "$@"
+  grep -Eqie '#!/usr/bin/env sh' -- "$@"
 }
 
 ########################################################################
@@ -129,6 +129,7 @@ for L in $(library_files); do
   || continue
 
   if library_POSIX_ready "$L"; then
+    >&2 echo ":: POSIX library '$L'"
     $GREP -v '^#' "$L"
   else
     $GREP -v '^#' "$L" | awk '{printf("#_!_POSIX_# %s\n", $0)}'

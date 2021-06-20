@@ -1,6 +1,5 @@
 #!/usr/bin/env sh
 
-# POSIX  : Ready
 # Purpose: Provide some basic functions
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)

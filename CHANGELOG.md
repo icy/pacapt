@@ -1,18 +1,22 @@
 ## next
 
+### New features
+
 * Single script can now execute within `POSIX` or `non-POSIX`
   environment and it detects/loads features dynamically.
+* `lib/opkg`: Add support for `OpenWrt` (and alike)
+
+### Fixes and Updates
+
+* `tests/`: Support new `ubuntu`/`debian` systems
 * `lib/yum`, `lib/dpkg`, `lib/apk`: Fix #96, #143
   by adding  `-q` (quiet) option for `Qs`.
-* `tests/`: Support new `ubuntu`/`debian` systems
 * `lib/00_core.sh`: POSIX going well
 * `lib/zz_main.sh`: POSIX going well
-* `lib/opkg`: Add support for `OpenWrt` (and alike)
 * `lib/apk`:
+  * Fix many implementation issues.
   * `Q` prints version information.
   * Fix `--noconfirm` issue (#150)
-  * Fix many implementation issues.
-  * POSIX going well
   * POSIX version (`pacapt-POSIX` works perfectly without `bash`)
 
 ## v2.4.4
