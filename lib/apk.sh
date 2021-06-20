@@ -162,11 +162,6 @@ apk_Sy() {
   apk update
 }
 
-apk_Sw() {
-  # shellcheck disable=2086
-  apk fetch $_TOPT -- "$@"
-}
-
 apk_U() {
   # shellcheck disable=2086
   apk add --allow-untrusted $_TOPT -- "$@"

@@ -18,6 +18,8 @@
   * `Q` prints version information.
   * Fix `--noconfirm` issue (#150)
   * POSIX version (`pacapt-POSIX` works perfectly without `bash`)
+* Remove `{apk,dnf,zypper}_Sw` methods
+  and fix the `--download-only` for them
 
 ## v2.4.4
 

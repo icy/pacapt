@@ -142,6 +142,7 @@ _translate_w() {
   case "$_PACMAN" in
   "dpkg")     local_opt="-d";;
   "cave")     local_opt="-f";;
+  "dnf")      local_opt="--downloadonly";;
   "macports") local_opt="fetch";;
   "portage")  local_opt="--fetchonly";;
   "zypper")   local_opt="--download-only";;
@@ -157,6 +158,7 @@ _translate_w() {
     local_ret=1
     ;;
   "apk")      local_opt="fetch";;
+  "opkg")     local_opt="--download-only";;
   *)
     local_opt=""
     local_ret=1
