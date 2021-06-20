@@ -1,6 +1,5 @@
 #!/usr/bin/env sh
 
-# POSIX  : Ready
 # Purpose: Support opkg (e.g. OpenWrt)
 # Author : Ky-Anh Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)

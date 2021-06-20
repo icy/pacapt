@@ -1,6 +1,5 @@
 #!/bin/sh
 
-# POSIX   : Ready
 # Purpose : Testing script for okpg support
 # Author  : Ky-Anh Huynh
 # Date    : June 19th, 2021
