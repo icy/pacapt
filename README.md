@@ -29,7 +29,7 @@ It supports the following package managers:
 
 - [Description](#pacapt---an-archlinuxs-pacman-like-wrapper-for-many-package-managers)
 - [Installation](#installation)
-  - [Install stable `Bash` script 2.4.x from Github](#install-stable-bash-script-24x-from-github)
+  - [Install the stable script from Github](#install-the-stable-script-from-github)
 - [Usage](#usage)
   - [Basic operations](#basic-operations)
   - [Basic options](#basic-options)
@@ -47,7 +47,7 @@ It supports the following package managers:
 1. This script shouldn't be installed on an Arch-based system;
 2. On `FreeBSD`, please install `bash` package first.
 
-### Install stable `Bash` script 2.4.x from Github
+### Install the stable script from Github
 
 You can download the stable script and make it executable.
 On non-Arch-based system, you may use `pacman` as script name instead of `pacapt`.
