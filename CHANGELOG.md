@@ -4,7 +4,7 @@
 
 * `lib/opkg`: Add support for `OpenWrt` (and alike)
 * `Bash` is not required on `Alpine`, `SunOS` or `OpenWrt`:
-  The proram can work perfectly with `POSIX` shell on those systems.
+  The program can work perfectly with `POSIX` shell on those systems.
 * Single script can now execute within `POSIX` or `non-POSIX`
   environment and it detects/loads features dynamically.
   If the system has `bash` installed, the program switches to
