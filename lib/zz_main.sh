@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
-# POSIX  : Ready
 # Purpose: A wrapper for all Unix package managers
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
@@ -71,6 +70,7 @@ _PACMAN_detect \
 if [ -z "${__PACAPT_FORKED__:-}" ]; then
   case "$_PACMAN" in
   "apk")  ;;
+  "opkg")  ;;
   "sun_tools" ) ;;
   *)
     _die "pacapt($_PACMAN) library is not ready for pure-POSIX features."

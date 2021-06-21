@@ -166,10 +166,6 @@ zypper_S() {
   zypper install $_TOPT "$@"
 }
 
-zypper_Sw() {
-  zypper install --download-only "$@"
-}
-
 zypper_U() {
   zypper install "$@"
 }

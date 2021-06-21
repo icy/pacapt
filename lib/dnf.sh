@@ -62,10 +62,6 @@ dnf_Suy() {
   dnf upgrade "$@"
 }
 
-dnf_Sw() {
-  dnf download "$@"
-}
-
 dnf_Sy() {
   dnf clean expire-cache && dnf check-update
 }

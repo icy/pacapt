@@ -1,6 +1,5 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-# POSIX   : Ready
 # Purpose : Provide some basic settings for external package managers
 # Author  : Ky-Anh Huynh
 # License : MIT

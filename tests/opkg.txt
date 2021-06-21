@@ -1,0 +1,91 @@
+#!/bin/sh
+
+# Purpose : Testing script for okpg support
+# Author  : Ky-Anh Huynh
+# Date    : June 19th, 2021
+# License : MIT
+
+im oofnik/openwrt:snapshot-x86-64
+im oofnik/openwrt:19.07.7-x86-64
+im oofnik/openwrt:19.07.6-x86-64
+im oofnik/openwrt:19.07.5-x86-64
+
+in -Sy
+ou Updated list of available packages in /var/opkg-lists/openwrt_core
+ou Downloading.*downloads.openwrt.org
+ou Signature check passed.
+
+in -Q
+ou busybox - .*
+ou libc - .*
+
+in -Q busybox
+ou busybox
+
+in -Qq
+ou ^busybox$
+
+in -Qi
+ou busybox
+ou libc
+ou Status: install user installed
+
+in -Ql
+ou libc
+ou busybox
+
+in -Ql libc
+ou libc
+
+in -Ql ruby
+ou empty
+
+in -Qo
+ou empty
+
+in -Qo busybox
+ou busybox - .*
+
+in -Qo /bin/sh
+ou busybox - .*
+
+in -Qs sh
+ou base-files - .*
+ou busybox - .*
+
+in -Qqs sh
+ou ^busybox$
+
+in -Sw htop
+in ! htop
+ou Downloading.*htop
+ou htop: not found
+
+in -S htop
+in ! command -v htop
+ou /usr/bin/htop
+
+in -R htop
+in ! htop -h
+ou Removing package htop from root
+ou htop: not found
+
+in -Sw htop
+in -U ./htop*.ipk
+in ! htop -h
+ou Hisham Muhammad
+
+in -Si ruby
+in ! ruby -e true
+ou ruby: not found
+ou Ruby is .* for quick and easy
+
+in -Sii librt
+ou e2fsprogs.*depends on.*
+
+in -Ss
+ou zoneinfo-core
+ou ^zsh
+
+in -Ss perl
+ou Perl is a stable.* programming language.

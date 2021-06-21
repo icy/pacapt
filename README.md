@@ -4,7 +4,7 @@
 
 `pacapt` is a wrapper for many package managers.
 Simply install package with `pacapt -S htop` or `pacapt install htop`
-on any `Linux`, `BSD`, `Mac OS` machines.
+on any `Linux`, `BSD`, `OpenWrt` or `Mac OS` machines.
 It supports the following package managers:
 
 * `pacman`        by `Arch Linux`, `ArchBang`, `Manjaro`, etc.
@@ -19,6 +19,7 @@ It supports the following package managers:
 * `pkg_tools`     by `OpenBSD`
 * `sun_tools`     by `Solaris(SunOS)`
 * `apk`           by `Alpine Linux`
+* `opkg`          by `OpenWrt`
 * `tazpkg`        by `SliTaz Linux`
 * `swupd`         by `Clear Linux`
 * `tlmgr`         by `TeX Live`
@@ -44,7 +45,7 @@ It supports the following package managers:
 ## Installation
 
 1. This script shouldn't be installed on an Arch-based system;
-2. On `FreeBSD` and `Alpine Linux`, please install `bash` package first.
+2. On `FreeBSD`, please install `bash` package first.
 
 ### Install stable `Bash` script 2.4.x from Github
 
@@ -113,23 +114,24 @@ A long list of options and operations can be found from [`ArchLinux`'s wiki](htt
 ### Implemented operations
 
 ```
-           Q Qc Qe Qi Qk Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Sg Si Sii Sl Ss Su Suy Sw Sy U
-      apk  ~        *     *     *     *  * *  *   *  * *  *   *    *     *   *  *  *  *   *  *  * *
-     cave  *        *     *     *  *  *  * *  *   *  * *  *   *    x     *         *  *   *     * x
+           Q Qc Qe Qi Qk Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Sg Si Sii Sl Ss Su Suy Sy U
+      apk  ~        *     *     *     *  * *  *   *  * *  *   *    *     *   *  *  *  *   *  * *
+     cave  *        *     *     *  *  *  * *  *   *  * *  *   *    x     *         *  *   *  * x
     conda  *                               *           *  *              *         *      *
-      dnf  ~  *  *  *     *  *  *  *  *  * *           *  *   *    *  *  *      *  *  *   *  *  * *
-     dpkg  ~        *     *     *  *  *  * *  *   *  ~ *  *   *    *     *   *     *  *   *     * *
- homebrew  ~  *     *     *     *     *  * *         * *  *   *    *     *         *  *   *     *
- macports     *           *     *        * *         ~ *  *   *          *         *  *   *     *
-    pkgng  *        *     *     *  *     * *         * *  *   *          *         *  *   *     *
-pkg_tools  ~        *     *     *  *     * *  *   *  ~ *  *   x          *      *  ~  *   *     x
-  portage  *  *     *     *     *        * *         * *  *   *    *     *         *  *   *     *
-sun_tools  *        *     *     *     *    *                                                      *
-    swupd              *        *     *    *           *                           *  *   *     *
-   tazpkg  *        *     *     *          *           *  *   *                    *  *   *     * *
-    tlmgr           *  *  *                *           *                 *      *  *      *       *
-      yum  *  *     *     *  *  *  *  *  * *         * *  *   *    *     *   *     *  *   *     * *
-   zypper  *  *     *     *  *  *  *  *  * *  *   *  * *  *   *    *     *   *  *  *  *   *  *  * *
+      dnf  ~  *  *  *     *  *  *  *  *  * *           *  *   *    *  *  *      *  *  *   *  * *
+     dpkg  ~        *     *     *  *  *  * *  *   *  ~ *  *   *    *     *   *     *  *   *  * *
+ homebrew  ~  *     *     *     *     *  * *         * *  *   *    *     *         *  *   *  *
+ macports     *           *     *        * *         ~ *  *   *          *         *  *   *  *
+     opkg  *        *     *     *     *  * *           *                 *   *     *  *      * *
+    pkgng  *        *     *     *  *     * *         * *  *   *          *         *  *   *  *
+pkg_tools  ~        *     *     *  *     * *  *   *  ~ *  *   x          *      *  ~  *   *  x
+  portage  *  *     *     *     *        * *         * *  *   *    *     *         *  *   *  *
+sun_tools  *        *     *     *     *    *                                                   *
+    swupd              *        *     *    *           *                           *  *   *  *
+   tazpkg  *        *     *     *          *           *  *   *                    *  *   *  * *
+    tlmgr           *  *  *                *           *                 *      *  *      *    *
+      yum  *  *     *     *  *  *  *  *  * *         * *  *   *    *     *   *     *  *   *  * *
+   zypper  *  *     *     *  *  *  *  *  * *  *   *  * *  *   *    *     *   *  *  *  *   *  * *
 ```
 
 **Notes:**

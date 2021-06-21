@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
-# POSIX  : Ready
 # Purpose: SunOS support
 # Author : Daniel YC Lin <dlin.tw@gmail.com>
 # License: Fair license (http://www.opensource.org/licenses/fair)

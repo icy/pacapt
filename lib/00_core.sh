@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
-# POSIX  : Ready
 # Purpose: Provide some basic functions
 # Author : Anh K. Huynh
 # License: Fair license (http://www.opensource.org/licenses/fair)
@@ -98,6 +97,7 @@ _PACMAN_detect() {
   _issue2pacman pkg_tools "OpenBSD" && return
   _issue2pacman pkg_tools "Bitrig" && return
   _issue2pacman apk "Alpine Linux" && return
+  _issue2pacman opkg "OpenWrt" && return
 
   [ -z "$_PACMAN" ] || return
 
@@ -121,6 +121,7 @@ _PACMAN_detect() {
   [ -x "/usr/sbin/pkg_add" ] && _PACMAN="pkg_tools" && return
   [ -x "/usr/sbin/pkgadd" ] && _PACMAN="sun_tools" && return
   [ -x "/sbin/apk" ] && _PACMAN="apk" && return
+  [ -x "/bin/opkg" ] && _PACMAN="opkg" && return
   [ -x "/usr/bin/tazpkg" ] && _PACMAN="tazpkg" && return
   [ -x "/usr/bin/swupd" ] && _PACMAN="swupd" && return
 
@@ -141,6 +142,7 @@ _translate_w() {
   case "$_PACMAN" in
   "dpkg")     local_opt="-d";;
   "cave")     local_opt="-f";;
+  "dnf")      local_opt="--downloadonly";;
   "macports") local_opt="fetch";;
   "portage")  local_opt="--fetchonly";;
   "zypper")   local_opt="--download-only";;
@@ -156,6 +158,7 @@ _translate_w() {
     local_ret=1
     ;;
   "apk")      local_opt="fetch";;
+  "opkg")     local_opt="--download-only";;
   *)
     local_opt=""
     local_ret=1

@@ -18,6 +18,7 @@ _dpkg_init() {
 }
 
 # dpkg_Q may _not_implemented
+# FIXME: Need to support a small list of packages
 dpkg_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     dpkg -l \

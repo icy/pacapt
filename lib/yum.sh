@@ -17,6 +17,7 @@ _yum_init() {
   :
 }
 
+# FIXME: Need to support a small list of packages
 yum_Q() {
   if [[ "$_TOPT" == "q" ]]; then
     rpm -qa --qf "%{NAME}\\n"

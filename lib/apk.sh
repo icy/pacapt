@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
-# POSIX  : Ready
 # Purpose: Support next-generation Alpine Linux apk package manager
 # Author : Carl X. Su <bcbcarl@gmail.com>
 #          Cuong Manh Le <cuong.manhle.vn@gmail.com>
@@ -20,6 +19,7 @@ _apk_init() {
 }
 
 # apk_Q may _not_implemented
+# FIXME: Need to support a small list of packages
 apk_Q() {
   case "$_TOPT" in
   "")
@@ -160,11 +160,6 @@ apk_Suy() {
 
 apk_Sy() {
   apk update
-}
-
-apk_Sw() {
-  # shellcheck disable=2086
-  apk fetch $_TOPT -- "$@"
 }
 
 apk_U() {
