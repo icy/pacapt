@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Purpose: FreeBSD support
 # Author : Konrad Borowski
@@ -47,9 +47,9 @@ pkgng_Qu() {
 }
 
 pkgng_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
+  if [ "$_TOPT" = "q" ]; then
     pkg query '%n' "$@"
-  elif [[ "$_TOPT" == "" ]]; then
+  elif [ "$_TOPT" = "" ]; then
     pkg query '%n %v' "$@"
   else
     _not_implemented
@@ -57,7 +57,7 @@ pkgng_Q() {
 }
 
 pkgng_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
+  if [ -z "$_TOPT" ]; then
     pkg remove "$@"
     pkg autoremove
   else
@@ -98,7 +98,7 @@ pkgng_Scc() {
 }
 
 pkgng_S() {
-  if [[ "$_TOPT" == "fetch" ]]; then
+  if [ "$_TOPT" = "fetch" ]; then
     pkg fetch "$@"
   else
     pkg install "$@"
