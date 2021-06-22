@@ -49,7 +49,7 @@ pkgng_Qu() {
 pkgng_Q() {
   if [ "$_TOPT" = "q" ]; then
     pkg query '%n' "$@"
-  elif [ "$_TOPT" = "" ]; then
+  elif [ -z "$_TOPT" ]; then
     pkg query '%n %v' "$@"
   else
     _not_implemented
