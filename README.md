@@ -44,8 +44,7 @@ It supports the following package managers:
 
 ## Installation
 
-1. This script shouldn't be installed on an Arch-based system;
-2. On `FreeBSD`, please install `bash` package first.
+This script shouldn't be installed on an Arch-based system;
 
 ### Install the stable script from Github
 

@@ -1,3 +1,7 @@
+## v3.0.1
+
+* `lib/pkg_tools`: Now can work with `POSIX` shell.
+
 ## v3.0.0
 
 ### New features
