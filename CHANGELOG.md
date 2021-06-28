@@ -1,6 +1,6 @@
 ## v3.0.1
 
-* `lib/pkg_tools`: Now can work with `POSIX` shell.
+* More `POSIX` ports: `pkg_tools`, `conda`, `tlmgr`, `dnf`, `swupd`
 
 ## v3.0.0
 
