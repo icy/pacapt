@@ -144,8 +144,6 @@ sun_tools  *        *     *     *     *    *                                    
 * [`batch-pacapt`](https://github.com/Grenadingue/batch-pacapt): An Arch's pacman-like package manager for Windows
 * [`node-pacapt`](https://github.com/Grenadingue/node-pacapt): A node.js wrapper of pacapt + batch-pacapt
 * `pacapt`'s [`nd`](https://github.com/icy/pacapt/tree/nd) branch: A rewrite in Dlang, now deprecated.
-* [`pacaptr`](https://github.com/rami3l/pacaptr): A Rust port of pacapt with decent `homebrew`/`choco`/`dpkg` support and more.
-  See also [Experimental projects](#experimental-projects)
 * [`pacapt-py`](https://github.com/rami3l/pacapt-py): A proof of concept in Python to provide pacapt-like experience to Homebrew.
 * [`pacapt-go`](https://github.com/rami3l/pacaptr/tree/go-dev): A more complete rewrite in Go, now lives in the [`go-dev`](https://github.com/rami3l/pacaptr/tree/go-dev) branch of `pacaptr` as legacy code.
 
