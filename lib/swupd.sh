@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Purpose: Clear Linux support
 # Author : Dmitry Kudriavtsev <me@dk0.us>
