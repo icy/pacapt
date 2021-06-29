@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Purpose: OpenBSD support
 # Author : Somasis <somasissounds@gmail.com>
@@ -51,13 +51,13 @@ pkg_tools_Q() {
   export PKG_PATH=
   # the dash after the pkg name is so we don't catch partial matches
   # because all packages in openbsd have the format 'pkgname-pkgver'
-  if [[ "$_TOPT" == "q" && -n "$*" ]]; then
+  if [ "$_TOPT" = "q" ] && [ -n "$*" ]; then
     pkg_info -q | grep "^${*}-"
-  elif [[ "$_TOPT" == "q" && -z "$*" ]];then
+  elif [ "$_TOPT" = "q" ] && [ -z "$*" ];then
     pkg_info -q
-  elif [[ "$_TOPT" == "" && -n "$*" ]]; then
+  elif [ "$_TOPT" = "" ] && [ -n "$*" ]; then
     pkg_info | grep "^${*}-"
-  elif [[ "$_TOPT" == "" && -z "$*" ]];then
+  elif [ "$_TOPT" = "" ] && [ -z "$*" ];then
     pkg_info
   else
     _not_implemented
@@ -66,7 +66,7 @@ pkg_tools_Q() {
 
 # pkg_tools_Rs may _not_implemented
 pkg_tools_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
+  if [ -z "$_TOPT" ]; then
     pkg_delete -D dependencies "$@"
   else
     _not_implemented
@@ -75,7 +75,7 @@ pkg_tools_Rs() {
 
 # pkg_tools_rn may _not_implemented
 pkg_tools_Rn() {
-  if [[ "$_TOPT" == "" ]];then
+  if [ -z "$_TOPT" ];then
     pkg_delete -c "$@"
   else
     _not_implemented
@@ -119,7 +119,7 @@ pkg_tools_Sy() {
 
 # pkg_tools_Ss may _not_implemented
 pkg_tools_Ss() {
-  if [[ -z "$*" ]];then
+  if [ -z "$*" ];then
     _not_implemented
   else
     pkg_info -Q "$@"
@@ -128,9 +128,9 @@ pkg_tools_Ss() {
 
 pkg_tools_Sc() {
   # by default no cache directory is used
-  if [[ -z "$PKG_CACHE" ]];then
+  if [ -z "$PKG_CACHE" ];then
     echo "You have no cache directory set, set \$PKG_CACHE for a cache directory."
-  elif [[ ! -d "$PKG_CACHE" ]];then
+  elif [ ! -d "$PKG_CACHE" ];then
     echo "You have a cache directory set, but it does not exist. Create \"$PKG_CACHE\"."
   else
     _removing_is_dangerous "rm -rf $PKG_CACHE/*"

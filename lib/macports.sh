@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Purpose: Macports support
 # Author : 10sr
@@ -39,7 +39,7 @@ macports_Qu() {
 
 # macports_Rs may _not_implemented
 macports_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
+  if [ -z "$_TOPT" ]; then
     port uninstall --follow-dependencies "$@"
   else
     _not_implemented
@@ -81,7 +81,7 @@ macports_Scc() {
 }
 
 macports_S() {
-  if [[ "$_TOPT" == "fetch" ]]; then
+  if [ "$_TOPT" = "fetch" ]; then
     port patch "$@"
   else
     port install "$@"

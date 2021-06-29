@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Purpose: Support next-generation Yum package manager
 # Author : Severus <severus@theslinux.org>
@@ -39,7 +39,7 @@ dnf_Si() {
 }
 
 dnf_Sg() {
-  if [[ $# -gt 0 ]]; then
+  if [ $# -gt 0 ]; then
     dnf group info "$@"
   else
     dnf group list
@@ -68,9 +68,9 @@ dnf_Sy() {
 
 # dnf_Q may _not_implemented
 dnf_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
+  if [ "$_TOPT" = "q" ]; then
     rpm -qa --qf "%{NAME}\\n"
-  elif [[ "$_TOPT" == "" ]]; then
+  elif [ -z "$_TOPT" ]; then
     rpm -qa --qf "%{NAME} %{VERSION}\\n"
   else
     _not_implemented

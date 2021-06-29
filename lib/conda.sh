@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Purpose : conda support
 # Author  : Antony Lee
@@ -18,7 +18,7 @@ _conda_init() {
 }
 
 conda_Q() {
-  if [[ $# -gt 0 ]]; then
+  if [ $# -gt 0 ]; then
     conda list "$(python -c 'import sys; print("^" + "|".join(sys.argv[1:]) + "$")' "$@")"
   else
     conda list

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Purpose: RedHat / Fedora Core support
 # Author : Anh K. Huynh
@@ -19,9 +19,9 @@ _yum_init() {
 
 # FIXME: Need to support a small list of packages
 yum_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
+  if [ "$_TOPT" = "q" ]; then
     rpm -qa --qf "%{NAME}\\n"
-  elif [[ "$_TOPT" == "" ]]; then
+  elif [ -z "$_TOPT" ]; then
     rpm -qa --qf "%{NAME} %{VERSION}\\n"
   else
     _not_implemented
@@ -33,9 +33,9 @@ yum_Qi() {
 }
 
 yum_Qs() {
-  if [[ "$_TOPT" == "q" ]]; then
+  if [ "$_TOPT" = "q" ]; then
     rpm -qa --qf "%{NAME}\\n" "*${*}*"
-  elif [[ "$_TOPT" == "" ]]; then
+  elif [ -z "$_TOPT" ]; then
     rpm -qa --qf "%{NAME} %{VERSION}\\n" "*${*}*"
   else
     _not_implemented
@@ -71,7 +71,7 @@ yum_Qm() {
 }
 
 yum_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
+  if [ -z "$_TOPT" ]; then
     yum erase "$@"
   else
     _not_implemented

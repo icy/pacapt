@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Purpose : tlmgr support
 # Author  : Antony Lee
