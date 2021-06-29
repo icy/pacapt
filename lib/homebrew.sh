@@ -139,7 +139,7 @@ homebrew_Sccc() {
     ;;
 
   *)
-    # FIXME: This is quite stupid!!! But it's an easy way
+    # FIXME: This can be wrong. But it's an easy way
     # FIXME: to avoid some warning from #shellcheck.
     # FIXME: Please note that, $_dcache is not empty now.
     rm -rf "${_dcache:-/x/x/x/x/x/x/x/x/x/x/x//x/x/x/x/x/}/"
