@@ -1,6 +1,6 @@
 ## v3.0.1
 
-* More `POSIX` ports: `pkg_tools`, `conda`, `tlmgr`, `dnf`, `swupd`, `yum`
+* More `POSIX` ports: `pkg_tools`, `conda`, `tlmgr`, `dnf`, `swupd`, `yum`, `macports`
 
 ## v3.0.0
 
