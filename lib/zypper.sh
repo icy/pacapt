@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Purpose: OpenSUSE support
 # Author : Anh K. Huynh
@@ -55,11 +55,11 @@ zypper_Qs() {
 }
 
 zypper_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
+  if [ "$_TOPT" = "q" ]; then
     zypper search -i "$@" \
     | grep ^i \
     | awk '{print $3}'
-  elif [[ "$_TOPT" == "" ]]; then
+  elif [ -z "$_TOPT" ]; then
     zypper search -i "$@"
   else
     _not_implemented
@@ -67,7 +67,7 @@ zypper_Q() {
 }
 
 zypper_Rs() {
-  if [[ "$_TOPT" == "s" ]]; then
+  if [ "$_TOPT" = "s" ]; then
     zypper remove "$@" --clean-deps
   else
     _not_implemented
@@ -80,31 +80,25 @@ zypper_R() {
 
 zypper_Rn() {
   # Remove configuration files
-  while read -r file; do
-    if [[ -f "$file" ]]; then
+  rpm -ql "$@" \
+  | while read -r file; do
+    if [ -f "$file" ]; then
       rm -fv "$file"
     fi
-  done < <(rpm -ql "$@")
+  done
 
   # Now remove the package per-se
   zypper remove "$@"
 }
 
-zypper_Rs() {
-  if [[ "$_TOPT" == "s" ]]; then
-    zypper remove "$@" --clean-deps
-  else
-    _not_implemented
-  fi
-}
-
 zypper_Rns() {
   # Remove configuration files
-  while read -r file; do
-    if [[ -f "$file" ]]; then
+  rpm -ql "$@" \
+  | while read -r file; do
+    if [ -f "$file" ]; then
       rm -fv "$file"
     fi
-  done < <(rpm -ql "$@")
+  done
 
   zypper remove "$@" --clean-deps
 }
@@ -118,7 +112,7 @@ zypper_Sy() {
 }
 
 zypper_Sl() {
-  if [[ $# -eq 0 ]]; then
+  if [ $# -eq 0 ]; then
     zypper pa -R
   else
     zypper pa -r "$@"
@@ -152,10 +146,10 @@ zypper_Si() {
 
 zypper_Sii() {
   # Ugly and slow, but does the trick
-  local packages=
+  local_packages=
 
-  packages="$(zypper pa -R | cut -d \| -f 3 | tr -s '\n' ' ')"
-  for package in $packages; do
+  local_packages="$(zypper pa -R | cut -d \| -f 3 | tr -s '\n' ' ')"
+  for package in $local_packages; do
     zypper info --requires "$package" \
     | grep -q "$@" && echo "$package"
   done
