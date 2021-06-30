@@ -1,0 +1,88 @@
+#!/bin/sh
+
+# Purpose : Testing script for zypper (opensuse) support
+# Author  : Ky-Anh Huynh
+# License : MIT
+
+im opensuse/leap:15.2
+im opensuse/leap:42.3
+im opensuse/tumbleweed:latest
+im opensuse/clair:latest
+
+in ! PACAPT_DEBUG=auto pacman
+ou debug.*Switching to Bash shell
+
+in -P
+ou available operations:.*( [Q][ ilos])+
+
+# Update package databses
+in -Sy
+
+# Simple query that lists all packages
+in -Qq
+ou ^update-alternatives
+ou ^zypper
+
+# Listing with version and package name
+in -Q
+# ou ^ii +zypper +.+ubuntu
+ou ^i\+ +\| +zypper +
+
+# Information of `zypper`
+in -Qi zypper
+ou ^Name +: +zypper
+ou ^Source package : zypper-.*.src
+
+# File listing for `zypper`
+in -Ql zypper
+ou ^/usr/lib/zypper/commands
+
+# Look up package name
+in -Qo /bin/bash
+ou ^bash.*
+
+in -Qo bash
+ou ^bash.*
+
+# Search for pattern in installed package (names + descriptions)
+in -Qs bash
+ou Bourne-Again Shell
+
+in -Qsq bash
+ou ^bash
+
+in -Qs bourne
+ou Bourne-Again Shell
+
+in -Qs screen
+ou ncurses-utils
+
+# Install and Deinstall a package
+
+# Download without installation
+in ! pacman -Sw --noconfirm screen
+in ! command -v screen || echo 'command not found'
+ou command not found
+
+# Display remote package information
+in -Si screen
+ou ^Name +: +screen
+
+#in -Sii screen
+#ou ^Reverse Depends:
+
+# # Now installation
+in ! pacman -S --noconfirm screen
+in ! command -v screen
+ou ^(/usr)?/bin/screen
+
+# Now remove the package
+in ! pacman -R --noconfirm screen
+in -Qi screen
+ou ^Status +: +not installed
+
+in -Sc
+ou All repositories have been cleaned up.
+
+in -sS tmux
+ou tmux

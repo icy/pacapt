@@ -1,6 +1,7 @@
 ## v3.0.2
 
-* `lib/zypper`: POSIX ready, tests added.
+* `lib/zypper`: POSIX ready, tests added, ninor fixes
+* `lib/zypper/Sii`: Removed as it's too slow.
 
 ## v3.0.1
 

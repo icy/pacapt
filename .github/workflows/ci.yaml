@@ -31,6 +31,12 @@ jobs:
     - uses: actions/checkout@v2
     - run: make tests TESTS=dpkg
 
+  zypper:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: make tests TESTS=zypper
+
   opkg:
     runs-on: ubuntu-latest
     steps:

@@ -51,7 +51,14 @@ zypper_Qp() {
 }
 
 zypper_Qs() {
-  zypper search --installed-only "$@"
+  zypper search --search-descriptions --installed-only "$@" \
+  | {
+    if [ "$_TOPT" = "q" ]; then
+      awk -F ' | ' '/^[a-z]/ {print $3}'
+    else
+      cat
+    fi
+  }
 }
 
 zypper_Q() {
@@ -145,14 +152,23 @@ zypper_Si() {
 }
 
 zypper_Sii() {
-  # Ugly and slow, but does the trick
-  local_packages=
+  if [ $# -eq 0 ]; then
+    _error "Missing some package name."
+    return 1
+  fi
+  _not_implemented
+  return
 
-  local_packages="$(zypper pa -R | cut -d \| -f 3 | tr -s '\n' ' ')"
-  for package in $local_packages; do
-    zypper info --requires "$package" \
-    | grep -q "$@" && echo "$package"
-  done
+  # TOO SLOW ! # # Ugly and slow, but does the trick
+  # TOO SLOW ! # local_packages="$( \
+  # TOO SLOW ! #   zypper pa --installed-only -R \
+  # TOO SLOW ! #   | grep -E '^[a-z]' \
+  # TOO SLOW ! #   | cut -d \| -f 3 | sort -u)"
+  # TOO SLOW ! #
+  # TOO SLOW ! # for package in $local_packages; do
+  # TOO SLOW ! #   zypper info --requires "$package" \
+  # TOO SLOW ! #   | grep -q "$@" && echo "$package"
+  # TOO SLOW ! # done
 }
 
 zypper_S() {
