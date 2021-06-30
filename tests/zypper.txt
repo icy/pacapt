@@ -7,7 +7,7 @@
 im opensuse/leap:15.2
 im opensuse/leap:42.3
 im opensuse/tumbleweed:latest
-im opensuse/clair:latest
+# im opensuse/clair:latest
 
 in ! PACAPT_DEBUG=auto pacman
 ou debug.*Switching to Bash shell

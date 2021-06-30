@@ -54,7 +54,7 @@ zypper_Qs() {
   zypper search --search-descriptions --installed-only "$@" \
   | {
     if [ "$_TOPT" = "q" ]; then
-      awk -F ' | ' '/^[a-z]/ {print $3}'
+      awk -F ' *| *' '/^[a-z]/ {print $3}'
     else
       cat
     fi
