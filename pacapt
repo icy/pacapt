@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 3.0.0
+# Version: 3.0.1
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2021 \
@@ -45,7 +45,7 @@
 
 _print_pacapt_version() {
   cat <<_EOF_
-pacapt version '3.0.0'
+pacapt version '3.0.1'
 
 Copyright (C) 2010 - 2021 \\
                           | 10sr (10sr)
@@ -85,7 +85,7 @@ DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 _EOF_
 }
 
-export PACAPT_VERSION='3.0.0'
+export PACAPT_VERSION='3.0.1'
 
 _help() {
   cat <<'EOF'
@@ -773,157 +773,157 @@ apk_U() {
 #_!_POSIX_# cave_U() {
 #_!_POSIX_#   _not_implemented
 #_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# _conda_init() {
-#_!_POSIX_#   :
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# conda_Q() {
-#_!_POSIX_#   if [[ $# -gt 0 ]]; then
-#_!_POSIX_#     conda list "$(python -c 'import sys; print("^" + "|".join(sys.argv[1:]) + "$")' "$@")"
-#_!_POSIX_#   else
-#_!_POSIX_#     conda list
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# conda_R() {
-#_!_POSIX_#   conda remove "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# conda_S() {
-#_!_POSIX_#   conda install "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# conda_Sc() {
-#_!_POSIX_#   conda clean --all "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# conda_Si() {
-#_!_POSIX_#   conda search "$@" --info
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# conda_Ss() {
-#_!_POSIX_#   conda search "*${*}*"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# conda_Suy() {
-#_!_POSIX_#   conda update --all "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# _dnf_init() {
-#_!_POSIX_#   :
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_S() {
-#_!_POSIX_#   # shellcheck disable=SC2086
-#_!_POSIX_#   dnf install $_TOPT "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Sc() {
-#_!_POSIX_#   dnf clean expire-cache "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Scc() {
-#_!_POSIX_#   dnf clean packages "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Sccc() {
-#_!_POSIX_#   dnf clean all "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Si() {
-#_!_POSIX_#   dnf info "$@" && dnf repoquery --deplist "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Sg() {
-#_!_POSIX_#   if [[ $# -gt 0 ]]; then
-#_!_POSIX_#     dnf group info "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     dnf group list
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Sl() {
-#_!_POSIX_#   dnf list available "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Ss() {
-#_!_POSIX_#   dnf search "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Su() {
-#_!_POSIX_#   dnf upgrade "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Suy() {
-#_!_POSIX_#   dnf upgrade "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Sy() {
-#_!_POSIX_#   dnf clean expire-cache && dnf check-update
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Q() {
-#_!_POSIX_#   if [[ "$_TOPT" == "q" ]]; then
-#_!_POSIX_#     rpm -qa --qf "%{NAME}\\n"
-#_!_POSIX_#   elif [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     rpm -qa --qf "%{NAME} %{VERSION}\\n"
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Qc() {
-#_!_POSIX_#   rpm -q --changelog "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Qe() {
-#_!_POSIX_#   dnf repoquery --userinstalled "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Qi() {
-#_!_POSIX_#   dnf info --installed "$@" && dnf repoquery --deplist "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Ql() {
-#_!_POSIX_#   rpm -ql "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Qm() {
-#_!_POSIX_#   dnf list extras
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Qo() {
-#_!_POSIX_#   if cmd="$(command -v -- "$@")"; then
-#_!_POSIX_#     rpm -qf "$cmd"
-#_!_POSIX_#   else
-#_!_POSIX_#     rpm -qf "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Qp() {
-#_!_POSIX_#   rpm -qp "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Qs() {
-#_!_POSIX_#   rpm -qa "*${*}*"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_Qu() {
-#_!_POSIX_#   dnf list updates "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_R() {
-#_!_POSIX_#   dnf remove "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dnf_U() {
-#_!_POSIX_#   dnf install "$@"
-#_!_POSIX_# }
+
+
+
+_conda_init() {
+  :
+}
+
+conda_Q() {
+  if [ $# -gt 0 ]; then
+    conda list "$(python -c 'import sys; print("^" + "|".join(sys.argv[1:]) + "$")' "$@")"
+  else
+    conda list
+  fi
+}
+
+conda_R() {
+  conda remove "$@"
+}
+
+conda_S() {
+  conda install "$@"
+}
+
+conda_Sc() {
+  conda clean --all "$@"
+}
+
+conda_Si() {
+  conda search "$@" --info
+}
+
+conda_Ss() {
+  conda search "*${*}*"
+}
+
+conda_Suy() {
+  conda update --all "$@"
+}
+
+
+
+_dnf_init() {
+  :
+}
+
+dnf_S() {
+  # shellcheck disable=SC2086
+  dnf install $_TOPT "$@"
+}
+
+dnf_Sc() {
+  dnf clean expire-cache "$@"
+}
+
+dnf_Scc() {
+  dnf clean packages "$@"
+}
+
+dnf_Sccc() {
+  dnf clean all "$@"
+}
+
+dnf_Si() {
+  dnf info "$@" && dnf repoquery --deplist "$@"
+}
+
+dnf_Sg() {
+  if [ $# -gt 0 ]; then
+    dnf group info "$@"
+  else
+    dnf group list
+  fi
+}
+
+dnf_Sl() {
+  dnf list available "$@"
+}
+
+dnf_Ss() {
+  dnf search "$@"
+}
+
+dnf_Su() {
+  dnf upgrade "$@"
+}
+
+dnf_Suy() {
+  dnf upgrade "$@"
+}
+
+dnf_Sy() {
+  dnf clean expire-cache && dnf check-update
+}
+
+dnf_Q() {
+  if [ "$_TOPT" = "q" ]; then
+    rpm -qa --qf "%{NAME}\\n"
+  elif [ -z "$_TOPT" ]; then
+    rpm -qa --qf "%{NAME} %{VERSION}\\n"
+  else
+    _not_implemented
+  fi
+}
+
+dnf_Qc() {
+  rpm -q --changelog "$@"
+}
+
+dnf_Qe() {
+  dnf repoquery --userinstalled "$@"
+}
+
+dnf_Qi() {
+  dnf info --installed "$@" && dnf repoquery --deplist "$@"
+}
+
+dnf_Ql() {
+  rpm -ql "$@"
+}
+
+dnf_Qm() {
+  dnf list extras
+}
+
+dnf_Qo() {
+  if cmd="$(command -v -- "$@")"; then
+    rpm -qf "$cmd"
+  else
+    rpm -qf "$@"
+  fi
+}
+
+dnf_Qp() {
+  rpm -qp "$@"
+}
+
+dnf_Qs() {
+  rpm -qa "*${*}*"
+}
+
+dnf_Qu() {
+  dnf list updates "$@"
+}
+
+dnf_R() {
+  dnf remove "$@"
+}
+
+dnf_U() {
+  dnf install "$@"
+}
 #_!_POSIX_# 
 #_!_POSIX_# 
 #_!_POSIX_# 
@@ -1204,7 +1204,7 @@ apk_U() {
 #_!_POSIX_#     ;;
 #_!_POSIX_# 
 #_!_POSIX_#   *)
-#_!_POSIX_#     # FIXME: This is quite stupid!!! But it's an easy way
+#_!_POSIX_#     # FIXME: This can be wrong. But it's an easy way
 #_!_POSIX_#     # FIXME: to avoid some warning from #shellcheck.
 #_!_POSIX_#     # FIXME: Please note that, $_dcache is not empty now.
 #_!_POSIX_#     rm -rf "${_dcache:-/x/x/x/x/x/x/x/x/x/x/x//x/x/x/x/x/}/"
@@ -1225,81 +1225,81 @@ apk_U() {
 #_!_POSIX_#     return "${ret[0]}"
 #_!_POSIX_#   fi
 #_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# _macports_init() {
-#_!_POSIX_#   :
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# macports_Ql() {
-#_!_POSIX_#   port contents "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# macports_Qo() {
-#_!_POSIX_#   if cmd="$(command -v -- "$@")"; then
-#_!_POSIX_#     port provides "$cmd"
-#_!_POSIX_#   else
-#_!_POSIX_#     port provides "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# macports_Qc() {
-#_!_POSIX_#   port log "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# macports_Qu() {
-#_!_POSIX_#   port outdated "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# macports_Rs() {
-#_!_POSIX_#   if [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     port uninstall --follow-dependencies "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# macports_R() {
-#_!_POSIX_#   port uninstall "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# macports_Si() {
-#_!_POSIX_#   port info "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# macports_Suy() {
-#_!_POSIX_#   port selfupdate \
-#_!_POSIX_#   && port upgrade outdated "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# macports_Su() {
-#_!_POSIX_#   port upgrade outdate "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# macports_Sy() {
-#_!_POSIX_#   port selfupdate "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# macports_Ss() {
-#_!_POSIX_#   port search "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# macports_Sc() {
-#_!_POSIX_#   port clean --all inactive "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# macports_Scc() {
-#_!_POSIX_#   port clean --all installed "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# macports_S() {
-#_!_POSIX_#   if [[ "$_TOPT" == "fetch" ]]; then
-#_!_POSIX_#     port patch "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     port install "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
+
+
+
+_macports_init() {
+  :
+}
+
+macports_Ql() {
+  port contents "$@"
+}
+
+macports_Qo() {
+  if cmd="$(command -v -- "$@")"; then
+    port provides "$cmd"
+  else
+    port provides "$@"
+  fi
+}
+
+macports_Qc() {
+  port log "$@"
+}
+
+macports_Qu() {
+  port outdated "$@"
+}
+
+macports_Rs() {
+  if [ -z "$_TOPT" ]; then
+    port uninstall --follow-dependencies "$@"
+  else
+    _not_implemented
+  fi
+}
+
+macports_R() {
+  port uninstall "$@"
+}
+
+macports_Si() {
+  port info "$@"
+}
+
+macports_Suy() {
+  port selfupdate \
+  && port upgrade outdated "$@"
+}
+
+macports_Su() {
+  port upgrade outdate "$@"
+}
+
+macports_Sy() {
+  port selfupdate "$@"
+}
+
+macports_Ss() {
+  port search "$@"
+}
+
+macports_Sc() {
+  port clean --all inactive "$@"
+}
+
+macports_Scc() {
+  port clean --all installed "$@"
+}
+
+macports_S() {
+  if [ "$_TOPT" = "fetch" ]; then
+    port patch "$@"
+  else
+    port install "$@"
+  fi
+}
 
 
 
@@ -1415,223 +1415,223 @@ opkg_Su() {
 opkg_U() {
   opkg install "$@"
 }
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# _pkgng_init() {
-#_!_POSIX_#   :
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_Qi() {
-#_!_POSIX_#   pkg info "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_Ql() {
-#_!_POSIX_#   pkg info -l "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_Qo() {
-#_!_POSIX_#   if cmd="$(command -v -- "$@")"; then
-#_!_POSIX_#     pkg which "$cmd"
-#_!_POSIX_#   else
-#_!_POSIX_#     pkg which "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_Qp() {
-#_!_POSIX_#   pkg query -F "$@" '%n %v'
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_Qu() {
-#_!_POSIX_#   pkg upgrade -n "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_Q() {
-#_!_POSIX_#   if [[ "$_TOPT" == "q" ]]; then
-#_!_POSIX_#     pkg query '%n' "$@"
-#_!_POSIX_#   elif [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     pkg query '%n %v' "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_Rs() {
-#_!_POSIX_#   if [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     pkg remove "$@"
-#_!_POSIX_#     pkg autoremove
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_R() {
-#_!_POSIX_#   pkg remove "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_Si() {
-#_!_POSIX_#   pkg search -S name -ef "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_Suy() {
-#_!_POSIX_#   pkg upgrade "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_Su() {
-#_!_POSIX_#   pkg upgrade -U "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_Sy() {
-#_!_POSIX_#   pkg update "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_Ss() {
-#_!_POSIX_#   pkg search "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_Sc() {
-#_!_POSIX_#   pkg clean "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_Scc() {
-#_!_POSIX_#   pkg clean -a "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkgng_S() {
-#_!_POSIX_#   if [[ "$_TOPT" == "fetch" ]]; then
-#_!_POSIX_#     pkg fetch "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     pkg install "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# _pkg_tools_init() {
-#_!_POSIX_#   :
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Qi() {
-#_!_POSIX_#   # disable searching mirrors for packages
-#_!_POSIX_#   export PKG_PATH=
-#_!_POSIX_#   pkg_info "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Ql() {
-#_!_POSIX_#   export PKG_PATH=
-#_!_POSIX_#   pkg_info -L "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Qo() {
-#_!_POSIX_#   export PKG_PATH=
-#_!_POSIX_#   if cmd="$(command -v -- "$@")"; then
-#_!_POSIX_#     pkg_info -E "$cmd"
-#_!_POSIX_#   else
-#_!_POSIX_#     pkg_info -E "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Qp() {
-#_!_POSIX_#   _not_implemented
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Qu() {
-#_!_POSIX_#   export PKG_PATH=
-#_!_POSIX_#   pkg_add -u "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Q() {
-#_!_POSIX_#   export PKG_PATH=
-#_!_POSIX_#   # the dash after the pkg name is so we don't catch partial matches
-#_!_POSIX_#   # because all packages in openbsd have the format 'pkgname-pkgver'
-#_!_POSIX_#   if [[ "$_TOPT" == "q" && -n "$*" ]]; then
-#_!_POSIX_#     pkg_info -q | grep "^${*}-"
-#_!_POSIX_#   elif [[ "$_TOPT" == "q" && -z "$*" ]];then
-#_!_POSIX_#     pkg_info -q
-#_!_POSIX_#   elif [[ "$_TOPT" == "" && -n "$*" ]]; then
-#_!_POSIX_#     pkg_info | grep "^${*}-"
-#_!_POSIX_#   elif [[ "$_TOPT" == "" && -z "$*" ]];then
-#_!_POSIX_#     pkg_info
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Rs() {
-#_!_POSIX_#   if [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     pkg_delete -D dependencies "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Rn() {
-#_!_POSIX_#   if [[ "$_TOPT" == "" ]];then
-#_!_POSIX_#     pkg_delete -c "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Rns() {
-#_!_POSIX_#   _not_implemented
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_R() {
-#_!_POSIX_#   pkg_delete "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Si() {
-#_!_POSIX_#   pkg_info "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Sl() {
-#_!_POSIX_#   pkg_info -L "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Suy() {
-#_!_POSIX_#   # pkg_tools doesn't really have any concept of a database
-#_!_POSIX_#   # there's actually not really any database to update, so
-#_!_POSIX_#   # this function is mostly just for convienience since on arch
-#_!_POSIX_#   # doing -Su is normally a bad thing to do since it's a partial upgrade
-#_!_POSIX_# 
-#_!_POSIX_#   pkg_tools_Su "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Su() {
-#_!_POSIX_#   pkg_add -u "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Sy() {
-#_!_POSIX_#   _not_implemented
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Ss() {
-#_!_POSIX_#   if [[ -z "$*" ]];then
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   else
-#_!_POSIX_#     pkg_info -Q "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Sc() {
-#_!_POSIX_#   # by default no cache directory is used
-#_!_POSIX_#   if [[ -z "$PKG_CACHE" ]];then
-#_!_POSIX_#     echo "You have no cache directory set, set \$PKG_CACHE for a cache directory."
-#_!_POSIX_#   elif [[ ! -d "$PKG_CACHE" ]];then
-#_!_POSIX_#     echo "You have a cache directory set, but it does not exist. Create \"$PKG_CACHE\"."
-#_!_POSIX_#   else
-#_!_POSIX_#     _removing_is_dangerous "rm -rf $PKG_CACHE/*"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_Scc() {
-#_!_POSIX_#   _not_implemented
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# pkg_tools_S() {
-#_!_POSIX_#   pkg_add "$@"
-#_!_POSIX_# }
+
+
+
+_pkgng_init() {
+  :
+}
+
+pkgng_Qi() {
+  pkg info "$@"
+}
+
+pkgng_Ql() {
+  pkg info -l "$@"
+}
+
+pkgng_Qo() {
+  if cmd="$(command -v -- "$@")"; then
+    pkg which "$cmd"
+  else
+    pkg which "$@"
+  fi
+}
+
+pkgng_Qp() {
+  pkg query -F "$@" '%n %v'
+}
+
+pkgng_Qu() {
+  pkg upgrade -n "$@"
+}
+
+pkgng_Q() {
+  if [ "$_TOPT" = "q" ]; then
+    pkg query '%n' "$@"
+  elif [ -z "$_TOPT" ]; then
+    pkg query '%n %v' "$@"
+  else
+    _not_implemented
+  fi
+}
+
+pkgng_Rs() {
+  if [ -z "$_TOPT" ]; then
+    pkg remove "$@"
+    pkg autoremove
+  else
+    _not_implemented
+  fi
+}
+
+pkgng_R() {
+  pkg remove "$@"
+}
+
+pkgng_Si() {
+  pkg search -S name -ef "$@"
+}
+
+pkgng_Suy() {
+  pkg upgrade "$@"
+}
+
+pkgng_Su() {
+  pkg upgrade -U "$@"
+}
+
+pkgng_Sy() {
+  pkg update "$@"
+}
+
+pkgng_Ss() {
+  pkg search "$@"
+}
+
+pkgng_Sc() {
+  pkg clean "$@"
+}
+
+pkgng_Scc() {
+  pkg clean -a "$@"
+}
+
+pkgng_S() {
+  if [ "$_TOPT" = "fetch" ]; then
+    pkg fetch "$@"
+  else
+    pkg install "$@"
+  fi
+}
+
+
+
+_pkg_tools_init() {
+  :
+}
+
+pkg_tools_Qi() {
+  # disable searching mirrors for packages
+  export PKG_PATH=
+  pkg_info "$@"
+}
+
+pkg_tools_Ql() {
+  export PKG_PATH=
+  pkg_info -L "$@"
+}
+
+pkg_tools_Qo() {
+  export PKG_PATH=
+  if cmd="$(command -v -- "$@")"; then
+    pkg_info -E "$cmd"
+  else
+    pkg_info -E "$@"
+  fi
+}
+
+pkg_tools_Qp() {
+  _not_implemented
+}
+
+pkg_tools_Qu() {
+  export PKG_PATH=
+  pkg_add -u "$@"
+}
+
+pkg_tools_Q() {
+  export PKG_PATH=
+  # the dash after the pkg name is so we don't catch partial matches
+  # because all packages in openbsd have the format 'pkgname-pkgver'
+  if [ "$_TOPT" = "q" ] && [ -n "$*" ]; then
+    pkg_info -q | grep "^${*}-"
+  elif [ "$_TOPT" = "q" ] && [ -z "$*" ];then
+    pkg_info -q
+  elif [ "$_TOPT" = "" ] && [ -n "$*" ]; then
+    pkg_info | grep "^${*}-"
+  elif [ "$_TOPT" = "" ] && [ -z "$*" ];then
+    pkg_info
+  else
+    _not_implemented
+  fi
+}
+
+pkg_tools_Rs() {
+  if [ -z "$_TOPT" ]; then
+    pkg_delete -D dependencies "$@"
+  else
+    _not_implemented
+  fi
+}
+
+pkg_tools_Rn() {
+  if [ -z "$_TOPT" ];then
+    pkg_delete -c "$@"
+  else
+    _not_implemented
+  fi
+}
+
+pkg_tools_Rns() {
+  _not_implemented
+}
+
+pkg_tools_R() {
+  pkg_delete "$@"
+}
+
+pkg_tools_Si() {
+  pkg_info "$@"
+}
+
+pkg_tools_Sl() {
+  pkg_info -L "$@"
+}
+
+pkg_tools_Suy() {
+  # pkg_tools doesn't really have any concept of a database
+  # there's actually not really any database to update, so
+  # this function is mostly just for convienience since on arch
+  # doing -Su is normally a bad thing to do since it's a partial upgrade
+
+  pkg_tools_Su "$@"
+}
+
+pkg_tools_Su() {
+  pkg_add -u "$@"
+}
+
+pkg_tools_Sy() {
+  _not_implemented
+}
+
+pkg_tools_Ss() {
+  if [ -z "$*" ];then
+    _not_implemented
+  else
+    pkg_info -Q "$@"
+  fi
+}
+
+pkg_tools_Sc() {
+  # by default no cache directory is used
+  if [ -z "$PKG_CACHE" ];then
+    echo "You have no cache directory set, set \$PKG_CACHE for a cache directory."
+  elif [ ! -d "$PKG_CACHE" ];then
+    echo "You have a cache directory set, but it does not exist. Create \"$PKG_CACHE\"."
+  else
+    _removing_is_dangerous "rm -rf $PKG_CACHE/*"
+  fi
+}
+
+pkg_tools_Scc() {
+  _not_implemented
+}
+
+pkg_tools_S() {
+  pkg_add "$@"
+}
 #_!_POSIX_# 
 #_!_POSIX_# 
 #_!_POSIX_# 
@@ -1812,53 +1812,53 @@ sun_tools_R() {
 sun_tools_U() {
   pkgadd "$@"
 }
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# _swupd_init() {
-#_!_POSIX_#   :
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# swupd_Qk() {
-#_!_POSIX_#   swupd verify "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# swupd_Qo() {
-#_!_POSIX_#   if cmd="$(command -v -- "$@")"; then
-#_!_POSIX_#     swupd search "$cmd"
-#_!_POSIX_#   else
-#_!_POSIX_#     swupd search "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# swupd_Qs() {
-#_!_POSIX_#   swupd search "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# swupd_R() {
-#_!_POSIX_#   swupd bundle-remove "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# swupd_Suy() {
-#_!_POSIX_#   swupd update
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# swupd_Su() {
-#_!_POSIX_#   swupd update
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# swupd_Sy() {
-#_!_POSIX_#   swupd search -i
-#_!_POSIX_#   swupd update
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# swupd_Ss() {
-#_!_POSIX_#   swupd search "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# swupd_S() {
-#_!_POSIX_#   swupd bundle-add "$@"
-#_!_POSIX_# }
+
+
+
+_swupd_init() {
+  :
+}
+
+swupd_Qk() {
+  swupd verify "$@"
+}
+
+swupd_Qo() {
+  if cmd="$(command -v -- "$@")"; then
+    swupd search "$cmd"
+  else
+    swupd search "$@"
+  fi
+}
+
+swupd_Qs() {
+  swupd search "$@"
+}
+
+swupd_R() {
+  swupd bundle-remove "$@"
+}
+
+swupd_Suy() {
+  swupd update
+}
+
+swupd_Su() {
+  swupd update
+}
+
+swupd_Sy() {
+  swupd search -i
+  swupd update
+}
+
+swupd_Ss() {
+  swupd search "$@"
+}
+
+swupd_S() {
+  swupd bundle-add "$@"
+}
 #_!_POSIX_# 
 #_!_POSIX_# 
 #_!_POSIX_# _tazpkg_init() {
@@ -1995,167 +1995,167 @@ sun_tools_U() {
 #_!_POSIX_#     shift
 #_!_POSIX_#   done
 #_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# _tlmgr_init() {
-#_!_POSIX_#   :
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tlmgr_Qi() {
-#_!_POSIX_#   tlmgr info --only-installed "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tlmgr_Qk() {
-#_!_POSIX_#   tlmgr check files
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tlmgr_Ql() {
-#_!_POSIX_#   tlmgr info --only-installed --list "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tlmgr_R() {
-#_!_POSIX_#   tlmgr remove "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tlmgr_S() {
-#_!_POSIX_#   tlmgr install "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tlmgr_Si() {
-#_!_POSIX_#   tlmgr info "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tlmgr_Sl() {
-#_!_POSIX_#   tlmgr info
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tlmgr_Ss() {
-#_!_POSIX_#   tlmgr search --global "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tlmgr_Suy() {
-#_!_POSIX_#   tlmgr update --all
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tlmgr_U() {
-#_!_POSIX_#   tlmgr install --file "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# _yum_init() {
-#_!_POSIX_#   :
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Q() {
-#_!_POSIX_#   if [[ "$_TOPT" == "q" ]]; then
-#_!_POSIX_#     rpm -qa --qf "%{NAME}\\n"
-#_!_POSIX_#   elif [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     rpm -qa --qf "%{NAME} %{VERSION}\\n"
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Qi() {
-#_!_POSIX_#   yum info "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Qs() {
-#_!_POSIX_#   if [[ "$_TOPT" == "q" ]]; then
-#_!_POSIX_#     rpm -qa --qf "%{NAME}\\n" "*${*}*"
-#_!_POSIX_#   elif [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     rpm -qa --qf "%{NAME} %{VERSION}\\n" "*${*}*"
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Ql() {
-#_!_POSIX_#   rpm -ql "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Qo() {
-#_!_POSIX_#   if cmd="$(command -v -- "$@")"; then
-#_!_POSIX_#     rpm -qf "$cmd"
-#_!_POSIX_#   else
-#_!_POSIX_#     rpm -qf "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Qp() {
-#_!_POSIX_#   rpm -qp "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Qc() {
-#_!_POSIX_#   rpm -q --changelog "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Qu() {
-#_!_POSIX_#   yum list updates "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Qm() {
-#_!_POSIX_#   yum list extras "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Rs() {
-#_!_POSIX_#   if [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     yum erase "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_R() {
-#_!_POSIX_#   yum erase "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Si() {
-#_!_POSIX_#   yum info "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Suy() {
-#_!_POSIX_#   yum update "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Su() {
-#_!_POSIX_#   yum update "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Sy() {
-#_!_POSIX_#   yum check-update "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Ss() {
-#_!_POSIX_#   yum -C search "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Sc() {
-#_!_POSIX_#   yum clean expire-cache "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Scc() {
-#_!_POSIX_#   yum clean packages "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Sccc() {
-#_!_POSIX_#   yum clean all "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_S() {
-#_!_POSIX_#   # shellcheck disable=SC2086
-#_!_POSIX_#   yum install $_TOPT "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_U() {
-#_!_POSIX_#   yum localinstall "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# yum_Sii() {
-#_!_POSIX_#   yum resolvedep "$@"
-#_!_POSIX_# }
+
+
+
+_tlmgr_init() {
+  :
+}
+
+tlmgr_Qi() {
+  tlmgr info --only-installed "$@"
+}
+
+tlmgr_Qk() {
+  tlmgr check files
+}
+
+tlmgr_Ql() {
+  tlmgr info --only-installed --list "$@"
+}
+
+tlmgr_R() {
+  tlmgr remove "$@"
+}
+
+tlmgr_S() {
+  tlmgr install "$@"
+}
+
+tlmgr_Si() {
+  tlmgr info "$@"
+}
+
+tlmgr_Sl() {
+  tlmgr info
+}
+
+tlmgr_Ss() {
+  tlmgr search --global "$@"
+}
+
+tlmgr_Suy() {
+  tlmgr update --all
+}
+
+tlmgr_U() {
+  tlmgr install --file "$@"
+}
+
+
+
+_yum_init() {
+  :
+}
+
+yum_Q() {
+  if [ "$_TOPT" = "q" ]; then
+    rpm -qa --qf "%{NAME}\\n"
+  elif [ -z "$_TOPT" ]; then
+    rpm -qa --qf "%{NAME} %{VERSION}\\n"
+  else
+    _not_implemented
+  fi
+}
+
+yum_Qi() {
+  yum info "$@"
+}
+
+yum_Qs() {
+  if [ "$_TOPT" = "q" ]; then
+    rpm -qa --qf "%{NAME}\\n" "*${*}*"
+  elif [ -z "$_TOPT" ]; then
+    rpm -qa --qf "%{NAME} %{VERSION}\\n" "*${*}*"
+  else
+    _not_implemented
+  fi
+}
+
+yum_Ql() {
+  rpm -ql "$@"
+}
+
+yum_Qo() {
+  if cmd="$(command -v -- "$@")"; then
+    rpm -qf "$cmd"
+  else
+    rpm -qf "$@"
+  fi
+}
+
+yum_Qp() {
+  rpm -qp "$@"
+}
+
+yum_Qc() {
+  rpm -q --changelog "$@"
+}
+
+yum_Qu() {
+  yum list updates "$@"
+}
+
+yum_Qm() {
+  yum list extras "$@"
+}
+
+yum_Rs() {
+  if [ -z "$_TOPT" ]; then
+    yum erase "$@"
+  else
+    _not_implemented
+  fi
+}
+
+yum_R() {
+  yum erase "$@"
+}
+
+yum_Si() {
+  yum info "$@"
+}
+
+yum_Suy() {
+  yum update "$@"
+}
+
+yum_Su() {
+  yum update "$@"
+}
+
+yum_Sy() {
+  yum check-update "$@"
+}
+
+yum_Ss() {
+  yum -C search "$@"
+}
+
+yum_Sc() {
+  yum clean expire-cache "$@"
+}
+
+yum_Scc() {
+  yum clean packages "$@"
+}
+
+yum_Sccc() {
+  yum clean all "$@"
+}
+
+yum_S() {
+  # shellcheck disable=SC2086
+  yum install $_TOPT "$@"
+}
+
+yum_U() {
+  yum localinstall "$@"
+}
+
+yum_Sii() {
+  yum resolvedep "$@"
+}
 #_!_POSIX_# 
 #_!_POSIX_# 
 #_!_POSIX_# 
