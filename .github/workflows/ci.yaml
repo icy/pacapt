@@ -6,12 +6,10 @@ on:
     - no-we-want-to-run-check-on-all-branches
 
 jobs:
-  smoke-tests:
+  shellcheck:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
 
     - name: prepare
       run: |
@@ -27,5 +25,20 @@ jobs:
         export CI_SHELLCHECK_UPDATE=yes
         make POSIX
 
-    - name: tests
-      run: make tests
+  dpkg:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: make tests TESTS=dpkg
+
+  opkg:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: make tests TESTS=opkg
+
+  others:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: make tests TESTS="slitaz40"
