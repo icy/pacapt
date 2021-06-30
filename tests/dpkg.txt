@@ -13,10 +13,10 @@ in ! rm -fv /etc/apt/apt.conf.d/docker-clean
 ou ^removed .*docker-clean
 
 in ! PACAPT_DEBUG=auto pacman
-ou "debug.*Switching to Bash shell"
+ou debug.*Switching to Bash shell
 
 in -P
-ou available operations:.*( [Q][ ilos])*
+ou available operations:.*( [Q][ ilos])+
 
 # Update package databses
 in -Sy
@@ -69,14 +69,14 @@ ou ^bash.+Bourne
 in -Qs screen
 ou empty
 
-in -Qs "Bourne Again"
+in -Qs 'Bourne Again'
 ou ^bash.+Bourne
 
 # Install and Deinstall a package
 
 # Download without installation
 in ! echo Y | pacman -Sw screen
-in ! which screen || echo "command not found"
+in ! which screen || echo 'command not found'
 ou command not found
 
 # Display remote package information

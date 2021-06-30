@@ -10,6 +10,7 @@
 #   $ docker run --rm \
 #       -v $PWD/test.sh:/tmp/test.sh \
 #       -v $PWD/pacapt.dev:/usr/bin/pacman \
+#       -e "MSG_PREFIX=:: (INFO) " \
 #       ubuntu:14.04 \
 #       /bin/sh /tmp/test.sh 2>test.log
 #
@@ -30,17 +31,23 @@ BEGIN {
   puts ""
   puts "set -u"
   puts ""
-  puts "_log()  { echo \"${MSG_PREFIX}$*\" 1>&2 ; }"
+  # Just send message to STDERR
+  puts "_log()  { echo \"$*\" 1>&2 ; }"
+
+  # A fancy wrappers of _log
   puts "_fail() { _log \"${MSG_PREFIX}Fail $*\"; echo \"${MSG_PREFIX}Fail: $*\"; }" # red
   puts "_erro() { _log \"${MSG_PREFIX}Erro $*\"; echo \"${MSG_PREFIX}Erro: $*\"; }" # red
   puts "_info() { _log \"${MSG_PREFIX}Info $*\"; echo \"${MSG_PREFIX}Info: $*\"; }" # cyan
   puts "_pass() { _log \"${MSG_PREFIX}Pass $*\"; echo \"${MSG_PREFIX}Pass: $*\"; }" # cyan
   puts "_exec() { _log \"${MSG_PREFIX}Exec $*\"; echo \"${MSG_PREFIX}Exec: $*\"; }" # yellow
   puts "_warn() { _log \"${MSG_PREFIX}Warn $*\"; echo \"${MSG_PREFIX}Warn: $*\"; }" # yellow
+
+  # Create a secure log (file) stream. If the file was set in $F_TMP
+  # we print out all output and remove that too.
   puts "_slog() {"
   puts "  if [ -n \"${F_TMP:-}\" ]; then"
-  puts "    echo 1>&2 \":: ${MSG_PREFIX}Exec output\""
-  puts "    cat 1>&2 $F_TMP"
+  puts "    _info 'Exec. output:'"
+  puts "    1>&2 cat $F_TMP"
   puts "    if [ $T_FAIL -ge 1 ]; then"
   puts "      cat $F_TMP \\"
   puts "      | awk '{ if (NR <= 100) { printf(\" > %s\\n\", $0); }}"
@@ -48,8 +55,14 @@ BEGIN {
   puts "    fi"
   puts "    rm -f \"${F_TMP}\""
   puts "    echo 1>&2"
+  puts "    export T_FAIL=0"
+  puts "  else"
+  puts "    export T_FAIL=0"
+  puts "    export F_TMP=\"$(mktemp)\""
+  puts "    if [ -z \"${F_TMP:-}\" ]; then"
+  puts "      _fail 'Unable to create temporary file.'"
+  puts "    fi"
   puts "  fi"
-  puts "  export T_FAIL=0"
   puts "}"
 }
 
@@ -58,12 +71,7 @@ if gs = $_.match(/^in(.*)/)
     puts ""
     outputs = []
     new_test = false
-
     puts "_slog"
-    puts "export F_TMP=\"$(mktemp)\""
-    puts "if [ -z ${F_TMP:-} ]; then"
-    puts "  _fail 'Unable to create temporary file.'"
-    puts "fi"
   end
 
   cmd = gs[1].strip.gsub("\$LOG", "$F_TMP")
@@ -93,10 +101,10 @@ elsif gs = $_.match(/^ou(.*)/)
   puts "if [ -n \"${F_TMP:-}\" ]; then"
   if expected.empty? or expected == "empty"
     puts "  ret=\"$(grep -Ec '.+' $F_TMP)\""
-    puts "  if [ $ret -ge 1 ]; then"
+    puts "  if [ -z \"$ret\" ] || [ \"$ret\" -ge 1 ]; then"
   else
     puts "  ret=\"$(grep -Ec \"#{expected}\" $F_TMP)\""
-    puts "  if [ $ret -eq 0 ]; then"
+    puts "  if [ -z \"$ret\" ] || [ \"$ret\" -eq 0 ]; then"
   end
   puts "    _fail Expected \"#{expected}\""
   puts "    N_FAIL=$(( N_FAIL + 1 ))"

@@ -1,3 +1,8 @@
+## v3.0.2
+
+* `lib/zypper`: POSIX ready, tests added, ninor fixes
+* `lib/zypper/Sii`: Removed as it's too slow.
+
 ## v3.0.1
 
 * More `POSIX` ports: `pkg_tools`, `conda`, `tlmgr`, `dnf`, `swupd`, `yum`, `macports`

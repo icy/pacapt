@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Purpose: OpenSUSE support
 # Author : Anh K. Huynh
@@ -51,15 +51,22 @@ zypper_Qp() {
 }
 
 zypper_Qs() {
-  zypper search --installed-only "$@"
+  zypper search --search-descriptions --installed-only "$@" \
+  | {
+    if [ "$_TOPT" = "q" ]; then
+      awk -F ' *| *' '/^[a-z]/ {print $3}'
+    else
+      cat
+    fi
+  }
 }
 
 zypper_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
+  if [ "$_TOPT" = "q" ]; then
     zypper search -i "$@" \
     | grep ^i \
     | awk '{print $3}'
-  elif [[ "$_TOPT" == "" ]]; then
+  elif [ -z "$_TOPT" ]; then
     zypper search -i "$@"
   else
     _not_implemented
@@ -67,7 +74,7 @@ zypper_Q() {
 }
 
 zypper_Rs() {
-  if [[ "$_TOPT" == "s" ]]; then
+  if [ "$_TOPT" = "s" ]; then
     zypper remove "$@" --clean-deps
   else
     _not_implemented
@@ -80,31 +87,25 @@ zypper_R() {
 
 zypper_Rn() {
   # Remove configuration files
-  while read -r file; do
-    if [[ -f "$file" ]]; then
+  rpm -ql "$@" \
+  | while read -r file; do
+    if [ -f "$file" ]; then
       rm -fv "$file"
     fi
-  done < <(rpm -ql "$@")
+  done
 
   # Now remove the package per-se
   zypper remove "$@"
 }
 
-zypper_Rs() {
-  if [[ "$_TOPT" == "s" ]]; then
-    zypper remove "$@" --clean-deps
-  else
-    _not_implemented
-  fi
-}
-
 zypper_Rns() {
   # Remove configuration files
-  while read -r file; do
-    if [[ -f "$file" ]]; then
+  rpm -ql "$@" \
+  | while read -r file; do
+    if [ -f "$file" ]; then
       rm -fv "$file"
     fi
-  done < <(rpm -ql "$@")
+  done
 
   zypper remove "$@" --clean-deps
 }
@@ -118,7 +119,7 @@ zypper_Sy() {
 }
 
 zypper_Sl() {
-  if [[ $# -eq 0 ]]; then
+  if [ $# -eq 0 ]; then
     zypper pa -R
   else
     zypper pa -r "$@"
@@ -151,14 +152,23 @@ zypper_Si() {
 }
 
 zypper_Sii() {
-  # Ugly and slow, but does the trick
-  local packages=
+  if [ $# -eq 0 ]; then
+    _error "Missing some package name."
+    return 1
+  fi
+  _not_implemented
+  return
 
-  packages="$(zypper pa -R | cut -d \| -f 3 | tr -s '\n' ' ')"
-  for package in $packages; do
-    zypper info --requires "$package" \
-    | grep -q "$@" && echo "$package"
-  done
+  # TOO SLOW ! # # Ugly and slow, but does the trick
+  # TOO SLOW ! # local_packages="$( \
+  # TOO SLOW ! #   zypper pa --installed-only -R \
+  # TOO SLOW ! #   | grep -E '^[a-z]' \
+  # TOO SLOW ! #   | cut -d \| -f 3 | sort -u)"
+  # TOO SLOW ! #
+  # TOO SLOW ! # for package in $local_packages; do
+  # TOO SLOW ! #   zypper info --requires "$package" \
+  # TOO SLOW ! #   | grep -q "$@" && echo "$package"
+  # TOO SLOW ! # done
 }
 
 zypper_S() {
