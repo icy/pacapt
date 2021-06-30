@@ -16,6 +16,7 @@
 
 BEGIN {
   new_test = true
+
   puts "#!/bin/sh"
   puts ""
   puts "# Notes: This file is generated. Please don't modify them manually."
@@ -29,16 +30,16 @@ BEGIN {
   puts ""
   puts "set -u"
   puts ""
-  puts "_log()  { echo \":: $*\" 1>&2 ; }"
-  puts "_fail() { _log \"Fail $*\"; echo \"Fail: $*\"; }" # red
-  puts "_erro() { _log \"Erro $*\"; echo \"Erro: $*\"; }" # red
-  puts "_info() { _log \"Info $*\"; echo \"Info: $*\"; }" # cyan
-  puts "_pass() { _log \"Pass $*\"; echo \"Pass: $*\"; }" # cyan
-  puts "_exec() { _log \"Exec $*\"; echo \"Exec: $*\"; }" # yellow
-  puts "_warn() { _log \"Warn $*\"; echo \"Warn: $*\"; }" # yellow
+  puts "_log()  { echo \"${MSG_PREFIX}$*\" 1>&2 ; }"
+  puts "_fail() { _log \"${MSG_PREFIX}Fail $*\"; echo \"${MSG_PREFIX}Fail: $*\"; }" # red
+  puts "_erro() { _log \"${MSG_PREFIX}Erro $*\"; echo \"${MSG_PREFIX}Erro: $*\"; }" # red
+  puts "_info() { _log \"${MSG_PREFIX}Info $*\"; echo \"${MSG_PREFIX}Info: $*\"; }" # cyan
+  puts "_pass() { _log \"${MSG_PREFIX}Pass $*\"; echo \"${MSG_PREFIX}Pass: $*\"; }" # cyan
+  puts "_exec() { _log \"${MSG_PREFIX}Exec $*\"; echo \"${MSG_PREFIX}Exec: $*\"; }" # yellow
+  puts "_warn() { _log \"${MSG_PREFIX}Warn $*\"; echo \"${MSG_PREFIX}Warn: $*\"; }" # yellow
   puts "_slog() {"
   puts "  if [ -n \"${F_TMP:-}\" ]; then"
-  puts "    echo 1>&2 ':: Exec output'"
+  puts "    echo 1>&2 \":: ${MSG_PREFIX}Exec output\""
   puts "    cat 1>&2 $F_TMP"
   puts "    if [ $T_FAIL -ge 1 ]; then"
   puts "      cat $F_TMP \\"
