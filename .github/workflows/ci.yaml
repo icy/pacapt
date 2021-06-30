@@ -31,12 +31,6 @@ jobs:
     - uses: actions/checkout@v2
     - run: make tests TESTS=dpkg
 
-  apk:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - run: make tests TESTS=apk
-
   opkg:
     runs-on: ubuntu-latest
     steps:
