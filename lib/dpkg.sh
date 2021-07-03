@@ -36,6 +36,10 @@ dpkg_Qi() {
   dpkg-query -s "$@"
 }
 
+dpkg_Qe() {
+  apt-mark showmanual "$@"
+}
+
 dpkg_Ql() {
   if [[ -n "$*" ]]; then
     dpkg-query -L "$@"
