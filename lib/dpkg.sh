@@ -32,6 +32,10 @@ dpkg_Q() {
   fi
 }
 
+dpkg_Qc() {
+  apt-get changelog "$@"
+}
+
 dpkg_Qi() {
   dpkg-query -s "$@"
 }
