@@ -30,6 +30,10 @@ in -Q
 # ou ^ii +apt +.+ubuntu
 ou ^ii +apt +
 
+# List explicitly installed packages
+in -Qe
+ou ^(iproute2|adduser)$
+
 # Information of `apt`
 in -Qi apt
 ou ^Package: apt$
