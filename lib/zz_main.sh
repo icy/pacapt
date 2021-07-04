@@ -161,7 +161,7 @@ while :; do
     #
     # FIXME: Please check pacman(8) to see if they are really 2nd operation
     #
-    e|g|i|l|m|n|o|p|s)
+    e|g|i|l|m|n|o|p|s|k)
       if [ -z "$_SOPT" ]; then
         _SOPT="$_opt"
         continue
