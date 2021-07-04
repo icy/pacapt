@@ -82,6 +82,7 @@ if [ -z "${__PACAPT_FORKED__:-}" ]; then
   "pkg_tools") ;;
   "sun_tools" ) ;;
   "swupd" ) ;;
+  "tazpkg") ;;
   "tlmgr" ) ;;
   "yum" ) ;;
   "zypper" ) ;;
