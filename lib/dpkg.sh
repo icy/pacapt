@@ -145,7 +145,7 @@ dpkg_Sy() {
 # FIXME: but I'm not sure there is any issue...
 dpkg_Ss() {
   apt-cache search "${@:-.}" \
-  | while read -r name _dash desc; do
+  | while read -r name _ desc; do
       if ! dpkg-query -W "$name" > /dev/null 2>&1; then
         printf "package/%s \n    %s\n" \
           "$name" "$desc"
