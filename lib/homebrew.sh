@@ -60,8 +60,8 @@ homebrew_Ql() {
     local_forumlas="$(brew list --formula)"
   else
     # FIXME: this awk is not perfect!
-    local_casks="$(brew list --casks | LIST="$@" awk '/$0 ~ ENVIRON["LIST"]/')"
-    local_forumlas="$(brew list --formula | LIST="$@" awk '/$0 ~ ENVIRON["LIST"]/')"
+    local_casks="$(brew list --casks | LIST="$*" awk '/$0 ~ ENVIRON["LIST"]/')"
+    local_forumlas="$(brew list --formula | LIST="$*" awk '/$0 ~ ENVIRON["LIST"]/')"
   fi
 
   if [ -z "$_TOPT" ]; then
@@ -150,6 +150,7 @@ homebrew_Q() {
   fi
   # shellcheck disable=SC2086
   brew list $local_flags --formula "$@"
+  # shellcheck disable=SC2086
   brew list $local_flags --cask "$@"
 }
 
