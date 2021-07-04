@@ -195,6 +195,7 @@ authors and contributors.
 * Anh K. Huynh (icy)
 * Antony Lee (anntzer)
 * Alex Lyon (Arcterus)
+* Álvaro Mondéjar (mondeja)
 * Carl X. Su (bcbcarl)
 * Cuong Manh Le (Gnouc)
 * Daniel YC Lin (dlintw)
