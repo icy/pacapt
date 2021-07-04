@@ -37,7 +37,7 @@ opkg_Q() {
 }
 
 opkg_Qi() {
-  for  pkg in $(opkg__get_local_pkgs "${@}"); do
+  for  pkg in $(opkg__get_local_pkgs "$@"); do
     opkg info "$pkg"
   done
 }
@@ -50,7 +50,7 @@ opkg__get_local_pkgs() {
   else
     # `opkg status` returns empty if package is not installed/removed.
     # shellcheck disable=SC2016
-    for pkg in "${@}"; do
+    for pkg in "$@"; do
       opkg status "$pkg"
     done \
     | "$AWK" '/^Package: / {print $NF}'
@@ -58,7 +58,7 @@ opkg__get_local_pkgs() {
 }
 
 opkg_Ql() {
-  for pkg in $(opkg__get_local_pkgs "${@}"); do
+  for pkg in $(opkg__get_local_pkgs "$@"); do
     # shellcheck disable=SC2016
     opkg files "$pkg" \
     | PKG="$pkg" "$AWK" \

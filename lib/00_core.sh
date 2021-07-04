@@ -46,7 +46,7 @@ _removing_is_dangerous() {
 }
 
 _require_programs() {
-  for cmd in "${@}"; do
+  for cmd in "$@"; do
     if ! command -v "$cmd" >/dev/null; then
       _die "pacapt(${_PACMAN:-_init}) requires '$cmd' but the tool is not found."
     fi

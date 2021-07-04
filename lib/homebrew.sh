@@ -124,7 +124,7 @@ homebrew_Q() {
     local_flags="--versions"
   fi
 
-  brew list $local_flags "${@}"
+  brew list $local_flags "$@"
 }
 
 # homebrew_Rs() {
@@ -134,7 +134,7 @@ homebrew_Q() {
 #     _die "pacapt(homebrew_Rs) missing arguments."
 #   fi
 #
-#   for _target in "${@}"; do
+#   for _target in "$@"; do
 #     brew rm "$_target"
 #
 #     while [ "$(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))" != "" ]
