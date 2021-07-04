@@ -9,6 +9,7 @@ im oofnik/openwrt:snapshot-x86-64
 im oofnik/openwrt:19.07.7-x86-64
 im oofnik/openwrt:19.07.6-x86-64
 im oofnik/openwrt:19.07.5-x86-64
+im opkg_bash4
 
 in -Sy
 ou Updated list of available packages in /var/opkg-lists/openwrt_core
