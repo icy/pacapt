@@ -10,7 +10,7 @@ default:
 	@echo '  install     : Install stable script into $$BINDIR.'
 	@echo "  clean       : (Experimental) Remove git-ignored files."
 	@echo "  shellcheck  : It's shellcheck."
-	@ecoh "  POSIX       : Use shellcheck with POSIX checks for some scripts."
+	@echo "  POSIX       : Use shellcheck with POSIX checks for some scripts."
 	@echo "  docker.i    : Launch interactive Docker container which mounts"
 	@echo '                your local working directory to /src/'
 	@echo '                and create symlink /bin/pacman to the local pacapt.dev'.
