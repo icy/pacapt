@@ -14,9 +14,16 @@ default:
 	@echo "  docker.i    : Launch interactive Docker container which mounts"
 	@echo '                your local working directory to /src/'
 	@echo '                and create symlink /bin/pacman to the local pacapt.dev'.
-	@echo '                Please use DISTRO= to specify Docker image.'
+	@echo '                Please use DISTRO= to specify Docker image. For example:'
+	@echo
+	@echo '                  make docker.i DISTRO=debian'
+	@echo
 	@echo "  tests       : Run all tests. Please read tests/README.md first."
 	@echo "                Use TESTS= to specify a package. Docker is required."
+	@echo "                For example:"
+	@echo
+	@echo "                  make tests TESTS=dpkg IMAGES=debian"
+	@echo
 	@echo "  stats       : Generate table of implemented operations in development branch."
 	@echo "  update_stats: Update README.md using results from 'stats' section."
 	@echo ""

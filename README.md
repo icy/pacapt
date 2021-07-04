@@ -116,17 +116,17 @@ A long list of options and operations can be found from [`ArchLinux`'s wiki](htt
            Q Qc Qe Qi Qk Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Sg Si Sii Sl Ss Su Suy Sy U
       apk  ~        *     *     *     *  * *  *   *  * *  *   *    *     *   *  *  *  *   *  * *
      cave  *        *     *     *  *  *  * *  *   *  * *  *   *    x     *         *  *   *  * x
-    conda  *                               *           *  *              *         *      *
+    conda  *                               *           *  *              *         *      *     
       dnf  ~  *  *  *     *  *  *  *  *  * *           *  *   *    *  *  *      *  *  *   *  * *
-     dpkg  ~  *  *  *     *     *  *  *  * *  *   *  ~ *  *   *    *     *   *     *  *   *  * *
- homebrew  *  *     *     *           *  * *           *  *   *    *     *         *  *   *  *
- macports     *           *     *        * *         ~ *  *   *          *         *  *   *  *
+     dpkg  ~  *  *  *  *  *     *  *  *  * *  *   *  ~ *  *   *    *     *   *     *  *   *  * *
+ homebrew  *  *     *     *           *  * *           *  *   *    *     *         *  *   *  *  
+ macports     *           *     *        * *         ~ *  *   *          *         *  *   *  *  
      opkg  *        *     *     *     *  * *           *                 *   *     *  *      * *
-    pkgng  *        *     *     *  *     * *         * *  *   *          *         *  *   *  *
-pkg_tools  ~        *     *     *  *     * *  *   *  ~ *  *   x          *      *  ~  *   *  x
-  portage  *  *     *     *     *        * *         * *  *   *    *     *         *  *   *  *
+    pkgng  *        *     *     *  *     * *         * *  *   *          *         *  *   *  *  
+pkg_tools  ~        *     *     *  *     * *  *   *  ~ *  *   x          *      *  ~  *   *  x  
+  portage  *  *     *     *     *        * *         * *  *   *    *     *         *  *   *  *  
 sun_tools  *        *     *     *     *    *                                                   *
-    swupd              *        *     *    *           *                           *  *   *  *
+    swupd              *        *     *    *           *                           *  *   *  *  
    tazpkg  *        *     *     *          *           *  *   *                    *  *   *  * *
     tlmgr           *  *  *                *           *                 *      *  *      *    *
       yum  *  *     *     *  *  *  *  *  * *         * *  *   *    *     *   *     *  *   *  * *
