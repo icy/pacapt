@@ -79,8 +79,8 @@ ou ^bash.+Bourne
 # Install and Deinstall a package
 
 # Download without installation
-in ! echo Y | pacman -Sw screen
-in ! which screen || echo 'command not found'
+in -Sw --noconfirm screen
+in ! command -v screen || echo 'command not found'
 ou command not found
 
 # Display remote package information
@@ -96,12 +96,12 @@ ou ^(Get|Err).+ apt
 
 # Now installation
 # From ubuntu:20.04 it becomes /bin/screen =))
-in ! echo Y | pacman -S screen
-in ! which screen
+in -S --noconfirm screen
+in ! command -v screen
 ou ^(/usr)?/bin/screen
 
 # Now remove the package
-in ! echo Y | pacman -R screen
+in -R --noconfirm screen
 in -Qi screen
 ou ^Status: deinstall
 
@@ -114,7 +114,7 @@ ou /usr/bin/apt.+OK
 ou /usr/bin/apt-get.+OK
 in -Qk
 ou /usr/bin/apt.+OK
-in ! echo Y | pacman -R debsums
+in -R --noconfirm debsums
 
 # Query information from a .deb package
 in ! export DEB_FILE=`find /var/cache/apt/ -type f -iname "screen*.deb"`
