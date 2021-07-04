@@ -52,26 +52,34 @@ homebrew_Qi() {
 #
 # FIXME: this doesn't work with Cask
 homebrew_Ql() {
-  if [ "$#" -ge 1 ]; then
-    brew list "$@"
+  local_casks=
+  local_forumlas=
+
+  if [ $# -eq 0 ]; then
+    local_casks="$(brew list --casks)"
+    local_forumlas="$(brew list --formula)"
   else
-    if [ -z "$_TOPT" ]; then
-      for package in $(brew list --cask); do
-        brew list --cask "$package" \
-        | PACKAGE="$package" awk '{printf("%s %s\n", ENVIRON["PACKAGE"], $0)}'
-      done
-      for package in $(brew list --formula); do
-        brew list --formula "$package" \
-        | PACKAGE="$package" awk '{printf("%s %s\n", ENVIRON["PACKAGE"], $0)}'
-      done
-    elif [ "$_TOPT" = "q" ]; then
-      for package in $(brew list --cask); do
-        brew list --cask "$package"
-      done
-      for package in $(brew list --formula); do
-        brew list --formula "$package"
-      done
-    fi
+    # FIXME: this awk is not perfect!
+    local_casks="$(brew list --casks | LIST="$@" awk '/$0 ~ ENVIRON["LIST"]/')"
+    local_forumlas="$(brew list --formula | LIST="$@" awk '/$0 ~ ENVIRON["LIST"]/')"
+  fi
+
+  if [ -z "$_TOPT" ]; then
+    for package in $local_casks; do
+      brew list --cask "$package" \
+      | PACKAGE="$package" awk '{printf("%s %s\n", ENVIRON["PACKAGE"], $0)}'
+    done
+    for package in $local_forumlas; do
+      brew list --formula "$package" \
+      | PACKAGE="$package" awk '{printf("%s %s\n", ENVIRON["PACKAGE"], $0)}'
+    done
+  elif [ "$_TOPT" = "q" ]; then
+    for package in $local_casks; do
+      brew list --cask "$package"
+    done
+    for package in $local_forumlas; do
+      brew list --formula "$package"
+    done
   fi
 }
 
@@ -141,7 +149,8 @@ homebrew_Q() {
     local_flags=""
   fi
   # shellcheck disable=SC2086
-  brew list $local_flags "$@"
+  brew list $local_flags --formula "$@"
+  brew list $local_flags --cask "$@"
 }
 
 # homebrew_Rs() {
