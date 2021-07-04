@@ -67,6 +67,7 @@ homebrew_Ql() {
   if [ -z "$_TOPT" ]; then
     for package in $local_casks; do
       brew list --cask "$package" \
+      | grep ^/ \
       | PACKAGE="$package" awk '{printf("%s %s\n", ENVIRON["PACKAGE"], $0)}'
     done
     for package in $local_forumlas; do
@@ -75,7 +76,8 @@ homebrew_Ql() {
     done
   elif [ "$_TOPT" = "q" ]; then
     for package in $local_casks; do
-      brew list --cask "$package"
+      brew list --cask "$package" \
+      | grep ^/
     done
     for package in $local_forumlas; do
       brew list --formula "$package"
