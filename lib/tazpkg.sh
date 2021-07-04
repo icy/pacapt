@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Purpose: Provide Slitaz support for pacapt script
 # Author : Anh K. Huynh
@@ -11,10 +11,10 @@ _tazpkg_init() {
 
 # tarpkg_Q may _not_implemented
 tazpkg_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
+  if [ "$_TOPT" = "q" ]; then
     tazpkg list "$@" \
     | awk '{ if (NF == 2 || NF == 3) { print $1; }}'
-  elif [[ "$_TOPT" == "" ]]; then
+  elif [ -z "$_TOPT" ]; then
     tazpkg list "$@"
   else
     _not_implemented
@@ -27,17 +27,17 @@ tazpkg_Qi() {
 
 # tarpkg_Ql may _not_implemented
 tazpkg_Ql() {
-  if [[ -z "$*" ]]; then
+  if [ "$#" -eq 0 ]; then
     _not_implemented
     return
   fi
 
-  if [[ "$_TOPT" == "q" ]]; then
+  if [ "$_TOPT" = "q" ]; then
     {
       tazpkg list-files "$@"
       tazpkg list-config "$@"
     } \
-    | grep ^/
+    | grep "^/"
   else
     tazpkg list-files "$@"
     tazpkg list-config "$@"
@@ -58,39 +58,39 @@ tazpkg_Suy() {
 }
 
 tazpkg_S() {
-  local _forced=""
+  local_forced=""
 
-  if grep -q -- "--forced" <<<"$*"; then
-    _forced="--forced"
+  if echo "$*" | grep -qs -- "--forced"; then
+    local_forced="--forced"
   fi
 
-  while (( $# )); do
-    if [[ "$1" == "--forced" ]]; then
-      _forced="--forced"
+  while [ $# -gt 0 ]; do
+    if [ "$1" = "--forced" ]; then
+      local_forced="--forced"
       shift
       continue
     fi
 
-    tazpkg get-install "$1" $_forced
+    tazpkg get-install "$1" $local_forced
     shift
   done
 }
 
 tazpkg_R() {
-  local _auto=""
+  local_auto=""
 
-  if grep -q -- "--auto" <<<"$*"; then
-    _auto="--auto"
+  if echo "*" | grep -sq -- "--auto"; then
+    local_auto="--auto"
   fi
 
-  while (( $# )); do
-    if [[ "$1" == "--auto" ]]; then
-      _auto="--auto"
+  while [ $# -ge 1 ]; do
+    if [ "$1" = "--auto" ]; then
+      local_auto="--auto"
       shift
       continue
     fi
 
-    tazpkg remove "$1" $_auto
+    tazpkg remove "$1" $local_auto
     shift
   done
 }
@@ -127,20 +127,20 @@ tazpkg_Qo() {
 }
 
 tazpkg_U() {
-  local _forced=""
+  local_forced=""
 
-  if grep -q -- "--forced" <<<"$*"; then
-    _forced="--forced"
+  if echo "*" | grep -sq -- "--forced"; then
+    local_forced="--forced"
   fi
 
-  while (( $# )); do
-    if [[ "$1" == "--forced" ]]; then
-      _forced="--forced"
+  while [ $# -ge 1 ]; do
+    if [ "$1" = "--forced" ]; then
+      local_forced="--forced"
       shift
       continue
     fi
 
-    tazpkg install "$1" $_forced
+    tazpkg install "$1" $local_forced
     shift
   done
 }

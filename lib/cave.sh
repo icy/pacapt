@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Purpose: Gentoo (+ Paludis) / Exherbo support
 # Author : Somasis <somasissounds@gmail.com>
@@ -14,12 +14,13 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
 # cave uses asterisks pretty liberally, this is for output parsing correctness
+# FIXME: This is the only thing we can't port this script to POSIX
 _cave_init() {
   shopt -u globstar
 }
 
 cave_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
+  if [ "$_TOPT" = "q" ]; then
     cave show -f "${@:-world}" \
     | grep -v '^$'
   else
@@ -32,7 +33,7 @@ cave_Qi() {
 }
 
 cave_Ql() {
-  if [[ -n "$*" ]]; then
+  if [ $# -ge 1 ]; then
     cave contents "$@"
     return
   fi
@@ -40,7 +41,7 @@ cave_Ql() {
   cave show -f "${@:-world}" \
   | grep -v '^$' \
   | while read -r _pkg; do
-      if [[ "$_TOPT" == "q" ]]; then
+      if [ "$_TOPT" = "q" ]; then
         cave --color no contents "$_pkg"
       else
         cave contents "$_pkg"
@@ -61,7 +62,7 @@ cave_Qp() {
 }
 
 cave_Qu() {
-  if [[ -z "$*" ]];then
+  if [ $# -eq 0 ];then
     cave resolve -c world \
     | grep '^u.*' \
     | while read -r _pkg; do
@@ -79,7 +80,7 @@ cave_Qs() {
 }
 
 cave_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
+  if [ -z "$_TOPT" ]; then
     cave uninstall -r "$@" \
     && echo "Control-C to stop uninstalling..." \
     && sleep 2s \

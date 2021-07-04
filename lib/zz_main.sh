@@ -27,26 +27,28 @@ if ! _sun_tools_init; then
   local_requirements="${local_requirements} sed"
 fi
 
-for cmd in $local_requirements; do
-  if ! command -v "$cmd" >/dev/null; then
-    _die "pacapt requires '$cmd' but the tool is not found."
-  fi
-done
+# shellcheck disable=SC2086
+_require_programs $local_requirements
 
 export PACAPT_DEBUG GREP AWK
 
 # Shell switching, as fast as possible
 if [ -z "${__PACAPT_FORKED__:-}" ]; then
-  if command -v bash >/dev/null; then
+  if command -v bash >/dev/null \
+      && bash -c 'echo ${BASH_VERSION[*]}' \
+        | "$GREP" -Ee "^[4-9]." >/dev/null 2>&1 \
+    ; then
+
     _debug "Switching to Bash shell"
     export __PACAPT_FORKED__="yes"
     readonly __PACAPT_FORKED__
 
-    exec bash "$0" "${@}"
+    exec bash "$0" "$@"
   fi
 else
   # Hey, this is very awesome strick to avoid syntax issue.
   # Note: in `bocker` (github.com/icy/bocker/) we use `base64`.
+  # FIXME: `source /dev/stdin` doesn't work without Bash >=4
   eval 'source /dev/stdin < <("$GREP" '^#_!_POSIX_#' "$0" | sed -e 's/^#_!_POSIX_#//')' \
   || _die "$0: Unable to load non-POSIX definitions".
 fi
@@ -69,11 +71,11 @@ _PACMAN_detect \
 # our library are not ready for pure-POSIX features!
 if [ -z "${__PACAPT_FORKED__:-}" ]; then
   case "$_PACMAN" in
-  "apk")  ;;
-  "opkg")  ;;
-  "sun_tools" ) ;;
+  "cave")
+    _die "pacapt($_PACMAN) library is not ready for pure-POSIX features (or your Bash version is not >= 4)."
+    ;;
   *)
-    _die "pacapt($_PACMAN) library is not ready for pure-POSIX features."
+    ;;
   esac
 fi
 

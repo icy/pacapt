@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Purpose: Debian / Ubuntu support
 # Author : Anh K. Huynh
@@ -20,11 +20,11 @@ _dpkg_init() {
 # dpkg_Q may _not_implemented
 # FIXME: Need to support a small list of packages
 dpkg_Q() {
-  if [[ "$_TOPT" == "q" ]]; then
+  if [ "$_TOPT" = "q" ]; then
     dpkg -l \
     | grep -E '^[hi]i' \
     | awk '{print $2}'
-  elif [[ "$_TOPT" == "" ]]; then
+  elif [ -z "$_TOPT" ]; then
     dpkg -l "$@" \
     | grep -E '^[hi]i'
   else
@@ -53,7 +53,7 @@ dpkg_Qk() {
 }
 
 dpkg_Ql() {
-  if [[ -n "$*" ]]; then
+  if [ $# -ge 1 ]; then
     dpkg-query -L "$@"
     return
   fi
@@ -62,7 +62,7 @@ dpkg_Ql() {
   | grep -E '^[hi]i' \
   | awk '{print $2}' \
   | while read -r _pkg; do
-      if [[ "$_TOPT" == "q" ]]; then
+      if [ "$_TOPT" = "q" ]; then
         dpkg-query -L "$_pkg"
       else
         dpkg-query -L "$_pkg" \
@@ -102,7 +102,7 @@ dpkg_Qs() {
 
 # dpkg_Rs may _not_implemented
 dpkg_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
+  if [ -z "$_TOPT" ]; then
     apt-get autoremove "$@"
   else
     _not_implemented
@@ -148,19 +148,18 @@ dpkg_Sy() {
   apt-get update "$@"
 }
 
+# FIXME: A simple implemention for #53 and
+# FIXME: https://github.com/icy/pacapt/pull/156
+# FIXME: but I'm not sure there is any issue...
 dpkg_Ss() {
-  local IFS=$'\n'
-  packages=($(apt-cache search "$@"))
-  for package in ${packages[@]:-}
-  do
-    name=${package%% - *}
-    desc=${package#* - }
-    dpkg-query -W "$name" > /dev/null 2>&1
-    if [[ $? -eq 1 ]]; then
-      echo -e "package/$name \n    $desc"
-    else
-      dpkg-query -W -f='package/${binary:Package} ${Version}\t[${Status}]\n    ${binary:Summary}\n' "$name"
-    fi
+  apt-cache search "${@:-.}" \
+  | while read -r name _ desc; do
+      if ! dpkg-query -W "$name" > /dev/null 2>&1; then
+        printf "package/%s \n    %s\n" \
+          "$name" "$desc"
+      else
+        dpkg-query -W -f='package/${binary:Package} ${Version}\n    ${binary:Summary}\n' "$name"
+      fi
   done
 }
 
@@ -173,6 +172,7 @@ dpkg_Scc() {
 }
 
 dpkg_S() {
+  # shellcheck disable=SC2086
   apt-get install $_TOPT "$@"
 }
 

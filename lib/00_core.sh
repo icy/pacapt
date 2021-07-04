@@ -45,6 +45,14 @@ _removing_is_dangerous() {
   return 1
 }
 
+_require_programs() {
+  for cmd in "$@"; do
+    if ! command -v "$cmd" >/dev/null; then
+      _die "pacapt(${_PACMAN:-_init}) requires '$cmd' but the tool is not found."
+    fi
+  done
+}
+
 # Detect package type from /etc/issue
 # FIXME: Using new `issue` file (location)
 _issue2pacman() {
@@ -243,6 +251,8 @@ _print_supported_operations() {
   echo
 }
 
+# NOTE: A few packager manager will require their own implemention
+# NOTE: hence it's better to give some flexible option here.
 _quiet_field1() {
   if [ -z "${_TOPT}" ]; then
     cat

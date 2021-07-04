@@ -1,15 +1,10 @@
 ## Table of contents
 
-1. [Future development](#future-development)
 1. [Coding style](#coding-style)
 1. [Testing. Writting test cases](#testing-writting-test-cases)
 1. [Generating pacapt script](#generating-pacapt-script)
 1. [Branches](#branches)
 1. [Closed branches](#closed-branches)
-
-## Future development
-
-See also [README.md](README.md#read-me-first)
 
 ## Coding style
 
@@ -39,13 +34,19 @@ $ docker run --rm -ti \
 # Your container's shell is available from this point
 ````
 
-## Generating `pacapt` script
+Alternatively you can use the `Makefile`
 
-1. The `pacapt` script is generated from the latest stable branch,
-   it is there to make installation process simple;
+```
+$ make docker.i DISTRO=debian:stable
+# # Your Bourne shell is available now
+# # Type `bash` to start more convenient interactive shell.
+```
+
+## Generating `pacapt.dev` script
+
+1. For your development, use `make pacapt.dev`;
 1. Please **do not** use `make pacapt` to update `pacapt`,
    and/or modify it manually;
-1. For your development, use `make pacapt.dev`;
 
 ## Branches
 
@@ -53,10 +54,6 @@ $ docker run --rm -ti \
     The current development branch.
     Some pull requests are merged on to this branch,
     but the work may not be ready for production.
-1. `v2.0`:
-    The current stable branch.
-    All future `v2.x` releases come from this branch.
-
 1. `your feature branch`:
     For new feature or bug fix, please work on your own branch
     and create pull request.
