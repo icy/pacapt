@@ -49,18 +49,27 @@ homebrew_Qi() {
 # in -Ql nano
 # ou bin/nano
 # ou share/info/nano.info
+#
+# FIXME: this doesn't work with Cask
 homebrew_Ql() {
   if [ "$#" -ge 1 ]; then
     brew list "$@"
   else
     if [ -z "$_TOPT" ]; then
-      for package in $(brew list); do
-        brew list "$package" \
+      for package in $(brew list --cask); do
+        brew list --cask "$package" \
+        | PACKAGE="$package" awk '{printf("%s %s\n", ENVIRON["PACKAGE"], $0)}'
+      done
+      for package in $(brew list --formula); do
+        brew list --formula "$package" \
         | PACKAGE="$package" awk '{printf("%s %s\n", ENVIRON["PACKAGE"], $0)}'
       done
     elif [ "$_TOPT" = "q" ]; then
-      for package in $(brew list); do
-        brew list "$package"
+      for package in $(brew list --cask); do
+        brew list --cask "$package"
+      done
+      for package in $(brew list --formula); do
+        brew list --formula "$package"
       done
     fi
   fi
