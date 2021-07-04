@@ -108,7 +108,7 @@ ou ^Status: deinstall
 # Verify package files
 in -Qk apt
 ou debsums binary does not exist
-in ! echo Y | pacman -S debsums
+in -S --noconfirm debsums
 in -Qk apt
 ou /usr/bin/apt.+OK
 ou /usr/bin/apt-get.+OK
