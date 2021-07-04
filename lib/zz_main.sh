@@ -86,7 +86,7 @@ if [ -z "${__PACAPT_FORKED__:-}" ]; then
   "yum" ) ;;
   "zypper" ) ;;
   *)
-    _die "pacapt($_PACMAN) library is not ready for pure-POSIX features."
+    _die "pacapt($_PACMAN) library is not ready for pure-POSIX features (or your Bash version is not >= 4)."
   esac
 fi
 

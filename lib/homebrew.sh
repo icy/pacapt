@@ -235,6 +235,8 @@ homebrew_Sccc() {
   esac
 }
 
+# NOTE: New version of homebrew will automatically invoke `brew cask install`
+# NOTE: if formula is not available.
 homebrew_S() {
   # shellcheck disable=SC2086
   2>&1 brew install $_TOPT "$@" \
