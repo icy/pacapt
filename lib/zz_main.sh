@@ -38,6 +38,10 @@ export PACAPT_DEBUG GREP AWK
 # Shell switching, as fast as possible
 if [ -z "${__PACAPT_FORKED__:-}" ]; then
   if command -v bash >/dev/null; then
+    if ! bash -c 'echo ${BASH_VERSION[*]}' | "$GREP" -Ee "^[4-9]."; then
+      _die "$0: your Bash version is not supported."
+    fi
+
     _debug "Switching to Bash shell"
     export __PACAPT_FORKED__="yes"
     readonly __PACAPT_FORKED__
@@ -47,6 +51,7 @@ if [ -z "${__PACAPT_FORKED__:-}" ]; then
 else
   # Hey, this is very awesome strick to avoid syntax issue.
   # Note: in `bocker` (github.com/icy/bocker/) we use `base64`.
+  # FIXME: `source /dev/stdin` doesn't work without Bash >=4
   eval 'source /dev/stdin < <("$GREP" '^#_!_POSIX_#' "$0" | sed -e 's/^#_!_POSIX_#//')' \
   || _die "$0: Unable to load non-POSIX definitions".
 fi
