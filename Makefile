@@ -4,10 +4,10 @@ DISTRO        = debian:stable
 default:
 	@echo "This is an experimental Makefile. Use it at your own risk."
 	@echo ""
+	@echo "## During development process"
+	@echo ""
 	@echo "  pacapt.dev  : Generate development script."
 	@echo '  install.dev : Install development script into $$BINDIR.'
-	@echo "  pacapt      : Generate stable script."
-	@echo '  install     : Install stable script into $$BINDIR.'
 	@echo "  clean       : (Experimental) Remove git-ignored files."
 	@echo "  shellcheck  : It's shellcheck."
 	@echo "  POSIX       : Use shellcheck with POSIX checks for some scripts."
@@ -21,13 +21,17 @@ default:
 	@echo "  tests       : Run all tests. Please read tests/README.md first."
 	@echo "                Use TESTS= to specify a package. Docker is required."
 	@echo "                For example:"
-	@echo
+	@echo ""
 	@echo "                  make tests TESTS=dpkg IMAGES=debian"
-	@echo
+	@echo ""
+	@echo "## During release "
+	@echo ""
 	@echo "  stats       : Generate table of implemented operations in development branch."
 	@echo "  update_stats: Update README.md using results from 'stats' section."
+	@echo "  pacapt      : Generate stable script."
+	@echo '  install     : Install stable script into $$BINDIR.'
 	@echo ""
-	@echo "Environments:"
+	@echo "## Environments"
 	@echo ""
 	@echo "  VERSION     : Version information. Default: git commit hash."
 	@echo "  BINDIR      : Destination directory. Default: /usr/local/bin."
