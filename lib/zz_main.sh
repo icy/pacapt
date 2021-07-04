@@ -80,6 +80,7 @@ if [ -z "${__PACAPT_FORKED__:-}" ]; then
   "opkg") ;;
   "pkgng") ;;
   "pkg_tools") ;;
+  "portage") ;;
   "sun_tools" ) ;;
   "swupd" ) ;;
   "tazpkg") ;;
