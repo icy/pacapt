@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Purpose: Homebrew support
 # Author : James Pearson
@@ -13,85 +13,136 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
+# in -Sy
 _homebrew_init() {
   :
 }
 
+# in -S nano
+
+# in ! command -v nano
+# ou bin/nano
+
+# in ! nano --version
+# ou GNU nano
+
+# in -Qi
+# ou kegs.*files
+
+# in -Qi nano
+# ou License: GPL
+# ou replacement for the Pico
 homebrew_Qi() {
   brew info "$@"
 }
 
+# NOTE: `Ql` will print list of packages! This is a `brew` feature
+# NOTE:  $ brew list       # list all packages
+# NOTE:  $ brew list nano  # list all nano's files
+# NOTE: `homebrew` detects the stdout stream and modifies the result
+# in -Ql
+# ou ^nano.* bin/nano
+
+# in -Qql
+# ou ^([^[:space:]])*bin/nano
+
+# in -Ql nano
+# ou bin/nano
+# ou share/info/nano.info
 homebrew_Ql() {
-  brew list "$@"
-}
-
-homebrew_Qo() {
-  local pkg prefix cellar
-
-  # FIXME: What happens if the file is not exectutable?
-  cd "$(dirname -- "$(which "$@")")" || return
-  pkg="$(pwd -P)/$(basename -- "$@")"
-  prefix="$(brew --prefix)"
-  cellar="$(brew --cellar)"
-
-  for package in "$cellar"/*; do
-    files=(${package}/*/${pkg/#$prefix\//})
-    if [[ -e "${files[${#files[@]} - 1]}" ]]; then
-      echo "${package/#$cellar\//}"
-      break
+  if [ "$#" -ge 1 ]; then
+    brew list "$@"
+  else
+    if [ -z "$_TOPT" ]; then
+      for package in $(brew list); do
+        brew list "$package" \
+        | PACKAGE="$package" awk '{printf("%s %s\n", ENVIRON["PACKAGE"], $0)}'
+      done
+    elif [ "$_TOPT" = "q" ]; then
+      for package in $(brew list); do
+        brew list "$package"
+      done
     fi
-  done
+  fi
 }
 
+# Please note that `brew list` lists all packages,
+# but `brew list nano` lists all files from `nano`.
+# Hence we need to provide `grep` command here.
+# FIXME: All packages without version information
+# in -Qs
+# ou ^nano
+homebrew_Qs() {
+  brew list | grep "${@:-.}"
+}
+
+# TODO # homebrew_Qo() {
+# TODO #   local_pkg=
+# TODO #   local_prefix=
+# TODO #   local_cellar=
+# TODO #
+# TODO #   # FIXME: What happens if the file is not exectutable?
+# TODO #   cd "$(dirname -- "$(command -v "$@")")" || return
+# TODO #
+# TODO #   local_pkg="$(pwd -P)/$(basename -- "$@")"
+# TODO #   local_prefix="$(brew --prefix)"
+# TODO #   local_cellar="$(brew --cellar)"
+# TODO #
+# TODO #   for package in "${local_cellar}"/*; do
+# TODO #     files=(${package}/*/${local_pkg/#${local_prefix}\//})
+# TODO #     if [[ -e "${files[${#files[@]} - 1]}" ]]; then
+# TODO #       echo "${package/#${local_cellar}\//}"
+# TODO #       break
+# TODO #     fi
+# TODO #   done
+# TODO # }
+
+# in -Qo -1
+# ou ^Date:
+
+# in -Qo nano -1
+# ou ^Date:
 homebrew_Qc() {
   brew log "$@"
 }
 
+# FIXME: The result may vary and we don't have a fixed expectation
 homebrew_Qu() {
-  brew outdated | grep "$@"
+  brew outdated "$@"
 }
 
-homebrew_Qs() {
-  brew list | grep "$@"
-}
-
-# homebrew_Q may _not_implemented
+# in -Q
+# ou nano [0-9].[0-9]
+# in -Qq
+# ou nano
+# in -Qq nano
+# ou nano
 homebrew_Q() {
-  if [[ "$_TOPT" == "" ]]; then
-    if [[ "$*" == "" ]]; then
-      brew list
-    else
-      brew list | grep "$@"
-    fi
+  if [ -z "$_TOPT" ]; then
+    local_flags=""
   else
-    _not_implemented
+    local_flags="--versions"
   fi
+
+  brew list $local_flags "${@}"
 }
 
-homebrew_Rs() {
-    if ! which join > /dev/null 2>&1; then
-      _die "pacapt: join binary does not exist in system."
-    fi
-
-    if ! which sort > /dev/null 2>&1; then
-      _die "pacapt: sort binary does not exist in system."
-    fi
-
-    if [[ -z "$*" ]]; then
-      _die "pacapt: ${FUNCNAME[0]} requires arguments"
-    fi
-
-    for _target in "${@}";
-    do
-      brew rm "$_target"
-
-      while [ "$(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))" != "" ]
-      do
-        brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))
-      done
-    done
-
-}
+# homebrew_Rs() {
+#   _require_programs join sort
+#
+#   if [ $# -eq 0 ]; then
+#     _die "pacapt(homebrew_Rs) missing arguments."
+#   fi
+#
+#   for _target in "${@}"; do
+#     brew rm "$_target"
+#
+#     while [ "$(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))" != "" ]
+#     do
+#       brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))
+#     done
+#   done
+# }
 
 homebrew_R() {
   brew remove "$@"
@@ -130,19 +181,19 @@ homebrew_Sccc() {
   # See more discussion in
   #   https://github.com/icy/pacapt/issues/47
 
-  local _dcache
+  local_dcache
 
-  _dcache="$(brew --cache)"
-  case "$_dcache" in
+  local_dcache="$(brew --cache)"
+  case "$local_dcache" in
   ""|"/"|" ")
-    _error "${FUNCNAME[0]}: Unable to delete '$_dcache'."
+    _error "pacapt(homebrew_Sccc): Unable to delete '$local_dcache'."
     ;;
 
   *)
     # FIXME: This can be wrong. But it's an easy way
     # FIXME: to avoid some warning from #shellcheck.
     # FIXME: Please note that, $_dcache is not empty now.
-    rm -rf "${_dcache:-/x/x/x/x/x/x/x/x/x/x/x//x/x/x/x/x/}/"
+    rm -rf "${local_dcache:-/x/x/x/x/x/x/x/x/x/x/x//x/x/x/x/x/}/"
     ;;
   esac
 }
@@ -151,12 +202,9 @@ homebrew_S() {
   # shellcheck disable=SC2086
   2>&1 brew install $_TOPT "$@" \
   | awk '{print; if ($0 ~ /brew cask install/) { exit(126); }}'
-  ret=( ${PIPESTATUS[*]} )
-  if [[ "${ret[1]}" == 126 ]]; then
-    echo >&2 ":: Now trying with brew/cask..."
+  if [ "${?}" = 126 ]; then
+    _warn "Failed to install package, now trying with 'brew cask' as suggested..."
     # shellcheck disable=SC2086
     brew cask install $_TOPT "$@"
-  else
-    return "${ret[0]}"
   fi
 }

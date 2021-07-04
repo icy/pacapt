@@ -27,11 +27,8 @@ if ! _sun_tools_init; then
   local_requirements="${local_requirements} sed"
 fi
 
-for cmd in $local_requirements; do
-  if ! command -v "$cmd" >/dev/null; then
-    _die "pacapt requires '$cmd' but the tool is not found."
-  fi
-done
+# shellcheck disable=SC2086
+_require_programs $local_requirements
 
 export PACAPT_DEBUG GREP AWK
 
