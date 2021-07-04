@@ -36,7 +36,7 @@ export PACAPT_DEBUG GREP AWK
 if [ -z "${__PACAPT_FORKED__:-}" ]; then
   if command -v bash >/dev/null \
       && bash -c 'echo ${BASH_VERSION[*]}' \
-        | "$GREP" -Ee "^[4-9]." \
+        | "$GREP" -Ee "^[4-9]." >/dev/null 2>&1 \
     ; then
 
     _debug "Switching to Bash shell"

@@ -69,11 +69,18 @@ homebrew_Ql() {
 # Please note that `brew list` lists all packages,
 # but `brew list nano` lists all files from `nano`.
 # Hence we need to provide `grep` command here.
-# FIXME: All packages without version information
+# FIXME: Also search in ... package description
+# FIXME: `homebrew search` does search online/locally (both!)
+# FIXME: and it may provide more options. We don't use them now.
 # in -Qs
 # ou ^nano
 homebrew_Qs() {
-  brew list | grep "${@:-.}"
+  if [ -z "$_TOPT" ]; then
+    local_flags="--versions"
+  else
+    local_flags=""
+  fi
+  brew list $local_flags | grep "${@:-.}"
 }
 
 # TODO # homebrew_Qo() {
