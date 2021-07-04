@@ -87,7 +87,11 @@ _check_POSIX_files() {
       | grep -Eiqe '^#!/usr/bin/env sh' ;
     then
       _check_file "$1" || return 1
+    # We only care POSIX issue for files under `lib/`
+    elif echo "$1" | grep -qs "lib/"; then
+      >&2 echo ":: WARNING: POSIX help-wanted '$1'"
     fi
+
     shift
   done
 }

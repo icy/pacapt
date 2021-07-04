@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Purpose: Gentoo support
 # Author : Hà-Dương Nguyễn
@@ -22,9 +22,9 @@ portage_Qi() {
 }
 
 portage_Ql() {
-  if [[ -x '/usr/bin/qlist' ]]; then
+  if [ -x '/usr/bin/qlist' ]; then
     qlist "$@"
-  elif [[ -x '/usr/bin/equery' ]]; then
+  elif [ -x '/usr/bin/equery' ]; then
     equery files "$@"
   else
     _error "'portage-utils' or 'gentoolkit' package is required to perform this opreation."
@@ -32,7 +32,7 @@ portage_Ql() {
 }
 
 portage_Qo() {
-  if [[ -x '/usr/bin/equery' ]]; then
+  if [ -x '/usr/bin/equery' ]; then
     if cmd="$(command -v -- "$@")"; then
       equery belongs "$cmd"
     else
@@ -53,13 +53,13 @@ portage_Qu() {
 }
 
 portage_Q() {
-  if [[ "$_TOPT" == "" ]]; then
-    if [[ -x '/usr/bin/eix' ]]; then
+  if [ -z "$_TOPT" ]; then
+    if [ -x '/usr/bin/eix' ]; then
       eix -I "$@"
-    elif [[ -x '/usr/bin/equery' ]]; then
+    elif [ -x '/usr/bin/equery' ]; then
       equery list -i "$@"
     else
-      LS_COLORS=never \
+      LS_COLORS="never" \
       ls -1 -d /var/db/pkg/*/*
     fi
   else
@@ -68,7 +68,7 @@ portage_Q() {
 }
 
 portage_Rs() {
-  if [[ "$_TOPT" == "" ]]; then
+  if [ -z "$_TOPT" ]; then
     emerge --depclean world "$@"
   else
     _not_implemented
@@ -84,7 +84,7 @@ portage_Si() {
 }
 
 portage_Suy() {
-  if [[ -x '/usr/bin/layman' ]]; then
+  if [ -x '/usr/bin/layman' ]; then
     layman --sync-all \
     && emerge --sync \
     && emerge -auND world "$@"
@@ -99,7 +99,7 @@ portage_Su() {
 }
 
 portage_Sy() {
-  if [[ -x "/usr/bin/layman" ]]; then
+  if [ -x "/usr/bin/layman" ]; then
     layman --sync-all \
     && emerge --sync "$@"
   else
@@ -108,7 +108,7 @@ portage_Sy() {
 }
 
 portage_Ss() {
-  if [[ -x "/usr/bin/eix" ]]; then
+  if [ -x "/usr/bin/eix" ]; then
     eix "$@"
   else
     emerge --search "$@"
@@ -116,7 +116,7 @@ portage_Ss() {
 }
 
 portage_Sc() {
-  if [[ -x "/usr/bin/eclean-dist" ]]; then
+  if [ -x "/usr/bin/eclean-dist" ]; then
     eclean-dist -d -t1m -s50 -f "$@"
   else
     _error "'gentoolkit' package is required to perform this operation."
@@ -124,7 +124,7 @@ portage_Sc() {
 }
 
 portage_Scc() {
-  if [[ -x "/usr/bin/eclean" ]]; then
+  if [ -x "/usr/bin/eclean" ]; then
     eclean -i distfiles "$@"
   else
     _error "'gentoolkit' package is required to perform this operation."

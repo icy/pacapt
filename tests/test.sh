@@ -16,6 +16,11 @@ __test_an_image_with_docker() {
 
   echo >&2 ":: INFO($local_pacman) Testing with $local_img"
   (
+    if [[ -f "Dockerfile.${local_img}" ]]; then
+      >&2 echo ":: ... building docker file ${local_img}"
+      docker build -t "$local_img" -f "Dockerfile.${local_img}" .
+    fi
+
     cd tmp/ || return 1
 
     # Bash/shellcheck suggests to avoid `sed`, but we would port

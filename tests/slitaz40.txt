@@ -5,6 +5,7 @@
 # License : MIT
 
 im icymatter/slitaz40-minimal
+im slitaz40_bash3
 
 in -Sy
 ou (Connecting to)|(Recharging repository)

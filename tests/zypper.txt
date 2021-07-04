@@ -8,9 +8,12 @@ im opensuse/leap:15.2
 im opensuse/leap:42.3
 im opensuse/tumbleweed:latest
 # im opensuse/clair:latest
+im zypper_bash3
 
+# On zypper_bash3, Bash is not available
 in ! PACAPT_DEBUG=auto pacman
-ou debug.*Switching to Bash shell
+in ! if bash --version | grep -qs 'version 3'; then echo "Bash3-no-switching"; fi
+ou (debug.*Switching to Bash shell)|(Bash3-no-switching)
 
 in -P
 ou available operations:.*( [Q][ ilos])+
