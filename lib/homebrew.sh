@@ -119,11 +119,10 @@ homebrew_Qu() {
 # ou nano
 homebrew_Q() {
   if [ -z "$_TOPT" ]; then
-    local_flags=""
-  else
     local_flags="--versions"
+  else
+    local_flags=""
   fi
-
   brew list $local_flags "$@"
 }
 
