@@ -7,6 +7,11 @@
 * `lib/zypper`: `POSIX` ready, tests added, minor fixes
 * `lib/zypper/Sii`: Removed as it's too slow.
 
+### Deprecation
+
+* `lib/homebrew/Rs`: temporarily deprecated
+* `lib/homebrew/Qo`: temporarily deprecated
+
 ### Development
 
 * `tests/` can run in `parallel`

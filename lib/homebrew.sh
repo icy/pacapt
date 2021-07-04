@@ -111,26 +111,26 @@ homebrew_Qs() {
   brew list $local_flags | grep "${@:-.}"
 }
 
-# TODO # homebrew_Qo() {
-# TODO #   local_pkg=
-# TODO #   local_prefix=
-# TODO #   local_cellar=
-# TODO #
-# TODO #   # FIXME: What happens if the file is not exectutable?
-# TODO #   cd "$(dirname -- "$(command -v "$@")")" || return
-# TODO #
-# TODO #   local_pkg="$(pwd -P)/$(basename -- "$@")"
-# TODO #   local_prefix="$(brew --prefix)"
-# TODO #   local_cellar="$(brew --cellar)"
-# TODO #
-# TODO #   for package in "${local_cellar}"/*; do
-# TODO #     files=(${package}/*/${local_pkg/#${local_prefix}\//})
-# TODO #     if [[ -e "${files[${#files[@]} - 1]}" ]]; then
-# TODO #       echo "${package/#${local_cellar}\//}"
-# TODO #       break
-# TODO #     fi
-# TODO #   done
-# TODO # }
+# FIXME # homebrew_Qo() {
+# FIXME #   local_pkg=
+# FIXME #   local_prefix=
+# FIXME #   local_cellar=
+# FIXME #
+# FIXME #   # FIXME: What happens if the file is not exectutable?
+# FIXME #   cd "$(dirname -- "$(command -v "$@")")" || return
+# FIXME #
+# FIXME #   local_pkg="$(pwd -P)/$(basename -- "$@")"
+# FIXME #   local_prefix="$(brew --prefix)"
+# FIXME #   local_cellar="$(brew --cellar)"
+# FIXME #
+# FIXME #   for package in "${local_cellar}"/*; do
+# FIXME #     files=(${package}/*/${local_pkg/#${local_prefix}\//})
+# FIXME #     if [[ -e "${files[${#files[@]} - 1]}" ]]; then
+# FIXME #       echo "${package/#${local_cellar}\//}"
+# FIXME #       break
+# FIXME #     fi
+# FIXME #   done
+# FIXME # }
 
 # in -Qo -1
 # ou ^Date:
@@ -164,22 +164,22 @@ homebrew_Q() {
   brew list $local_flags --cask "$@"
 }
 
-# homebrew_Rs() {
-#   _require_programs join sort
-#
-#   if [ $# -eq 0 ]; then
-#     _die "pacapt(homebrew_Rs) missing arguments."
-#   fi
-#
-#   for _target in "$@"; do
-#     brew rm "$_target"
-#
-#     while [ "$(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))" != "" ]
-#     do
-#       brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))
-#     done
-#   done
-# }
+# FIXME # homebrew_Rs() {
+# FIXME #   _require_programs join sort
+# FIXME #
+# FIXME #   if [ $# -eq 0 ]; then
+# FIXME #     _die "pacapt(homebrew_Rs) missing arguments."
+# FIXME #   fi
+# FIXME #
+# FIXME #   for _target in "$@"; do
+# FIXME #     brew rm "$_target"
+# FIXME #
+# FIXME #     while [ "$(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))" != "" ]
+# FIXME #     do
+# FIXME #       brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))
+# FIXME #     done
+# FIXME #   done
+# FIXME # }
 
 homebrew_R() {
   brew remove "$@"
