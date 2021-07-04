@@ -80,6 +80,7 @@ homebrew_Qs() {
   else
     local_flags=""
   fi
+  # shellcheck disable=SC2086
   brew list $local_flags | grep "${@:-.}"
 }
 
@@ -130,6 +131,7 @@ homebrew_Q() {
   else
     local_flags=""
   fi
+  # shellcheck disable=SC2086
   brew list $local_flags "$@"
 }
 
