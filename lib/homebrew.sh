@@ -60,8 +60,8 @@ homebrew_Ql() {
     local_forumlas="$(brew list --formula)"
   else
     # FIXME: this awk is not perfect!
-    local_casks="$(brew list --casks | LIST="$*" awk '/$0 ~ ENVIRON["LIST"]/')"
-    local_forumlas="$(brew list --formula | LIST="$*" awk '/$0 ~ ENVIRON["LIST"]/')"
+    local_casks="$(brew list --casks | LIST="$*" awk '$0 ~ ENVIRON["LIST"]')"
+    local_forumlas="$(brew list --formula | LIST="$*" awk '$0 ~ ENVIRON["LIST"]')"
   fi
 
   if [ -z "$_TOPT" ]; then
