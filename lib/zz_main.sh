@@ -37,10 +37,10 @@ export PACAPT_DEBUG GREP AWK
 
 # Shell switching, as fast as possible
 if [ -z "${__PACAPT_FORKED__:-}" ]; then
-  if command -v bash >/dev/null; then
-    if ! bash -c 'echo ${BASH_VERSION[*]}' | "$GREP" -Ee "^[4-9]."; then
-      _die "$0: your Bash version (${BASH_VERSION[*]}) is not supported."
-    fi
+  if command -v bash >/dev/null \
+      && bash -c 'echo ${BASH_VERSION[*]}' \
+        | "$GREP" -Ee "^[4-9]." \
+    ; then
 
     _debug "Switching to Bash shell"
     export __PACAPT_FORKED__="yes"
