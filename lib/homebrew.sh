@@ -37,9 +37,18 @@ homebrew_Qi() {
 }
 
 # NOTE: `Ql` will print list of packages! This is a `brew` feature
-# NOTE:  $ brew list       # list all packages
-# NOTE:  $ brew list nano  # list all nano's files
-# NOTE: `homebrew` detects the stdout stream and modifies the result
+#
+# NOTE:   $ brew list       # list all packages
+# NOTE:   $ brew list nano  # list all nano's files (short list)
+#
+# NOTE: `homebrew` detects the stdout stream and modifies the result.
+# NOTE: For example, `homebrew list nano` only gives short output
+# NOTE: by default, but when being used with pipe it will print all
+# NOTE: files (which can be very slow/long)
+#
+# NOTE:   $ brew list nano | cat  # list all files (full list)
+#
+
 # in -Ql
 # ou ^nano.* bin/nano
 
@@ -50,7 +59,6 @@ homebrew_Qi() {
 # ou bin/nano
 # ou share/info/nano.info
 #
-# FIXME: this doesn't work with Cask
 homebrew_Ql() {
   local_casks=
   local_forumlas=
