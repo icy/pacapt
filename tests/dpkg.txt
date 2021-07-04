@@ -7,13 +7,15 @@
 # FIXME: debian:squeeze It's unable to run `pacman -Sy`
 im ubuntu:14.04 ubuntu:16.04  ubuntu:18.04   ubuntu:20.04  ubuntu
 im              debian:jessie debian:stretch debian:buster debian
+im debian_bash3
 
 # Remove `docker-clean` because we need *.deb files under /var/cache
 in ! rm -fv /etc/apt/apt.conf.d/docker-clean
 ou ^removed .*docker-clean
 
 in ! PACAPT_DEBUG=auto pacman
-ou debug.*Switching to Bash shell
+in ! if bash --version | grep -qs 'version 3'; then echo "Bash3-no-switching"; fi
+ou (debug.*Switching to Bash shell)|(Bash3-no-switching)
 
 in -P
 ou available operations:.*( [Q][ ilos])+
@@ -114,7 +116,8 @@ ou ^ Package: screen
 in -Sc
 in clear
 in -sS tmux
-ou tmux
+ou package/tmux
+ou terminal multiplexer
 
 # Strong cleaning up
 in -Sccc

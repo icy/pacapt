@@ -69,26 +69,13 @@ _PACMAN_detect \
 # Once we haven't switcher over `bash`, there is great chance
 # the current system are missing `Bash` ; on these systems
 # our library are not ready for pure-POSIX features!
-# FIXME: Now this list has to be updated manually.
 if [ -z "${__PACAPT_FORKED__:-}" ]; then
   case "$_PACMAN" in
-  "apk")  ;;
-  "conda")  ;;
-  "dnf") ;;
-  "homebrew") ;;
-  "macports") ;;
-  "opkg") ;;
-  "pkgng") ;;
-  "pkg_tools") ;;
-  "portage") ;;
-  "sun_tools" ) ;;
-  "swupd" ) ;;
-  "tazpkg") ;;
-  "tlmgr" ) ;;
-  "yum" ) ;;
-  "zypper" ) ;;
-  *)
+  "cave")
     _die "pacapt($_PACMAN) library is not ready for pure-POSIX features (or your Bash version is not >= 4)."
+    ;;
+  *)
+    ;;
   esac
 fi
 
