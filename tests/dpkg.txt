@@ -105,6 +105,17 @@ in ! echo Y | pacman -R screen
 in -Qi screen
 ou ^Status: deinstall
 
+# Verify package files
+in -Qk apt
+ou debsums binary does not exist
+in ! echo Y | pacman -S debsums
+in -Qk apt
+ou /usr/bin/apt.+OK
+ou /usr/bin/apt-get.+OK
+in -Qk
+ou /usr/bin/apt.+OK
+in ! echo Y | pacman -R debsums
+
 # Query information from a .deb package
 in ! export DEB_FILE=`find /var/cache/apt/ -type f -iname "screen*.deb"`
 in -Qp $DEB_FILE

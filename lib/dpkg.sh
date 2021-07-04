@@ -44,6 +44,14 @@ dpkg_Qe() {
   apt-mark showmanual "$@"
 }
 
+dpkg_Qk() {
+  if ! which debsums > /dev/null 2>&1; then
+    _die "pacapt: debsums binary does not exist in system."
+  fi
+
+  debsums "$@"
+}
+
 dpkg_Ql() {
   if [[ -n "$*" ]]; then
     dpkg-query -L "$@"
