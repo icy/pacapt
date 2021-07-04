@@ -1,7 +1,15 @@
 ## v3.0.2
 
-* `lib/zypper`: POSIX ready, tests added, ninor fixes
+* `lib/*`: All `POSIX`, except `lib/cave`
+* `lib/homebrew`: Fix shell switching issue (#170)
+  that makes the program broken since `v3.0.0`
+* `lib/zypper`: `POSIX` ready, tests added, minor fixes
 * `lib/zypper/Sii`: Removed as it's too slow.
+
+### Development
+
+* `tests/` can run in `parallel`
+* `tests` can support any custom `Dockerfile`
 
 ## v3.0.1
 

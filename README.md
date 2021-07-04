@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/icy/pacapt/actions/workflows/ci.yaml/badge.svg)](https://github.com/icy/pacapt/actions)
 
-`pacapt` is a wrapper for many package managers.
+`pacapt` is a `shell` wrapper for many package managers.
 Simply install package with `pacapt -S htop` or `pacapt install htop`
 on any `Linux`, `BSD`, `OpenWrt` or `Mac OS` machines.
 It supports the following package managers:
@@ -43,7 +43,8 @@ It supports the following package managers:
 
 ## Installation
 
-This script shouldn't be installed on an Arch-based system;
+This script shouldn't be installed on an Arch-based system.
+On `cave`-based system, `bash` is required.
 
 ### Install the stable script from Github
 
@@ -52,7 +53,7 @@ On non-Arch-based system, you may use `pacman` as script name instead of `pacapt
 
 ````
 $ sudo wget -O /usr/local/bin/pacapt \
-https://github.com/icy/pacapt/raw/ng/pacapt
+    https://github.com/icy/pacapt/raw/ng/pacapt
 
 $ sudo chmod 755 /usr/local/bin/pacapt
 
@@ -117,8 +118,8 @@ A long list of options and operations can be found from [`ArchLinux`'s wiki](htt
      cave  *        *     *     *  *  *  * *  *   *  * *  *   *    x     *         *  *   *  * x
     conda  *                               *           *  *              *         *      *
       dnf  ~  *  *  *     *  *  *  *  *  * *           *  *   *    *  *  *      *  *  *   *  * *
-     dpkg  ~        *     *     *  *  *  * *  *   *  ~ *  *   *    *     *   *     *  *   *  * *
- homebrew  ~  *     *     *     *     *  * *         * *  *   *    *     *         *  *   *  *
+     dpkg  ~  *  *  *     *     *  *  *  * *  *   *  ~ *  *   *    *     *   *     *  *   *  * *
+ homebrew  *  *     *     *           *  * *           *  *   *    *     *         *  *   *  *
  macports     *           *     *        * *         ~ *  *   *          *         *  *   *  *
      opkg  *        *     *     *     *  * *           *                 *   *     *  *      * *
     pkgng  *        *     *     *  *     * *         * *  *   *          *         *  *   *  *
