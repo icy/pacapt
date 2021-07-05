@@ -5,6 +5,7 @@
 # License : MIT
 
 im alpine:3.12 alpine:3.13 alpine:3.14 alpine:latest
+im                                     alpine_bash4
 
 in -P
 ou available operations:.*( [Q][ ilos])+
@@ -115,6 +116,7 @@ ou ^busybox.+description:$
 ou ^busybox.+webpage:$
 
 in -Sii busybox
+ou ^busybox.* is required by:$
 ou ^alpine-conf
 ou ^alpine-baselayout
 
