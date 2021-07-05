@@ -2295,6 +2295,14 @@ zypper_Sl() {
   fi
 }
 
+zypper_Sg() {
+  if [ $# -gt 0 ]; then
+    zypper info "$@"
+  else
+    zypper patterns
+  fi
+}
+
 zypper_Ss() {
   zypper search "$@"
 }
@@ -2621,6 +2629,7 @@ _validate_operation() {
   "zypper_Suy") ;;
   "zypper_Sy") ;;
   "zypper_Sl") ;;
+  "zypper_Sg") ;;
   "zypper_Ss") ;;
   "zypper_Su") ;;
   "zypper_Sc") ;;
