@@ -34,6 +34,17 @@ apk_Q() {
   esac
 }
 
+apk_Qe() {
+  packages_marked_to_install="$(cat /etc/apk/world)"
+  installed_packages="$(apk info)"
+
+  while read -r L; do
+    echo "$installed_packages" | grep -Eo "^$L$"
+  done << EOF
+$packages_marked_to_install
+EOF
+}
+
 apk_Qi() {
   if [ "$#" -eq 0 ]; then
     # shellcheck disable=SC2046

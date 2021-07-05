@@ -87,6 +87,28 @@ in clear
 in ! command -v screen
 ou empty
 
+# List explicitly installed packages
+in -Qe | grep -o wget
+ou empty
+
+in -S wget
+in -Qe
+ou ^wget$
+ou ^alpine-conf$
+ou ^alpine-baselayout$
+
+in -R wget
+in clear
+in -Qe | grep -o wget
+ou empty
+
+in ! echo "wget" >> /etc/apk/world
+in -Qe | grep -o wget
+ou empty
+in ! sed -i '$ d' /etc/apk/world
+in ! cat /etc/apk/world | grep -o wget
+ou empty
+
 # Clean cache
 in ! ls /var/cache/apk/
 ou ^installed$
