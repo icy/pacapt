@@ -1,0 +1,137 @@
+#!/bin/sh
+
+# Purpose : Testing script for apk support
+# Author  : Álvaro Mondéjar
+# License : MIT
+
+im alpine:3.12 alpine:3.13 alpine:3.14 alpine:latest
+im                                     alpine_bash4
+
+in -P
+ou available operations:.*( [Q][ ilos])+
+
+# Get installed packages
+in -Qq
+ou ^busybox
+in -Q
+ou ^busybox.+\[installed\]$
+
+# Get packages information
+in -Qi
+ou ^musl.+description:$
+ou ^musl.+webpage:$
+ou ^busybox.+description:$
+ou ^busybox.+webpage:$
+
+# Get package information
+in -Qi busybox
+ou ^busybox.+description:$
+ou ^busybox.+webpage:$
+
+# Get package files
+in -Ql busybox
+ou ^busybox bin/busybox$
+in -Ql
+ou ^busybox bin/busybox$
+ou ^ca-certificates-bundle etc/ssl/cert.pem$
+in -Qlq
+ou ^bin/busybox$
+ou ^etc/ssl/cert.pem$
+
+# Get package which provides file
+in -Qo /bin/busybox
+ou ^/bin/busybox is owned by busybox.+
+in -Qo busybox
+ou ^/bin/busybox is owned by busybox.+
+
+# Search locally installed packages
+in -Qs busybox
+ou ^busybox.+\[installed\]$
+
+# List packages with available updates
+in -Qu
+ou ^Installed:\s+Available:$
+
+# Update
+in -Sy
+ou ^(fetch|OK)
+
+# Download package
+in -Sw screen
+ou ^Downloading screen
+
+# Setup cache
+in -S alpine-conf
+ou Installing alpine-conf
+ou ^OK
+in ! setup-apkcache /var/cache/apk/
+ou empty
+
+# Install package
+in -S screen
+ou Installing screen
+ou ^OK
+
+# Remove package
+in ! which screen
+ou /usr/bin/screen
+in -R screen
+ou Purging screen
+in ! command -v screen
+ou empty
+
+# Purge package
+in -Rn screen
+ou ^OK
+in clear
+in ! command -v screen
+ou empty
+
+# Clean cache
+in ! ls /var/cache/apk/
+ou ^installed$
+ou ^screen
+in -Sc
+ou empty
+in ! ls /var/cache/apk/
+ou ^screen
+in -Scc
+ou empty
+in ! ls /var/cache/apk/
+ou empty
+
+in -S screen
+ou Installing screen
+ou ^OK
+in ! ls /var/cache/apk/
+ou ^screen
+in -Scc
+ou empty
+in ! ls /var/cache/apk/
+ou empty
+
+# Display remote package information
+in -Si busybox
+ou ^busybox.+description:$
+ou ^busybox.+webpage:$
+
+in -Sii busybox
+ou ^busybox.* is required by:$
+ou ^alpine-conf
+ou ^alpine-baselayout
+
+# Search packages
+in -Sl
+ou ^(WARNING|libxcb)
+in -Ss
+ou ^(WARNING|libxcb)
+in -Ss libxcb
+ou ^(WARNING|libxcb-dev)
+
+# Upgrade
+in -Su
+ou ^fetch
+ou ^OK
+in -Suy
+ou ^fetch
+ou ^OK
