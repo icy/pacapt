@@ -1,5 +1,6 @@
 ## Table of contents
 
+1. [The design of the program](ARCHITECTURE.md)
 1. [Coding style](#coding-style)
 1. [Testing. Writting test cases](#testing-writting-test-cases)
 1. [Generating pacapt script](#generating-pacapt-script)
