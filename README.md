@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/icy/pacapt/actions/workflows/ci.yaml/badge.svg)](https://github.com/icy/pacapt/actions)
 
-`pacapt` is a `shell` wrapper for many package managers.
+`pacapt` is a 56KB `shell` wrapper for many package managers.
 Simply install package with `pacapt -S htop` or `pacapt install htop`
 on any `Linux`, `BSD`, `OpenWrt` or `Mac OS` machines.
 It supports the following package managers:
