@@ -7,6 +7,7 @@
     - [ ] [`tests`](#tests)
     - [ ] [CI with github-action](#ci-with-github-action)
     - [ ] [`bin`](#bin)
+- [ ] [History. Languages](#history-languages)
 
 ## Introduction
 
@@ -118,6 +119,19 @@ my_method() {
 
 Please visit the self-doc YAML file [`.github/workflows/ci.yaml`](.github/workflows/ci.yaml).
 
-## History
+## History. Languages
 
 The first implementation was submitted in 2010.
+
+The project is using
+
+* `Ruby`
+* `Perl`
+* `Bourne` and `Bourne-Again` shell scripting language
+* Docker
+* `Dlang` on some deprecated branches
+* its own DLS for test files
+* `Markdown` (Github format)
+* `English`
+
+:P
