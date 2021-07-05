@@ -283,7 +283,7 @@ _translate_all || exit
 if [ -n "$*" ]; then
   case "${_POPT}${_SOPT}" in
   "Su"|"Sy"|"Suy")
-    if ! echo "$*" | grep -Eq '((^|\s)-)|(-+\w+\s+[^-])'; then
+    if ! echo "$*" | $GREP -Eq -e '(^|\s)-' -e '-+\w+\s+[^-]'; then
       echo 1>&2 "WARNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
       echo 1>&2 "  The -Sy/u options refresh and/or upgrade all packages."
       echo 1>&2 "  To install packages as well, use separate commands:"
