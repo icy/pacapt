@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 3.0.1
+# Version: 3.0.2
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2021 \
@@ -12,6 +12,7 @@
 #                           | Anh K. Huynh (icy)
 #                           | Antony Lee (anntzer)
 #                           | Alex Lyon (Arcterus)
+#                           | Álvaro Mondéjar (mondeja)
 #                           | Carl X. Su (bcbcarl)
 #                           | Cuong Manh Le (Gnouc)
 #                           | Daniel YC Lin (dlintw)
@@ -45,7 +46,7 @@
 
 _print_pacapt_version() {
   cat <<_EOF_
-pacapt version '3.0.1'
+pacapt version '3.0.2'
 
 Copyright (C) 2010 - 2021 \\
                           | 10sr (10sr)
@@ -53,6 +54,7 @@ Copyright (C) 2010 - 2021 \\
                           | Anh K. Huynh (icy)
                           | Antony Lee (anntzer)
                           | Alex Lyon (Arcterus)
+                          | Álvaro Mondéjar (mondeja)
                           | Carl X. Su (bcbcarl)
                           | Cuong Manh Le (Gnouc)
                           | Daniel YC Lin (dlintw)
@@ -85,7 +87,7 @@ DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 _EOF_
 }
 
-export PACAPT_VERSION='3.0.1'
+export PACAPT_VERSION='3.0.2'
 
 _help() {
   cat <<'EOF'
@@ -225,6 +227,14 @@ _not_implemented() {
 _removing_is_dangerous() {
   echo >&2 "${_PACMAN}: removing with '$*' is too dangerous"
   return 1
+}
+
+_require_programs() {
+  for cmd in "$@"; do
+    if ! command -v "$cmd" >/dev/null; then
+      _die "pacapt(${_PACMAN:-_init}) requires '$cmd' but the tool is not found."
+    fi
+  done
 }
 
 _issue2pacman() {
@@ -635,7 +645,7 @@ apk_U() {
 #_!_POSIX_# }
 #_!_POSIX_# 
 #_!_POSIX_# cave_Q() {
-#_!_POSIX_#   if [[ "$_TOPT" == "q" ]]; then
+#_!_POSIX_#   if [ "$_TOPT" = "q" ]; then
 #_!_POSIX_#     cave show -f "${@:-world}" \
 #_!_POSIX_#     | grep -v '^$'
 #_!_POSIX_#   else
@@ -648,7 +658,7 @@ apk_U() {
 #_!_POSIX_# }
 #_!_POSIX_# 
 #_!_POSIX_# cave_Ql() {
-#_!_POSIX_#   if [[ -n "$*" ]]; then
+#_!_POSIX_#   if [ $# -ge 1 ]; then
 #_!_POSIX_#     cave contents "$@"
 #_!_POSIX_#     return
 #_!_POSIX_#   fi
@@ -656,7 +666,7 @@ apk_U() {
 #_!_POSIX_#   cave show -f "${@:-world}" \
 #_!_POSIX_#   | grep -v '^$' \
 #_!_POSIX_#   | while read -r _pkg; do
-#_!_POSIX_#       if [[ "$_TOPT" == "q" ]]; then
+#_!_POSIX_#       if [ "$_TOPT" = "q" ]; then
 #_!_POSIX_#         cave --color no contents "$_pkg"
 #_!_POSIX_#       else
 #_!_POSIX_#         cave contents "$_pkg"
@@ -677,7 +687,7 @@ apk_U() {
 #_!_POSIX_# }
 #_!_POSIX_# 
 #_!_POSIX_# cave_Qu() {
-#_!_POSIX_#   if [[ -z "$*" ]];then
+#_!_POSIX_#   if [ $# -eq 0 ];then
 #_!_POSIX_#     cave resolve -c world \
 #_!_POSIX_#     | grep '^u.*' \
 #_!_POSIX_#     | while read -r _pkg; do
@@ -695,7 +705,7 @@ apk_U() {
 #_!_POSIX_# }
 #_!_POSIX_# 
 #_!_POSIX_# cave_Rs() {
-#_!_POSIX_#   if [[ "$_TOPT" == "" ]]; then
+#_!_POSIX_#   if [ -z "$_TOPT" ]; then
 #_!_POSIX_#     cave uninstall -r "$@" \
 #_!_POSIX_#     && echo "Control-C to stop uninstalling..." \
 #_!_POSIX_#     && sleep 2s \
@@ -924,307 +934,320 @@ dnf_R() {
 dnf_U() {
   dnf install "$@"
 }
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# _dpkg_init() {
-#_!_POSIX_#   :
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Q() {
-#_!_POSIX_#   if [[ "$_TOPT" == "q" ]]; then
-#_!_POSIX_#     dpkg -l \
-#_!_POSIX_#     | grep -E '^[hi]i' \
-#_!_POSIX_#     | awk '{print $2}'
-#_!_POSIX_#   elif [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     dpkg -l "$@" \
-#_!_POSIX_#     | grep -E '^[hi]i'
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Qi() {
-#_!_POSIX_#   dpkg-query -s "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Ql() {
-#_!_POSIX_#   if [[ -n "$*" ]]; then
-#_!_POSIX_#     dpkg-query -L "$@"
-#_!_POSIX_#     return
-#_!_POSIX_#   fi
-#_!_POSIX_# 
-#_!_POSIX_#   dpkg -l \
-#_!_POSIX_#   | grep -E '^[hi]i' \
-#_!_POSIX_#   | awk '{print $2}' \
-#_!_POSIX_#   | while read -r _pkg; do
-#_!_POSIX_#       if [[ "$_TOPT" == "q" ]]; then
-#_!_POSIX_#         dpkg-query -L "$_pkg"
-#_!_POSIX_#       else
-#_!_POSIX_#         dpkg-query -L "$_pkg" \
-#_!_POSIX_#         | while read -r _line; do
-#_!_POSIX_#             echo "$_pkg $_line"
-#_!_POSIX_#           done
-#_!_POSIX_#       fi
-#_!_POSIX_#     done
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Qo() {
-#_!_POSIX_#   if cmd="$(command -v -- "$@")"; then
-#_!_POSIX_#     dpkg-query -S "$cmd"
-#_!_POSIX_#   else
-#_!_POSIX_#     dpkg-query -S "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Qp() {
-#_!_POSIX_#   dpkg-deb -I "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Qu() {
-#_!_POSIX_#   apt-get upgrade --trivial-only "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Qs() {
-#_!_POSIX_#   # dpkg >= 1.16.2 dpkg-query -W -f='${db:Status-Abbrev} ${binary:Package}\t${Version}\t${binary:Summary}\n'
-#_!_POSIX_#   dpkg-query -W -f='${Status} ${Package}\t${Version}\t${Description}\n' \
-#_!_POSIX_#   | grep -E '^((hold)|(install)|(deinstall))' \
-#_!_POSIX_#   | sed -r -e 's#^(\w+ ){3}##g' \
-#_!_POSIX_#   | grep -Ei "${@:-.}" \
-#_!_POSIX_#   | _quiet_field1
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Rs() {
-#_!_POSIX_#   if [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     apt-get autoremove "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Rn() {
-#_!_POSIX_#   apt-get purge "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Rns() {
-#_!_POSIX_#   apt-get --purge autoremove "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_R() {
-#_!_POSIX_#   apt-get remove "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Si() {
-#_!_POSIX_#   apt-cache show "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Suy() {
-#_!_POSIX_#   apt-get update \
-#_!_POSIX_#   && apt-get upgrade "$@" \
-#_!_POSIX_#   && apt-get dist-upgrade "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Su() {
-#_!_POSIX_#   apt-get upgrade "$@" \
-#_!_POSIX_#   && apt-get dist-upgrade "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Sy() {
-#_!_POSIX_#   apt-get update "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Ss() {
-#_!_POSIX_#   local IFS=$'\n'
-#_!_POSIX_#   packages=($(apt-cache search "$@"))
-#_!_POSIX_#   for package in ${packages[@]:-}
-#_!_POSIX_#   do
-#_!_POSIX_#     name=${package%% - *}
-#_!_POSIX_#     desc=${package#* - }
-#_!_POSIX_#     dpkg-query -W "$name" > /dev/null 2>&1
-#_!_POSIX_#     if [[ $? -eq 1 ]]; then
-#_!_POSIX_#       echo -e "package/$name \n    $desc"
-#_!_POSIX_#     else
-#_!_POSIX_#       dpkg-query -W -f='package/${binary:Package} ${Version}\t[${Status}]\n    ${binary:Summary}\n' "$name"
-#_!_POSIX_#     fi
-#_!_POSIX_#   done
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Sc() {
-#_!_POSIX_#   apt-get clean "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Scc() {
-#_!_POSIX_#   apt-get autoclean "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_S() {
-#_!_POSIX_#   apt-get install $_TOPT "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_U() {
-#_!_POSIX_#   dpkg -i "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Sii() {
-#_!_POSIX_#   apt-cache rdepends "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# dpkg_Sccc() {
-#_!_POSIX_#   rm -fv /var/cache/apt/*.bin
-#_!_POSIX_#   rm -fv /var/cache/apt/archives/*.*
-#_!_POSIX_#   rm -fv /var/lib/apt/lists/*.*
-#_!_POSIX_#   apt-get autoclean
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# _homebrew_init() {
-#_!_POSIX_#   :
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Qi() {
-#_!_POSIX_#   brew info "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Ql() {
-#_!_POSIX_#   brew list "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Qo() {
-#_!_POSIX_#   local pkg prefix cellar
-#_!_POSIX_# 
-#_!_POSIX_#   # FIXME: What happens if the file is not exectutable?
-#_!_POSIX_#   cd "$(dirname -- "$(which "$@")")" || return
-#_!_POSIX_#   pkg="$(pwd -P)/$(basename -- "$@")"
-#_!_POSIX_#   prefix="$(brew --prefix)"
-#_!_POSIX_#   cellar="$(brew --cellar)"
-#_!_POSIX_# 
-#_!_POSIX_#   for package in "$cellar"/*; do
-#_!_POSIX_#     files=(${package}/*/${pkg/#$prefix\//})
-#_!_POSIX_#     if [[ -e "${files[${#files[@]} - 1]}" ]]; then
-#_!_POSIX_#       echo "${package/#$cellar\//}"
-#_!_POSIX_#       break
-#_!_POSIX_#     fi
-#_!_POSIX_#   done
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Qc() {
-#_!_POSIX_#   brew log "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Qu() {
-#_!_POSIX_#   brew outdated | grep "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Qs() {
-#_!_POSIX_#   brew list | grep "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Q() {
-#_!_POSIX_#   if [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     if [[ "$*" == "" ]]; then
-#_!_POSIX_#       brew list
-#_!_POSIX_#     else
-#_!_POSIX_#       brew list | grep "$@"
-#_!_POSIX_#     fi
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Rs() {
-#_!_POSIX_#     if ! which join > /dev/null 2>&1; then
-#_!_POSIX_#       _die "pacapt: join binary does not exist in system."
-#_!_POSIX_#     fi
-#_!_POSIX_# 
-#_!_POSIX_#     if ! which sort > /dev/null 2>&1; then
-#_!_POSIX_#       _die "pacapt: sort binary does not exist in system."
-#_!_POSIX_#     fi
-#_!_POSIX_# 
-#_!_POSIX_#     if [[ -z "$*" ]]; then
-#_!_POSIX_#       _die "pacapt: ${FUNCNAME[0]} requires arguments"
-#_!_POSIX_#     fi
-#_!_POSIX_# 
-#_!_POSIX_#     for _target in "${@}";
-#_!_POSIX_#     do
-#_!_POSIX_#       brew rm "$_target"
-#_!_POSIX_# 
-#_!_POSIX_#       while [ "$(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))" != "" ]
-#_!_POSIX_#       do
-#_!_POSIX_#         brew rm $(join <(sort <(brew leaves)) <(sort <(brew deps $_target)))
-#_!_POSIX_#       done
-#_!_POSIX_#     done
-#_!_POSIX_# 
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_R() {
-#_!_POSIX_#   brew remove "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Si() {
-#_!_POSIX_#   brew info "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Suy() {
-#_!_POSIX_#   brew update \
-#_!_POSIX_#   && brew upgrade "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Su() {
-#_!_POSIX_#   brew upgrade "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Sy() {
-#_!_POSIX_#   brew update "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Ss() {
-#_!_POSIX_#   brew search "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Sc() {
-#_!_POSIX_#   brew cleanup "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Scc() {
-#_!_POSIX_#   brew cleanup -s "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_Sccc() {
-#_!_POSIX_#   # See more discussion in
-#_!_POSIX_#   #   https://github.com/icy/pacapt/issues/47
-#_!_POSIX_# 
-#_!_POSIX_#   local _dcache
-#_!_POSIX_# 
-#_!_POSIX_#   _dcache="$(brew --cache)"
-#_!_POSIX_#   case "$_dcache" in
-#_!_POSIX_#   ""|"/"|" ")
-#_!_POSIX_#     _error "${FUNCNAME[0]}: Unable to delete '$_dcache'."
-#_!_POSIX_#     ;;
-#_!_POSIX_# 
-#_!_POSIX_#   *)
-#_!_POSIX_#     # FIXME: This can be wrong. But it's an easy way
-#_!_POSIX_#     # FIXME: to avoid some warning from #shellcheck.
-#_!_POSIX_#     # FIXME: Please note that, $_dcache is not empty now.
-#_!_POSIX_#     rm -rf "${_dcache:-/x/x/x/x/x/x/x/x/x/x/x//x/x/x/x/x/}/"
-#_!_POSIX_#     ;;
-#_!_POSIX_#   esac
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# homebrew_S() {
-#_!_POSIX_#   # shellcheck disable=SC2086
-#_!_POSIX_#   2>&1 brew install $_TOPT "$@" \
-#_!_POSIX_#   | awk '{print; if ($0 ~ /brew cask install/) { exit(126); }}'
-#_!_POSIX_#   ret=( ${PIPESTATUS[*]} )
-#_!_POSIX_#   if [[ "${ret[1]}" == 126 ]]; then
-#_!_POSIX_#     echo >&2 ":: Now trying with brew/cask..."
-#_!_POSIX_#     # shellcheck disable=SC2086
-#_!_POSIX_#     brew cask install $_TOPT "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     return "${ret[0]}"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
+
+
+
+_dpkg_init() {
+  :
+}
+
+dpkg_Q() {
+  if [ "$_TOPT" = "q" ]; then
+    dpkg -l \
+    | grep -E '^[hi]i' \
+    | awk '{print $2}'
+  elif [ -z "$_TOPT" ]; then
+    dpkg -l "$@" \
+    | grep -E '^[hi]i'
+  else
+    _not_implemented
+  fi
+}
+
+dpkg_Qc() {
+  apt-get changelog "$@"
+}
+
+dpkg_Qi() {
+  dpkg-query -s "$@"
+}
+
+dpkg_Qe() {
+  apt-mark showmanual "$@"
+}
+
+dpkg_Qk() {
+  if ! command -v debsums > /dev/null 2>&1; then
+    _die "pacapt: debsums binary does not exist in system."
+  fi
+
+  debsums "$@"
+}
+
+dpkg_Ql() {
+  if [ $# -ge 1 ]; then
+    dpkg-query -L "$@"
+    return
+  fi
+
+  dpkg -l \
+  | grep -E '^[hi]i' \
+  | awk '{print $2}' \
+  | while read -r _pkg; do
+      if [ "$_TOPT" = "q" ]; then
+        dpkg-query -L "$_pkg"
+      else
+        dpkg-query -L "$_pkg" \
+        | while read -r _line; do
+            echo "$_pkg $_line"
+          done
+      fi
+    done
+}
+
+dpkg_Qo() {
+  if cmd="$(command -v -- "$@")"; then
+    dpkg-query -S "$cmd"
+  else
+    dpkg-query -S "$@"
+  fi
+}
+
+dpkg_Qp() {
+  dpkg-deb -I "$@"
+}
+
+dpkg_Qu() {
+  apt-get upgrade --trivial-only "$@"
+}
+
+dpkg_Qs() {
+  # dpkg >= 1.16.2 dpkg-query -W -f='${db:Status-Abbrev} ${binary:Package}\t${Version}\t${binary:Summary}\n'
+  dpkg-query -W -f='${Status} ${Package}\t${Version}\t${Description}\n' \
+  | grep -E '^((hold)|(install)|(deinstall))' \
+  | sed -r -e 's#^(\w+ ){3}##g' \
+  | grep -Ei "${@:-.}" \
+  | _quiet_field1
+}
+
+dpkg_Rs() {
+  if [ -z "$_TOPT" ]; then
+    apt-get autoremove "$@"
+  else
+    _not_implemented
+  fi
+}
+
+dpkg_Rn() {
+  apt-get purge "$@"
+}
+
+dpkg_Rns() {
+  apt-get --purge autoremove "$@"
+}
+
+dpkg_R() {
+  apt-get remove "$@"
+}
+
+dpkg_Si() {
+  apt-cache show "$@"
+}
+
+dpkg_Suy() {
+  apt-get update \
+  && apt-get upgrade "$@" \
+  && apt-get dist-upgrade "$@"
+}
+
+dpkg_Su() {
+  apt-get upgrade "$@" \
+  && apt-get dist-upgrade "$@"
+}
+
+
+dpkg_Sy() {
+  apt-get update "$@"
+}
+
+dpkg_Ss() {
+  apt-cache search "${@:-.}" \
+  | while read -r name _ desc; do
+      if ! dpkg-query -W "$name" > /dev/null 2>&1; then
+        printf "package/%s \n    %s\n" \
+          "$name" "$desc"
+      else
+        dpkg-query -W -f='package/${binary:Package} ${Version}\n    ${binary:Summary}\n' "$name"
+      fi
+  done
+}
+
+dpkg_Sc() {
+  apt-get clean "$@"
+}
+
+dpkg_Scc() {
+  apt-get autoclean "$@"
+}
+
+dpkg_S() {
+  # shellcheck disable=SC2086
+  apt-get install $_TOPT "$@"
+}
+
+dpkg_U() {
+  dpkg -i "$@"
+}
+
+dpkg_Sii() {
+  apt-cache rdepends "$@"
+}
+
+dpkg_Sccc() {
+  rm -fv /var/cache/apt/*.bin
+  rm -fv /var/cache/apt/archives/*.*
+  rm -fv /var/lib/apt/lists/*.*
+  apt-get autoclean
+}
+
+
+
+_homebrew_init() {
+  :
+}
+
+
+
+
+
+homebrew_Qi() {
+  brew info "$@"
+}
+
+
+
+
+homebrew_Ql() {
+  local_casks=
+  local_forumlas=
+
+  if [ $# -eq 0 ]; then
+    local_casks="$(brew list --casks)"
+    local_forumlas="$(brew list --formula)"
+  else
+    # FIXME: this awk is not perfect!
+    local_casks="$(brew list --casks | LIST="$*" awk '$0 ~ ENVIRON["LIST"]')"
+    local_forumlas="$(brew list --formula | LIST="$*" awk '$0 ~ ENVIRON["LIST"]')"
+  fi
+
+  if [ -z "$_TOPT" ]; then
+    for package in $local_casks; do
+      brew list --cask "$package" \
+      | grep ^/ \
+      | PACKAGE="$package" awk '{printf("%s %s\n", ENVIRON["PACKAGE"], $0)}'
+    done
+    for package in $local_forumlas; do
+      brew list --formula "$package" \
+      | PACKAGE="$package" awk '{printf("%s %s\n", ENVIRON["PACKAGE"], $0)}'
+    done
+  elif [ "$_TOPT" = "q" ]; then
+    for package in $local_casks; do
+      brew list --cask "$package" \
+      | grep ^/
+    done
+    for package in $local_forumlas; do
+      brew list --formula "$package"
+    done
+  fi
+}
+
+homebrew_Qs() {
+  if [ -z "$_TOPT" ]; then
+    local_flags="--versions"
+  else
+    local_flags=""
+  fi
+  # shellcheck disable=SC2086
+  brew list $local_flags | grep "${@:-.}"
+}
+
+
+
+homebrew_Qc() {
+  brew log "$@"
+}
+
+homebrew_Qu() {
+  brew outdated "$@"
+}
+
+homebrew_Q() {
+  if [ -z "$_TOPT" ]; then
+    local_flags="--versions"
+  else
+    local_flags=""
+  fi
+  # shellcheck disable=SC2086
+  brew list $local_flags --formula "$@"
+  # shellcheck disable=SC2086
+  brew list $local_flags --cask "$@"
+}
+
+
+homebrew_R() {
+  brew remove "$@"
+}
+
+homebrew_Si() {
+  brew info "$@"
+}
+
+homebrew_Suy() {
+  brew update \
+  && brew upgrade "$@"
+}
+
+homebrew_Su() {
+  brew upgrade "$@"
+}
+
+homebrew_Sy() {
+  brew update "$@"
+}
+
+homebrew_Ss() {
+  brew search "$@"
+}
+
+homebrew_Sc() {
+  brew cleanup "$@"
+}
+
+homebrew_Scc() {
+  brew cleanup -s "$@"
+}
+
+homebrew_Sccc() {
+  # See more discussion in
+  #   https://github.com/icy/pacapt/issues/47
+
+  local_dcache
+
+  local_dcache="$(brew --cache)"
+  case "$local_dcache" in
+  ""|"/"|" ")
+    _error "pacapt(homebrew_Sccc): Unable to delete '$local_dcache'."
+    ;;
+
+  *)
+    # FIXME: This can be wrong. But it's an easy way
+    # FIXME: to avoid some warning from #shellcheck.
+    # FIXME: Please note that, $_dcache is not empty now.
+    rm -rf "${local_dcache:-/x/x/x/x/x/x/x/x/x/x/x//x/x/x/x/x/}/"
+    ;;
+  esac
+}
+
+homebrew_S() {
+  # shellcheck disable=SC2086
+  2>&1 brew install $_TOPT "$@" \
+  | awk '{print; if ($0 ~ /brew cask install/) { exit(126); }}'
+  if [ "${?}" = 126 ]; then
+    _warn "Failed to install package, now trying with 'brew cask' as suggested..."
+    # shellcheck disable=SC2086
+    brew cask install $_TOPT "$@"
+  fi
+}
 
 
 
@@ -1327,7 +1350,7 @@ opkg_Q() {
 }
 
 opkg_Qi() {
-  for  pkg in $(opkg__get_local_pkgs "${@}"); do
+  for  pkg in $(opkg__get_local_pkgs "$@"); do
     opkg info "$pkg"
   done
 }
@@ -1339,7 +1362,7 @@ opkg__get_local_pkgs() {
   else
     # `opkg status` returns empty if package is not installed/removed.
     # shellcheck disable=SC2016
-    for pkg in "${@}"; do
+    for pkg in "$@"; do
       opkg status "$pkg"
     done \
     | "$AWK" '/^Package: / {print $NF}'
@@ -1347,7 +1370,7 @@ opkg__get_local_pkgs() {
 }
 
 opkg_Ql() {
-  for pkg in $(opkg__get_local_pkgs "${@}"); do
+  for pkg in $(opkg__get_local_pkgs "$@"); do
     # shellcheck disable=SC2016
     opkg files "$pkg" \
     | PKG="$pkg" "$AWK" \
@@ -1632,133 +1655,133 @@ pkg_tools_Scc() {
 pkg_tools_S() {
   pkg_add "$@"
 }
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# _portage_init() {
-#_!_POSIX_#   :
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Qi() {
-#_!_POSIX_#   emerge --info "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Ql() {
-#_!_POSIX_#   if [[ -x '/usr/bin/qlist' ]]; then
-#_!_POSIX_#     qlist "$@"
-#_!_POSIX_#   elif [[ -x '/usr/bin/equery' ]]; then
-#_!_POSIX_#     equery files "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     _error "'portage-utils' or 'gentoolkit' package is required to perform this opreation."
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Qo() {
-#_!_POSIX_#   if [[ -x '/usr/bin/equery' ]]; then
-#_!_POSIX_#     if cmd="$(command -v -- "$@")"; then
-#_!_POSIX_#       equery belongs "$cmd"
-#_!_POSIX_#     else
-#_!_POSIX_#       equery belongs "$@"
-#_!_POSIX_#     fi
-#_!_POSIX_#   else
-#_!_POSIX_#     _error "'gentoolkit' package is required to perform this operation."
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Qc() {
-#_!_POSIX_#   emerge -p --changelog "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Qu() {
-#_!_POSIX_#   emerge -uvN "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Q() {
-#_!_POSIX_#   if [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     if [[ -x '/usr/bin/eix' ]]; then
-#_!_POSIX_#       eix -I "$@"
-#_!_POSIX_#     elif [[ -x '/usr/bin/equery' ]]; then
-#_!_POSIX_#       equery list -i "$@"
-#_!_POSIX_#     else
-#_!_POSIX_#       LS_COLORS=never \
-#_!_POSIX_#       ls -1 -d /var/db/pkg/*/*
-#_!_POSIX_#     fi
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Rs() {
-#_!_POSIX_#   if [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     emerge --depclean world "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_R() {
-#_!_POSIX_#   emerge --depclean "@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Si() {
-#_!_POSIX_#   emerge --info "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Suy() {
-#_!_POSIX_#   if [[ -x '/usr/bin/layman' ]]; then
-#_!_POSIX_#     layman --sync-all \
-#_!_POSIX_#     && emerge --sync \
-#_!_POSIX_#     && emerge -auND world "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     emerge --sync \
-#_!_POSIX_#     && emerge -uND world "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Su() {
-#_!_POSIX_#   emerge -uND world "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Sy() {
-#_!_POSIX_#   if [[ -x "/usr/bin/layman" ]]; then
-#_!_POSIX_#     layman --sync-all \
-#_!_POSIX_#     && emerge --sync "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     emerge --sync "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Ss() {
-#_!_POSIX_#   if [[ -x "/usr/bin/eix" ]]; then
-#_!_POSIX_#     eix "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     emerge --search "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Sc() {
-#_!_POSIX_#   if [[ -x "/usr/bin/eclean-dist" ]]; then
-#_!_POSIX_#     eclean-dist -d -t1m -s50 -f "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     _error "'gentoolkit' package is required to perform this operation."
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Scc() {
-#_!_POSIX_#   if [[ -x "/usr/bin/eclean" ]]; then
-#_!_POSIX_#     eclean -i distfiles "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     _error "'gentoolkit' package is required to perform this operation."
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_Sccc() {
-#_!_POSIX_#   rm -fv /usr/portage/distfiles/*.*
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# portage_S() {
-#_!_POSIX_#   emerge "$@"
-#_!_POSIX_# }
+
+
+
+_portage_init() {
+  :
+}
+
+portage_Qi() {
+  emerge --info "$@"
+}
+
+portage_Ql() {
+  if [ -x '/usr/bin/qlist' ]; then
+    qlist "$@"
+  elif [ -x '/usr/bin/equery' ]; then
+    equery files "$@"
+  else
+    _error "'portage-utils' or 'gentoolkit' package is required to perform this opreation."
+  fi
+}
+
+portage_Qo() {
+  if [ -x '/usr/bin/equery' ]; then
+    if cmd="$(command -v -- "$@")"; then
+      equery belongs "$cmd"
+    else
+      equery belongs "$@"
+    fi
+  else
+    _error "'gentoolkit' package is required to perform this operation."
+  fi
+}
+
+portage_Qc() {
+  emerge -p --changelog "$@"
+}
+
+portage_Qu() {
+  emerge -uvN "$@"
+}
+
+portage_Q() {
+  if [ -z "$_TOPT" ]; then
+    if [ -x '/usr/bin/eix' ]; then
+      eix -I "$@"
+    elif [ -x '/usr/bin/equery' ]; then
+      equery list -i "$@"
+    else
+      LS_COLORS="never" \
+      ls -1 -d /var/db/pkg/*/*
+    fi
+  else
+    _not_implemented
+  fi
+}
+
+portage_Rs() {
+  if [ -z "$_TOPT" ]; then
+    emerge --depclean world "$@"
+  else
+    _not_implemented
+  fi
+}
+
+portage_R() {
+  emerge --depclean "@"
+}
+
+portage_Si() {
+  emerge --info "$@"
+}
+
+portage_Suy() {
+  if [ -x '/usr/bin/layman' ]; then
+    layman --sync-all \
+    && emerge --sync \
+    && emerge -auND world "$@"
+  else
+    emerge --sync \
+    && emerge -uND world "$@"
+  fi
+}
+
+portage_Su() {
+  emerge -uND world "$@"
+}
+
+portage_Sy() {
+  if [ -x "/usr/bin/layman" ]; then
+    layman --sync-all \
+    && emerge --sync "$@"
+  else
+    emerge --sync "$@"
+  fi
+}
+
+portage_Ss() {
+  if [ -x "/usr/bin/eix" ]; then
+    eix "$@"
+  else
+    emerge --search "$@"
+  fi
+}
+
+portage_Sc() {
+  if [ -x "/usr/bin/eclean-dist" ]; then
+    eclean-dist -d -t1m -s50 -f "$@"
+  else
+    _error "'gentoolkit' package is required to perform this operation."
+  fi
+}
+
+portage_Scc() {
+  if [ -x "/usr/bin/eclean" ]; then
+    eclean -i distfiles "$@"
+  else
+    _error "'gentoolkit' package is required to perform this operation."
+  fi
+}
+
+portage_Sccc() {
+  rm -fv /usr/portage/distfiles/*.*
+}
+
+portage_S() {
+  emerge "$@"
+}
 
 
 
@@ -1859,142 +1882,142 @@ swupd_Ss() {
 swupd_S() {
   swupd bundle-add "$@"
 }
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# _tazpkg_init() {
-#_!_POSIX_#   :
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tazpkg_Q() {
-#_!_POSIX_#   if [[ "$_TOPT" == "q" ]]; then
-#_!_POSIX_#     tazpkg list "$@" \
-#_!_POSIX_#     | awk '{ if (NF == 2 || NF == 3) { print $1; }}'
-#_!_POSIX_#   elif [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     tazpkg list "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tazpkg_Qi() {
-#_!_POSIX_#   tazpkg info "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tazpkg_Ql() {
-#_!_POSIX_#   if [[ -z "$*" ]]; then
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#     return
-#_!_POSIX_#   fi
-#_!_POSIX_# 
-#_!_POSIX_#   if [[ "$_TOPT" == "q" ]]; then
-#_!_POSIX_#     {
-#_!_POSIX_#       tazpkg list-files "$@"
-#_!_POSIX_#       tazpkg list-config "$@"
-#_!_POSIX_#     } \
-#_!_POSIX_#     | grep ^/
-#_!_POSIX_#   else
-#_!_POSIX_#     tazpkg list-files "$@"
-#_!_POSIX_#     tazpkg list-config "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tazpkg_Sy() {
-#_!_POSIX_#   tazpkg recharge
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tazpkg_Su() {
-#_!_POSIX_#   tazpkg up
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tazpkg_Suy() {
-#_!_POSIX_#   tazpkg_Sy \
-#_!_POSIX_#   && tazpkg_Su
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tazpkg_S() {
-#_!_POSIX_#   local _forced=""
-#_!_POSIX_# 
-#_!_POSIX_#   if grep -q -- "--forced" <<<"$*"; then
-#_!_POSIX_#     _forced="--forced"
-#_!_POSIX_#   fi
-#_!_POSIX_# 
-#_!_POSIX_#   while (( $# )); do
-#_!_POSIX_#     if [[ "$1" == "--forced" ]]; then
-#_!_POSIX_#       _forced="--forced"
-#_!_POSIX_#       shift
-#_!_POSIX_#       continue
-#_!_POSIX_#     fi
-#_!_POSIX_# 
-#_!_POSIX_#     tazpkg get-install "$1" $_forced
-#_!_POSIX_#     shift
-#_!_POSIX_#   done
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tazpkg_R() {
-#_!_POSIX_#   local _auto=""
-#_!_POSIX_# 
-#_!_POSIX_#   if grep -q -- "--auto" <<<"$*"; then
-#_!_POSIX_#     _auto="--auto"
-#_!_POSIX_#   fi
-#_!_POSIX_# 
-#_!_POSIX_#   while (( $# )); do
-#_!_POSIX_#     if [[ "$1" == "--auto" ]]; then
-#_!_POSIX_#       _auto="--auto"
-#_!_POSIX_#       shift
-#_!_POSIX_#       continue
-#_!_POSIX_#     fi
-#_!_POSIX_# 
-#_!_POSIX_#     tazpkg remove "$1" $_auto
-#_!_POSIX_#     shift
-#_!_POSIX_#   done
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tazpkg_Sc() {
-#_!_POSIX_#   tazpkg clean-cache
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tazpkg_Scc() {
-#_!_POSIX_#   tazpkg clean-cache
-#_!_POSIX_#   cd /var/lib/tazpkg/ \
-#_!_POSIX_#   && {
-#_!_POSIX_#     rm -fv \
-#_!_POSIX_#       ./*.bak \
-#_!_POSIX_#       ID \
-#_!_POSIX_#       packages.* \
-#_!_POSIX_#       files.list.*
-#_!_POSIX_#   }
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tazpkg_Ss() {
-#_!_POSIX_#   tazpkg search "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tazpkg_Qo() {
-#_!_POSIX_#   if cmd="$(command -v -- "$@")"; then
-#_!_POSIX_#     tazpkg search-pkgname "$cmd"
-#_!_POSIX_#   else
-#_!_POSIX_#     tazpkg search-pkgname "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# tazpkg_U() {
-#_!_POSIX_#   local _forced=""
-#_!_POSIX_# 
-#_!_POSIX_#   if grep -q -- "--forced" <<<"$*"; then
-#_!_POSIX_#     _forced="--forced"
-#_!_POSIX_#   fi
-#_!_POSIX_# 
-#_!_POSIX_#   while (( $# )); do
-#_!_POSIX_#     if [[ "$1" == "--forced" ]]; then
-#_!_POSIX_#       _forced="--forced"
-#_!_POSIX_#       shift
-#_!_POSIX_#       continue
-#_!_POSIX_#     fi
-#_!_POSIX_# 
-#_!_POSIX_#     tazpkg install "$1" $_forced
-#_!_POSIX_#     shift
-#_!_POSIX_#   done
-#_!_POSIX_# }
+
+
+_tazpkg_init() {
+  :
+}
+
+tazpkg_Q() {
+  if [ "$_TOPT" = "q" ]; then
+    tazpkg list "$@" \
+    | awk '{ if (NF == 2 || NF == 3) { print $1; }}'
+  elif [ -z "$_TOPT" ]; then
+    tazpkg list "$@"
+  else
+    _not_implemented
+  fi
+}
+
+tazpkg_Qi() {
+  tazpkg info "$@"
+}
+
+tazpkg_Ql() {
+  if [ "$#" -eq 0 ]; then
+    _not_implemented
+    return
+  fi
+
+  if [ "$_TOPT" = "q" ]; then
+    {
+      tazpkg list-files "$@"
+      tazpkg list-config "$@"
+    } \
+    | grep "^/"
+  else
+    tazpkg list-files "$@"
+    tazpkg list-config "$@"
+  fi
+}
+
+tazpkg_Sy() {
+  tazpkg recharge
+}
+
+tazpkg_Su() {
+  tazpkg up
+}
+
+tazpkg_Suy() {
+  tazpkg_Sy \
+  && tazpkg_Su
+}
+
+tazpkg_S() {
+  local_forced=""
+
+  if echo "$*" | grep -qs -- "--forced"; then
+    local_forced="--forced"
+  fi
+
+  while [ $# -gt 0 ]; do
+    if [ "$1" = "--forced" ]; then
+      local_forced="--forced"
+      shift
+      continue
+    fi
+
+    tazpkg get-install "$1" $local_forced
+    shift
+  done
+}
+
+tazpkg_R() {
+  local_auto=""
+
+  if echo "*" | grep -sq -- "--auto"; then
+    local_auto="--auto"
+  fi
+
+  while [ $# -ge 1 ]; do
+    if [ "$1" = "--auto" ]; then
+      local_auto="--auto"
+      shift
+      continue
+    fi
+
+    tazpkg remove "$1" $local_auto
+    shift
+  done
+}
+
+tazpkg_Sc() {
+  tazpkg clean-cache
+}
+
+tazpkg_Scc() {
+  tazpkg clean-cache
+  cd /var/lib/tazpkg/ \
+  && {
+    rm -fv \
+      ./*.bak \
+      ID \
+      packages.* \
+      files.list.*
+  }
+}
+
+tazpkg_Ss() {
+  tazpkg search "$@"
+}
+
+tazpkg_Qo() {
+  if cmd="$(command -v -- "$@")"; then
+    tazpkg search-pkgname "$cmd"
+  else
+    tazpkg search-pkgname "$@"
+  fi
+}
+
+tazpkg_U() {
+  local_forced=""
+
+  if echo "*" | grep -sq -- "--forced"; then
+    local_forced="--forced"
+  fi
+
+  while [ $# -ge 1 ]; do
+    if [ "$1" = "--forced" ]; then
+      local_forced="--forced"
+      shift
+      continue
+    fi
+
+    tazpkg install "$1" $local_forced
+    shift
+  done
+}
 
 
 
@@ -2156,165 +2179,175 @@ yum_U() {
 yum_Sii() {
   yum resolvedep "$@"
 }
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# 
-#_!_POSIX_# _zypper_init() {
-#_!_POSIX_#   :
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Qc() {
-#_!_POSIX_#   rpm -q --changelog "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Qi() {
-#_!_POSIX_#   zypper info "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Ql() {
-#_!_POSIX_#   rpm -ql "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Qu() {
-#_!_POSIX_#   zypper list-updates "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Qm() {
-#_!_POSIX_#   zypper search -si "$@" \
-#_!_POSIX_#   | grep 'System Packages'
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Qo() {
-#_!_POSIX_#   if cmd="$(command -v -- "$@")"; then
-#_!_POSIX_#     rpm -qf "$cmd"
-#_!_POSIX_#   else
-#_!_POSIX_#     rpm -qf "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Qp() {
-#_!_POSIX_#   rpm -qip "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Qs() {
-#_!_POSIX_#   zypper search --installed-only "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Q() {
-#_!_POSIX_#   if [[ "$_TOPT" == "q" ]]; then
-#_!_POSIX_#     zypper search -i "$@" \
-#_!_POSIX_#     | grep ^i \
-#_!_POSIX_#     | awk '{print $3}'
-#_!_POSIX_#   elif [[ "$_TOPT" == "" ]]; then
-#_!_POSIX_#     zypper search -i "$@"
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Rs() {
-#_!_POSIX_#   if [[ "$_TOPT" == "s" ]]; then
-#_!_POSIX_#     zypper remove "$@" --clean-deps
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_R() {
-#_!_POSIX_#   zypper remove "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Rn() {
-#_!_POSIX_#   # Remove configuration files
-#_!_POSIX_#   while read -r file; do
-#_!_POSIX_#     if [[ -f "$file" ]]; then
-#_!_POSIX_#       rm -fv "$file"
-#_!_POSIX_#     fi
-#_!_POSIX_#   done < <(rpm -ql "$@")
-#_!_POSIX_# 
-#_!_POSIX_#   # Now remove the package per-se
-#_!_POSIX_#   zypper remove "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Rs() {
-#_!_POSIX_#   if [[ "$_TOPT" == "s" ]]; then
-#_!_POSIX_#     zypper remove "$@" --clean-deps
-#_!_POSIX_#   else
-#_!_POSIX_#     _not_implemented
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Rns() {
-#_!_POSIX_#   # Remove configuration files
-#_!_POSIX_#   while read -r file; do
-#_!_POSIX_#     if [[ -f "$file" ]]; then
-#_!_POSIX_#       rm -fv "$file"
-#_!_POSIX_#     fi
-#_!_POSIX_#   done < <(rpm -ql "$@")
-#_!_POSIX_# 
-#_!_POSIX_#   zypper remove "$@" --clean-deps
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Suy() {
-#_!_POSIX_#   zypper dup "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Sy() {
-#_!_POSIX_#   zypper refresh "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Sl() {
-#_!_POSIX_#   if [[ $# -eq 0 ]]; then
-#_!_POSIX_#     zypper pa -R
-#_!_POSIX_#   else
-#_!_POSIX_#     zypper pa -r "$@"
-#_!_POSIX_#   fi
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Ss() {
-#_!_POSIX_#   zypper search "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Su() {
-#_!_POSIX_#   zypper --no-refresh dup "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Sc() {
-#_!_POSIX_#   zypper clean "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Scc() {
-#_!_POSIX_#   zypper clean "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Sccc() {
-#_!_POSIX_#   # Not way to do this in zypper
-#_!_POSIX_#   _not_implemented
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Si() {
-#_!_POSIX_#   zypper info --requires "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_Sii() {
-#_!_POSIX_#   # Ugly and slow, but does the trick
-#_!_POSIX_#   local packages=
-#_!_POSIX_# 
-#_!_POSIX_#   packages="$(zypper pa -R | cut -d \| -f 3 | tr -s '\n' ' ')"
-#_!_POSIX_#   for package in $packages; do
-#_!_POSIX_#     zypper info --requires "$package" \
-#_!_POSIX_#     | grep -q "$@" && echo "$package"
-#_!_POSIX_#   done
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_S() {
-#_!_POSIX_#   # shellcheck disable=SC2086
-#_!_POSIX_#   zypper install $_TOPT "$@"
-#_!_POSIX_# }
-#_!_POSIX_# 
-#_!_POSIX_# zypper_U() {
-#_!_POSIX_#   zypper install "$@"
-#_!_POSIX_# }
+
+
+
+_zypper_init() {
+  :
+}
+
+zypper_Qc() {
+  rpm -q --changelog "$@"
+}
+
+zypper_Qi() {
+  zypper info "$@"
+}
+
+zypper_Ql() {
+  rpm -ql "$@"
+}
+
+zypper_Qu() {
+  zypper list-updates "$@"
+}
+
+zypper_Qm() {
+  zypper search -si "$@" \
+  | grep 'System Packages'
+}
+
+zypper_Qo() {
+  if cmd="$(command -v -- "$@")"; then
+    rpm -qf "$cmd"
+  else
+    rpm -qf "$@"
+  fi
+}
+
+zypper_Qp() {
+  rpm -qip "$@"
+}
+
+zypper_Qs() {
+  zypper search --search-descriptions --installed-only "$@" \
+  | {
+    if [ "$_TOPT" = "q" ]; then
+      awk -F ' *| *' '/^[a-z]/ {print $3}'
+    else
+      cat
+    fi
+  }
+}
+
+zypper_Q() {
+  if [ "$_TOPT" = "q" ]; then
+    zypper search -i "$@" \
+    | grep ^i \
+    | awk '{print $3}'
+  elif [ -z "$_TOPT" ]; then
+    zypper search -i "$@"
+  else
+    _not_implemented
+  fi
+}
+
+zypper_Rs() {
+  if [ "$_TOPT" = "s" ]; then
+    zypper remove "$@" --clean-deps
+  else
+    _not_implemented
+  fi
+}
+
+zypper_R() {
+  zypper remove "$@"
+}
+
+zypper_Rn() {
+  # Remove configuration files
+  rpm -ql "$@" \
+  | while read -r file; do
+    if [ -f "$file" ]; then
+      rm -fv "$file"
+    fi
+  done
+
+  # Now remove the package per-se
+  zypper remove "$@"
+}
+
+zypper_Rns() {
+  # Remove configuration files
+  rpm -ql "$@" \
+  | while read -r file; do
+    if [ -f "$file" ]; then
+      rm -fv "$file"
+    fi
+  done
+
+  zypper remove "$@" --clean-deps
+}
+
+zypper_Suy() {
+  zypper dup "$@"
+}
+
+zypper_Sy() {
+  zypper refresh "$@"
+}
+
+zypper_Sl() {
+  if [ $# -eq 0 ]; then
+    zypper pa -R
+  else
+    zypper pa -r "$@"
+  fi
+}
+
+zypper_Ss() {
+  zypper search "$@"
+}
+
+zypper_Su() {
+  zypper --no-refresh dup "$@"
+}
+
+zypper_Sc() {
+  zypper clean "$@"
+}
+
+zypper_Scc() {
+  zypper clean "$@"
+}
+
+zypper_Sccc() {
+  # Not way to do this in zypper
+  _not_implemented
+}
+
+zypper_Si() {
+  zypper info --requires "$@"
+}
+
+zypper_Sii() {
+  if [ $# -eq 0 ]; then
+    _error "Missing some package name."
+    return 1
+  fi
+  _not_implemented
+  return
+
+  # TOO SLOW ! # # Ugly and slow, but does the trick
+  # TOO SLOW ! # local_packages="$( \
+  # TOO SLOW ! #   zypper pa --installed-only -R \
+  # TOO SLOW ! #   | grep -E '^[a-z]' \
+  # TOO SLOW ! #   | cut -d \| -f 3 | sort -u)"
+  # TOO SLOW ! #
+  # TOO SLOW ! # for package in $local_packages; do
+  # TOO SLOW ! #   zypper info --requires "$package" \
+  # TOO SLOW ! #   | grep -q "$@" && echo "$package"
+  # TOO SLOW ! # done
+}
+
+zypper_S() {
+  # shellcheck disable=SC2086
+  zypper install $_TOPT "$@"
+}
+
+zypper_U() {
+  zypper install "$@"
+}
 _validate_operation() {
   case "$1" in
   "apk_Q") ;;
@@ -2391,7 +2424,10 @@ _validate_operation() {
   "dnf_R") ;;
   "dnf_U") ;;
   "dpkg_Q") ;;
+  "dpkg_Qc") ;;
   "dpkg_Qi") ;;
+  "dpkg_Qe") ;;
+  "dpkg_Qk") ;;
   "dpkg_Ql") ;;
   "dpkg_Qo") ;;
   "dpkg_Qp") ;;
@@ -2414,12 +2450,10 @@ _validate_operation() {
   "dpkg_Sccc") ;;
   "homebrew_Qi") ;;
   "homebrew_Ql") ;;
-  "homebrew_Qo") ;;
+  "homebrew_Qs") ;;
   "homebrew_Qc") ;;
   "homebrew_Qu") ;;
-  "homebrew_Qs") ;;
   "homebrew_Q") ;;
-  "homebrew_Rs") ;;
   "homebrew_R") ;;
   "homebrew_Si") ;;
   "homebrew_Suy") ;;
@@ -2583,7 +2617,6 @@ _validate_operation() {
   "zypper_Rs") ;;
   "zypper_R") ;;
   "zypper_Rn") ;;
-  "zypper_Rs") ;;
   "zypper_Rns") ;;
   "zypper_Suy") ;;
   "zypper_Sy") ;;
@@ -2616,25 +2649,26 @@ if ! _sun_tools_init; then
   local_requirements="${local_requirements} sed"
 fi
 
-for cmd in $local_requirements; do
-  if ! command -v "$cmd" >/dev/null; then
-    _die "pacapt requires '$cmd' but the tool is not found."
-  fi
-done
+_require_programs $local_requirements
 
 export PACAPT_DEBUG GREP AWK
 
 if [ -z "${__PACAPT_FORKED__:-}" ]; then
-  if command -v bash >/dev/null; then
+  if command -v bash >/dev/null \
+      && bash -c 'echo ${BASH_VERSION[*]}' \
+        | "$GREP" -Ee "^[4-9]." >/dev/null 2>&1 \
+    ; then
+
     _debug "Switching to Bash shell"
     export __PACAPT_FORKED__="yes"
     readonly __PACAPT_FORKED__
 
-    exec bash "$0" "${@}"
+    exec bash -- "$0" "$@"
   fi
 else
   # Hey, this is very awesome strick to avoid syntax issue.
   # Note: in `bocker` (github.com/icy/bocker/) we use `base64`.
+  # FIXME: `source /dev/stdin` doesn't work without Bash >=4
   eval 'source /dev/stdin < <("$GREP" '^#_!_POSIX_#' "$0" | sed -e 's/^#_!_POSIX_#//')' \
   || _die "$0: Unable to load non-POSIX definitions".
 fi
@@ -2652,11 +2686,11 @@ _PACMAN_detect \
 
 if [ -z "${__PACAPT_FORKED__:-}" ]; then
   case "$_PACMAN" in
-  "apk")  ;;
-  "opkg")  ;;
-  "sun_tools" ) ;;
+  "cave")
+    _die "pacapt($_PACMAN) library is not ready for pure-POSIX features (or your Bash version is not >= 4)."
+    ;;
   *)
-    _die "pacapt($_PACMAN) library is not ready for pure-POSIX features."
+    ;;
   esac
 fi
 
@@ -2741,7 +2775,7 @@ while :; do
     #
     # FIXME: Please check pacman(8) to see if they are really 2nd operation
     #
-    e|g|i|l|m|n|o|p|s)
+    e|g|i|l|m|n|o|p|s|k)
       if [ -z "$_SOPT" ]; then
         _SOPT="$_opt"
         continue
@@ -2855,18 +2889,20 @@ _translate_all || exit
 if [ -n "$*" ]; then
   case "${_POPT}${_SOPT}" in
   "Su"|"Sy"|"Suy")
-    echo 1>&2 "WARNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    echo 1>&2 "  The -Sy/u options refresh and/or upgrade all packages."
-    echo 1>&2 "  To install packages as well, use separate commands:"
-    echo 1>&2
-    echo 1>&2 "    $0 -S$_SOPT; $0 -S ${*}"
-    echo 1>&2 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    if ! echo "$*" | $GREP -Eq -e '(^|\s)-' -e '-+\w+\s+[^-]'; then
+      echo 1>&2 "WARNING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+      echo 1>&2 "  The -Sy/u options refresh and/or upgrade all packages."
+      echo 1>&2 "  To install packages as well, use separate commands:"
+      echo 1>&2
+      echo 1>&2 "    $0 -S$_SOPT; $0 -S ${*:-}"
+      echo 1>&2 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    fi;
   esac
 fi
 
 if [ -n "$PACAPT_DEBUG" ]; then
   echo "pacapt: $_PACMAN, p=$_POPT, s=$_SOPT, t=$_TOPT, e=$_EOPT"
-  echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT ${*}'"
+  echo "pacapt: execute '${_PACMAN}_${_POPT}${_SOPT} $_EOPT ${*:-}'"
   if command -v declare >/dev/null; then
     # shellcheck disable=SC3044
     declare -f "${_PACMAN}_${_POPT}${_SOPT}"
