@@ -126,6 +126,14 @@ zypper_Sl() {
   fi
 }
 
+zypper_Sg() {
+  if [ $# -gt 0 ]; then
+    zypper info "$@"
+  else
+    zypper patterns
+  fi
+}
+
 zypper_Ss() {
   zypper search "$@"
 }

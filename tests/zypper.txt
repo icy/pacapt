@@ -89,3 +89,12 @@ ou All repositories have been cleaned up.
 
 in -sS tmux
 ou tmux
+
+# Package groups
+in -Sg
+ou ^  | base
+ou ^  | console
+
+in -Sg console
+ou ^  | patterns-base-console
+ou ^  | tmux
