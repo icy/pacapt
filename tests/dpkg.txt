@@ -22,6 +22,12 @@ ou available operations:.*( [Q][ ilos])+
 
 # Update package databses
 in -Sy
+ou ^Get
+ou ^Fetched
+in -Sy --quiet --quiet
+ou empty
+in -Sy -qq
+ou empty
 
 # Simple query that lists all packages
 in -Qq
