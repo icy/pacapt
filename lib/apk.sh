@@ -35,14 +35,7 @@ apk_Q() {
 }
 
 apk_Qe() {
-  packages_marked_to_install="$(cat /etc/apk/world)"
-  installed_packages="$(apk info)"
-
-  while read -r L; do
-    echo "$installed_packages" | grep -Eo "^$L$"
-  done << EOF
-$packages_marked_to_install
-EOF
+  apk info | grep -x -f /etc/apk/world
 }
 
 apk_Qi() {

@@ -106,7 +106,7 @@ in ! echo "wget" >> /etc/apk/world
 in -Qe | grep -o wget
 ou empty
 in ! sed -i '$ d' /etc/apk/world
-in ! cat /etc/apk/world | grep -o wget
+in ! grep -o wget /etc/apk/world
 ou empty
 
 # Clean cache
