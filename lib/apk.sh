@@ -34,6 +34,10 @@ apk_Q() {
   esac
 }
 
+apk_Qe() {
+  apk info | grep -x -f /etc/apk/world
+}
+
 apk_Qi() {
   if [ "$#" -eq 0 ]; then
     # shellcheck disable=SC2046
