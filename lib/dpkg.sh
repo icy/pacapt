@@ -121,6 +121,18 @@ dpkg_R() {
   apt-get remove "$@"
 }
 
+dpkg_Sg() {
+  if ! command -v tasksel > /dev/null 2>&1; then
+    _die "pacapt: tasksel binary does not exist in system."
+  fi
+  
+  if [ $# -gt 0 ]; then
+    tasksel --task-packages "$@"
+  else
+    tasksel --list-task
+  fi
+}
+
 dpkg_Si() {
   apt-cache show "$@"
 }
