@@ -1,11 +1,15 @@
 ## v3.0.2
 
+* `tests/apk`: Add tests (Credit: @mondeja)
 * `lib/*`: All `POSIX`, except `lib/cave`
-* `lib/homebrew`: Fix shell switching issue (#170)
+* `lib/homebrew`: Fix shell switching issue (Fixes #170)
   that makes the program broken since `v3.0.0`
 * `lib/dpkg/{Qc,Qe}`: Add (Credit: @mondeja)
 * `lib/zypper`: `POSIX` ready, tests added, minor fixes
+* `lib/zypper/Sg`: Add (credit: @mondeja)
 * `lib/zypper/Sii`: Removed as it's too slow.
+* Improve the way the program deals with back-end's
+  optional arguments (Fixes #173)
 
 ### Deprecation
 
