@@ -125,12 +125,14 @@ dpkg_Si() {
   apt-cache show "$@"
 }
 
+# FIXME: support --quiet
 dpkg_Suy() {
   apt-get update \
   && apt-get upgrade "$@" \
   && apt-get dist-upgrade "$@"
 }
 
+# FIXME: Support --quiet
 dpkg_Su() {
   apt-get upgrade "$@" \
   && apt-get dist-upgrade "$@"
@@ -143,9 +145,14 @@ dpkg_Su() {
 #   apt-get --download-only install "$@"
 # }
 
-# FIXME: Should we remove "$@"?
 dpkg_Sy() {
-  apt-get update "$@"
+  if [ "$_TOPT" = "q" ]; then
+    local_quiet="--quiet"
+  else
+    local_quiet=""
+  fi
+  # shellcheck disable=SC2086
+  apt-get update $local_quiet
 }
 
 # FIXME: A simple implemention for #53 and
