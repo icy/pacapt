@@ -118,7 +118,7 @@ A long list of options and operations can be found from [`ArchLinux`'s wiki](htt
      cave  *        *     *     *  *  *  * *  *   *  * *  *   *    x     *         *  *   *  * x
     conda  *                               *           *  *              *         *      *     
       dnf  ~  *  *  *     *  *  *  *  *  * *           *  *   *    *  *  *      *  *  *   *  * *
-     dpkg  ~  *  *  *  *  *     *  *  *  * *  *   *  ~ *  *   *    *     *   *     *  *   *  * *
+     dpkg  ~  *  *  *  *  *     *  *  *  * *  *   *  ~ *  *   *    *  *  *   *     *  *   *  * *
  homebrew  *  *     *     *           *  * *           *  *   *    *     *         *  *   *  *  
  macports     *           *     *        * *         ~ *  *   *          *         *  *   *  *  
      opkg  *        *     *     *     *  * *           *                 *   *     *  *      * *
@@ -130,7 +130,7 @@ sun_tools  *        *     *     *     *    *                                    
    tazpkg  *        *     *     *          *           *  *   *                    *  *   *  * *
     tlmgr           *  *  *                *           *                 *      *  *      *    *
       yum  *  *     *     *  *  *  *  *  * *         * *  *   *    *     *   *     *  *   *  * *
-   zypper  *  *     *     *  *  *  *  *  * *  *   *  * *  *   *    *     *   *  *  *  *   *  * *
+   zypper  *  *     *     *  *  *  *  *  * *  *   *  * *  *   *    *  *  *   *  *  *  *   *  * *
 ```
 
 **Notes:**
