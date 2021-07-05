@@ -54,10 +54,10 @@ Other than that, there are a few important/essential files:
 
 ### `tests`
 
-Contains all text files written by a simple `DSL`. Some useful information
-about them can be read from [`tests/README.md`](tests/README.md),
-see real examples in [`tests/dpkg.txt`](tests/dpkg.txt) (this is one
-of the richest test file we have).
+Contains all tests files written in a simple `DSL`. Some useful information
+about them can be read from [`tests/README.md`](tests/README.md).
+See real examples in [`tests/dpkg.txt`](tests/dpkg.txt) (this is one
+of the richest test files we have).
 
 In short, the test file has the following format
 
@@ -73,9 +73,9 @@ The test file is heavily parsed by a custom `Ruby` script found in
 [`bin/gen_tests.rb`](bin/gen_tests.rb) and will be invoked
 by the executor [`tests/test.sh`](tests/test.sh). When there are
 multiple docker images are provided, the `parallel` command will know
-that and execute tests in parallel.
+that and execute multiple containers in parallel.
 
-On all tests in the test file are executed in the order provided.
+All tests in the test file are executed in the order provided.
 
 ### `bin`
 
@@ -88,12 +88,13 @@ Contains two important scripts
 * [`gen_tests.rb`](bin/gen_tests.rb): To deal with our tests DSL
   as mentioned in the section [`tests`](#tests)
 
-The very tricky program [`bin/gen_stats.sh`] is used to generate
-the table of all supported operations that you see from
+The very tricky program [`bin/gen_stats.sh`]`bin/gen_stats.sh
+is used to generate the table of all supported operations that you see from
 the [README.md](README.md#implemented-operations). The algorithm
 was designed and implemented _once_ and since then no further change
-was made :D Well, it's so scary to touch that part, as long as it's working.
-To script requires all method in [`lib/`](lib/) to follow a strict syntax
+has ever been made :D Well, it's so scary to touch that part,
+as long as it's working.
+It requires all methods in [`lib/`](lib/) to follow a strict syntax
 which you can see from the code:
 
 ```
