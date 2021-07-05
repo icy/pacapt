@@ -88,7 +88,7 @@ Contains two important scripts
 * [`gen_tests.rb`](bin/gen_tests.rb): To deal with our tests DSL
   as mentioned in the section [`tests`](#tests)
 
-The very tricky program [`bin/gen_stats.sh`]`bin/gen_stats.sh
+The very tricky program [`bin/gen_stats.sh`](bin/gen_stats.sh)
 is used to generate the table of all supported operations that you see from
 the [README.md](README.md#implemented-operations). The algorithm
 was designed and implemented _once_ and since then no further change
