@@ -143,7 +143,6 @@ dpkg_Su() {
 #   apt-get --download-only install "$@"
 # }
 
-# FIXME: Should we remove "$@"?
 dpkg_Sy() {
   apt-get update "$@"
 }
