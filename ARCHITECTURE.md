@@ -130,7 +130,7 @@ The project is using
 * `Bourne` and `Bourne-Again` shell scripting language
 * Docker
 * `Dlang` on some deprecated branches
-* its own DLS for test files
+* its own DSL for test files
 * `Markdown` (Github format)
 * `English`
 
