@@ -115,7 +115,7 @@ ou ^Status: deinstall
 
 # Verify package files
 in -Qk apt
-ou debsums binary does not exist
+ou ^:: pacapt: debsums binary does not exist in system\.$
 in -S --noconfirm debsums
 in -Qk apt
 ou /usr/bin/apt.+OK
@@ -123,6 +123,17 @@ ou /usr/bin/apt-get.+OK
 in -Qk
 ou /usr/bin/apt.+OK
 in -R --noconfirm debsums
+
+# Package groups
+in -Sg
+ou ^:: pacapt: tasksel binary does not exist in system\.$
+in -S --noconfirm tasksel
+in -Sg
+ou ^u (print-server|ubuntu-desktop|manual)
+
+in ! if [ "$(cat /etc/*-release | grep -E ^ID= | cut -d'=' -f2)" = "ubuntu" ]; then pacman -Sg ubuntu-desktop; else pacman -Sg print-server; fi
+ou ^(task-print-server|ubuntu-desktop)
+in -R --noconfirm tasksel
 
 # Query information from a .deb package
 in ! export DEB_FILE=`find /var/cache/apt/ -type f -iname "screen*.deb"`
