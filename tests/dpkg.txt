@@ -27,6 +27,12 @@ in -Sy
 in -Qq
 ou ^apt$
 
+in -Q --quiet
+ou ^apt$
+
+in --quiet -Q
+ou ^apt$
+
 # Listing with version and package name
 in -Q
 # ou ^ii +apt +.+ubuntu

@@ -114,6 +114,12 @@ while :; do
     continue
     ;;
 
+  "--quiet")
+    shift
+    _TOPT="q"
+    continue
+    ;;
+
   "-"|"--")
     shift
     break
@@ -250,6 +256,7 @@ while :; do
   if [ -n "$_POPT" ] && [ -n "$_SOPT" ]; then
     case "${1:-}" in
     "-w"|"--noconfirm") ;;
+    "-q"|"--quiet") ;;
     *) break;;
     esac
 
