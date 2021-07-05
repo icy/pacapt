@@ -128,7 +128,8 @@ The project is using
 * `Ruby`
 * `Perl`
 * `Bourne` and `Bourne-Again` shell scripting language
-* Docker
+* `Dockerfile`
+* (GNU) `parallel`, `awk`, `sed`, `grep`
 * `Dlang` on some deprecated branches
 * its own DSL for test files
 * `Markdown` (Github format)
