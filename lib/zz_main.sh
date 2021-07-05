@@ -43,7 +43,7 @@ if [ -z "${__PACAPT_FORKED__:-}" ]; then
     export __PACAPT_FORKED__="yes"
     readonly __PACAPT_FORKED__
 
-    exec bash "$0" "$@"
+    exec bash "$0" -- "$@"
   fi
 else
   # Hey, this is very awesome strick to avoid syntax issue.
