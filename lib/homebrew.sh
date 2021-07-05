@@ -217,9 +217,6 @@ homebrew_Scc() {
 homebrew_Sccc() {
   # See more discussion in
   #   https://github.com/icy/pacapt/issues/47
-
-  local_dcache
-
   local_dcache="$(brew --cache)"
   case "$local_dcache" in
   ""|"/"|" ")
