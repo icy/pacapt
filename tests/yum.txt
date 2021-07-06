@@ -1,0 +1,136 @@
+#!/bin/sh
+
+# Purpose : Testing script for yum support
+# Author  : Álvaro Mondéjar
+# License : MIT
+
+im centos:7 centos:8
+
+in -P
+ou available operations:.*( [Q][ ilos])+
+
+# Get installed packages
+in -Qq
+ou ^rpm$
+in -Q
+ou ^rpm [0-9]+\.[0-9]+\.?[0-9]*$
+
+# Get packages information
+in -Qi
+ou ^Name\s+: rpm$
+ou ^Version\s+: [0-9]+\.[0-9]+\.?[0-9]*$
+
+# Get package information
+in -Qi rpm
+ou ^Name\s+: rpm$
+ou ^Version\s+: [0-9]+\.[0-9]+\.?[0-9]*$
+
+# Get locally installed package
+in -Qs rpm
+ou ^rpm [0-9]+\.[0-9]+\.?[0-9]*$
+in -Qqs rpm
+ou ^rpm$
+
+# Get package files
+in -Ql rpm
+ou ^(/usr)?/bin/rpm$
+
+# Get package from file
+in -Qo rpm
+ou ^rpm-.+\.x86_64$
+in -Qo "$(command -v rpm)"
+ou ^rpm-.+\.x86_64$
+
+# Show package changelog
+in -Qc rpm
+ou ^*\s.+[0-9]$
+
+# List packages with available updates
+in -Qu
+ou ^[a-z\-]+\.x86_64.+(baseos|updates)$
+in -Sy
+ou ^[a-z\-]+\.x86_64.+(baseos|updates)$
+
+# Get installed packages unavailable in repos
+in -Qm
+ou ^(Last metadata expiration check|Loaded plugins)
+
+# Install package
+in ! command -v wget
+ou empty
+in -S --noconfirm wget
+ou ^Installing:$
+ou ^ wget\s+x86_64
+ou ^Installed:$
+in ! command -v wget
+ou ^(/usr)?/bin/wget$
+
+# Remove package
+in -R --noconfirm wget
+ou ^Removing:$
+ou ^ wget\s+x86_64
+ou ^Removed:$
+in ! command -v wget
+ou empty
+
+in -S --noconfirm wget
+in ! command -v wget
+ou ^(/usr)?/bin/wget$
+in -Rs --noconfirm wget
+ou ^Removing:$
+ou ^ wget\s+x86_64
+ou ^Removed:$
+in ! command -v wget
+ou empty
+
+# Update
+in -Su
+ou ^Up(dat|grad)ing:$
+in -Suy
+ou ^[a-z\-]+\.x86_64.+(baseos|updates)$
+
+# Search packages
+in -Ss wget
+ou ^wget\.x86_64
+
+# NOTE: dependencies queries require repoquery (included in yum-utils)
+in -S --noconfirm yum-utils
+in clear
+in ! command -v repoquery
+ou ^(/usr)?/bin/repoquery$
+
+# Get information from local package file
+in ! repoquery --location nano
+ou ^http.+\.rpm$
+in ! curl -sL "$(repoquery --location nano 2>/dev/null)" -o /tmp/nano-package.rpm
+ou empty
+in ! [ -f /tmp/nano-package.rpm ] || echo not found
+ou empty
+in -Qp /tmp/nano-package.rpm
+ou ^nano-.+\.x86_64$
+
+# Install package using local file
+in ! command -v nano
+ou empty
+in -U --noconfirm /tmp/nano-package.rpm
+ou ^Installing:$
+ou ^ nano\s+x86_64
+ou ^Installed:$
+in ! command -v nano
+ou ^(/usr)?/bin/nano$
+
+# Cache cleaning
+in -Sc
+ou ^[0-9]+( metadata)? files removed$
+in -Scc
+ou ^[0-9]+( package)? files removed$
+in -Sccc
+ou ^([0-9]+ files removed|Cleaning repos:)
+
+# Get dependencies
+in -Si yum
+ou ^(dnf|rpm)-
+
+# Get reverse dependencies
+in -Sii rpm
+ou ^rpm-libs-
