@@ -66,7 +66,7 @@ BEGIN {
   puts "}"
 }
 
-if gs = $_.match(/^in(.*)/)
+if gs = $_.to_s.match(/^in(.*)/)
   if new_test
     puts ""
     outputs = []
@@ -93,7 +93,7 @@ if gs = $_.match(/^in(.*)/)
   puts "  { #{cmd} ; } 1>>$F_TMP 2>&1"
   puts "fi"
 
-elsif gs = $_.match(/^ou(.*)/)
+elsif gs = $_.to_s.match(/^ou(.*)/)
   new_test = true
   expected = gs[1].strip
 

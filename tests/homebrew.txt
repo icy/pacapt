@@ -1,0 +1,40 @@
+#!/usr/bin/env sh
+
+# Purpose : testings pacapt+homebrew
+# Author  : Ky-Anh Huynh
+# Date    : 06.July.2021
+
+im macos
+
+in -Sy
+in -S nano
+in ! command -v nano
+ou bin/nano
+in ! nano --version
+ou GNU nano
+in -Qi
+ou kegs.*files
+in -Qi nano
+ou License: GPL
+ou replacement for the Pico
+
+# FIXME: This is very slow on Github # in -Ql
+# FIXME: This is very slow on Github # ou ^nano.* bin/nano
+# FIXME: This is very slow on Github # in -Qql
+# FIXME: This is very slow on Github # ou ^([^[:space:]])*bin/nano
+
+in -Ql nano
+ou bin/nano
+ou share/info/nano.info
+in -Qs
+ou ^nano
+#in -Qo -1
+#ou ^Date:
+#in -Qo nano -1
+#ou ^Date:
+in -Q
+ou nano [0-9].[0-9]
+in -Qq
+ou nano
+in -Qq nano
+ou nano
