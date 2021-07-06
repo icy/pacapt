@@ -1,0 +1,128 @@
+#!/bin/sh
+
+# Purpose : Testing script for dnf support
+# Author  : Álvaro Mondéjar
+# License : MIT
+
+im fedora:32 fedora:33 fedora:34
+
+in -P
+ou available operations:.*( [Q][ ilos])+
+
+# NOTE: in fedora:34 '/usr/bin/dnf' is not an executable
+#       but in all machines the binary is a symlink
+in ! [ -L /usr/bin/dnf ] && echo "dnf binary is symlink"
+ou ^dnf binary is symlink$
+
+# List packages with available updates
+in -Qu
+ou ^Available Upgrades$
+
+# Update and upgrade
+in -Su --noconfirm
+ou ^Upgrading:$
+ou ^Upgraded:$
+
+# Get installed packages
+in -Qq
+ou ^bash$
+ou ^grep$
+in -Q
+ou ^bash [0-9]+\.[0-9]+\.?[0-9]*$
+
+# Get packages information (too slow)
+#in -Qi
+
+# Get package information
+in -Qi bash
+ou ^Name\s+: bash$
+ou ^Version\s+: [0-9]+\.[0-9]+\.?[0-9]*$
+
+# Get locally installed package
+in -Qs rpm
+ou ^rpm-.+\.x86_64$
+ou ^rpm-libs-.+\.x86_64$
+
+# Get package files
+in -Ql rpm
+ou ^/usr/bin/rpm$
+
+# Get package from file
+in -Qo rpm
+ou ^rpm-.+\.x86_64$
+in -Qo "$(command -v rpm)"
+ou ^rpm-.+\.x86_64$
+
+# Show package changelog
+in -Qc rpm
+ou ^*\s.+[0-9]$
+
+# Get installed packages unavailable in repos
+in -Qm
+ou ^Last metadata expiration check
+
+# Install package
+in ! command -v nano
+ou empty
+in -S --noconfirm nano
+ou ^Installing:$
+ou ^ nano\s+x86_64
+ou ^Installed:$
+in ! command -v nano
+ou /bin/nano
+
+# Remove pakage
+in -R --noconfirm nano
+ou ^Removing:$
+ou ^ nano\s+x86_64
+ou ^Removed:$
+
+# Search packages
+in -Ss wget
+ou ^wget\.x86_64
+in -Sl
+ou ^Available Packages$
+
+# Get information from local package file
+in ! dnf repoquery --location nano
+ou ^http.+\.rpm$
+in ! curl -sL "$(dnf repoquery --location nano 2>/dev/null | head -n 1)" -o /tmp/nano-package.rpm
+ou empty
+in ! [ -f /tmp/nano-package.rpm ] || echo not found
+ou empty
+in -Qp /tmp/nano-package.rpm
+ou ^nano-.+\.x86_64$
+
+# Install package using local file
+in ! command -v nano
+ou empty
+in -U --noconfirm /tmp/nano-package.rpm
+ou ^Installing:$
+ou ^ nano\s+x86_64
+ou ^Installed:$
+in ! command -v nano
+ou ^(/usr)?/bin/nano$
+
+# Cache cleaning
+in -Sc
+ou ^[0-9]+ files removed$
+in -Scc
+ou ^[0-9]+ files removed$
+in -Sccc
+ou ^[0-9]+ files removed$
+
+# Get dependencies
+in -Si dnf
+ou ^bash
+ou ^python3-dnf
+
+# Get reverse dependencies
+in -Sii rpm
+ou ^rpm-libs-
+
+# Package groups
+in -Sg
+ou ^   3D Printing$
+in -Sg "3D Printing"
+ou ^   blender$
+ou ^   openscad$

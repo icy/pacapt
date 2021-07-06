@@ -119,7 +119,7 @@ _PACMAN_detect() {
   [ -x "/usr/bin/apt-get" ] && _PACMAN="dpkg" && return
   [ -x "/data/data/com.termux/files/usr/bin/apt-get" ] && _PACMAN="dpkg" && return
   [ -x "/usr/bin/cave" ] && _PACMAN="cave" && return
-  [ -x "/usr/bin/dnf" ] && _PACMAN="dnf" && return
+  [[ -x "/usr/bin/dnf" || -L "/usr/bin/dnf" ]] && _PACMAN="dnf" && return
   [ -x "/usr/bin/yum" ] && _PACMAN="yum" && return
   [ -x "/opt/local/bin/port" ] && _PACMAN="macports" && return
   [ -x "/usr/bin/emerge" ] && _PACMAN="portage" && return
