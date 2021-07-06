@@ -82,6 +82,14 @@ yum_R() {
   yum erase "$@"
 }
 
+yum_Sg() {
+  if [ $# -eq 0 ]; then
+    yum grouplist hidden
+  else
+    yum groups info "$@"
+  fi
+}
+
 yum_Si() {
   _require_programs repoquery
   repoquery --requires --resolve "$@"
