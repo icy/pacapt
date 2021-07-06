@@ -13,25 +13,10 @@
 #
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
-# in -Sy
 _homebrew_init() {
   :
 }
 
-# in -S nano
-
-# in ! command -v nano
-# ou bin/nano
-
-# in ! nano --version
-# ou GNU nano
-
-# in -Qi
-# ou kegs.*files
-
-# in -Qi nano
-# ou License: GPL
-# ou replacement for the Pico
 homebrew_Qi() {
   brew info "$@"
 }
@@ -47,17 +32,6 @@ homebrew_Qi() {
 # NOTE: files (which can be very slow/long)
 #
 # NOTE:   $ brew list nano | cat  # list all files (full list)
-#
-
-# in -Ql
-# ou ^nano.* bin/nano
-
-# in -Qql
-# ou ^([^[:space:]])*bin/nano
-
-# in -Ql nano
-# ou bin/nano
-# ou share/info/nano.info
 #
 homebrew_Ql() {
   local_casks=
@@ -99,8 +73,6 @@ homebrew_Ql() {
 # FIXME: Also search in ... package description
 # FIXME: `homebrew search` does search online/locally (both!)
 # FIXME: and it may provide more options. We don't use them now.
-# in -Qs
-# ou ^nano
 homebrew_Qs() {
   if [ -z "$_TOPT" ]; then
     local_flags="--versions"
@@ -132,11 +104,6 @@ homebrew_Qs() {
 # FIXME #   done
 # FIXME # }
 
-# in -Qo -1
-# ou ^Date:
-
-# in -Qo nano -1
-# ou ^Date:
 homebrew_Qc() {
   brew log "$@"
 }
@@ -146,12 +113,6 @@ homebrew_Qu() {
   brew outdated "$@"
 }
 
-# in -Q
-# ou nano [0-9].[0-9]
-# in -Qq
-# ou nano
-# in -Qq nano
-# ou nano
 homebrew_Q() {
   if [ -z "$_TOPT" ]; then
     local_flags="--versions"
