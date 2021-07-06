@@ -34,3 +34,12 @@ gen: tmp/pacapt.dev
 clean:
 	@rm -fv tmp/*.sh tmp/pacapt.dev
 	@echo Please remove tmp/*.log manually.
+
+# test_homebrew:
+# test_homebrew: Execute tests within MacOS provided by Github-actions
+.PHONY: test_homebrew
+test_homebrew:
+	@set -u && echo $$CI >/dev/null
+	@mkdir -pv tmp
+	@ruby -n ../bin/gen_tests.rb < homebrew.txt > tmp/homebrew.sh
+	@cd tmp && MSG_PREFIX=":: [homebrew] " sh homebrew.sh

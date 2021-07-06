@@ -54,3 +54,16 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: make tests TESTS="slitaz40"
+
+  homebrew:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: |
+        # test_homebrew
+        set -x
+        make pacapt.dev
+        export PATH="$(pwd -P):$PATH"
+        ln -s pacapt.dev pacman
+        cd tests/
+        make test_homebrew
