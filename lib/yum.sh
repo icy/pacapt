@@ -83,10 +83,7 @@ yum_R() {
 }
 
 yum_Si() {
-  if ! command -v repoquery > /dev/null 2>&1; then
-    _die "pacapt: repoquery binary does not exist in system."
-  fi
-
+  _require_programs repoquery
   repoquery --requires --resolve "$@"
 }
 
@@ -128,9 +125,6 @@ yum_U() {
 }
 
 yum_Sii() {
-  if ! command -v repoquery > /dev/null 2>&1; then
-    _die "pacapt: repoquery binary does not exist in system."
-  fi
-
+  _require_programs repoquery
   repoquery --installed --whatrequires "$@"
 }

@@ -115,7 +115,7 @@ ou ^Status: deinstall
 
 # Verify package files
 in -Qk apt
-ou ^:: pacapt: debsums binary does not exist in system\.$
+ou requires 'debsums' but the tool is not found\.$
 in -S --noconfirm debsums
 in -Qk apt
 ou /usr/bin/apt.+OK
@@ -126,7 +126,7 @@ in -R --noconfirm debsums
 
 # Package groups
 in -Sg
-ou ^:: pacapt: tasksel binary does not exist in system\.$
+ou requires 'tasksel' but the tool is not found\.$
 in -S --noconfirm tasksel
 in -Sg
 ou ^u (print-server|ubuntu-desktop|manual)
