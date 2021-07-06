@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 3.0.2
+# Version: 3.0.3
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2021 \
@@ -46,7 +46,7 @@
 
 _print_pacapt_version() {
   cat <<_EOF_
-pacapt version '3.0.2'
+pacapt version '3.0.3'
 
 Copyright (C) 2010 - 2021 \\
                           | 10sr (10sr)
@@ -87,7 +87,7 @@ DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 _EOF_
 }
 
-export PACAPT_VERSION='3.0.2'
+export PACAPT_VERSION='3.0.3'
 
 _help() {
   cat <<'EOF'
@@ -503,6 +503,10 @@ apk_Q() {
     _not_implemented
     ;;
   esac
+}
+
+apk_Qe() {
+  apk info | grep -x -f /etc/apk/world
 }
 
 apk_Qi() {
@@ -967,10 +971,7 @@ dpkg_Qe() {
 }
 
 dpkg_Qk() {
-  if ! command -v debsums > /dev/null 2>&1; then
-    _die "pacapt: debsums binary does not exist in system."
-  fi
-
+  _require_programs debsums
   debsums "$@"
 }
 
@@ -1040,6 +1041,16 @@ dpkg_R() {
   apt-get remove "$@"
 }
 
+dpkg_Sg() {
+  _require_programs tasksel
+  
+  if [ $# -gt 0 ]; then
+    tasksel --task-packages "$@"
+  else
+    tasksel --list-task
+  fi
+}
+
 dpkg_Si() {
   apt-cache show "$@"
 }
@@ -1106,16 +1117,9 @@ _homebrew_init() {
   :
 }
 
-
-
-
-
 homebrew_Qi() {
   brew info "$@"
 }
-
-
-
 
 homebrew_Ql() {
   local_casks=
@@ -1160,7 +1164,6 @@ homebrew_Qs() {
   # shellcheck disable=SC2086
   brew list $local_flags | grep "${@:-.}"
 }
-
 
 
 homebrew_Qc() {
@@ -1220,9 +1223,6 @@ homebrew_Scc() {
 homebrew_Sccc() {
   # See more discussion in
   #   https://github.com/icy/pacapt/issues/47
-
-  local_dcache
-
   local_dcache="$(brew --cache)"
   case "$local_dcache" in
   ""|"/"|" ")
@@ -2136,7 +2136,8 @@ yum_R() {
 }
 
 yum_Si() {
-  yum info "$@"
+  _require_programs repoquery
+  repoquery --requires --resolve "$@"
 }
 
 yum_Suy() {
@@ -2177,7 +2178,8 @@ yum_U() {
 }
 
 yum_Sii() {
-  yum resolvedep "$@"
+  _require_programs repoquery
+  repoquery --installed --whatrequires "$@"
 }
 
 
@@ -2359,6 +2361,7 @@ zypper_U() {
 _validate_operation() {
   case "$1" in
   "apk_Q") ;;
+  "apk_Qe") ;;
   "apk_Qi") ;;
   "apk_Ql") ;;
   "apk_Qo") ;;
@@ -2445,6 +2448,7 @@ _validate_operation() {
   "dpkg_Rn") ;;
   "dpkg_Rns") ;;
   "dpkg_R") ;;
+  "dpkg_Sg") ;;
   "dpkg_Si") ;;
   "dpkg_Suy") ;;
   "dpkg_Su") ;;

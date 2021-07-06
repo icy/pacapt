@@ -1,3 +1,13 @@
+## v3.0.3
+
+* Add architecture documentation
+* `lib/apk/Qe`: Add (credit: @mondeja)
+* `lib/dpkg/Sg`: Add (credit: @mondeja)
+* `lib/yum`: Minor fixes (credit: @mondeja)
+* `libe/homebrew`: Minor bug fix
+* `tets/yum`: Add (credit: @mondeja)
+* `tests/homebrew`: Add CI support on Github-Action
+
 ## v3.0.2
 
 * `tests/apk`: Add tests (Credit: @mondeja)
