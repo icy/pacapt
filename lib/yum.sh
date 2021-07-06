@@ -83,7 +83,8 @@ yum_R() {
 }
 
 yum_Si() {
-  yum info "$@"
+  _require_programs repoquery
+  repoquery --requires --resolve "$@"
 }
 
 yum_Suy() {
@@ -124,5 +125,6 @@ yum_U() {
 }
 
 yum_Sii() {
-  yum resolvedep "$@"
+  _require_programs repoquery
+  repoquery --installed --whatrequires "$@"
 }

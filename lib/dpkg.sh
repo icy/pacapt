@@ -45,10 +45,7 @@ dpkg_Qe() {
 }
 
 dpkg_Qk() {
-  if ! command -v debsums > /dev/null 2>&1; then
-    _die "pacapt: debsums binary does not exist in system."
-  fi
-
+  _require_programs debsums
   debsums "$@"
 }
 
@@ -122,9 +119,7 @@ dpkg_R() {
 }
 
 dpkg_Sg() {
-  if ! command -v tasksel > /dev/null 2>&1; then
-    _die "pacapt: tasksel binary does not exist in system."
-  fi
+  _require_programs tasksel
   
   if [ $# -gt 0 ]; then
     tasksel --task-packages "$@"
