@@ -39,7 +39,7 @@ BEGIN {
   # This is the case for non-docker tests (homebrew, pkgng).
   # We need to reduce the duplicate log message in these cases.
   #
-  puts "_log()  { if [ -n \"${CI:-}\" ]; then echo \"$*\" 1>&2 ; fi; }"
+  puts "_log()  { if [ -z \"${CI:-}\" ]; then echo \"$*\" 1>&2 ; fi; }"
 
   # A fancy wrappers of _log
   puts "_fail() { _log \"${MSG_PREFIX}Fail: $*\"; echo \"${MSG_PREFIX}Fail: $*\"; }" # red
