@@ -134,3 +134,10 @@ ou ^(dnf|rpm)-
 # Get reverse dependencies
 in -Sii rpm
 ou ^rpm-libs-
+
+# Package groups
+in -Sg
+ou ^   FTP Server$
+in -Sg "FTP Server"
+ou ^ Mandatory Packages:$
+ou ^   \+?vsftpd$
