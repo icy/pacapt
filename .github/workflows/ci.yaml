@@ -79,3 +79,19 @@ jobs:
         ln -s pacapt.dev pacman
         cd tests/
         make test_homebrew
+
+  pkgng:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: vmactions/freebsd-vm@v0.1.5
+      with:
+        usesh: true
+        prepare: pkg install -y bash ruby git
+        run: |
+          set -x
+          make pacapt.dev
+          ln -s pacapt.dev pacman
+          export PATH="$(pwd -P):$PATH"
+          cd tests/
+          make test_pkgng

@@ -43,3 +43,13 @@ test_homebrew:
 	@mkdir -pv tmp
 	@ruby -n ../bin/gen_tests.rb < homebrew.txt > tmp/homebrew.sh
 	@cd tmp && MSG_PREFIX=":: [homebrew] " sh homebrew.sh
+
+# test_pkgng:
+# test_pkgng: Execute FreeBSD tests within MacOS provided by Github-actions
+.PHONY: test_pkgng
+test_pkgng:
+	@set -u && echo $$CI >/dev/null
+	@mkdir -pv tmp
+	@ruby -n ../bin/gen_tests.rb < pkgng.txt > tmp/pkgng.sh
+	@pkg remove -y bash || true
+	@cd tmp && MSG_PREFIX=":: [pkgng] " sh pkgng.sh
