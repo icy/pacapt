@@ -42,6 +42,14 @@ BEGIN {
   puts "_log()  { if [ -z \"${CI:-}\" ]; then echo \"$*\" 1>&2 ; fi; }"
 
   # A fancy wrappers of _log
+  #
+  # Where there is any message, we need to ensure they are on both
+  # channels (STDIN, STDERR). Normally, the STDERR has more verbose
+  # information, i.e, the output of all executions. The STDERR will
+  # be [often] captured for later investigation and it's done via
+  # the `tests/test.sh`. From STDIN we try to keep it compact.
+  # ...
+  #
   puts "_fail() { _log \"${MSG_PREFIX}Fail: $*\"; echo \"${MSG_PREFIX}Fail: $*\"; }" # red
   puts "_erro() { _log \"${MSG_PREFIX}Erro: $*\"; echo \"${MSG_PREFIX}Erro: $*\"; }" # red
   puts "_info() { _log \"${MSG_PREFIX}Info: $*\"; echo \"${MSG_PREFIX}Info: $*\"; }" # cyan
@@ -53,8 +61,15 @@ BEGIN {
   # we print out all output and remove that too.
   puts "_slog() {"
   puts "  if [ -n \"${F_TMP:-}\" ]; then"
-  puts "    _info 'Exec. output:'"
-  puts "    1>&2 cat $F_TMP"
+  puts "    if [ -z \"${CI:-}\" ]; then"
+  puts "      _info 'Exec. output:'"
+  puts "      1>&2 cat $F_TMP"
+  puts "    fi"
+  # ...
+  # but when our test fails, we also print the first 100 lines to
+  # the STDOUT, so that we can see them quickly. It can be tricky
+  # when  homebrew/pkgng fails, because we don't have any access
+  # to MacOS environment on github-action runner. But let's see...
   puts "    if [ $T_FAIL -ge 1 ]; then"
   puts "      cat $F_TMP \\"
   puts "      | awk '{ if (NR <= 100) { printf(\" > %s\\n\", $0); }}"
