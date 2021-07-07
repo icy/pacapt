@@ -50,7 +50,7 @@ BEGIN {
   # the `tests/test.sh`. From STDIN we try to keep it compact.
   # ...
   #
-  puts "_fail() { _log \"${MSG_PREFIX}Fail: $*\"; echo \"${MSG_PREFIX}Fail: $*\"; }" # red
+  puts "_fail() { _log \"${MSG_PREFIX}Fail: $*\"; printf \"${MSG_PREFIX}\e[31mFail\e[0m: %s\n\" \"$*\"; }" # red
   puts "_erro() { _log \"${MSG_PREFIX}Erro: $*\"; echo \"${MSG_PREFIX}Erro: $*\"; }" # red
   puts "_info() { _log \"${MSG_PREFIX}Info: $*\"; echo \"${MSG_PREFIX}Info: $*\"; }" # cyan
   puts "_pass() { _log \"${MSG_PREFIX}Pass: $*\"; echo \"${MSG_PREFIX}Pass: $*\"; }" # cyan
