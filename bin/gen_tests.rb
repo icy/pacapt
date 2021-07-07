@@ -31,16 +31,23 @@ BEGIN {
   puts ""
   puts "set -u"
   puts ""
+  #
   # Just send message to STDERR
-  puts "_log()  { echo \"$*\" 1>&2 ; }"
+  #
+  # When CI is set, we expect the current test script is executed directly
+  # by Github-Runner shell (not via our Docker launcher.)
+  # This is the case for non-docker tests (homebrew, pkgng).
+  # We need to reduce the duplicate log message in these cases.
+  #
+  puts "_log()  { if [ -z \"${CI:-}\" ]; then echo \"$*\" 1>&2 ; fi; }"
 
   # A fancy wrappers of _log
-  puts "_fail() { _log \"${MSG_PREFIX}Fail $*\"; echo \"${MSG_PREFIX}Fail: $*\"; }" # red
-  puts "_erro() { _log \"${MSG_PREFIX}Erro $*\"; echo \"${MSG_PREFIX}Erro: $*\"; }" # red
-  puts "_info() { _log \"${MSG_PREFIX}Info $*\"; echo \"${MSG_PREFIX}Info: $*\"; }" # cyan
-  puts "_pass() { _log \"${MSG_PREFIX}Pass $*\"; echo \"${MSG_PREFIX}Pass: $*\"; }" # cyan
-  puts "_exec() { _log \"${MSG_PREFIX}Exec $*\"; echo \"${MSG_PREFIX}Exec: $*\"; }" # yellow
-  puts "_warn() { _log \"${MSG_PREFIX}Warn $*\"; echo \"${MSG_PREFIX}Warn: $*\"; }" # yellow
+  puts "_fail() { _log \"${MSG_PREFIX}Fail: $*\"; echo \"${MSG_PREFIX}Fail: $*\"; }" # red
+  puts "_erro() { _log \"${MSG_PREFIX}Erro: $*\"; echo \"${MSG_PREFIX}Erro: $*\"; }" # red
+  puts "_info() { _log \"${MSG_PREFIX}Info: $*\"; echo \"${MSG_PREFIX}Info: $*\"; }" # cyan
+  puts "_pass() { _log \"${MSG_PREFIX}Pass: $*\"; echo \"${MSG_PREFIX}Pass: $*\"; }" # cyan
+  puts "_exec() { _log \"${MSG_PREFIX}Exec: $*\"; echo \"${MSG_PREFIX}Exec: $*\"; }" # yellow
+  puts "_warn() { _log \"${MSG_PREFIX}Warn: $*\"; echo \"${MSG_PREFIX}Warn: $*\"; }" # yellow
 
   # Create a secure log (file) stream. If the file was set in $F_TMP
   # we print out all output and remove that too.
