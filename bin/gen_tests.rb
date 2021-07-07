@@ -61,16 +61,16 @@ BEGIN {
   # we print out all output and remove that too.
   puts "_slog() {"
   puts "  if [ -n \"${F_TMP:-}\" ]; then"
-  puts "    if [ -z \"${CI:-}\" ]; then"
-  puts "      _info 'Exec. output:'"
-  puts "      1>&2 cat $F_TMP"
-  puts "    fi"
   # ...
   # but when our test fails, we also print the first 100 lines to
   # the STDOUT, so that we can see them quickly. It can be tricky
   # when  homebrew/pkgng fails, because we don't have any access
   # to MacOS environment on github-action runner. But let's see...
   puts "    if [ $T_FAIL -ge 1 ]; then"
+  puts "      _info 'Exec. output:'"
+  puts "      if [ -z \"${CI:-}\" ]; then"
+  puts "        1>&2 cat $F_TMP"
+  puts "      fi"
   puts "      cat $F_TMP \\"
   puts "      | awk '{ if (NR <= 100) { printf(\" > %s\\n\", $0); }}"
   puts "         END { if (NR > 100) { printf(\" > ...\\n\");}}'"
