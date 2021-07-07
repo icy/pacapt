@@ -56,6 +56,7 @@ BEGIN {
   puts "_pass() { _log \"${MSG_PREFIX}Pass: $*\"; echo \"${MSG_PREFIX}Pass: $*\"; }" # cyan
   puts "_exec() { _log \"${MSG_PREFIX}Exec: $*\"; echo \"${MSG_PREFIX}Exec: $*\"; }" # yellow
   puts "_warn() { _log \"${MSG_PREFIX}Warn: $*\"; echo \"${MSG_PREFIX}Warn: $*\"; }" # yellow
+  puts "_stde() { _log \"${MSG_PREFIX}Info: $*\"; }"
 
   # Create a secure log (file) stream. If the file was set in $F_TMP
   # we print out all output and remove that too.
@@ -63,7 +64,7 @@ BEGIN {
   puts "  if [ -n \"${F_TMP:-}\" ]; then"
   # ... first we record all logs to STDERR for later investigation
   puts "    if [ -z \"${CI:-}\" ]; then"
-  puts "      _log 'Exec. output:'"
+  puts "      _stde 'Exec. output:'"
   puts "      1>&2 cat $F_TMP"
   puts "    fi"
   # ...
@@ -77,7 +78,8 @@ BEGIN {
   puts "         END { if (NR > 100) { printf(\" > ...\\n\");}}'"
   puts "    fi"
   puts "    rm -f \"${F_TMP}\""
-  puts "    echo 1>&2"
+  # We record a seperator in the output, bc. it's too verbose
+  puts "    _stde ====================================================="
   puts "    export T_FAIL=0"
   puts "  else"
   puts "    export T_FAIL=0"
