@@ -8,7 +8,7 @@ im macos
 
 # Ensure we are running Bash3 within Github-Action
 in ! bash --version
-ou version 38.
+ou version 3.
 
 in -Sy
 in -S nano
