@@ -1,0 +1,80 @@
+#!/bin/sh
+
+# Purpose : Testing script for pkgng support
+# Author  : Álvaro Mondéjar
+# License : MIT
+
+# NOTE: Must be executed in a FreeBSD distribution
+
+im freebsd
+
+# Get installed packages
+in -Qq
+ou ^(pkg|git|ruby)
+in -Q
+ou ^(pkg|git|ruby)
+
+# Get packages information
+in -Qi
+ou ^pkg-[0-9]+\.[0-9]+\.?[0-9]*\s+Package manager$
+
+# Get package information
+in -Qi pkg
+ou ^Name\s+: pkg$
+ou ^Version\s+: [0-9]+\.[0-9]+\.?[0-9]*$
+
+# Get package files
+in -Ql pkg
+ou ^pkg-[0-9]+\.[0-9]+\.?[0-9]*:$
+ou ^\s+/usr/local/sbin/pkg$
+
+# Get dependencies
+in -Si nginx
+ou ^Name\s+: nginx$
+ou ^Version\s+: [0-9]+\.[0-9]+\.?[0-9]*
+ou ^Shared Libs required:$
+
+# Search package
+in -Ss nano
+ou ^nano-[0-9]+\.[0-9]+\.?[0-9]*
+ou ^rubygem-nanoc-[0-9]+\.[0-9]+\.?[0-9]*
+
+# Update
+in -Sy
+ou ^All repositories are up to date\.$
+
+# Upgrade
+in -Su
+ou ^Your packages are up to date\.$
+in -Syu
+ou ^All repositories are up to date\.$
+ou ^Your packages are up to date\.$
+
+# Install package
+in ! command -v nano
+ou empty
+in -S --noconfirm nano
+ou ^New packages to be INSTALLED:$
+in ! command -v nano
+ou ^/usr/local/bin/nano$
+
+# Remove package
+in -R --noconfirm nano
+ou ^Installed packages to be REMOVED:$
+in ! nano
+ou not found
+
+in -S --noconfirm nano
+in clear
+in -R --noconfirm nano
+ou ^Installed packages to be REMOVED:$
+
+# Fetch package
+in -Sw nano
+ou ^Number of packages to be fetched: 1$
+
+# Clean cache
+in -Sc --noconfirm
+ou ^The following package files will be deleted:$
+in -Scc
+ou ^Nothing to do.$

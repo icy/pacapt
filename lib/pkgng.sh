@@ -98,7 +98,8 @@ pkgng_Scc() {
 }
 
 pkgng_S() {
-  if [ "$_TOPT" = "fetch" ]; then
+  # shellcheck disable=SC2153
+  if [ "$_EOPT" = "fetch" ]; then
     pkg fetch "$@"
   else
     pkg install "$@"
