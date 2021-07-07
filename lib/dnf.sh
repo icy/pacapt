@@ -35,7 +35,11 @@ dnf_Sccc() {
 }
 
 dnf_Si() {
-  dnf info "$@" && dnf repoquery --deplist "$@"
+  dnf repoquery --requires --resolve "$@"
+}
+
+dnf_Sii() {
+  dnf repoquery --installed --whatrequires "$@"
 }
 
 dnf_Sg() {
