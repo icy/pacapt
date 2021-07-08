@@ -66,7 +66,7 @@ ou not found
 
 in -S --noconfirm nano
 in clear
-in -R --noconfirm nano
+in -Rs --noconfirm nano
 ou ^Installed packages to be REMOVED:$
 
 # Fetch package
