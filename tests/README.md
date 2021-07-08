@@ -11,7 +11,7 @@ See also https://github.com/icy/pacapt/actions.
 
 ## Preparing test environment
 
-We run `#bash` test scripts inside `Docker` container. We will need
+We run `#sh` test scripts inside `Docker` container. We will need
 the following things
 
 1. A fast network to download base images from http://hub.docker.com/,
@@ -34,7 +34,7 @@ Basically we execute the following command
         -v $PWD/test.sh:/tmp/test.sh \
         -v $PWD/pacapt.dev:/usr/bin/pacman \
         ubuntu:18.04 \
-        /tmp/test.sh
+        sh /tmp/test.sh
 
 This command will return 0 if all tests pass, or return 1 if any test fails.
 
@@ -47,7 +47,7 @@ machine. It is expected to work in similar environment with `GNU Make`,
 `Bash` and `Docker`.
 
     $ make                # List all sections
-    $ make all            # Execute all test scripts
+    $ make all            # Execute all tests (WARNING: It's slow!)
                           # or a subset of tests, as below
     $ make TESTS="foo.txt bar.txt"
     $ make TESTS="foo.txt" IMAGES="ubuntu:latest"
@@ -57,6 +57,25 @@ all logs and details. If there is any test script fails, the process
 is stopped for investigation.
 
 ## Writing test cases
+
+In short, the test file has the following format
+
+```
+im  docker-image1 docker-image2
+im  docker-image3 ...
+
+in pacman options
+in ! command to execute
+ou regular expression to match
+```
+
+The test file is heavily parsed by a custom `Ruby` script found in
+[`bin/gen_tests.rb`](bin/gen_tests.rb) and will be invoked
+by the executor [`tests/test.sh`](tests/test.sh). When there are
+multiple docker images are provided, the `parallel` command will know
+that and execute multiple containers in parallel.
+
+All tests in the test file are executed in the order provided.
 
 See examples in `tests/dpkg.txt`. Each test case combines of input command
 and output regular expressions used by `grep -E`. Input command is started

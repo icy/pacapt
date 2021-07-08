@@ -42,26 +42,44 @@ BEGIN {
   puts "_log()  { if [ -z \"${CI:-}\" ]; then echo \"$*\" 1>&2 ; fi; }"
 
   # A fancy wrappers of _log
-  puts "_fail() { _log \"${MSG_PREFIX}Fail: $*\"; echo \"${MSG_PREFIX}Fail: $*\"; }" # red
+  #
+  # Where there is any message, we need to ensure they are on both
+  # channels (STDIN, STDERR). Normally, the STDERR has more verbose
+  # information, i.e, the output of all executions. The STDERR will
+  # be [often] captured for later investigation and it's done via
+  # the `tests/test.sh`. From STDIN we try to keep it compact.
+  # ...
+  #
+  puts "_fail() { _log \"${MSG_PREFIX}Fail: $*\"; printf \"${MSG_PREFIX}\e[31mFail\e[0m: %s\n\" \"$*\"; }" # red
   puts "_erro() { _log \"${MSG_PREFIX}Erro: $*\"; echo \"${MSG_PREFIX}Erro: $*\"; }" # red
   puts "_info() { _log \"${MSG_PREFIX}Info: $*\"; echo \"${MSG_PREFIX}Info: $*\"; }" # cyan
   puts "_pass() { _log \"${MSG_PREFIX}Pass: $*\"; echo \"${MSG_PREFIX}Pass: $*\"; }" # cyan
   puts "_exec() { _log \"${MSG_PREFIX}Exec: $*\"; echo \"${MSG_PREFIX}Exec: $*\"; }" # yellow
   puts "_warn() { _log \"${MSG_PREFIX}Warn: $*\"; echo \"${MSG_PREFIX}Warn: $*\"; }" # yellow
+  puts "_stde() { _log \"${MSG_PREFIX}Info: $*\"; }"
 
   # Create a secure log (file) stream. If the file was set in $F_TMP
   # we print out all output and remove that too.
   puts "_slog() {"
   puts "  if [ -n \"${F_TMP:-}\" ]; then"
-  puts "    _info 'Exec. output:'"
-  puts "    1>&2 cat $F_TMP"
+  # ... first we record all logs to STDERR for later investigation
+  puts "    if [ -z \"${CI:-}\" ]; then"
+  puts "      _stde 'Exec. output:'"
+  puts "      1>&2 cat $F_TMP"
+  puts "    fi"
+  # ...
+  # but when our test fails, we also print the first 100 lines to
+  # the STDOUT, so that we can see them quickly. It can be tricky
+  # when  homebrew/pkgng fails, because we don't have any access
+  # to MacOS environment on github-action runner. But let's see...
   puts "    if [ $T_FAIL -ge 1 ]; then"
   puts "      cat $F_TMP \\"
   puts "      | awk '{ if (NR <= 100) { printf(\" > %s\\n\", $0); }}"
   puts "         END { if (NR > 100) { printf(\" > ...\\n\");}}'"
   puts "    fi"
   puts "    rm -f \"${F_TMP}\""
-  puts "    echo 1>&2"
+  # We record a seperator in the output, bc. it's too verbose
+  puts "    _stde ====================================================="
   puts "    export T_FAIL=0"
   puts "  else"
   puts "    export T_FAIL=0"
