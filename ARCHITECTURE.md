@@ -60,24 +60,6 @@ about them can be read from [`tests/README.md`](tests/README.md).
 See real examples in [`tests/dpkg.txt`](tests/dpkg.txt) (this is one
 of the richest test files we have).
 
-In short, the test file has the following format
-
-```
-im  docker-image
-
-in pacman options
-in ! command to execute
-ou regular expression to match
-```
-
-The test file is heavily parsed by a custom `Ruby` script found in
-[`bin/gen_tests.rb`](bin/gen_tests.rb) and will be invoked
-by the executor [`tests/test.sh`](tests/test.sh). When there are
-multiple docker images are provided, the `parallel` command will know
-that and execute multiple containers in parallel.
-
-All tests in the test file are executed in the order provided.
-
 ### `bin`
 
 Contains two important scripts
