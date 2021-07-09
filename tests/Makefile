@@ -59,7 +59,4 @@ test_pkgng:
 .PHONY: test_sun_tools
 test_sun_tools:
 	@set -u && echo $$CI >/dev/null
-	@mkdir -pv tmp
-	@ruby -n ../bin/gen_tests.rb < sun_tools.txt > tmp/sun_tools.sh
-	@echo y | pkgrm CSWgit || true
 	cd tmp && MSG_PREFIX=":: [sun_tools] " sh sun_tools.sh

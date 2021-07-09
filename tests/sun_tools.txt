@@ -10,20 +10,20 @@ im solaris
 
 # Get packages information
 in -Qi
-ou PKGINST:\s+CSWcacertificates
-ou PKGINST:\s+CSWruby20
+ou PKGINST:\s+CSWpkgutil
+ou PKGINST:\s+BRCMbnx
 
 # Get locally installed package
-in -Qs ruby
-ou ^application CSWruby20
+in -Qs pkgutil
+ou ^application CSWpkgutil
 
 # Get installed packages
 in -Q
-ou ^application CSWbash
+ou ^application CSWpkgutil
 
-in -Q CSWbash
-ou ^application CSWbash bash
+in -Q CSWpkgutil
+ou ^application CSWpkgutil pkgutil
 
 in -Qq
-ou ^application CSWbash
+ou ^application CSWpkgutil
 

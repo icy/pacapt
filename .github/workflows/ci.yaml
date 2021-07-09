@@ -100,14 +100,12 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Build pacapt and tests
+      run: make pacapt.dev && mkdir -pv tests/tmp/ && cd tests && ruby -n ../bin/gen_tests.rb < sun_tools.txt > tmp/sun_tools.sh
     - uses: vmactions/solaris-vm@v0.0.3
       with:
         run: |
           set -x
-          /opt/csw/bin/pkgutil -U
-          /opt/csw/bin/pkgutil -a git ruby
-          /opt/csw/bin/pkgutil -y -i git ruby20
-          make pacapt.dev
           ln -s pacapt.dev pacman
           export PATH="$(pwd -P):$PATH"
           cd tests/
