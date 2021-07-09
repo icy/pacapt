@@ -95,3 +95,20 @@ jobs:
           export PATH="$(pwd -P):$PATH"
           cd tests/
           make test_pkgng
+
+  sun_tools:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: vmactions/solaris-vm@v0.0.3
+      with:
+        run: |
+          set -x
+          /opt/csw/bin/pkgutil -U
+          /opt/csw/bin/pkgutil -a git ruby
+          /opt/csw/bin/pkgutil -y -i git ruby20
+          make pacapt.dev
+          ln -s pacapt.dev pacman
+          export PATH="$(pwd -P):$PATH"
+          cd tests/
+          make test_sun_tools

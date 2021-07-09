@@ -31,6 +31,12 @@ BEGIN {
   puts ""
   puts "set -u"
   puts ""
+  puts ": \"${GGREP:=grep}\""
+  puts ""
+  puts "if [ \"$(uname)\" = \"SunOS\" ]; then"
+  puts "  GGREP=ggrep"
+  puts "fi"
+  puts ""
   #
   # Just send message to STDERR
   #
@@ -107,10 +113,10 @@ elsif gs = $_.to_s.match(/^ou(.*)/)
   puts "N_TEST=$(( N_TEST + 1 ))"
   puts "if [ -n \"${F_TMP:-}\" ]; then"
   if expected.empty? or expected == "empty"
-    puts "  ret=\"$(grep -Ec '.+' $F_TMP)\""
+    puts "  ret=\"$(\"$GGREP\" -Ec '.+' $F_TMP)\""
     puts "  if [ -z \"$ret\" ] || [ \"$ret\" -ge 1 ]; then"
   else
-    puts "  ret=\"$(grep -Ec \"#{expected}\" $F_TMP)\""
+    puts "  ret=\"$(\"$GGREP\" -Ec \"#{expected}\" $F_TMP)\""
     puts "  if [ -z \"$ret\" ] || [ \"$ret\" -eq 0 ]; then"
   end
   puts "    _fail Expected \"#{expected}\""

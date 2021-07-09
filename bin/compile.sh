@@ -30,11 +30,11 @@ fi
 : "${GREP:=grep}"     # Need to update on SunOS
 : "${AWK:=awk}"       # Need to update on SunOS
 
-# At compile time, `_sun_tools_init` is not yet defined.
-if [[ -f "lib/sun_tools.sh" ]]; then
-  # shellcheck disable=1091
-  source "lib/sun_tools.sh" :
-  _sun_tools_init || true
+if [ "$(uname)" = "SunOS" ]; then
+  # ggrep (GNU-grep) is required in SunOS to build and test because the default
+  # implementation of grep in SunOS doesn't support the options `-E` and `-e` 
+  GREP=ggrep
+  AWK=nawk
 fi
 
 export GREP AWK VERSION PACAPT_STATS
@@ -116,7 +116,7 @@ library_files() {
 }
 
 library_POSIX_ready() {
-  grep -Eqie '#!/usr/bin/env sh' -- "$@"
+  $GREP -Eqie '#!/usr/bin/env sh' -- "$@"
 }
 
 ########################################################################
