@@ -86,7 +86,7 @@ ou ^Available Packages$
 # Get information from local package file
 in ! dnf repoquery --location nano
 ou ^http.+\.rpm$
-in ! curl -sL "$(dnf repoquery --location nano 2>/dev/null | head -n 1)" -o /tmp/nano-package.rpm
+in ! curl -sL "$(dnf repoquery --location nano 2>/dev/null | head -n 1)" -o /tmp/nano-package.rpm --connect-timeout 5 --max-time 30 --retry 5 --retry-delay 0 --retry-max-time 60
 ou empty
 in ! [ -f /tmp/nano-package.rpm ] || echo not found
 ou empty
