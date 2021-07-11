@@ -116,7 +116,7 @@ library_files() {
 }
 
 library_POSIX_ready() {
-  grep -Eqie '#!/usr/bin/env sh' -- "$@"
+  "$GREP" -qi '#!/usr/bin/env sh' -- "$@"
 }
 
 ########################################################################
