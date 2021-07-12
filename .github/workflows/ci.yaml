@@ -95,3 +95,18 @@ jobs:
           export PATH="$(pwd -P):$PATH"
           cd tests/
           make test_pkgng
+
+  sun_tools:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build pacapt and tests
+      run: make pacapt.dev && mkdir -pv tests/tmp/ && cd tests && ruby -n ../bin/gen_tests.rb < sun_tools.txt > tmp/sun_tools.sh
+    - uses: vmactions/solaris-vm@v0.0.3
+      with:
+        run: |
+          set -x
+          ln -s pacapt.dev pacman
+          export PATH="$(pwd -P):$PATH"
+          cd tests/
+          make test_sun_tools

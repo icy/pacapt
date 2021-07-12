@@ -84,7 +84,7 @@ _check_POSIX_files() {
   export SHELLCHECK_SHELL="sh"
   while (( $# )); do
     if awk 'NR==1' < "$1" \
-      | grep -Eiqe '^#!/usr/bin/env sh' ;
+      | grep -iq '^#!/usr/bin/env sh' ;
     then
       _check_file "$1" || return 1
     # We only care POSIX issue for files under `lib/`

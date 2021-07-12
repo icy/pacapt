@@ -53,3 +53,10 @@ test_pkgng:
 	@ruby -n ../bin/gen_tests.rb < pkgng.txt > tmp/pkgng.sh
 	@pkg remove -y bash || true
 	@cd tmp && MSG_PREFIX=":: [pkgng] " sh pkgng.sh
+
+# test_sun_tools:
+# test_sun_tools: Execute SunOS tests within MacOS provided by Github-actions
+.PHONY: test_sun_tools
+test_sun_tools:
+	@set -u && echo $$CI >/dev/null
+	cd tmp && MSG_PREFIX=":: [sun_tools] " sh sun_tools.sh

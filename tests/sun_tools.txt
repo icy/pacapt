@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# Purpose : Testing script for sun_tools support
+# Author  : Álvaro Mondéjar
+# License : MIT
+
+# NOTE: Must be executed in a Solaris (SunOS) distribution
+
+im solaris
+
+# Get packages information
+in -Qi
+ou PKGINST:\s+CSWpkgutil
+ou PKGINST:\s+BRCMbnx
+
+# Get locally installed package
+in -Qs pkgutil
+ou ^application CSWpkgutil
+
+# Get installed packages
+in -Q
+ou ^application CSWpkgutil
+
+in -Q CSWpkgutil
+ou ^application CSWpkgutil pkgutil
+
+in -Qq
+ou ^application CSWpkgutil
+
