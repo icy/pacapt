@@ -117,7 +117,7 @@ A long list of options and operations can be found from [`ArchLinux`'s wiki](htt
       apk  ~     *  *     *     *     *  * *  *   *  * *  *   *    *     *   *  *  *  *   *  * *
      cave  *        *     *     *  *  *  * *  *   *  * *  *   *    x     *         *  *   *  * x
     conda  *                               *           *  *              *         *      *     
-      dnf  ~  *  *  *     *  *  *  *  *  * *           *  *   *    *  *  *      *  *  *   *  * *
+      dnf  ~  *  *  *     *  *  *  *  *  * *           *  *   *    *  *  *   *  *  *  *   *  * *
      dpkg  ~  *  *  *  *  *     *  *  *  * *  *   *  ~ *  *   *    *  *  *   *     *  *   *  * *
  homebrew  *  *     *     *           *  * *           *  *   *    *     *         *  *   *  *  
  macports     *           *     *        * *         ~ *  *   *          *         *  *   *  *  
@@ -129,7 +129,7 @@ sun_tools  *        *     *     *     *    *                                    
     swupd              *        *     *    *           *                           *  *   *  *  
    tazpkg  *        *     *     *          *           *  *   *                    *  *   *  * *
     tlmgr           *  *  *                *           *                 *      *  *      *    *
-      yum  *  *     *     *  *  *  *  *  * *         * *  *   *    *     *   *     *  *   *  * *
+      yum  *  *     *     *  *  *  *  *  * *         * *  *   *    *  *  *   *     *  *   *  * *
    zypper  *  *     *     *  *  *  *  *  * *  *   *  * *  *   *    *  *  *   *  *  *  *   *  * *
 ```
 

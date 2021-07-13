@@ -850,7 +850,11 @@ dnf_Sccc() {
 }
 
 dnf_Si() {
-  dnf info "$@" && dnf repoquery --deplist "$@"
+  dnf repoquery --requires --resolve "$@"
+}
+
+dnf_Sii() {
+  dnf repoquery --installed --whatrequires "$@"
 }
 
 dnf_Sg() {
@@ -1521,7 +1525,8 @@ pkgng_Scc() {
 }
 
 pkgng_S() {
-  if [ "$_TOPT" = "fetch" ]; then
+  # shellcheck disable=SC2153
+  if [ "$_EOPT" = "fetch" ]; then
     pkg fetch "$@"
   else
     pkg install "$@"
@@ -2135,6 +2140,14 @@ yum_R() {
   yum erase "$@"
 }
 
+yum_Sg() {
+  if [ $# -eq 0 ]; then
+    yum grouplist hidden
+  else
+    yum groups info "$@"
+  fi
+}
+
 yum_Si() {
   _require_programs repoquery
   repoquery --requires --resolve "$@"
@@ -2416,6 +2429,7 @@ _validate_operation() {
   "dnf_Scc") ;;
   "dnf_Sccc") ;;
   "dnf_Si") ;;
+  "dnf_Sii") ;;
   "dnf_Sg") ;;
   "dnf_Sl") ;;
   "dnf_Ss") ;;
@@ -2606,6 +2620,7 @@ _validate_operation() {
   "yum_Qm") ;;
   "yum_Rs") ;;
   "yum_R") ;;
+  "yum_Sg") ;;
   "yum_Si") ;;
   "yum_Suy") ;;
   "yum_Su") ;;
