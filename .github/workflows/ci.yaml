@@ -102,6 +102,11 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build pacapt and tests
       run: make pacapt.dev && mkdir -pv tests/tmp/ && cd tests && ruby -n ../bin/gen_tests.rb < sun_tools.txt > tmp/sun_tools.sh
+    - uses: actions/cache@v2
+      with:
+        key: sol-11_4
+        path: |
+          sol-11_4.ova
     - uses: mondeja/solaris-vm-action@v1
       with:
         run: |
