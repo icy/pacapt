@@ -1,3 +1,19 @@
+## v3.0.3
+
+Minor bug fixes and features added.
+More development improvements.
+This release is mainly driven by @mondeja.
+
+* Add architecture documentation
+* `lib/apk/Qe`: Add (credit: @mondeja)
+* `lib/dpkg/Sg`: Add (credit: @mondeja)
+* `lib/yum`: Minor fixes (credit: @mondeja)
+* `lib/yum/Sg`: Add (credit: @mondeja)
+* `lib/zypper/Sg`: Add (credit: @mondeja)
+* `tests/yum`: Add (credit: @mondeja)
+* Add CI support on Github-Action for many package managers
+  (`dnf`, `yum`, `homebrew`, `pkgng`, `sun_tools`)
+
 ## v3.0.2
 
 * `tests/apk`: Add tests (Credit: @mondeja)
