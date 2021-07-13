@@ -24,7 +24,7 @@ default:
 	@echo ""
 	@echo "                  make tests TESTS=dpkg IMAGES=debian"
 	@echo ""
-	@echo "## During release "
+	@echo "## During release process"
 	@echo ""
 	@echo "  stats       : Generate table of implemented operations in development branch."
 	@echo "  update_stats: Update README.md using results from 'stats' section."
