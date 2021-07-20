@@ -17,6 +17,14 @@ _swupd_init() {
   :
 }
 
+swupd_Q() {
+  swupd bundle-list "$@"
+}
+
+swupd_Qi() {
+  swupd bundle-info "$@"
+}
+
 swupd_Qk() {
   swupd verify "$@"
 }
@@ -46,7 +54,6 @@ swupd_Su() {
 }
 
 swupd_Sy() {
-  swupd search -i
   swupd update
 }
 
