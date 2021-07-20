@@ -1,0 +1,52 @@
+#!/bin/sh
+
+# Purpose : Testing script for swupd support
+# Author  : Álvaro Mondéjar
+# License : MIT
+
+im clearlinux:base clearlinux:latest
+
+# Update
+in -Su
+ou ^Update complete - System already up-to-date
+in -Suy
+ou ^Update complete - System already up-to-date
+in -Sy
+ou ^Update complete - System already up-to-date
+
+# Install package (os-core-search needed for searching capabilities)
+in -S os-core-search
+ou ^ - os-core-search
+ou ^Installing files\.\.\.$
+ou ^Successfully installed 1 bundle$
+
+# Search package
+in -Ss os-core-search
+ou ^Bundle with the best search result:$
+ou ^\s+os-core-search\s+- Provides swupd search capability\. \(installed\)$
+
+# List installed packages
+in -Q
+Installed bundles:
+ou ^ - findutils$
+ou ^ - os-core$
+ou ^ - os-core-search$
+
+# Query package files
+in -Qo swupd
+ou ^\s+os-core-update.+\(installed\)$
+in -Qo /sbin/swupd
+ou ^\s+os-core-update.+\(installed\)$
+
+# Get bundle information
+in -Qi os-core-search
+ou ^ Info for bundle: os-core-search$
+ou ^Status: Explicitly installed$
+
+# Remove bundle
+in -R os-core-search
+ou ^The following bundles are being removed:$
+ou ^Deleting bundle files\.\.\.$
+ou ^Successfully removed 1 bundle$
+in -Ss os-core-search
+ou ^This bundle can be installed with:$

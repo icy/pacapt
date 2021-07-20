@@ -131,8 +131,8 @@ _PACMAN_detect() {
   [ -x "/sbin/apk" ] && _PACMAN="apk" && return
   [ -x "/bin/opkg" ] && _PACMAN="opkg" && return
   [ -x "/usr/bin/tazpkg" ] && _PACMAN="tazpkg" && return
-  [ -x "/usr/bin/swupd" ] && _PACMAN="swupd" && return
-
+  
+  command -v swupd >/dev/null && _PACMAN="swupd" && return
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
   return 1

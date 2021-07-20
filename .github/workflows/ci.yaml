@@ -61,6 +61,12 @@ jobs:
     - uses: actions/checkout@v2
     - run: make tests TESTS=yum
 
+  swupd:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: make tests TESTS=swupd
+
   others:
     runs-on: ubuntu-latest
     steps:
