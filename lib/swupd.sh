@@ -45,6 +45,14 @@ swupd_R() {
   swupd bundle-remove "$@"
 }
 
+swupd_Sc() {
+  swupd clean "$@"
+}
+
+swupd_Scc() {
+  swupd clean --all "$@"
+}
+
 swupd_Suy() {
   swupd update
 }
