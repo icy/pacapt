@@ -25,6 +25,10 @@ conda_Q() {
   fi
 }
 
+conda_Qo() {
+  conda package --which "$@"
+}
+
 conda_R() {
   conda remove "$@"
 }
