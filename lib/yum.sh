@@ -28,6 +28,15 @@ yum_Q() {
   fi
 }
 
+yum_Qe() {
+  # in Centos8, repoquery takes 'reason' as format placeholder
+  centos_version="$(cat /etc/*elease | $GREP 'VERSION_ID=' | cut -d'"' -f2)"
+  [ "$centos_version" -eq "8" ] && reason="reason" || reason="yumdb_info.reason"
+
+  repoquery --installed --qf "%{name} - %{$reason}" --all \
+    | $GREP 'user$' | cut -d' ' -f1
+}
+
 yum_Qi() {
   yum info "$@"
 }

@@ -120,6 +120,11 @@ ou ^Installed:$
 in ! command -v nano
 ou ^(/usr)?/bin/nano$
 
+# List packages installed explicitly
+in -Qe
+ou ^nano$
+ou ^yum-utils$
+
 # Cache cleaning
 in -Sc
 ou ^[0-9]+( metadata)? files* removed$
