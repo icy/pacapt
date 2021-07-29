@@ -5,6 +5,7 @@
 # License : MIT
 
 im fedora:32 fedora:33 fedora:34
+im oraclelinux-8_dnf
 
 in -P
 ou available operations:.*( [Q][ ilos])+
@@ -15,13 +16,15 @@ in ! [ -L /usr/bin/dnf ] && echo "dnf binary is symlink"
 ou ^dnf binary is symlink$
 
 # List packages with available updates
+# NOTE: Fedora | OracleLinux
 in -Qu
-ou ^Available Upgrades$
+ou ^(Available Upgrades|Oracle Linux)
 
 # Update and upgrade
+# NOTE: Fedora | OracleLinux
 in -Su --noconfirm
-ou ^Upgrading:$
-ou ^Upgraded:$
+ou ^(Upgrading:|Nothing to do.)$
+ou ^(Upgraded:|Complete!)$
 
 # Get installed packages
 in -Qq
@@ -122,7 +125,7 @@ ou ^rpm-libs-
 
 # Package groups
 in -Sg
-ou ^   3D Printing$
-in -Sg "3D Printing"
-ou ^   blender$
-ou ^   openscad$
+ou ^   RPM Development Tools$
+in -Sg "RPM Development Tools"
+ou ^   redhat-rpm-config$
+ou ^   rpm-build$
