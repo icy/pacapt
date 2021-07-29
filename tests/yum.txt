@@ -5,6 +5,7 @@
 # License : MIT
 
 im centos:7 centos:8
+im oraclelinux:7-slim
 
 in -P
 ou available operations:.*( [Q][ ilos])+
@@ -47,9 +48,9 @@ ou ^*\s.+[0-9]$
 
 # List packages with available updates
 in -Qu
-ou ^[a-z\-]+\.x86_64.+(baseos|updates)$
+ou ^[a-z0-9\-]+\.x86_64.+(baseos|updates|ol7_latest)$
 in -Sy
-ou ^[a-z\-]+\.x86_64.+(baseos|updates)$
+ou ^[a-z0-9\-]+\.x86_64.+(baseos|updates|ol7_latest)$
 
 # Get installed packages unavailable in repos
 in -Qm
@@ -87,7 +88,7 @@ ou empty
 in -Su
 ou ^Up(dat|grad)ing:$
 in -Suy
-ou ^[a-z\-]+\.x86_64.+(baseos|updates)$
+ou ^[a-z0-9\-]+\.x86_64.+(baseos|updates|ol7_latest)$
 
 # Search packages
 in -Ss wget
@@ -121,11 +122,11 @@ ou ^(/usr)?/bin/nano$
 
 # Cache cleaning
 in -Sc
-ou ^[0-9]+( metadata)? files removed$
+ou ^[0-9]+( metadata)? files* removed$
 in -Scc
-ou ^[0-9]+( package)? files removed$
+ou ^[0-9]+( package)? files* removed$
 in -Sccc
-ou ^([0-9]+ files removed|Cleaning repos:)
+ou ^([0-9]+ files* removed|Cleaning repos:)
 
 # Get dependencies
 in -Si yum
