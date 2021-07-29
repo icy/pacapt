@@ -50,3 +50,9 @@ ou ^Deleting bundle files\.\.\.$
 ou ^Successfully removed 1 bundle$
 in -Ss os-core-search
 ou ^This bundle can be installed with:$
+
+# Clean cache
+in -Sc
+ou files removed$
+in -Scc
+ou files removed$
