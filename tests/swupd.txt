@@ -8,11 +8,11 @@ im clearlinux:base clearlinux:latest
 
 # Update
 in -Su
-ou ^Update complete - System already up-to-date
+ou ^Update (complete - System already up-to-date|started)
 in -Suy
-ou ^Update complete - System already up-to-date
+ou ^Update (complete - System already up-to-date|started)
 in -Sy
-ou ^Update complete - System already up-to-date
+ou ^Update (complete - System already up-to-date|started)
 
 # Install package (os-core-search needed for searching capabilities)
 in -S os-core-search
