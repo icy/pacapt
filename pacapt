@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 3.0.3
+# Version: 3.0.4
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2021 \
@@ -46,7 +46,7 @@
 
 _print_pacapt_version() {
   cat <<_EOF_
-pacapt version '3.0.3'
+pacapt version '3.0.4'
 
 Copyright (C) 2010 - 2021 \\
                           | 10sr (10sr)
@@ -87,7 +87,7 @@ DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 _EOF_
 }
 
-export PACAPT_VERSION='3.0.3'
+export PACAPT_VERSION='3.0.4'
 
 _help() {
   cat <<'EOF'
@@ -800,6 +800,10 @@ conda_Q() {
   else
     conda list
   fi
+}
+
+conda_Qo() {
+  conda package --which "$@"
 }
 
 conda_R() {
@@ -1847,6 +1851,14 @@ _swupd_init() {
   :
 }
 
+swupd_Q() {
+  swupd bundle-list "$@"
+}
+
+swupd_Qi() {
+  swupd bundle-info "$@"
+}
+
 swupd_Qk() {
   swupd verify "$@"
 }
@@ -1867,6 +1879,14 @@ swupd_R() {
   swupd bundle-remove "$@"
 }
 
+swupd_Sc() {
+  swupd clean "$@"
+}
+
+swupd_Scc() {
+  swupd clean --all "$@"
+}
+
 swupd_Suy() {
   swupd update
 }
@@ -1876,7 +1896,6 @@ swupd_Su() {
 }
 
 swupd_Sy() {
-  swupd search -i
   swupd update
 }
 
@@ -2084,6 +2103,15 @@ yum_Q() {
   else
     _not_implemented
   fi
+}
+
+yum_Qe() {
+  # in Centos8, repoquery takes 'reason' as format placeholder
+  centos_version="$($GREP -ohP '(?<=VERSION_ID=")([^"]+)(?=")' /etc/*elease)"
+  [ "$centos_version" -eq "8" ] && reason="reason" || reason="yumdb_info.reason"
+
+  repoquery --installed --qf "%{name} - %{$reason}" --all \
+    | $GREP 'user$' | cut -d' ' -f1
 }
 
 yum_Qi() {
@@ -2418,6 +2446,7 @@ _validate_operation() {
   "cave_S") ;;
   "cave_U") ;;
   "conda_Q") ;;
+  "conda_Qo") ;;
   "conda_R") ;;
   "conda_S") ;;
   "conda_Sc") ;;
@@ -2577,10 +2606,14 @@ _validate_operation() {
   "sun_tools_Q") ;;
   "sun_tools_R") ;;
   "sun_tools_U") ;;
+  "swupd_Q") ;;
+  "swupd_Qi") ;;
   "swupd_Qk") ;;
   "swupd_Qo") ;;
   "swupd_Qs") ;;
   "swupd_R") ;;
+  "swupd_Sc") ;;
+  "swupd_Scc") ;;
   "swupd_Suy") ;;
   "swupd_Su") ;;
   "swupd_Sy") ;;
@@ -2610,6 +2643,7 @@ _validate_operation() {
   "tlmgr_Suy") ;;
   "tlmgr_U") ;;
   "yum_Q") ;;
+  "yum_Qe") ;;
   "yum_Qi") ;;
   "yum_Qs") ;;
   "yum_Ql") ;;
