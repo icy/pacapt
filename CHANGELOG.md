@@ -1,3 +1,10 @@
+## v3.0.4
+
+* `lib/swupd`: Add tests and more operations (credit: @mondeja)
+* `lib/conda/Qo`: added (credit: @anntzer)
+* `lib/yum/Qe`: Added (credit: @mondeja)
+* `yum` or `dnf`: Tests improvements (credit: @mondeja)
+
 ## v3.0.3
 
 Minor bug fixes and features added.

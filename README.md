@@ -126,10 +126,10 @@ A long list of options and operations can be found from [`ArchLinux`'s wiki](htt
 pkg_tools  ~        *     *     *  *     * *  *   *  ~ *  *   x          *      *  ~  *   *  x  
   portage  *  *     *     *     *        * *         * *  *   *    *     *         *  *   *  *  
 sun_tools  *        *     *     *     *    *                                                   *
-    swupd              *        *     *    *           *                           *  *   *  *  
+    swupd  *        *  *        *     *    *           *  *   *                    *  *   *  *  
    tazpkg  *        *     *     *          *           *  *   *                    *  *   *  * *
     tlmgr           *  *  *                *           *                 *      *  *      *    *
-      yum  *  *     *     *  *  *  *  *  * *         * *  *   *    *  *  *   *     *  *   *  * *
+      yum  *  *  *  *     *  *  *  *  *  * *         * *  *   *    *  *  *   *     *  *   *  * *
    zypper  *  *     *     *  *  *  *  *  * *  *   *  * *  *   *    *  *  *   *  *  *  *   *  * *
 ```
 
