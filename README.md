@@ -11,7 +11,7 @@ It supports the following package managers:
 * `dpkg/apt-get`  by `Debian`, `Ubuntu`, etc.
 * `homebrew`      by `Mac OS X`
 * `macports`      by `Mac OS X`
-* `yum/rpm`       by `Redhat`, `CentOS`, `Fedora`, etc.
+* `yum/rpm`       by `Redhat`, `CentOS`, `Fedora`, `Oracle Linux`, etc.
 * `portage`       by `Gentoo`
 * `zypper`        by `OpenSUSE`
 * `pkgng`         by `FreeBSD`
