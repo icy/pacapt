@@ -6,7 +6,7 @@
 
 # FIXME: debian:squeeze It's unable to run `pacman -Sy`
 im ubuntu:14.04 ubuntu:16.04  ubuntu:18.04   ubuntu:20.04  ubuntu
-im              debian:jessie debian:stretch debian:buster debian
+im              debian:jessie debian:stretch debian:buster debian:bullseye
 im debian_bash3
 
 # Remove `docker-clean` because we need *.deb files under /var/cache
@@ -39,6 +39,7 @@ in -Q
 ou ^ii +apt +
 
 # List explicitly installed packages
+in ! if [ "$(cat /etc/*-release | grep -E ^VERSION_CODENAME= | cut -d'=' -f2)" = "bullseye" ]; then pacman -S --noconfirm iproute2; fi
 in -Qe
 ou ^(iproute2|adduser)$
 
@@ -129,10 +130,13 @@ in -Sg
 ou requires 'tasksel' but the tool is not found\.$
 in -S --noconfirm tasksel
 in -Sg
-ou ^u (print-server|ubuntu-desktop|manual)
+# debian*?                          -> web-server
+# ubuntu(:(18.04|20.04))?           -> ubuntu-desktop
+# ubuntu:(14.04|16.04)              -> manual
+ou ^u (web-server|ubuntu-desktop|manual)
 
-in ! if [ "$(cat /etc/*-release | grep -E ^ID= | cut -d'=' -f2)" = "ubuntu" ]; then pacman -Sg ubuntu-desktop; else pacman -Sg print-server; fi
-ou ^(task-print-server|ubuntu-desktop)
+in ! if [ "$(cat /etc/*-release | grep -E ^ID= | cut -d'=' -f2)" = "ubuntu" ]; then pacman -Sg ubuntu-desktop; else pacman -Sg web-server; fi
+ou ^(task-web-server|ubuntu-desktop)
 in -R --noconfirm tasksel
 
 # Query information from a .deb package
