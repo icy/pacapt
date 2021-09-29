@@ -74,7 +74,7 @@ ou ^Installed:$
 in ! command -v nano
 ou /bin/nano
 
-# Remove pakage
+# Remove package
 in -R --noconfirm nano
 ou ^Removing:$
 ou ^ nano\s+x86_64

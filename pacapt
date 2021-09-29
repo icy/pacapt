@@ -1624,7 +1624,7 @@ pkg_tools_Sl() {
 pkg_tools_Suy() {
   # pkg_tools doesn't really have any concept of a database
   # there's actually not really any database to update, so
-  # this function is mostly just for convienience since on arch
+  # this function is mostly just for convenience since on arch
   # doing -Su is normally a bad thing to do since it's a partial upgrade
 
   pkg_tools_Su "$@"
@@ -1681,7 +1681,7 @@ portage_Ql() {
   elif [ -x '/usr/bin/equery' ]; then
     equery files "$@"
   else
-    _error "'portage-utils' or 'gentoolkit' package is required to perform this opreation."
+    _error "'portage-utils' or 'gentoolkit' package is required to perform this operation."
   fi
 }
 
@@ -2969,7 +2969,7 @@ if [ -n "$PACAPT_DEBUG" ]; then
     # shellcheck disable=SC3044
     declare -f "${_PACMAN}_${_POPT}${_SOPT}"
   else
-    _error "Attempted to print the defintion of the method '${_PACMAN}_${_POPT}${_SOPT}'."
+    _error "Attempted to print the definition of the method '${_PACMAN}_${_POPT}${_SOPT}'."
     _error "However, unable to find method ('declare'). Maybe your shell is purely POSIX?"
   fi
 else

@@ -107,7 +107,7 @@ For developers:
 
 ## v2.3.14
 
-* `lib/homebrew`: `brew upgrade` is equivalant to `brew upgrade --all`.
+* `lib/homebrew`: `brew upgrade` is equivalent to `brew upgrade --all`.
   See #90 and #101.
 * Support `Clear Linux`. See #94.
 
@@ -134,7 +134,7 @@ For developers:
 
 * `bin/gen_tests.rb`: Add;
 * `lib/dpkg`: Add and update test cases;
-* `CONTRIBUTING`: Add new section `Writting test cases`.
+* `CONTRIBUTING`: Add new section `Writing test cases`.
 
 ## v2.3.11
 

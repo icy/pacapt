@@ -20,7 +20,7 @@ ou (debug.*Switching to Bash shell)|(Bash3-no-switching)
 in -P
 ou available operations:.*( [Q][ ilos])+
 
-# Update package databses
+# Update package databases
 in -Sy
 ou ^Get
 ou ^Fetched

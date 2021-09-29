@@ -84,7 +84,7 @@ BEGIN {
   puts "         END { if (NR > 100) { printf(\" > ...\\n\");}}'"
   puts "    fi"
   puts "    rm -f \"${F_TMP}\""
-  # We record a seperator in the output, bc. it's too verbose
+  # We record a separator in the output, bc. it's too verbose
   puts "    _stde ====================================================="
   puts "    export T_FAIL=0"
   puts "  else"

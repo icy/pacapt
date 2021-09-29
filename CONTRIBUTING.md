@@ -2,7 +2,7 @@
 
 1. [The design of the program](ARCHITECTURE.md)
 1. [Coding style](#coding-style)
-1. [Testing. Writting test cases](#testing-writting-test-cases)
+1. [Testing. Writing test cases](#testing-writing-test-cases)
 1. [Generating pacapt script](#generating-pacapt-script)
 1. [Branches](#branches)
 1. [Closed branches](#closed-branches)
@@ -15,7 +15,7 @@
 1. We try to follow the convention from:
     https://github.com/icy/bash-coding-style.
 
-## Testing. Writting test cases
+## Testing. Writing test cases
 
 See also `tests/README.md` and https://github.com/icy/pacapt/actions.
 

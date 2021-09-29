@@ -301,7 +301,7 @@ if [ -n "$PACAPT_DEBUG" ]; then
     # shellcheck disable=SC3044
     declare -f "${_PACMAN}_${_POPT}${_SOPT}"
   else
-    _error "Attempted to print the defintion of the method '${_PACMAN}_${_POPT}${_SOPT}'."
+    _error "Attempted to print the definition of the method '${_PACMAN}_${_POPT}${_SOPT}'."
     _error "However, unable to find method ('declare'). Maybe your shell is purely POSIX?"
   fi
 else
