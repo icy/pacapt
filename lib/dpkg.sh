@@ -154,7 +154,7 @@ dpkg_Sy() {
   apt-get update "$@"
 }
 
-# FIXME: A simple implemention for #53 and
+# FIXME: A simple implementation for #53 and
 # FIXME: https://github.com/icy/pacapt/pull/156
 # FIXME: but I'm not sure there is any issue...
 dpkg_Ss() {

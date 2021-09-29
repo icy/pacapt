@@ -251,7 +251,7 @@ _print_supported_operations() {
   echo
 }
 
-# NOTE: A few packager manager will require their own implemention
+# NOTE: A few package managers will require their own implementation
 # NOTE: hence it's better to give some flexible option here.
 _quiet_field1() {
   if [ -z "${_TOPT}" ]; then

@@ -102,7 +102,7 @@ pkg_tools_Sl() {
 pkg_tools_Suy() {
   # pkg_tools doesn't really have any concept of a database
   # there's actually not really any database to update, so
-  # this function is mostly just for convienience since on arch
+  # this function is mostly just for convenience since on arch
   # doing -Su is normally a bad thing to do since it's a partial upgrade
 
   pkg_tools_Su "$@"

@@ -27,7 +27,7 @@ portage_Ql() {
   elif [ -x '/usr/bin/equery' ]; then
     equery files "$@"
   else
-    _error "'portage-utils' or 'gentoolkit' package is required to perform this opreation."
+    _error "'portage-utils' or 'gentoolkit' package is required to perform this operation."
   fi
 }
 
