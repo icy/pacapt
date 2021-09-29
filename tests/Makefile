@@ -41,7 +41,7 @@ clean:
 test_homebrew:
 	@set -u && echo $$CI >/dev/null
 	@mkdir -pv tmp
-	@ruby -n ../bin/gen_tests.rb < homebrew.txt > tmp/homebrew.sh
+	@sh ../bin/gen_tests.sh < homebrew.txt > tmp/homebrew.sh
 	@cd tmp && MSG_PREFIX=":: [homebrew] " sh homebrew.sh
 
 # test_pkgng:
@@ -50,7 +50,7 @@ test_homebrew:
 test_pkgng:
 	@set -u && echo $$CI >/dev/null
 	@mkdir -pv tmp
-	@ruby -n ../bin/gen_tests.rb < pkgng.txt > tmp/pkgng.sh
+	@sh ../bin/gen_tests.sh < pkgng.txt > tmp/pkgng.sh
 	@pkg remove -y bash || true
 	@cd tmp && MSG_PREFIX=":: [pkgng] " sh pkgng.sh
 

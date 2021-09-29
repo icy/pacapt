@@ -68,7 +68,7 @@ Contains two important scripts
   and create the main program `pacapt`. It's also used to generate
   a development version of the script: Please check out
   `make pacapt.dev` for more details
-* [`gen_tests.rb`](bin/gen_tests.rb): To deal with our tests DSL
+* [`gen_tests.sh`](bin/gen_tests.sh): To deal with our tests DSL
   as mentioned in the section [`tests`](#tests)
 
 The very tricky program [`bin/gen_stats.sh`](bin/gen_stats.sh)

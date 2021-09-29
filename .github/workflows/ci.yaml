@@ -93,7 +93,7 @@ jobs:
     - uses: vmactions/freebsd-vm@v0.1.5
       with:
         usesh: true
-        prepare: pkg install -y bash ruby git
+        prepare: pkg install -y bash git
         run: |
           set -x
           make pacapt.dev
@@ -107,7 +107,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build pacapt and tests
-      run: make pacapt.dev && mkdir -pv tests/tmp/ && cd tests && ruby -n ../bin/gen_tests.rb < sun_tools.txt > tmp/sun_tools.sh
+      run: make pacapt.dev && mkdir -pv tests/tmp/ && cd tests && sh ../bin/gen_tests.sh < sun_tools.txt > tmp/sun_tools.sh
     - uses: actions/cache@v2
       with:
         key: sol-11_4
