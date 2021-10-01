@@ -47,10 +47,11 @@ in -Qc rpm
 ou ^*\s.+[0-9]$
 
 # List packages with available updates
+# oraclelinux/slim may doesn't show anything
 in -Qu
-ou ^[a-z0-9\-]+\.x86_64.+(baseos|updates|ol7_latest)$
+ou ^(([a-z0-9\-]+\.x86_64.+(baseos|updates|ol7_latest))|(Loaded plugins: ovl))$
 in -Sy
-ou ^[a-z0-9\-]+\.x86_64.+(baseos|updates|ol7_latest)$
+ou ^(([a-z0-9\-]+\.x86_64.+(baseos|updates|ol7_latest))|(Loaded plugins: ovl))$
 
 # Get installed packages unavailable in repos
 in -Qm
@@ -86,9 +87,9 @@ ou empty
 
 # Update
 in -Su
-ou ^Up(dat|grad)ing:$
+ou ^((Up(dat|grad)ing:)|((Loaded plugins: ovl)))$
 in -Suy
-ou ^[a-z0-9\-]+\.x86_64.+(baseos|updates|ol7_latest)$
+ou ^(([a-z0-9\-]+\.x86_64.+(baseos|updates|ol7_latest))|((Loaded plugins: ovl)))$
 
 # Search packages
 in -Ss wget
