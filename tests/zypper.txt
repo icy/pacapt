@@ -6,7 +6,12 @@
 
 im opensuse/leap:15.2
 im opensuse/leap:42.3
-im opensuse/tumbleweed:latest
+
+# FIXME: We disable this but also create a specific test from
+# FIXME: github/workflow (zypper-seccomp). We should re-enable
+# FIXME: this once the upstream issues are gone
+# im opensuse/tumbleweed:latest
+
 # im opensuse/clair:latest
 im zypper_bash3
 

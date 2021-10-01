@@ -37,6 +37,18 @@ jobs:
     - uses: actions/checkout@v2
     - run: make tests TESTS=zypper
 
+  # See also
+  #
+  #   * https://github.com/icy/pacapt/pull/207#issuecomment-929220016
+  #   * https://bugzilla.opensuse.org/show_bug.cgi?id=1190670
+  #   * https://github.com/moby/moby/pull/42836
+  #
+  zypper-seccomp:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: make tests TESTS=zypper IMAGES=opensuse/tumbleweed:latest
+
   opkg:
     runs-on: ubuntu-latest
     steps:
