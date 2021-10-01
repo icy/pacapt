@@ -18,14 +18,13 @@ the following things
    and to execute `pacman -Sy` command;
 1. Our user environment can execute `docker run` command to create
    new container and mount some host volumes;
-1. A basic `Ruby` environment to execute `./bin/gen_tests.rb` script.
 
 Basically we execute the following command
 
     $ cd <pacapt root directory>
 
     $ mkdir -p tests/tmp/
-    $ ruby -n ./bin/gen_tests.rb \
+    $ sh ./bin/gen_tests.sh \
         < tests/dpkg.txt \
         > tests/tmp/test.sh
 
@@ -70,7 +69,7 @@ ou regular expression to match
 ```
 
 The test file is heavily parsed by a custom `Ruby` script found in
-[`bin/gen_tests.rb`](bin/gen_tests.rb) and will be invoked
+[`bin/gen_tests.sh`](bin/gen_tests.sh) and will be invoked
 by the executor [`tests/test.sh`](tests/test.sh). When there are
 multiple docker images are provided, the `parallel` command will know
 that and execute multiple containers in parallel.

@@ -59,7 +59,7 @@ _test() {
   fi
 
   echo >&2 ":: INFO($local_pacman) Generating 'tmp/$local_pacman.sh'..."
-  ruby -n ../bin/gen_tests.rb < "$local_file" > "tmp/$local_pacman.sh"
+  sh ../bin/gen_tests.sh < "$local_file" > "tmp/$local_pacman.sh"
   chmod 755 "tmp/$local_pacman.sh"
 
   if ! sh -n "tmp/$local_pacman.sh"; then
