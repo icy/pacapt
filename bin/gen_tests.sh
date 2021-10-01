@@ -14,25 +14,25 @@
 #       ubuntu:14.04 \
 #       /bin/sh /tmp/test.sh 2>test.log
 
-echo "#!/bin/sh"
-echo ""
-echo "# Notes: This file is generated. Please don't modify them manually."
-echo ""
-echo "export PATH=/sbin:/bin:/usr/sbin:/usr/bin:\$PATH"
-echo ""
-echo "N_TEST=0  # Total number of tests"
-echo "N_FAIL=0  # Number of failed tests"
-echo "F_TMP=    # Temporary file"
-echo "T_FAIL=0  # Number of failed tests in current block"
-echo ""
-echo "set -u"
-echo ""
-echo ": \"\${GGREP:=grep}\""
-echo ""
-echo "if [ \"\$(uname)\" = \"SunOS\" ]; then"
-echo "  GGREP=ggrep"
-echo "fi"
-echo ""
+/bin/echo "#!/bin/sh"
+/bin/echo ""
+/bin/echo "# Notes: This file is generated. Please don't modify them manually."
+/bin/echo ""
+/bin/echo "export PATH=/sbin:/bin:/usr/sbin:/usr/bin:\$PATH"
+/bin/echo ""
+/bin/echo "N_TEST=0  # Total number of tests"
+/bin/echo "N_FAIL=0  # Number of failed tests"
+/bin/echo "F_TMP=    # Temporary file"
+/bin/echo "T_FAIL=0  # Number of failed tests in current block"
+/bin/echo ""
+/bin/echo "set -u"
+/bin/echo ""
+/bin/echo ": \"\${GGREP:=grep}\""
+/bin/echo ""
+/bin/echo "if [ \"\$(uname)\" = \"SunOS\" ]; then"
+/bin/echo "  GGREP=ggrep"
+/bin/echo "fi"
+/bin/echo ""
 #
 # Just send message to STDERR
 #
@@ -41,7 +41,7 @@ echo ""
 # This is the case for non-docker tests (homebrew, pkgng).
 # We need to reduce the duplicate log message in these cases.
 #
-echo "_log()  { if [ -z \"\${CI:-}\" ]; then echo \"\$*\" 1>&2 ; fi; }"
+/bin/echo "_log()  { if [ -z \"\${CI:-}\" ]; then echo \"\$*\" 1>&2 ; fi; }"
 
 # A fancy wrappers of _log
 #
@@ -52,62 +52,63 @@ echo "_log()  { if [ -z \"\${CI:-}\" ]; then echo \"\$*\" 1>&2 ; fi; }"
 # the `tests/test.sh`. From STDIN we try to keep it compact.
 # ...
 #
-# shellcheck disable=SC2028
-echo "_fail() { _log \"\${MSG_PREFIX}Fail: \$*\"; printf \"\${MSG_PREFIX}\e[31mFail\e[0m: %s\n\" \"\$*\"; }" # red
-echo "_erro() { _log \"\${MSG_PREFIX}Erro: \$*\"; echo \"\${MSG_PREFIX}Erro: \$*\"; }" # red
-echo "_info() { _log \"\${MSG_PREFIX}Info: \$*\"; echo \"\${MSG_PREFIX}Info: \$*\"; }" # cyan
-echo "_pass() { _log \"\${MSG_PREFIX}Pass: \$*\"; echo \"\${MSG_PREFIX}Pass: \$*\"; }" # cyan
-echo "_exec() { _log \"\${MSG_PREFIX}Exec: \$*\"; echo \"\${MSG_PREFIX}Exec: \$*\"; }" # yellow
-echo "_warn() { _log \"\${MSG_PREFIX}Warn: \$*\"; echo \"\${MSG_PREFIX}Warn: \$*\"; }" # yellow
-echo "_stde() { _log \"\${MSG_PREFIX}Info: \$*\"; }"
+# shellcheck disable=SC2016
+printf '_fail() { _log "${MSG_PREFIX}Fail: $*"; printf "${MSG_PREFIX}[31mFail[0m: %%s\n'  # red
+printf '" "$*"; }\n'
+/bin/echo "_erro() { _log \"\${MSG_PREFIX}Erro: \$*\"; echo \"\${MSG_PREFIX}Erro: \$*\"; }"
+/bin/echo "_info() { _log \"\${MSG_PREFIX}Info: \$*\"; echo \"\${MSG_PREFIX}Info: \$*\"; }"
+/bin/echo "_pass() { _log \"\${MSG_PREFIX}Pass: \$*\"; echo \"\${MSG_PREFIX}Pass: \$*\"; }"
+/bin/echo "_exec() { _log \"\${MSG_PREFIX}Exec: \$*\"; echo \"\${MSG_PREFIX}Exec: \$*\"; }"
+/bin/echo "_warn() { _log \"\${MSG_PREFIX}Warn: \$*\"; echo \"\${MSG_PREFIX}Warn: \$*\"; }"
+/bin/echo "_stde() { _log \"\${MSG_PREFIX}Info: \$*\"; }"
 
 # Create a secure log (file) stream. If the file was set in \$F_TMP
 # we print out all output and remove that too.
-echo "_slog() {"
-echo "  if [ -n \"\${F_TMP:-}\" ]; then"
+/bin/echo "_slog() {"
+/bin/echo "  if [ -n \"\${F_TMP:-}\" ]; then"
 # ... first we record all logs to STDERR for later investigation
-echo "    if [ -z \"\${CI:-}\" ]; then"
-echo "      _stde 'Exec. output:'"
-echo "      1>&2 cat \$F_TMP"
-echo "    fi"
+/bin/echo "    if [ -z \"\${CI:-}\" ]; then"
+/bin/echo "      _stde 'Exec. output:'"
+/bin/echo "      1>&2 cat \$F_TMP"
+/bin/echo "    fi"
 # ...
 # but when our test fails, we also print the first 100 lines to
 # the STDOUT, so that we can see them quickly. It can be tricky
 # when  homebrew/pkgng fails, because we don't have any access
 # to MacOS environment on github-action runner. But let's see...
-echo "    if [ \$T_FAIL -ge 1 ]; then"
-echo "      cat \$F_TMP \\"
+/bin/echo "    if [ \$T_FAIL -ge 1 ]; then"
+/bin/echo "      cat \$F_TMP \\"
 # shellcheck disable=SC2028
-echo "      | awk '{ if (NR <= 100) { printf(\" > %s\\\n\", \$0); }}"
+/bin/echo "      | awk '{ if (NR <= 100) { printf(\" > %s\\n\", \$0); }}"
 # shellcheck disable=SC2028
-echo "         END { if (NR > 100) { printf(\" > ...\\\n\");}}'"
-echo "    fi"
-echo "    rm -f \"\${F_TMP}\""
+/bin/echo "         END { if (NR > 100) { printf(\" > ...\\n\");}}'"
+/bin/echo "    fi"
+/bin/echo "    rm -f \"\${F_TMP}\""
 # We record a seperator in the output because it's too verbose
-echo "    _stde ====================================================="
-echo "    export T_FAIL=0"
-echo "  else"
-echo "    export T_FAIL=0"
-echo "    export F_TMP=\"\$(mktemp)\""
-echo "    if [ -z \"\${F_TMP:-}\" ]; then"
-echo "      _fail 'Unable to create temporary file.'"
-echo "    fi"
-echo "  fi"
-echo "}"
+/bin/echo "    _stde ====================================================="
+/bin/echo "    export T_FAIL=0"
+/bin/echo "  else"
+/bin/echo "    export T_FAIL=0"
+/bin/echo "    export F_TMP=\"\$(mktemp)\""
+/bin/echo "    if [ -z \"\${F_TMP:-}\" ]; then"
+/bin/echo "      _fail 'Unable to create temporary file.'"
+/bin/echo "    fi"
+/bin/echo "  fi"
+/bin/echo "}"
 
 new_test=1
 
 while read -r line; do
-  first_3_chars="$(echo "$line" | cut -c -1,2,3)"
+  first_3_chars="$(/bin/echo "$line" | cut -c -1,2,3)"
   if [ "$first_3_chars" = "in " ]; then
     if [ "$new_test" -eq 1 ]; then
-        echo ""
-        echo "_slog"
+        /bin/echo ""
+        /bin/echo "_slog"
         new_test=0
     fi
 
     cmd="$(
-      echo "$line" \
+      /bin/echo "$line" \
       | cut -c 4- \
       | PATTERN=\$LOG REPL=\$F_TMP awk '{gsub(ENVIRON["PATTERN"], ENVIRON["REPL"]); print}'
     )"
@@ -123,39 +124,39 @@ while read -r line; do
 
     # FIXME: We wanted to use `tee` here, but that will create new pipes,
     # FIXME: and hence some feature didn't work (e.g., export FOO=).
-    echo "if [ -n \"\${F_TMP:-}\" ]; then"
-    echo "  _exec \"$cmd\""
-    echo "  { $cmd ; } 1>>\$F_TMP 2>&1"
-    echo "fi"
+    /bin/echo "if [ -n \"\${F_TMP:-}\" ]; then"
+    /bin/echo "  _exec \"$cmd\""
+    /bin/echo "  { $cmd ; } 1>>\$F_TMP 2>&1"
+    /bin/echo "fi"
   elif [ "$first_3_chars" = "ou " ]; then
     new_test=1
-    expected="$(echo "$line" | cut -c 4-)"
+    expected="$(/bin/echo "$line" | cut -c 4-)"
 
-    echo "N_TEST=\$(( N_TEST + 1 ))"
-    echo "if [ -n \"\${F_TMP:-}\" ]; then"
+    /bin/echo "N_TEST=\$(( N_TEST + 1 ))"
+    /bin/echo "if [ -n \"\${F_TMP:-}\" ]; then"
     if [ -z "$expected" ] || [ "$expected" = "empty" ]; then
-      echo "  ret=\"\$(\"\$GGREP\" -Ec '.+' \$F_TMP)\""
-      echo "  if [ -z \"\$ret\" ] || [ \"\$ret\" -ge 1 ]; then"
+      /bin/echo "  ret=\"\$(\"\$GGREP\" -Ec '.+' \$F_TMP)\""
+      /bin/echo "  if [ -z \"\$ret\" ] || [ \"\$ret\" -ge 1 ]; then"
     else
-      echo "  ret=\"\$(\"\$GGREP\" -Ec \"$expected\" \$F_TMP)\""
-      echo "  if [ -z \"\$ret\" ] || [ \"\$ret\" -eq 0 ]; then"
+      /bin/echo "  ret=\"\$(\"\$GGREP\" -Ec \"$expected\" \$F_TMP)\""
+      /bin/echo "  if [ -z \"\$ret\" ] || [ \"\$ret\" -eq 0 ]; then"
     fi
-    echo "    _fail Expected \"$expected\""
-    echo "    N_FAIL=\$(( N_FAIL + 1 ))"
-    echo "    T_FAIL=\$(( T_FAIL + 1 ))"
-    echo "  else"
-    echo "    _pass Matched \"$expected\""
-    echo "  fi"
-    echo "else"
-    echo "  N_FAIL=\$(( N_FAIL + 1 ))"
-    echo "fi"
+    /bin/echo "    _fail Expected \"$expected\""
+    /bin/echo "    N_FAIL=\$(( N_FAIL + 1 ))"
+    /bin/echo "    T_FAIL=\$(( T_FAIL + 1 ))"
+    /bin/echo "  else"
+    /bin/echo "    _pass Matched \"$expected\""
+    /bin/echo "  fi"
+    /bin/echo "else"
+    /bin/echo "  N_FAIL=\$(( N_FAIL + 1 ))"
+    /bin/echo "fi"
   fi
 done
 
-echo "_slog"
-echo "if [ \$N_FAIL -ge 1 ]; then"
-echo "  _fail \"\$N_FAIL/\$N_TEST test(s) failed.\""
-echo "  exit 1"
-echo "else"
-echo "  _pass \"All \$N_TEST tests(s) passed.\""
-echo "fi"
+/bin/echo "_slog"
+/bin/echo "if [ \$N_FAIL -ge 1 ]; then"
+/bin/echo "  _fail \"\$N_FAIL/\$N_TEST test(s) failed.\""
+/bin/echo "  exit 1"
+/bin/echo "else"
+/bin/echo "  _pass \"All \$N_TEST tests(s) passed.\""
+/bin/echo "fi"
