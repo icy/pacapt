@@ -1,3 +1,7 @@
+## v3.0.5
+
+* `lib/apt-cyg`: Add initial support for `apt-cyg` on Cygwin systems
+
 ## v3.0.4
 
 * `lib/swupd`: Add tests and more operations (credit: @mondeja)

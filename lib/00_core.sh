@@ -116,6 +116,9 @@ _PACMAN_detect() {
     && return
   fi
 
+  if uname -a | "$GREP" -q Cygwin; then
+    command -v "apt-cyg" >/dev/null && _PACMAN="apt_cyg" && return
+  fi
   [ -x "/usr/bin/apt-get" ] && _PACMAN="dpkg" && return
   [ -x "/data/data/com.termux/files/usr/bin/apt-get" ] && _PACMAN="dpkg" && return
   [ -x "/usr/bin/cave" ] && _PACMAN="cave" && return
