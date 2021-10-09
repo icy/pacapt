@@ -1,6 +1,13 @@
 ## v3.0.5
 
 * `lib/apt-cyg`: Add initial support for `apt-cyg` on Cygwin systems
+* Rewrote `bin/gen_tests.rb` in `bash` (@mondeja)
+* Minor typo/tests fixes
+
+WARNING: The script won't work with docker container image
+`opensuse/tumbleweed:latest`. See also
+https://bugzilla.opensuse.org/show_bug.cgi?id=1190670
+and https://github.com/moby/moby/pull/42836
 
 ## v3.0.4
 
