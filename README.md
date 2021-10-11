@@ -7,10 +7,11 @@ Simply install package with `pacapt -S htop` or `pacapt install htop`
 on any `Linux`, `BSD`, `OpenWrt` or `Mac OS` machines.
 It supports the following package managers:
 
-* `pacman`        by `Arch Linux`, `ArchBang`, `Manjaro`, etc.
-* `dpkg/apt-get`  by `Debian`, `Ubuntu`, etc.
-* `homebrew`      by `Mac OS X`
-* `macports`      by `Mac OS X`
+* `pacman`        on `Arch Linux`-based systems, `ArchBang`, `Manjaro`, etc.
+* `apt-cyg`       on Cygwin (via [apt-cyg](https://github.com/transcode-open/apt-cyg))
+* `apt-get`       on `Debian`, `Ubuntu`, etc.
+* `homebrew`      on `Mac OS X`
+* `macports`      on `Mac OS X`
 * `yum/rpm`       by `Redhat`, `CentOS`, `Fedora`, `Oracle Linux`, etc.
 * `portage`       by `Gentoo`
 * `zypper`        by `OpenSUSE`

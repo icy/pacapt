@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 3.0.4
+# Version: 3.0.5
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2021 \
@@ -46,7 +46,7 @@
 
 _print_pacapt_version() {
   cat <<_EOF_
-pacapt version '3.0.4'
+pacapt version '3.0.5'
 
 Copyright (C) 2010 - 2021 \\
                           | 10sr (10sr)
@@ -87,7 +87,7 @@ DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 _EOF_
 }
 
-export PACAPT_VERSION='3.0.4'
+export PACAPT_VERSION='3.0.5'
 
 _help() {
   cat <<'EOF'
@@ -297,6 +297,9 @@ _PACMAN_detect() {
     && return
   fi
 
+  if uname -a | "$GREP" -q Cygwin; then
+    command -v "apt-cyg" >/dev/null && _PACMAN="apt_cyg" && return
+  fi
   [ -x "/usr/bin/apt-get" ] && _PACMAN="dpkg" && return
   [ -x "/data/data/com.termux/files/usr/bin/apt-get" ] && _PACMAN="dpkg" && return
   [ -x "/usr/bin/cave" ] && _PACMAN="cave" && return
@@ -640,6 +643,47 @@ apk_Sy() {
 apk_U() {
   # shellcheck disable=2086
   apk add --allow-untrusted $_TOPT -- "$@"
+}
+
+
+_apt_cyg_init() {
+  :
+}
+
+apt_cyg_Ss() {
+  apt-cyg search "$@"
+}
+
+apt_cyg_S() {
+  apt-cyg install "$@"
+}
+
+apt_cyg_Sy() {
+  apt-cyg update "$@"
+}
+
+apt_cyg_Q() {
+  apt-cyg list "$@"
+}
+
+apt_cyg_Qi() {
+  apt-cyg show "$@"
+}
+
+apt_cyg_Ql() {
+  for pkg in "$@"; do
+    if [ "$_TOPT" = "q" ]; then
+      apt-cyg listfiles "$pkg"
+    else
+       apt-cyg listfiles "$pkg" \
+       | pkg="$pkg" \
+         awk '{printf("%s %s\n", ENVIRON["pkg"], $0)}'
+    fi
+  done
+}
+
+apt_cyg_R() {
+  apt-cyg remove "$@"
 }
 #_!_POSIX_# 
 #_!_POSIX_# 
@@ -2424,6 +2468,13 @@ _validate_operation() {
   "apk_Suy") ;;
   "apk_Sy") ;;
   "apk_U") ;;
+  "apt_cyg_Ss") ;;
+  "apt_cyg_S") ;;
+  "apt_cyg_Sy") ;;
+  "apt_cyg_Q") ;;
+  "apt_cyg_Qi") ;;
+  "apt_cyg_Ql") ;;
+  "apt_cyg_R") ;;
   "cave_Q") ;;
   "cave_Qi") ;;
   "cave_Ql") ;;
