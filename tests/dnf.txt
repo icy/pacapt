@@ -5,41 +5,43 @@
 # License : MIT
 
 im fedora:32 fedora:33 fedora:34
-im oraclelinux-8_dnf
+im oraclelinux-8_dnf oraclelinux:8-slim
 
 in -P
 ou available operations:.*( [Q][ ilos])+
 
-# NOTE: in fedora:34 '/usr/bin/dnf' is not an executable
-#       but in all machines the binary is a symlink
-in ! [ -L /usr/bin/dnf ] && echo "dnf binary is symlink"
-ou ^dnf binary is symlink$
+# Note, to support microdnf, we remove this part.
+# It's still here for a near future reference.
+
+# # NOTE: in fedora:34 '/usr/bin/dnf' is not an executable
+# #       but in all machines the binary is a symlink
+# in ! [ -L /usr/bin/dnf ] && echo "dnf binary is symlink"
+# ou ^dnf binary is symlink$
 
 # List packages with available updates
 # NOTE: Fedora | OracleLinux
 in -Qu
-ou ^(Available Upgrades|Oracle Linux)
+ou (Available Upgrades|Oracle Linux|operation is invalid or not implemented)
 
 # Update and upgrade
 # NOTE: Fedora | OracleLinux
 in -Su --noconfirm
-ou ^(Upgrading:|Nothing to do.)$
-ou ^(Upgraded:|Complete!)$
+ou ^(Upgrading:||Updating:|Nothing to do.)
+ou ^(Upgraded:|Complete.)$
 
 # Get installed packages
 in -Qq
-ou ^bash$
-ou ^grep$
+ou ^(bash|grep|gawk|tzdata)$
 in -Q
-ou ^bash [0-9]+\.[0-9]+\.?[0-9]*$
+ou ^tzdata [0-9]{4}
 
 # Get packages information (too slow)
 #in -Qi
 
-# Get package information
+# Get package information (dnf only)
 in -Qi bash
-ou ^Name\s+: bash$
-ou ^Version\s+: [0-9]+\.[0-9]+\.?[0-9]*$
+ou ^(operation is invalid or not implemented|Name\s+: bash)$
+ou ^(operation is invalid or not implemented|Version\s+: [0-9]+\.[0-9]+\.?[0-9]*)$
 
 # Get locally installed package
 in -Qs rpm

@@ -14,60 +14,66 @@
 # DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 
 _dnf_init() {
-  :
+  if command -v dnf >/dev/null; then
+    export DNF_BIN="dnf"
+  elif command -v microdnf >/dev/null; then
+    export DNF_BIN="microdnf"
+  else
+    _die "Something wrong with pacapt: dnf/microdnf binary not found."
+  fi
 }
 
 dnf_S() {
   # shellcheck disable=SC2086
-  dnf install $_TOPT "$@"
+  $DNF_BIN install $_TOPT "$@"
 }
 
 dnf_Sc() {
-  dnf clean expire-cache "$@"
+  $DNF_BIN clean expire-cache "$@"
 }
 
 dnf_Scc() {
-  dnf clean packages "$@"
+  $DNF_BIN clean packages "$@"
 }
 
 dnf_Sccc() {
-  dnf clean all "$@"
+  $DNF_BIN clean all "$@"
 }
 
 dnf_Si() {
-  dnf repoquery --requires --resolve "$@"
+  $DNF_BIN repoquery --requires --resolve "$@"
 }
 
 dnf_Sii() {
-  dnf repoquery --installed --whatrequires "$@"
+  $DNF_BIN repoquery --installed --whatrequires "$@"
 }
 
 dnf_Sg() {
   if [ $# -gt 0 ]; then
-    dnf group info "$@"
+    $DNF_BIN group info "$@"
   else
-    dnf group list
+    $DNF_BIN group list
   fi
 }
 
 dnf_Sl() {
-  dnf list available "$@"
+  $DNF_BIN list available "$@"
 }
 
 dnf_Ss() {
-  dnf search "$@"
+  $DNF_BIN search "$@"
 }
 
 dnf_Su() {
-  dnf upgrade "$@"
+  $DNF_BIN upgrade "$@"
 }
 
 dnf_Suy() {
-  dnf upgrade "$@"
+  $DNF_BIN upgrade "$@"
 }
 
 dnf_Sy() {
-  dnf clean expire-cache && dnf check-update
+  $DNF_BIN clean expire-cache && $DNF_BIN check-update
 }
 
 # dnf_Q may _not_implemented
@@ -86,11 +92,19 @@ dnf_Qc() {
 }
 
 dnf_Qe() {
-  dnf repoquery --userinstalled "$@"
+  $DNF_BIN repoquery --userinstalled "$@"
 }
 
 dnf_Qi() {
-  dnf info --installed "$@" && dnf repoquery --deplist "$@"
+  case "$DNF_BIN" in
+  "dnf")
+    $DNF_BIN info --installed "$@" \
+    && $DNF_BIN repoquery --deplist "$@"
+    ;;
+  *)
+    _not_implemented
+    ;;
+  esac
 }
 
 dnf_Ql() {
@@ -98,7 +112,7 @@ dnf_Ql() {
 }
 
 dnf_Qm() {
-  dnf list extras
+  $DNF_BIN list extras
 }
 
 dnf_Qo() {
@@ -118,13 +132,16 @@ dnf_Qs() {
 }
 
 dnf_Qu() {
-  dnf list updates "$@"
+  case "$DNF_BIN" in
+  "dnf")  dnf list updates "$@" ;;
+  *)      _not_implemented ;;
+  esac
 }
 
 dnf_R() {
-  dnf remove "$@"
+  $DNF_BIN remove "$@"
 }
 
 dnf_U() {
-  dnf install "$@"
+  $DNF_BIN install "$@"
 }

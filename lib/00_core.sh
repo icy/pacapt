@@ -69,10 +69,14 @@ _issue2pacman() {
   [ "$(uname)" = "SunOS" ] && _PACMAN="$local_pacman" && return
 
   $GREP -qis "$@" /etc/issue \
-  && _PACMAN="$local_pacman" && return
+  && _PACMAN="$local_pacman" \
+  && command -v "$local_pacman" >/dev/null \
+  && return
 
   $GREP -qis "$@" /etc/os-release \
-  && _PACMAN="$local_pacman" && return
+  && _PACMAN="$local_pacman" \
+  && command -v "$local_pacman" >/dev/null \
+  && return
 }
 
 # Detect package type
@@ -116,13 +120,14 @@ _PACMAN_detect() {
     && return
   fi
 
-  if uname -a | "$GREP" -q Cygwin; then
+  if uname -a | "$GREP" -q "Cygwin"; then
     command -v "apt-cyg" >/dev/null && _PACMAN="apt_cyg" && return
   fi
   [ -x "/usr/bin/apt-get" ] && _PACMAN="dpkg" && return
   [ -x "/data/data/com.termux/files/usr/bin/apt-get" ] && _PACMAN="dpkg" && return
   [ -x "/usr/bin/cave" ] && _PACMAN="cave" && return
   [ -x "/usr/bin/dnf" ] && _PACMAN="dnf" && return
+  [ -x "/usr/bin/microdnf" ] && _PACMAN="dnf" && return
   [ -x "/usr/bin/yum" ] && _PACMAN="yum" && return
   [ -x "/opt/local/bin/port" ] && _PACMAN="macports" && return
   [ -x "/usr/bin/emerge" ] && _PACMAN="portage" && return
