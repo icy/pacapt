@@ -1,0 +1,44 @@
+#!/bin/sh
+
+# Purpose : Testing script for xbps support
+# Author  : Connor Sample
+# License : MIT
+
+im voidlinux
+
+# List packages
+in -Q
+ou ^ii.*$
+
+in -Qe
+ou ^base-minimal.*$
+
+in -Qi dash
+ou ^\[\*\]\sdash.*
+
+in -Ql tar
+ou ^/usr/bin/tar.*
+
+in -Qo /usr/bin/tar
+ou tar-[0-9_.]+: /usr/bin/tar \(regular file\)
+
+in -Qs tar
+ou \[\*\] tar-.*
+
+# Installing/removing packages
+# Older version of void is throwing a certificate error due to old certificate
+
+in ! SSL_NO_VERIFY_PEER=true pacman -Sy
+ou .*\[\*\]\sUpdating repository.*
+
+in -S --noconfirm nano
+ou .*[1-9]+\sinstalled.*
+
+in -Ss nano
+ou \[\-\]\snano.*
+
+in -R --noconfirm nano
+ou .*1 removed\.$
+
+in -Scc
+ou
