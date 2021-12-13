@@ -28,7 +28,7 @@ in -Sy
 
 # Simple query that lists all packages
 in -Qq
-ou ^update-alternatives
+ou ^glibc
 ou ^zypper
 
 # Listing with version and package name
