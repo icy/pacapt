@@ -106,6 +106,7 @@ _PACMAN_detect() {
   _issue2pacman pkg_tools "Bitrig" && return
   _issue2pacman apk "Alpine Linux" && return
   _issue2pacman opkg "OpenWrt" && return
+  _issue2pacman xbps "Void" && return
 
   [ -z "$_PACMAN" ] || return
 
@@ -135,6 +136,7 @@ _PACMAN_detect() {
   [ -x "/bin/opkg" ] && _PACMAN="opkg" && return
   [ -x "/usr/bin/tazpkg" ] && _PACMAN="tazpkg" && return
   [ -x "/usr/bin/swupd" ] && _PACMAN="swupd" && return
+  [ -x "/bin/xbps-install" ] && _PACMAN="xbps" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
@@ -170,6 +172,7 @@ _translate_w() {
     ;;
   "apk")      local_opt="fetch";;
   "opkg")     local_opt="--download-only";;
+  "xbps")     local_opt="-D";;
   *)
     local_opt=""
     local_ret=1
@@ -215,6 +218,7 @@ _translate_noconfirm() {
   "pkgng")  local_opt="-y";;
   "tazpkg") local_opt="--auto";;
   "apk")    local_opt="";;
+  "xbps")   local_opt="-y";;
   *)
     local_opt=""
     local_ret=1
