@@ -7,24 +7,25 @@ Simply install package with `pacapt -S htop` or `pacapt install htop`
 on any `Linux`, `BSD`, `OpenWrt` or `Mac OS` machines.
 It supports the following package managers:
 
-* `pacman`        on `Arch Linux`-based systems, `ArchBang`, `Manjaro`, etc.
-* `apt-cyg`       on Cygwin (via [apt-cyg](https://github.com/transcode-open/apt-cyg))
-* `apt-get`       on `Debian`, `Ubuntu`, etc.
-* `homebrew`      on `Mac OS X`
-* `macports`      on `Mac OS X`
-* `yum/rpm`       by `Redhat`, `CentOS`, `Fedora`, `Oracle Linux`, etc.
-* `portage`       by `Gentoo`
-* `zypper`        by `OpenSUSE`
-* `pkgng`         by `FreeBSD`
-* `cave`          by `Exherbo Linux`
-* `pkg_tools`     by `OpenBSD`
-* `sun_tools`     by `Solaris(SunOS)`
-* `apk`           by `Alpine Linux`
-* `opkg`          by `OpenWrt`
-* `tazpkg`        by `SliTaz Linux`
-* `swupd`         by `Clear Linux`
-* `tlmgr`         by `TeX Live`
-* `conda`         by [`Conda`](https://conda.io/docs/)
+* `pacman`        from `Arch Linux`-based systems, `ArchBang`, `Manjaro`, etc.
+* `apt-cyg`       from Cygwin (via [apt-cyg](https://github.com/transcode-open/apt-cyg))
+* `apt-get`       from `Debian`, `Ubuntu`, etc.
+* `homebrew`      from `Mac OS X`
+* `macports`      from `Mac OS X`
+* `yum/rpm`       from `Redhat`, `CentOS`, `Fedora`, `Oracle Linux`, etc.
+* `portage`       from `Gentoo`
+* `zypper`        from `OpenSUSE`
+* `pkgng`         from `FreeBSD`
+* `cave`          from `Exherbo Linux`
+* `pkg_tools`     from `OpenBSD`
+* `sun_tools`     from `Solaris(SunOS)`
+* `apk`           from `Alpine Linux`
+* `opkg`          from `OpenWrt`
+* `tazpkg`        from `SliTaz Linux`
+* `swupd`         from `Clear Linux`
+* `xbps`          from `Void Linux`
+* `tlmgr`         from `TeX Live`
+* `conda`         from [`Conda`](https://conda.io/docs/)
 
 ## TOC
 
@@ -116,22 +117,22 @@ A long list of options and operations can be found from [`ArchLinux`'s wiki](htt
 ```
            Q Qc Qe Qi Qk Ql Qm Qo Qp Qs Qu R Rn Rns Rs S Sc Scc Sccc Sg Si Sii Sl Ss Su Suy Sy U
       apk  ~     *  *     *     *     *  * *  *   *  * *  *   *    *     *   *  *  *  *   *  * *
-  apt_cyg  *        *     *                *           *                           *         *  
+  apt_cyg  *        *     *                *           *                           *         *
      cave  *        *     *     *  *  *  * *  *   *  * *  *   *    x     *         *  *   *  * x
-    conda  *                    *          *           *  *              *         *      *     
+    conda  *                    *          *           *  *              *         *      *
       dnf  ~  *  *  *     *  *  *  *  *  * *           *  *   *    *  *  *   *  *  *  *   *  * *
      dpkg  ~  *  *  *  *  *     *  *  *  * *  *   *  ~ *  *   *    *  *  *   *     *  *   *  * *
- homebrew  *  *     *     *           *  * *           *  *   *    *     *         *  *   *  *  
- macports     *           *     *        * *         ~ *  *   *          *         *  *   *  *  
+ homebrew  *  *     *     *           *  * *           *  *   *    *     *         *  *   *  *
+ macports     *           *     *        * *         ~ *  *   *          *         *  *   *  *
      opkg  *        *     *     *     *  * *           *                 *   *     *  *      * *
-    pkgng  *        *     *     *  *     * *         * *  *   *          *         *  *   *  *  
-pkg_tools  ~        *     *     *  *     * *  *   *  ~ *  *   x          *      *  ~  *   *  x  
-  portage  *  *     *     *     *        * *         * *  *   *    *     *         *  *   *  *  
+    pkgng  *        *     *     *  *     * *         * *  *   *          *         *  *   *  *
+pkg_tools  ~        *     *     *  *     * *  *   *  ~ *  *   x          *      *  ~  *   *  x
+  portage  *  *     *     *     *        * *         * *  *   *    *     *         *  *   *  *
 sun_tools  *        *     *     *     *    *                                                   *
-    swupd  *        *  *        *     *    *           *  *   *                    *  *   *  *  
+    swupd  *        *  *        *     *    *           *  *   *                    *  *   *  *
    tazpkg  *        *     *     *          *           *  *   *                    *  *   *  * *
     tlmgr           *  *  *                *           *                 *      *  *      *    *
-     xbps  *     *  *     *     *     *    *           *      *                    *  *   *  *  
+     xbps  *     *  *     *     *     *    *           *      *                    *  *   *  *
       yum  *  *  *  *     *  *  *  *  *  * *         * *  *   *    *  *  *   *     *  *   *  * *
    zypper  *  *     *     *  *  *  *  *  * *  *   *  * *  *   *    *  *  *   *  *  *  *   *  * *
 ```
@@ -193,32 +194,33 @@ Many people have contributed to the project by sending pull requests
 and/or reporting on the ticket system. Here is an incomplete list of
 authors and contributors.
 
-* 10sr (10sr)
-* Alexander Dupuy (dupuy)
-* Anh K. Huynh (icy)
-* Antony Lee (anntzer)
-* Alex Lyon (Arcterus)
-* Álvaro Mondéjar (mondeja)
-* Carl X. Su (bcbcarl)
-* Cuong Manh Le (Gnouc)
-* Daniel YC Lin (dlintw)
-* Danny George (dangets)
-* Darshit Shah (darnir)
-* Dmitry Kudriavtsev (dkudriavtsev)
-* Eric Crosson (EricCrosson)
-* Evan Relf (evanrelf)
-* GijsTimmers (GijsTimmers)
-* Hà-Dương Nguyễn (cmpitg)
-* Huy Ngô (NgoHuy)
-* James Pearson (xiongchiamiov)
-* Janne Heß (dasJ)
-* Jiawei Zhou (4679)
+* 10sr (@10sr)
+* Alexander Dupuy (@dupuy)
+* Anh K. Huynh (@icy)
+* Antony Lee (@anntzer)
+* Alex Lyon (@Arcterus)
+* Álvaro Mondéjar (@mondeja)
+* Carl X. Su (@bcbcarl)
+* Cuong Manh Le (@Gnouc)
+* Daniel YC Lin (@dlintw)
+* Danny George (@dangets)
+* Darshit Shah (@darnir)
+* Dmitry Kudriavtsev (@dkudriavtsev)
+* Eric Crosson (@EricCrosson)
+* Evan Relf (@evanrelf)
+* GijsTimmers (@GijsTimmers)
+* Hà-Dương Nguyễn (@cmpitg)
+* Huy Ngô (@NgoHuy)
+* James Pearson (@xiongchiamiov)
+* Janne Heß (@dasJ)
+* Jiawei Zhou (@4679)
 * Karol Blazewicz
-* Kevin Brubeck (unhammer)
-* Konrad Borowski (xfix)
-* Kylie McClain (somasis)
-* Gen Li (Rami3L)
-* Valerio Pizzi (Pival81)
-* Siôn Le Roux (sinisterstuf)
-* Thiago Perrotta (thiagowfx)
-* Vojtech Letal (letalvoj)
+* Kevin Brubeck (@unhammer)
+* Konrad Borowski (@xfix)
+* Kylie McClain (@somasis)
+* Gen Li (@Rami3L)
+* Valerio Pizzi (@Pival81)
+* Siôn Le Roux (@sinisterstuf)
+* Tabulate (@TabulateJarl8)
+* Thiago Perrotta (@thiagowfx)
+* Vojtech Letal (@letalvoj)

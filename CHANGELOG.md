@@ -1,3 +1,7 @@
+## v3.0.6
+
+* New support `Void Linux` (Thanks Tabulate @TabulateJarl8)
+
 ## v3.0.5
 
 * `lib/apt-cyg`: Add initial support for `apt-cyg` on Cygwin systems
