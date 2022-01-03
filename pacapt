@@ -3,39 +3,40 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 3.0.5
+# Version: 3.0.6
 # Authors: Anh K. Huynh et al.
 
-# Copyright (C) 2010 - 2021 \
-#                           | 10sr (10sr)
-#                           | Alexander Dupuy (dupuy)
-#                           | Anh K. Huynh (icy)
-#                           | Antony Lee (anntzer)
-#                           | Alex Lyon (Arcterus)
-#                           | Álvaro Mondéjar (mondeja)
-#                           | Carl X. Su (bcbcarl)
-#                           | Cuong Manh Le (Gnouc)
-#                           | Daniel YC Lin (dlintw)
-#                           | Danny George (dangets)
-#                           | Darshit Shah (darnir)
-#                           | Dmitry Kudriavtsev (dkudriavtsev)
-#                           | Eric Crosson (EricCrosson)
-#                           | Evan Relf (evanrelf)
-#                           | GijsTimmers (GijsTimmers)
-#                           | Hà-Dương Nguyễn (cmpitg)
-#                           | Huy Ngô (NgoHuy)
-#                           | James Pearson (xiongchiamiov)
-#                           | Janne Heß (dasJ)
-#                           | Jiawei Zhou (4679)
+# Copyright (C) 2010 - 2022 \
+#                           | 10sr (@10sr)
+#                           | Alexander Dupuy (@dupuy)
+#                           | Anh K. Huynh (@icy)
+#                           | Antony Lee (@anntzer)
+#                           | Alex Lyon (@Arcterus)
+#                           | Álvaro Mondéjar (@mondeja)
+#                           | Carl X. Su (@bcbcarl)
+#                           | Cuong Manh Le (@Gnouc)
+#                           | Daniel YC Lin (@dlintw)
+#                           | Danny George (@dangets)
+#                           | Darshit Shah (@darnir)
+#                           | Dmitry Kudriavtsev (@dkudriavtsev)
+#                           | Eric Crosson (@EricCrosson)
+#                           | Evan Relf (@evanrelf)
+#                           | GijsTimmers (@GijsTimmers)
+#                           | Hà-Dương Nguyễn (@cmpitg)
+#                           | Huy Ngô (@NgoHuy)
+#                           | James Pearson (@xiongchiamiov)
+#                           | Janne Heß (@dasJ)
+#                           | Jiawei Zhou (@4679)
 #                           | Karol Blazewicz
-#                           | Kevin Brubeck (unhammer)
-#                           | Konrad Borowski (xfix)
-#                           | Kylie McClain (somasis)
-#                           | Gen Li (Rami3L)
-#                           | Valerio Pizzi (Pival81)
-#                           | Siôn Le Roux (sinisterstuf)
-#                           | Thiago Perrotta (thiagowfx)
-#                           | Vojtech Letal (letalvoj)
+#                           | Kevin Brubeck (@unhammer)
+#                           | Konrad Borowski (@xfix)
+#                           | Kylie McClain (@somasis)
+#                           | Gen Li (@Rami3L)
+#                           | Valerio Pizzi (@Pival81)
+#                           | Siôn Le Roux (@sinisterstuf)
+#                           | Tabulate (@TabulateJarl8)
+#                           | Thiago Perrotta (@thiagowfx)
+#                           | Vojtech Letal (@letalvoj)
 #
 # Usage of the works is permitted provided that this instrument is
 # retained with the works, so that any entity that uses the works is
@@ -46,38 +47,39 @@
 
 _print_pacapt_version() {
   cat <<_EOF_
-pacapt version '3.0.5'
+pacapt version '3.0.6'
 
-Copyright (C) 2010 - 2021 \\
-                          | 10sr (10sr)
-                          | Alexander Dupuy (dupuy)
-                          | Anh K. Huynh (icy)
-                          | Antony Lee (anntzer)
-                          | Alex Lyon (Arcterus)
-                          | Álvaro Mondéjar (mondeja)
-                          | Carl X. Su (bcbcarl)
-                          | Cuong Manh Le (Gnouc)
-                          | Daniel YC Lin (dlintw)
-                          | Danny George (dangets)
-                          | Darshit Shah (darnir)
-                          | Dmitry Kudriavtsev (dkudriavtsev)
-                          | Eric Crosson (EricCrosson)
-                          | Evan Relf (evanrelf)
-                          | GijsTimmers (GijsTimmers)
-                          | Hà-Dương Nguyễn (cmpitg)
-                          | Huy Ngô (NgoHuy)
-                          | James Pearson (xiongchiamiov)
-                          | Janne Heß (dasJ)
-                          | Jiawei Zhou (4679)
+Copyright (C) 2010 - 2022 \\
+                          | 10sr (@10sr)
+                          | Alexander Dupuy (@dupuy)
+                          | Anh K. Huynh (@icy)
+                          | Antony Lee (@anntzer)
+                          | Alex Lyon (@Arcterus)
+                          | Álvaro Mondéjar (@mondeja)
+                          | Carl X. Su (@bcbcarl)
+                          | Cuong Manh Le (@Gnouc)
+                          | Daniel YC Lin (@dlintw)
+                          | Danny George (@dangets)
+                          | Darshit Shah (@darnir)
+                          | Dmitry Kudriavtsev (@dkudriavtsev)
+                          | Eric Crosson (@EricCrosson)
+                          | Evan Relf (@evanrelf)
+                          | GijsTimmers (@GijsTimmers)
+                          | Hà-Dương Nguyễn (@cmpitg)
+                          | Huy Ngô (@NgoHuy)
+                          | James Pearson (@xiongchiamiov)
+                          | Janne Heß (@dasJ)
+                          | Jiawei Zhou (@4679)
                           | Karol Blazewicz
-                          | Kevin Brubeck (unhammer)
-                          | Konrad Borowski (xfix)
-                          | Kylie McClain (somasis)
-                          | Gen Li (Rami3L)
-                          | Valerio Pizzi (Pival81)
-                          | Siôn Le Roux (sinisterstuf)
-                          | Thiago Perrotta (thiagowfx)
-                          | Vojtech Letal (letalvoj)
+                          | Kevin Brubeck (@unhammer)
+                          | Konrad Borowski (@xfix)
+                          | Kylie McClain (@somasis)
+                          | Gen Li (@Rami3L)
+                          | Valerio Pizzi (@Pival81)
+                          | Siôn Le Roux (@sinisterstuf)
+                          | Tabulate (@TabulateJarl8)
+                          | Thiago Perrotta (@thiagowfx)
+                          | Vojtech Letal (@letalvoj)
 
 Usage of the works is permitted provided that this
 instrument is retained with the works, so that any
@@ -87,7 +89,7 @@ DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 _EOF_
 }
 
-export PACAPT_VERSION='3.0.5'
+export PACAPT_VERSION='3.0.6'
 
 _help() {
   cat <<'EOF'
@@ -287,6 +289,7 @@ _PACMAN_detect() {
   _issue2pacman pkg_tools "Bitrig" && return
   _issue2pacman apk "Alpine Linux" && return
   _issue2pacman opkg "OpenWrt" && return
+  _issue2pacman xbps "Void" && return
 
   [ -z "$_PACMAN" ] || return
 
@@ -316,6 +319,7 @@ _PACMAN_detect() {
   [ -x "/bin/opkg" ] && _PACMAN="opkg" && return
   [ -x "/usr/bin/tazpkg" ] && _PACMAN="tazpkg" && return
   [ -x "/usr/bin/swupd" ] && _PACMAN="swupd" && return
+  [ -x "/bin/xbps-install" ] && _PACMAN="xbps" && return
 
   command -v brew >/dev/null && _PACMAN="homebrew" && return
 
@@ -349,6 +353,7 @@ _translate_w() {
     ;;
   "apk")      local_opt="fetch";;
   "opkg")     local_opt="--download-only";;
+  "xbps")     local_opt="-D";;
   *)
     local_opt=""
     local_ret=1
@@ -392,6 +397,7 @@ _translate_noconfirm() {
   "pkgng")  local_opt="-y";;
   "tazpkg") local_opt="--auto";;
   "apk")    local_opt="";;
+  "xbps")   local_opt="-y";;
   *)
     local_opt=""
     local_ret=1
@@ -2135,6 +2141,64 @@ tlmgr_U() {
 
 
 
+_xbps_init() {
+  :
+}
+
+xbps_Q() {
+  xbps-query -l
+}
+
+xbps_Qe() {
+  xbps-query -m
+}
+
+xbps_Qi() {
+  xbps-query -s "$@"
+}
+
+xbps_Ql() {
+  xbps-query -f "$@"
+}
+
+xbps_Qo() {
+  xbps-query -o "$@"
+}
+
+xbps_Qs() {
+  xbps-query -s "$@"
+}
+
+xbps_S() {
+  xbps-install "$@"
+}
+
+xbps_Ss() {
+  xbps-query -Rs "$@"
+}
+
+xbps_Su() {
+  xbps-install -u
+}
+
+xbps_Sy() {
+  xbps-install -S
+}
+
+xbps_Suy() {
+  xbps-install -Su
+}
+
+xbps_R() {
+  xbps-remove "$@"
+}
+
+xbps_Scc() {
+  xbps-remove -O
+}
+
+
+
 _yum_init() {
   :
 }
@@ -2693,6 +2757,19 @@ _validate_operation() {
   "tlmgr_Ss") ;;
   "tlmgr_Suy") ;;
   "tlmgr_U") ;;
+  "xbps_Q") ;;
+  "xbps_Qe") ;;
+  "xbps_Qi") ;;
+  "xbps_Ql") ;;
+  "xbps_Qo") ;;
+  "xbps_Qs") ;;
+  "xbps_S") ;;
+  "xbps_Ss") ;;
+  "xbps_Su") ;;
+  "xbps_Sy") ;;
+  "xbps_Suy") ;;
+  "xbps_R") ;;
+  "xbps_Scc") ;;
   "yum_Q") ;;
   "yum_Qe") ;;
   "yum_Qi") ;;
