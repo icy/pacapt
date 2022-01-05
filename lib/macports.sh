@@ -82,6 +82,7 @@ macports_Scc() {
 
 macports_S() {
   if [ "$_TOPT" = "fetch" ]; then
+    shift
     port patch "$@"
   else
     port install "$@"

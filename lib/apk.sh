@@ -116,8 +116,8 @@ apk_S() {
   case ${_EOPT} in
     # Download only
     ("fetch") shift
-              apk fetch $_TOPT -- "$@" ;;
-          (*) apk add   $_TOPT -- "$@" ;;
+              apk fetch $_TOPT "$@" ;;
+          (*) apk add   $_TOPT "$@" ;;
   esac
 }
 

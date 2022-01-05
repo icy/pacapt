@@ -237,8 +237,10 @@ _translate_all() {
 
   local_debug="$(_translate_debug)" || return 1
   local_noconfirm="$(_translate_noconfirm)" || return 1
-  local_args="$(_translate_w)" || return 1
 
+  # WARNING: Order does matter, see also
+  #   https://github.com/icy/pacapt/pull/219#issuecomment-1006079629
+  local_args="$(_translate_w)" || return 1
   local_args="${local_args}${local_noconfirm:+ }${local_noconfirm}"
   local_args="${local_args}${local_debug:+ }${local_debug}"
 
