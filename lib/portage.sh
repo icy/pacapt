@@ -76,7 +76,7 @@ portage_Rs() {
 }
 
 portage_R() {
-  emerge --depclean "@"
+  emerge --depclean "$@"
 }
 
 portage_Si() {
