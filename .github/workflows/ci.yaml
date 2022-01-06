@@ -105,7 +105,7 @@ jobs:
         make test_homebrew
 
   pkgng:
-    runs-on: macos-latest
+    runs-on: macos-10.15
     steps:
     - uses: actions/checkout@v2
     - uses: vmactions/freebsd-vm@v0.1.5
@@ -121,7 +121,7 @@ jobs:
           make test_pkgng
 
   sun_tools:
-    runs-on: macos-latest
+    runs-on: macos-10.15
     steps:
     - uses: actions/checkout@v2
     - name: Build pacapt and tests
