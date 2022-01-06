@@ -57,10 +57,10 @@ in -Sy
 ou ^(fetch|OK)
 
 # Download package
-in -Sw screen
-ou ^Downloading screen
+in -Swv nano
+ou Downloading nano
 
-in -Swv screen
+in -Sw screen
 ou ^Downloading screen
 
 # Setup cache
