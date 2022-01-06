@@ -60,6 +60,9 @@ ou ^(fetch|OK)
 in -Sw screen
 ou ^Downloading screen
 
+in -Swv screen
+ou ^Downloading screen
+
 # Setup cache
 in -S alpine-conf
 ou Installing alpine-conf
