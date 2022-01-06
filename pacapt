@@ -1377,12 +1377,16 @@ macports_Scc() {
 }
 
 macports_S() {
-  if [ "$_TOPT" = "fetch" ]; then
+  # shellcheck disable=SC2153
+  case "$_EOPT" in
+  fetch*)
     shift
     port patch "$@"
-  else
+    ;;
+  *)
     port install "$@"
-  fi
+    ;;
+  esac
 }
 
 
@@ -1583,12 +1587,15 @@ pkgng_Scc() {
 
 pkgng_S() {
   # shellcheck disable=SC2153
-  if [ "$_EOPT" = "fetch" ]; then
+  case "$_EOPT" in
+  fetch*)
     shift
     pkg fetch "$@"
-  else
+    ;;
+  *)
     pkg install "$@"
-  fi
+    ;;
+  esac
 }
 
 
