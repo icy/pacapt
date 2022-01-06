@@ -81,10 +81,14 @@ macports_Scc() {
 }
 
 macports_S() {
-  if [ "$_TOPT" = "fetch" ]; then
+  # shellcheck disable=SC2153
+  case "$_EOPT" in
+  fetch*)
     shift
     port patch "$@"
-  else
+    ;;
+  *)
     port install "$@"
-  fi
+    ;;
+  esac
 }

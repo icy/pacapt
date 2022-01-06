@@ -57,6 +57,9 @@ in -Sy
 ou ^(fetch|OK)
 
 # Download package
+in -Swv nano
+ou Downloading nano
+
 in -Sw screen
 ou ^Downloading screen
 

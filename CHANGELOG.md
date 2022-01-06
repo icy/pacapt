@@ -1,3 +1,8 @@
+## v3.0.7
+
+* `lib/{apk,macports,pkgng}`: Fixed fetch option #214
+* `lib/portage`: Fixed syntax error #218 (Thanks @owl4ce)
+
 ## v3.0.6
 
 * New support `Void Linux` (Thanks Tabulate @TabulateJarl8)

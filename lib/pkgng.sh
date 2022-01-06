@@ -99,10 +99,13 @@ pkgng_Scc() {
 
 pkgng_S() {
   # shellcheck disable=SC2153
-  if [ "$_EOPT" = "fetch" ]; then
+  case "$_EOPT" in
+  fetch*)
     shift
     pkg fetch "$@"
-  else
+    ;;
+  *)
     pkg install "$@"
-  fi
+    ;;
+  esac
 }
