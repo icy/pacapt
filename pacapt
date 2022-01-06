@@ -3,7 +3,7 @@
 # Purpose: A wrapper for all Unix package managers
 # License: Fair license (http://www.opensource.org/licenses/fair)
 # Source : http://github.com/icy/pacapt/
-# Version: 3.0.6
+# Version: 3.0.7
 # Authors: Anh K. Huynh et al.
 
 # Copyright (C) 2010 - 2022 \
@@ -47,7 +47,7 @@
 
 _print_pacapt_version() {
   cat <<_EOF_
-pacapt version '3.0.6'
+pacapt version '3.0.7'
 
 Copyright (C) 2010 - 2022 \\
                           | 10sr (@10sr)
@@ -89,7 +89,7 @@ DISCLAIMER: THE WORKS ARE WITHOUT WARRANTY.
 _EOF_
 }
 
-export PACAPT_VERSION='3.0.6'
+export PACAPT_VERSION='3.0.7'
 
 _help() {
   cat <<'EOF'
@@ -416,8 +416,10 @@ _translate_all() {
 
   local_debug="$(_translate_debug)" || return 1
   local_noconfirm="$(_translate_noconfirm)" || return 1
-  local_args="$(_translate_w)" || return 1
 
+  # WARNING: Order does matter, see also
+  #   https://github.com/icy/pacapt/pull/219#issuecomment-1006079629
+  local_args="$(_translate_w)" || return 1
   local_args="${local_args}${local_noconfirm:+ }${local_noconfirm}"
   local_args="${local_args}${local_debug:+ }${local_debug}"
 
@@ -596,8 +598,8 @@ apk_S() {
   case ${_EOPT} in
     # Download only
     ("fetch") shift
-              apk fetch $_TOPT -- "$@" ;;
-          (*) apk add   $_TOPT -- "$@" ;;
+              apk fetch $_TOPT "$@" ;;
+          (*) apk add   $_TOPT "$@" ;;
   esac
 }
 
@@ -1376,6 +1378,7 @@ macports_Scc() {
 
 macports_S() {
   if [ "$_TOPT" = "fetch" ]; then
+    shift
     port patch "$@"
   else
     port install "$@"
@@ -1581,6 +1584,7 @@ pkgng_Scc() {
 pkgng_S() {
   # shellcheck disable=SC2153
   if [ "$_EOPT" = "fetch" ]; then
+    shift
     pkg fetch "$@"
   else
     pkg install "$@"
@@ -1779,7 +1783,7 @@ portage_Rs() {
 }
 
 portage_R() {
-  emerge --depclean "@"
+  emerge --depclean "$@"
 }
 
 portage_Si() {
