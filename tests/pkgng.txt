@@ -70,7 +70,7 @@ in -Rs --noconfirm nano
 ou ^Installed packages to be REMOVED:$
 
 # Fetch package
-in ! echo y | -Sw nano
+in ! echo y | pacman -Sw nano
 ou ^Number of packages to be fetched: 1$
 
 # Clean cache
