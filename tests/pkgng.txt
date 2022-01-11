@@ -70,11 +70,12 @@ in -Rs --noconfirm nano
 ou ^Installed packages to be REMOVED:$
 
 # Fetch package
-in -Sw nano
+in ! echo y | -Sw nano
 ou ^Number of packages to be fetched: 1$
 
 # Clean cache
 in -Sc --noconfirm
-ou ^The following package files will be deleted:$
+ou ^(Nothing to do)|(The following package files will be deleted:)$
+
 in -Scc
-ou ^Nothing to do.$
+ou ^(Nothing to do.)|(/var/cache/pkg/.+)$
