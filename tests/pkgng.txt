@@ -39,10 +39,11 @@ in -Ss nano
 ou ^nano-[0-9]+\.[0-9]+\.?[0-9]*
 ou ^rubygem-nanoc-[0-9]+\.[0-9]+\.?[0-9]*
 
-# Vm initialization installs this tool!
-in -Rs bash
-in ! command -v bash
-ou not found
+# # Vm initialization installs this tool!
+# NOTE: This is already done in Makefile
+# in -Rs bash
+# in ! command -v bash
+# ou not found
 
 # Update
 in -Sy
