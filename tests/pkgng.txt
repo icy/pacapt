@@ -39,6 +39,12 @@ in -Ss nano
 ou ^nano-[0-9]+\.[0-9]+\.?[0-9]*
 ou ^rubygem-nanoc-[0-9]+\.[0-9]+\.?[0-9]*
 
+# # Vm initialization installs this tool!
+# NOTE: This is already done in Makefile
+# in -Rs bash
+# in ! command -v bash
+# ou not found
+
 # Update
 in -Sy
 ou ^All repositories are up to date\.$
@@ -70,11 +76,12 @@ in -Rs --noconfirm nano
 ou ^Installed packages to be REMOVED:$
 
 # Fetch package
-in -Sw nano
-ou ^Number of packages to be fetched: 1$
+in ! echo y | pacman -Sw nano
+ou ^No packages are required to be fetched.$
 
 # Clean cache
 in -Sc --noconfirm
-ou ^The following package files will be deleted:$
+ou ^(Nothing to do)|(The following package files will be deleted:)$
+
 in -Scc
-ou ^Nothing to do.$
+ou ^(Nothing to do.)|(/var/cache/pkg/.+)$
