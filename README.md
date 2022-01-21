@@ -54,13 +54,18 @@ You can download the stable script and make it executable.
 On non-Arch-based system, you may use `pacman` as script name instead of `pacapt`.
 
 ````
-$ sudo wget -O /usr/local/bin/pacapt \
-    https://github.com/icy/pacapt/raw/ng/pacapt
-
+$ sudo wget -O /usr/local/bin/pacapt https://github.com/icy/pacapt/raw/ng/pacapt
 $ sudo chmod 755 /usr/local/bin/pacapt
-
 $ sudo ln -sv /usr/local/bin/pacapt /usr/local/bin/pacman || true
 ````
+
+If you have `curl` and want some interesting output:
+
+```
+# WARNING: Don't do this on Arch-based system!
+$ curl -o /usr/bin/pacman https://github.com/icy/pacapt/raw/ng/pacapt
+$ chmod 755 /usr/bin/pacman
+```
 
 For non-system package manager, you need to create symbolic links
 
