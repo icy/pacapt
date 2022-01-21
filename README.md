@@ -63,7 +63,7 @@ If you have `curl` and want some interesting output:
 
 ```
 # WARNING: Don't do this on Arch-based system!
-$ curl -o /usr/bin/pacman https://github.com/icy/pacapt/raw/ng/pacapt
+$ curl -Lo /usr/bin/pacman https://github.com/icy/pacapt/raw/ng/pacapt
 $ chmod 755 /usr/bin/pacman
 ```
 
